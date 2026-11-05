@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#070B16">
+<title>مسيرة نجم</title>
+<link rel="stylesheet" href="fonts/changa.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="game" aria-label="ملعب الماتش"></canvas>
+<canvas id="ov" aria-hidden="true"></canvas>
+<div id="vig"></div>
+<div id="dim"></div>
+
+<!-- TITLE -->
+<section class="screen on" id="scr-title">
+  <h1 class="brand">مسيرة <span>نجم</span></h1>
+  <div class="tag">من ملاعب الدرجة الرابعة المصرية لمنصة الكرة الذهبية</div>
+  <div class="menu">
+    <button class="btn" id="mContinue">كمّل المسيرة <span id="mContSub" style="font-size:13px;font-weight:600"></span></button>
+    <button class="btn ghost" id="mNew">مسيرة جديدة</button>
+    <button class="btn ghost" id="mQuick">ماتش سريع</button>
+    <button class="btn ghost" id="mSettings">الإعدادات</button>
+    <button class="btn ghost" id="mFull">ملء الشاشة</button>
+  </div>
+  <div class="keys">على الكمبيوتر: <kbd>الأسهم</kbd> حركة · <kbd>Space</kbd> تمرير/تبديل · <kbd>X</kbd> تسديد (اضغط مطوّل) · <kbd>C</kbd> بينية/زحلقة · <kbd>Shift</kbd> سرعة · <kbd>Esc</kbd> إيقاف</div>
+</section>
+
+<!-- CREATE -->
+<section class="screen" id="scr-create">
+  <div class="topbar"><div><h2 class="ttl">اعمل لاعبك</h2><div class="sub">هتبدأ في نادي «اتحاد الوادي» — الدرجة الرابعة، مجموعة القاهرة</div></div><button class="btn ghost sm" data-go="title">رجوع</button></div>
+  <div class="split">
+    <div class="panel scroll" style="flex:1">
+      <div class="field"><label for="cName">اسم اللاعب</label><input id="cName" maxlength="18" value="" placeholder="مثلاً: عمر إبراهيم"></div>
+      <div class="field"><label>المركز</label><div class="seg" id="cPos"><button data-v="RW" class="on">جناح أيمن</button><button data-v="ST">مهاجم صريح</button><button data-v="CAM">صانع ألعاب</button></div></div>
+      <div class="field"><label>الرقم</label><div class="seg" id="cNum"><button data-v="7">7</button><button data-v="10">10</button><button data-v="9">9</button><button data-v="11">11</button><button data-v="27" class="on">27</button></div></div>
+      <div class="row" style="gap:28px;flex-wrap:wrap">
+        <div class="field"><label>لون البشرة</label><div class="row" id="cSkin"></div></div>
+        <div class="field"><label>لون الشعر</label><div class="row" id="cHair"></div></div>
+      </div>
+    </div>
+    <div class="panel" style="width:min(300px,34vw);display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:10px">
+      <div class="card" id="cCard"></div>
+      <button class="btn" id="cGo" style="width:100%">ابدأ المسيرة</button>
+    </div>
+  </div>
+</section>
+
+<!-- HUB -->
+<section class="screen" id="scr-hub">
+  <div class="topbar">
+    <div class="logo"><div class="mk">م</div><div><div id="hClub" style="line-height:1.1"></div><div class="sub" id="hTier" style="font-size:13px;font-weight:600"></div></div></div>
+    <div class="chips"><div class="chip">الموسم <b id="hSeason"></b></div><div class="chip">نقاط مهارة <b id="hSP"></b></div><div class="chip g">فلوس <b id="hCoins"></b></div><button class="btn ghost sm" data-go="title">القائمة</button></div>
+  </div>
+  <div class="hub">
+    <button class="tile cut main" id="tNext"></button>
+    <button class="tile cut" id="tPlayer"></button>
+    <button class="tile cut" id="tTable"></button>
+    <button class="tile cut" id="tLadder"></button>
+    <button class="tile cut" id="tSettings"><span class="lbl">الإعدادات</span><span class="big">التحكم والصوت</span><span class="sm">مدة الماتش، الصعوبة، طريقة التحكم</span></button>
+  </div>
+</section>
+
+<!-- PLAYER -->
+<section class="screen" id="scr-player">
+  <div class="topbar"><div><h2 class="ttl">لاعبي</h2><div class="sub">وزّع نقاط المهارة أو اتمرّن بالطاقة</div></div><div class="chips"><div class="chip">نقاط مهارة <b id="pSP"></b></div><div class="chip">طاقة <b id="pEn"></b></div><button class="btn ghost sm" data-go="hub">رجوع</button></div></div>
+  <div class="split">
+    <div class="panel" style="display:flex;align-items:center;justify-content:center"><div class="card" id="pCard"></div></div>
+    <div class="panel scroll" style="flex:1" id="pAttrs"></div>
+  </div>
+</section>
+
+<!-- TABLE -->
+<section class="screen" id="scr-table">
+  <div class="topbar"><div><h2 class="ttl" id="tbTitle">جدول الدوري</h2><div class="sub">أول اتنين بيصعدوا</div></div><button class="btn ghost sm" data-go="hub">رجوع</button></div>
+  <div class="panel scroll" style="flex:1"><table class="tbl" id="tbl"></table></div>
+</section>
+
+<!-- LADDER -->
+<section class="screen" id="scr-ladder">
+  <div class="topbar"><div><h2 class="ttl">سلم المسيرة</h2><div class="sub">كل محطة محتاجة تقييم معيّن عشان الأندية الأكبر تطلبك</div></div><button class="btn ghost sm" data-go="hub">رجوع</button></div>
+  <div class="ladder" id="lad"></div>
+</section>
+
+<!-- SETTINGS -->
+<section class="screen" id="scr-settings">
+  <div class="topbar"><h2 class="ttl">الإعدادات</h2><button class="btn ghost sm" id="setBack">رجوع</button></div>
+  <div class="panel scroll" style="flex:1">
+    <div class="field"><label>مدة الماتش</label><div class="seg" data-k="halfLen"><button data-v="60">دقيقتين</button><button data-v="120">4 دقايق</button><button data-v="180">6 دقايق</button><button data-v="300">10 دقايق</button></div></div>
+    <div class="field"><label>الصعوبة</label><div class="seg" data-k="diff"><button data-v="-8">سهل</button><button data-v="0">عادي</button><button data-v="6">صعب</button><button data-v="12">أسطوري</button></div></div>
+    <div class="field"><label>التحكم في ماتشات المسيرة</label><div class="seg" data-k="lock"><button data-v="0">الفريق كله (تبديل اللاعبين)</button><button data-v="1">لاعبك بس (اطلب الكورة)</button></div></div>
+    <div class="field"><label>جودة الجرافيكس</label><div class="seg" data-k="gfx"><button data-v="2">عالية (ظلال كاملة)</button><button data-v="1">متوسطة (أسرع للموبايلات الضعيفة)</button></div></div>
+    <div class="field"><label>الصوت</label><div class="seg" data-k="sound"><button data-v="1">شغّال</button><button data-v="0">مقفول</button></div></div>
+  </div>
+</section>
+
+<!-- PREMATCH -->
+<section class="screen" id="scr-pre">
+  <div class="topbar"><div><h2 class="ttl" id="preT"></h2><div class="sub" id="preS"></div></div><button class="btn ghost sm" id="preBack">رجوع</button></div>
+  <div class="panel cut" style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:16px">
+    <div class="vs" id="preVs"></div>
+    <div class="row" style="justify-content:center;gap:12px;flex-wrap:wrap">
+      <button class="btn" id="preGo">ابدأ الماتش</button>
+      <button class="btn ghost" id="preSim">محاكاة النتيجة</button>
+    </div>
+  </div>
+</section>
+
+<!-- POST -->
+<section class="screen" id="scr-post">
+  <div class="topbar"><div><h2 class="ttl">نهاية الماتش</h2><div class="sub" id="poS"></div></div></div>
+  <div class="split">
+    <div class="panel cut" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px" id="poScore"></div>
+    <div class="panel cut scroll" style="flex:1.2;display:flex;flex-direction:column;gap:10px" id="poStats"></div>
+  </div>
+  <div class="row" style="justify-content:center;margin-top:10px"><button class="btn" id="poGo">كمّل</button></div>
+</section>
+
+<!-- SEASON END -->
+<section class="screen" id="scr-season">
+  <div class="topbar"><div><h2 class="ttl" id="seT"></h2><div class="sub" id="seS"></div></div></div>
+  <div class="split">
+    <div class="panel cut" style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:10px" id="seSum"></div>
+    <div class="scroll" style="flex:1.3" id="seOff"></div>
+  </div>
+</section>
+
+<!-- BALLON -->
+<section class="screen" id="scr-ballon" style="align-items:center;justify-content:center;text-align:center;gap:10px">
+  <svg width="90" height="90" viewBox="0 0 24 24" fill="none" stroke="#F5C542" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14.5L7 22l5-3 5 3-1.5-7.5"/></svg>
+  <h2 class="brand goldbg" style="font-size:clamp(36px,10vh,70px)">الكرة الذهبية</h2>
+  <div class="tag" id="baS"></div>
+  <div class="row"><button class="btn gold" id="baGo">كمّل المسيرة</button><button class="btn ghost" data-go="title">القائمة الرئيسية</button></div>
+</section>
+
+<!-- HUD -->
+<div id="hud">
+  <div id="bug"><span class="tm"><i id="kA"></i><span id="hA"></span></span><span id="sc">0 - 0</span><span class="tm"><span id="hB"></span><i id="kB"></i></span><span id="clk">0'</span></div>
+  <button id="pauseBtn" aria-label="إيقاف مؤقت"><svg width="20" height="20" viewBox="0 0 24 24" fill="#EEF2FF" aria-hidden="true"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></button>
+  <div id="banner"><div id="bnT"></div><div id="bnS"></div></div>
+  <div id="joyZone"><div id="joyBase"><div id="joyKnob"></div></div></div>
+  <div id="btns">
+    <button class="cb" id="bSprint">سرعة</button>
+    <button class="cb" id="bThru"><span id="lThru">بينية</span></button>
+    <button class="cb" id="bPass"><span id="lPass">تمرير</span></button>
+    <button class="cb" id="bShoot"><span id="lShoot">تسديد</span><small id="sShoot">اضغط مطوّل</small></button>
+  </div>
+  <div id="pause"><h2 class="ttl">الماتش واقف</h2><button class="btn" id="paRes">كمّل الماتش</button><button class="btn ghost" id="paQuit">انسحب للقائمة</button></div>
+</div>
+
+<div id="rotate"><svg width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="#C6F432" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg><div class="ttl">لف الموبايل بالعرض</div><div class="sub">اللعبة معمولة للشاشة الأفقية</div></div>
+<div class="toast" id="toast"></div>
+
+<script src="js/core.js"></script>
+<script src="js/render3d.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

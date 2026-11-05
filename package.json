@@ -1,0 +1,19 @@
+{
+  "name": "masiret-nagm",
+  "private": true,
+  "version": "1.0.0",
+  "description": "مسيرة نجم: لعبة مسيرة لاعب كرة قدم من الدرجة الرابعة المصرية للكرة الذهبية (Android build with Capacitor)",
+  "scripts": {
+    "fonts": "node scripts/copy-fonts.js",
+    "sync": "npm run fonts && cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.1",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/core": "^8.5.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.1",
+    "@fontsource/changa": "^5.2.0"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "appId": "com.asomygames.masiretnagm",
+  "appName": "مسيرة نجم",
+  "webDir": "www",
+  "server": { "androidScheme": "https" },
+  "android": {
+    "allowMixedContent": false,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false,
+    "backgroundColor": "#070B16"
+  }
+}

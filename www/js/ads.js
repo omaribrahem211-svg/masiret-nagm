@@ -3,9 +3,9 @@
 // لحد ما الأكواد الحقيقية تتحط هنا، بيشتغل بإعلانات جوجل التجريبية.
 'use strict';
 const ADS={
- testing:true, // خليها true لحد ما الأكواد الحقيقية تتحط تحت ويتأكد إنها شغالة
- interId:'ca-app-pub-3940256099942544/1033173712', // كود الإعلان البيني (Interstitial)
- rewardId:'ca-app-pub-3940256099942544/5224354917', // كود الإعلان بمكافأة (Rewarded)
+ testing:true, // بيتحدد لوحده: نسخة التجربة (APK debug) = إعلانات تجريبية، نسخة جوجل بلاي (AAB release) = إعلانات حقيقية
+ interId:'ca-app-pub-5272866425919152/9607323788', // الإعلان البيني (Interstitial)
+ rewardId:'ca-app-pub-5272866425919152/2430532181', // الإعلان بمكافأة (Rewarded)
  interEvery:3, // إعلان بيني كل كام ماتش
  interGapMs:120000, // أقل وقت بين إعلانين بينيين
  energyGain:40 // الطاقة اللي بترجع من إعلان المكافأة
@@ -16,7 +16,7 @@ const Ads=(()=>{
  const wait=(ms)=>new Promise(r=>setTimeout(r,ms));
  function once(name,ms){const a=A();return new Promise(res=>{let h=null,done=false;const fin=v=>{if(done)return;done=true;try{h&&h.remove&&h.remove();}catch(e){}res(v);};
   Promise.resolve(a.addListener(name,()=>fin(true))).then(x=>{h=x;if(done)try{x.remove();}catch(e){}}).catch(()=>{});if(ms)setTimeout(()=>fin(false),ms);});}
- async function init(){const a=A();if(!a)return;try{await a.initialize({initializeForTesting:ADS.testing});
+ async function init(){const a=A();if(!a)return;try{const inf=Nat&&Nat.info?await Nat.info():null;ADS.testing=!!(inf&&inf.debuggable);}catch(e){ADS.testing=false;}try{await a.initialize({initializeForTesting:ADS.testing});
    try{const ci=await a.requestConsentInfo();if(ci&&ci.isConsentFormAvailable&&String(ci.status).toUpperCase()==='REQUIRED')await a.showConsentForm();}catch(e){}
    ready=true;loadR();loadI();}catch(e){setTimeout(init,60000);}}
  async function loadR(){const a=A();if(!a||!ready||rw)return;try{await a.prepareRewardVideoAd({adId:ADS.rewardId,isTesting:ADS.testing});rw=true;}catch(e){rw=false;setTimeout(loadR,30000);}}

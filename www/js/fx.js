@@ -28,9 +28,9 @@ function drawOverlay(ctx,m,w,h,proj){ctx.clearRect(0,0,w,h);
  m.radar(ctx,w,h);FX.draw(ctx,w,h,m);}
 /* ---------- التعليق الصوتي (ملفات متولدة بالذكاء الاصطناعي وقت البناء) ---------- */
 const Voice={on:true,ready:false,man:null,buf:{},cur:null,last:0,
- async init(){try{const r=await fetch('audio/voice/manifest.json',{cache:'no-store'});if(!r.ok)return;const m=await r.json();if(m&&m.lines){this.man=m;this.ready=true;}}catch(e){}},
+ base:'audio/voice/',async init(){this.ready=false;this.buf={};const d=(typeof App!=='undefined'&&App.settings&&App.settings.dial)?'gulf':'eg';for(const b of ['audio/voice/'+d+'/','audio/voice/']){try{const r=await fetch(b+'manifest.json',{cache:'no-store'});if(!r.ok)continue;const m=await r.json();if(m&&m.lines){this.man=m;this.base=b;this.ready=true;return;}}catch(e){}}},
  has(k){return this.ready&&this.man.lines[k]>0;},
- async load(k,i){const url='audio/voice/'+k+'_'+i+'.'+(this.man.ext||'mp3');if(this.buf[url])return this.buf[url];if(!SFX.ctx)return null;const ab=await(await fetch(url)).arrayBuffer();const b=await new Promise((ok,no)=>SFX.ctx.decodeAudioData(ab,ok,no));this.buf[url]=b;return b;},
+ async load(k,i){const url=this.base+k+'_'+i+'.'+(this.man.ext||'mp3');if(this.buf[url])return this.buf[url];if(!SFX.ctx)return null;const ab=await(await fetch(url)).arrayBuffer();const b=await new Promise((ok,no)=>SFX.ctx.decodeAudioData(ab,ok,no));this.buf[url]=b;return b;},
  preload(){if(!this.ready||!SFX.ctx)return;for(const k in this.man.lines)for(let i=0;i<this.man.lines[k];i++)this.load(k,i).catch(()=>{});},
  play(k,prio){if(!this.on||!this.has(k)||!SFX.ctx||!SFX.on)return false;const now=performance.now();if(!prio&&(this.cur||now-this.last<2500))return true;this.last=now;const i=Math.floor(Math.random()*this.man.lines[k]);
   this.load(k,i).then(b=>{if(!b)return;if(this.cur){try{this.cur.stop();}catch(e){}}const c=SFX.ctx,s=c.createBufferSource();s.buffer=b;const g=c.createGain();g.gain.value=1.15;s.connect(g);g.connect(c.destination);s.onended=()=>{if(this.cur===s)this.cur=null;};s.start();this.cur=s;}).catch(()=>{});return true;},
@@ -39,7 +39,7 @@ const Voice={on:true,ready:false,man:null,buf:{},cur:null,last:0,
 /* ---------- التعليق ---------- */
 const Comm={last:0,el:null,voice:null,tts:false,text:false,
  init(){this.el=document.getElementById('comm');try{if('speechSynthesis' in window){const pickV=()=>{const vs=speechSynthesis.getVoices();this.voice=vs.find(v=>/ar[-_]EG/i.test(v.lang))||vs.find(v=>/^ar/i.test(v.lang))||null;};pickV();speechSynthesis.onvoiceschanged=pickV;}}catch(e){}},
- say(type,vars,prio){const L0=COMM[type];if(!L0)return;const spoke=Voice.play(type,prio);const now=performance.now();if(!prio&&now-this.last<2200)return;this.last=now;let txt=pick(L0);for(const k in (vars||{}))txt=txt.split('{'+k+'}').join(vars[k]);
+ say(type,vars,prio){const dl=(App.settings&&App.settings.dial)?'gulf':'eg';const FB={goal_late:'goal',goal_equal:'goal',goal_lead:'goal',goal_comeback:'goal',goal_header:'goal',goal_long:'goal',goal_pen:'goal',save_great:'save',gk_rush:'save',miss_big:'miss',shot_long:'shot',end_win:'end',end_draw:'end',end_loss:'end'};const D=typeof COMM_D!=='undefined'?COMM_D[dl]:null;let L0=(D&&D[type])||COMM[type];if(!L0&&FB[type]){type=FB[type];L0=(D&&D[type])||COMM[type];}if(!L0)return;const vk=Voice.has(type)?type:(FB[type]&&Voice.has(FB[type])?FB[type]:type);const spoke=Voice.play(vk,prio);const now=performance.now();if(!prio&&now-this.last<2200)return;this.last=now;let txt=pick(L0);for(const k in (vars||{}))txt=txt.split('{'+k+'}').join(vars[k]);
   if(this.text&&this.el){this.el.textContent=txt;this.el.classList.remove('on');void this.el.offsetWidth;this.el.classList.add('on');}
   if(!spoke&&this.tts&&this.voice){try{if(prio)speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt);u.voice=this.voice;u.lang=this.voice.lang;u.rate=1.08;u.pitch=prio?1.15:1;speechSynthesis.speak(u);}catch(e){}}},
  stop(){Voice.stop();try{speechSynthesis.cancel();}catch(e){}if(this.el)this.el.classList.remove('on');}

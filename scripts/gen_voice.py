@@ -1,21 +1,18 @@
 #!/usr/bin/env python3
 """
-يولّد ملفات التعليق الصوتي العربي من voice/lines.json إلى www/audio/voice/
+يولّد التعليق الصوتي بلهجتين من voice/lines_eg.json و voice/lines_gulf.json
+إلى www/audio/voice/<eg|gulf>/<key>_<i>.mp3 + manifest.json
 
-المحرك:
-  1) Azure Speech (صوت مصري طبيعي ar-EG-ShakirNeural) لو المتغيرات دي موجودة:
-       AZURE_SPEECH_KEY  و  AZURE_SPEECH_REGION   (مثلاً westeurope)
-     الخطة المجانية F0 بتدي 500 ألف حرف في الشهر، والتعليق كله أقل من 5 آلاف حرف.
-  2) Piper (مفتوح المصدر، من غير أي حساب) بصوت عربي ar_JO-kareem كبديل.
-
-بيطلع: www/audio/voice/<key>_<i>.mp3 + manifest.json
+المحرك (بالترتيب):
+  1) Azure Speech لو AZURE_SPEECH_KEY و AZURE_SPEECH_REGION موجودين (الخطة الرسمية للمتجر)
+  2) edge-tts (صوت Microsoft العربي من غير مفتاح): مصري ar-EG-ShakirNeural ، خليجي ar-SA-HamedNeural
+  3) Piper ar_JO-kareem كحل أخير
 """
-import json, os, sys, subprocess, urllib.request, wave, shutil, html
+import json, os, sys, subprocess, urllib.request, wave, shutil, html, asyncio
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LINES = os.path.join(ROOT, 'voice', 'lines.json')
-OUT = os.path.join(ROOT, 'www', 'audio', 'voice')
-VOICE = os.environ.get('AZURE_VOICE', 'ar-EG-ShakirNeural')
+OUTROOT = os.path.join(ROOT, 'www', 'audio', 'voice')
+VOICES = {'eg': ('ar-EG', 'ar-EG-ShakirNeural'), 'gulf': ('ar-SA', 'ar-SA-HamedNeural')}
 
 
 def to_mp3(wav, mp3):
@@ -26,10 +23,11 @@ def to_mp3(wav, mp3):
     return 'wav'
 
 
-def azure(text, excited, path):
+def azure(text, excited, path, dial):
     key, region = os.environ['AZURE_SPEECH_KEY'], os.environ['AZURE_SPEECH_REGION']
+    lang, voice = VOICES[dial]
     rate, pitch = ('+18%', '+12%') if excited else ('+4%', '+0%')
-    ssml = (f"<speak version='1.0' xml:lang='ar-EG'><voice name='{VOICE}'>"
+    ssml = (f"<speak version='1.0' xml:lang='{lang}'><voice name='{voice}'>"
             f"<prosody rate='{rate}' pitch='{pitch}' volume='+10%'>{html.escape(text)}</prosody></voice></speak>")
     req = urllib.request.Request(
         f'https://{region}.tts.speech.microsoft.com/cognitiveservices/v1', data=ssml.encode('utf-8'),
@@ -40,8 +38,24 @@ def azure(text, excited, path):
     return 'mp3'
 
 
+_edge = None
+def edge(text, excited, path, dial):
+    global _edge
+    if _edge is None:
+        subprocess.run([sys.executable, '-m', 'pip', 'install', '-q', 'edge-tts'], check=True)
+        import edge_tts  # noqa
+        _edge = edge_tts
+    rate, pitch = ('+16%', '+8Hz') if excited else ('+4%', '+0Hz')
+    async def go():
+        await _edge.Communicate(text, VOICES[dial][1], rate=rate, pitch=pitch).save(path + '.mp3')
+    asyncio.run(go())
+    if os.path.getsize(path + '.mp3') < 800:
+        raise RuntimeError('empty audio')
+    return 'mp3'
+
+
 _piper = None
-def piper(text, excited, path):
+def piper(text, excited, path, dial):
     global _piper
     if _piper is None:
         subprocess.run([sys.executable, '-m', 'pip', 'install', '-q', 'piper-tts'], check=True)
@@ -54,35 +68,33 @@ def piper(text, excited, path):
         _piper = PiperVoice.load(model)
     wav = path + '.wav'
     with wave.open(wav, 'wb') as wf:
-        if hasattr(_piper, 'synthesize_wav'):
-            _piper.synthesize_wav(text, wf)
-        else:
-            _piper.synthesize(text, wf)
+        (_piper.synthesize_wav if hasattr(_piper, 'synthesize_wav') else _piper.synthesize)(text, wf)
     return to_mp3(wav, path + '.mp3')
 
 
 def main():
-    data = json.load(open(LINES, encoding='utf-8'))
-    os.makedirs(OUT, exist_ok=True)
     use_azure = bool(os.environ.get('AZURE_SPEECH_KEY') and os.environ.get('AZURE_SPEECH_REGION'))
-    engine = 'azure' if use_azure else 'piper'
-    print('engine:', engine)
-    counts, ext = {}, 'mp3'
-    for key, spec in data.items():
-        if key.startswith('_'):
-            continue
-        n = 0
-        for i, text in enumerate(spec['lines']):
-            path = os.path.join(OUT, f'{key}_{n}')
-            try:
-                ext = (azure if use_azure else piper)(text, spec.get('excited'), path)
-                n += 1
-            except Exception as e:  # جملة واحدة فشلت مش بتوقف الباقي
-                print('failed', key, i, e)
-        counts[key] = n
-        print(key, n)
-    json.dump({'engine': engine, 'ext': ext, 'lines': counts}, open(os.path.join(OUT, 'manifest.json'), 'w'), ensure_ascii=False)
-    print('done', sum(counts.values()), 'clips')
+    engines = ([('azure', azure)] if use_azure else []) + [('edge', edge), ('piper', piper)]
+    for dial in VOICES:
+        data = json.load(open(os.path.join(ROOT, 'voice', f'lines_{dial}.json'), encoding='utf-8'))
+        out = os.path.join(OUTROOT, dial)
+        os.makedirs(out, exist_ok=True)
+        counts, used = {}, set()
+        for key, spec in data.items():
+            n = 0
+            for text in spec['lines']:
+                path = os.path.join(out, f'{key}_{n}')
+                for name, fn in engines:
+                    try:
+                        fn(text, spec.get('excited'), path, dial)
+                        used.add(name)
+                        n += 1
+                        break
+                    except Exception as e:
+                        print('engine', name, 'failed for', key, e)
+            counts[key] = n
+        json.dump({'engine': '+'.join(sorted(used)), 'ext': 'mp3', 'lines': counts}, open(os.path.join(out, 'manifest.json'), 'w'), ensure_ascii=False)
+        print(dial, 'engine', used, 'clips', sum(counts.values()))
 
 
 if __name__ == '__main__':

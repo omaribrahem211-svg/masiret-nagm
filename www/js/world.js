@@ -88,3 +88,17 @@ function leagueNews(c){const lg=c.league,tb=sortTable(lg),ld=tb[0];
  const RR=lg.rounds.length;if(lg.md===Math.floor(RR/2))addNews(c,'league','نهاية الدور الأول: '+c.club.name+' في المركز '+pos+' برصيد '+tb[pos-1].Pts+' نقطة');
  if(lg.md===RR-2){const gap=tb[0].Pts-tb[1].Pts;addNews(c,'league',gap<=3?'صراع ناري على اللقب: '+tb[0].name+' و'+tb[1].name+' والفرق '+gap+' نقط بس':tb[0].name+' قرّب جداً من اللقب بفارق '+gap+' نقط');}
  worldTick(c);}
+/* ---- أحداث العالم كل موسم ---- */
+const LG_TITLE={EN:'الدوري الإنجليزي',ES:'الدوري الإسباني',IT:'الدوري الإيطالي',DE:'الدوري الألماني',FR:'الدوري الفرنسي',PT:'الدوري البرتغالي',NL:'الدوري الهولندي',TR:'الدوري التركي',SA:'الدوري السعودي',EG:'الدوري المصري',MA:'الدوري المغربي',BR:'الدوري البرازيلي',AR:'الدوري الأرجنتيني',US:'الدوري الأمريكي'};
+function wPick(list,rf,k){const mx=Math.max(...list.map(rf));let tot=0;const w=list.map(x=>{const v=Math.exp((rf(x)-mx)/(k||2.5));tot+=v;return v;});let r=Math.random()*tot;for(let i=0;i<list.length;i++){r-=w[i];if(r<=0)return list[i];}return list[0];}
+function worldSeason(c){const W=wInit(c);const myKey=curTier(c).country;const Y=seasonYear(c);
+ for(const cc in LG_TITLE){if(cc===myKey&&curTier(c).domestic===(cc===c.path.home)&&c.path.tier>=3)continue;const L=REAL[cc];if(!L)continue;const w=wPick(L.slice(0,10),r=>r[1]);addNews(c,'world',w[0]+' بطل '+LG_TITLE[cc]+' '+Y+'-'+(Y+1));}
+ const cont=[['دوري أبطال أوروبا',['EN','ES','IT','DE','FR']],['دوري أبطال أفريقيا',['EG','MA','TN','DZ']],['دوري أبطال آسيا للنخبة',['SA','QA','AE']],['كوبا ليبرتادوريس',['BR','AR']]];
+ for(const [n,ccs] of cont){if(c.cont&&c.cont.name===n)continue;const pool=[];ccs.forEach(cc=>(REAL[cc]||[]).slice(0,6).forEach(r=>pool.push(r)));const w=wPick(pool,r=>r[1],2);addNews(c,'world',w[0]+' يتوج بلقب '+n+' '+(Y+1),true);}
+ const yr=Y+1;const confs=['eu','af','as','sa','na'];const mine=c.ntc&&(c.ntc.tt||c.ntc.tj);
+ if(yr%4===2){if(!(mine&&mine.wc)){const pool=['البرازيل','الأرجنتين','فرنسا','إسبانيا','إنجلترا','ألمانيا','البرتغال','هولندا','المغرب','إيطاليا','بلجيكا','كرواتيا','أوروجواي','كولومبيا','اليابان','السنغال','المكسيك','أمريكا','مصر','السعودية'];const w=wPick(pool.map(natByName),t=>t.R,2.2);addNews(c,'world',w.name+' بطل كأس العالم '+yr+'!',true);}}
+ for(const cf of confs){const T=TOURN[cf]&&TOURN[cf][yr];if(!T)continue;if(mine&&mine.name===T)continue;const w=wPick(CONF_NATS[cf].map(natByName),t=>t.R,2.2);addNews(c,'world',w.name+' بطل '+T+' '+yr,true);}
+ if(c.path.tier<4){const race=ballonRace(c,0).filter(x=>!x.me);addNews(c,'world',race[0].n+' يفوز بالكرة الذهبية '+(yr)+'، ووصيفه '+race[1].n,true);}
+ for(let i=0;i<2;i++){const s=pick(W.stars);const eu=['EN','ES','FR','DE','IT'];const cc=pick(eu);const dest=pick(REAL[cc].slice(0,6));const fee=Math.round(R(60,180));addNews(c,'transfer','صفقة الصيف: '+s.n+' ينتقل إلى '+dest[0]+' مقابل '+fee+' مليون دولار',true);s.club=dest[0];if(W.sq){let pl=null;for(const k in W.sq){const i=W.sq[k].findIndex(p=>p.n===s.n);if(i>=0){pl=W.sq[k][i];W.sq[k].splice(i,1);}}if(pl&&W.sq[dest[0]])W.sq[dest[0]].push(pl);}}
+ if(ASIAN_CUP_JAN[yr]&&!(c.ntc&&c.ntc.tj)){const w=wPick(CONF_NATS.as.map(natByName),t=>t.R,2.2);addNews(c,'world',w.name+' بطل '+ASIAN_CUP_JAN[yr]+' '+yr,true);}
+}

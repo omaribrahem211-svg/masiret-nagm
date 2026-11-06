@@ -4,4 +4,6 @@
     <string name="title_activity_main">مسيرة نجم</string>
     <string name="package_name">com.asomygames.masiretnagm</string>
     <string name="custom_url_scheme">com.asomygames.masiretnagm</string>
+    <!-- AdMob App ID (ده كود جوجل التجريبي لحد ما الكود الحقيقي يتحط) -->
+    <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
 </resources>

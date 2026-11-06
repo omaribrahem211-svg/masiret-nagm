@@ -57,7 +57,7 @@ function mkTeam(def,dir,idx){const kit=def.kitArr||KITS[(def.kit||0)%KITS.length
  const SQ=def.sq&&def.sq.length>=11?pickXI(def.sq):null;const bo=def.sqBoost||0;const boost=st=>{if(bo)for(const k in st)if(k!=='gk'||st.gk>20)st[k]=clamp(st[k]+bo,20,99);return st;};const used=new Set();const nmU=()=>{let n;for(let k=0;k<10;k++){n=randName(def.nm);if(!used.has(n))break;}used.add(n);return n;};
  F433.forEach((s,i)=>{const sp=SQ&&SQ.xi[i];const st=sp?boost(Object.assign({gk:20},sp.st)):genStats(def.R,s.r);const p={team:t,i,role:s.r,bx:s.x,by:s.y,x:0,y:0,vx:0,vy:0,fx:dir,fy:0,st,name:sp?sp.n:nmU(),num:NUMS[i],star:false,cool:0,tcool:0,stun:0,slide:0,anim:Math.random()*6,dec:R(0,.4),hold:0,skin:pick(SKINS),hair:pick(HAIRS),tgt:null,des:null,spd:0,stam:100,yc:0,inj:false,off:false,stats:newStats()};p.ms=6.1+p.st.pace/100*2.7;p.mse=p.ms;t.pl.push(p);});
  t.bench=['DF','MF','MF','FW','FW'].map((r,k)=>{const slot=F433.find(f=>f.r===r);const bp=SQ&&SQ.bench[k];const st=bp?boost(Object.assign({gk:20},bp.st)):genStats(def.R-2,r);const p={team:t,i:-1,role:r,bx:slot.x,by:slot.y,x:CX,y:-2,vx:0,vy:0,fx:dir,fy:0,st,name:randName(def.nm),num:[12,15,16,18,20][k],star:false,cool:0,tcool:0,stun:0,slide:0,anim:0,dec:0,hold:0,skin:pick(SKINS),hair:pick(HAIRS),tgt:null,des:null,spd:0,stam:100,yc:0,inj:false,off:false,stats:newStats()};if(bp)p.name=bp.n;else p.name=nmU();p.ms=6.1+p.st.pace/100*2.7;p.mse=p.ms;return p;});t.subs=0;
- if(def.star){const s=def.star,p=t.pl[s.slot];p.st=Object.assign({gk:20},s.st);p.ms=6.1+p.st.pace/100*2.7;p.mse=p.ms;p.name=s.name;p.num=s.num;p.star=true;p.skin=s.skin;p.hair=s.hair;if(s.slot===6)p.bx=38;if(s.slot===5)p.bx=34;t.star=p;}
+ if(def.star){const s=def.star,p=t.pl[s.slot];p.st=Object.assign({gk:20},s.st);p.ms=6.1+p.st.pace/100*2.7;p.mse=p.ms;p.name=s.name;p.num=s.num;p.star=true;if(s.en!=null){p.stam=clamp(45+s.en*.55,45,100);p.mse=p.ms*(.78+.22*p.stam/100);}p.skin=s.skin;p.hair=s.hair;if(s.slot===6)p.bx=38;if(s.slot===5)p.bx=34;t.star=p;}
  return t;}
 function pickXI(sq){const by=r=>sq.filter(p=>p.r===r).sort((a,b)=>b.ov-a.ov);const pool=new Set(sq);const take=(r,n)=>{const out=[];for(const p of by(r)){if(out.length>=n)break;if(pool.has(p)){out.push(p);pool.delete(p);}}while(out.length<n){const p=[...pool].sort((a,b)=>b.ov-a.ov)[0];if(!p)break;out.push(p);pool.delete(p);}return out;};
  const xi=[].concat(take('GK',1),take('DF',4),take('MF',3),take('FW',3));const bench=[].concat(take('DF',1),take('MF',2),take('FW',2));return{xi,bench};}
@@ -333,7 +333,7 @@ class Match{
   else if(slide&&(behind||fast))card='yellow';
   else if(lastMan||p.stats.fl>=3&&!p.yc)card='yellow';
   if(card==='yellow'&&p.yc>=1)card='red';
-  let inj=false;if(c.star&&!c.inj&&slide&&(behind||fast)&&Math.random()<.25){c.inj=true;this.starInj=true;inj=true;}
+  let inj=false;if(c.star&&!c.inj&&slide&&(behind||fast)&&Math.random()<.25+(1-c.stam/100)*.3){c.inj=true;this.starInj=true;inj=true;}
   const g=this.ownG(p.team),inBox=Math.abs(c.x-g[0])<16.5&&Math.abs(c.y-CY)<20.16;
   this.events.push({type:'foul',team:p.team.idx,min:this.minute(),card,name:p.name});
   if(card==='yellow'){p.yc++;p.stats.yc++;}

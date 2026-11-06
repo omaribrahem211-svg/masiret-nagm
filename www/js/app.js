@@ -42,7 +42,7 @@ function mail(c,type,from,title,body,action){c.inbox.unshift({id:c.msgId++,type,
 function feedPost(c,user,text,mine){c.feed.unshift({user,text,likes:Math.round((mine?c.followers*R(.05,.15):R(5,200)*(1+c.followers/5000))),rt:Math.round(R(0,40)*(1+c.followers/20000)),mine:!!mine,t:c.si});if(c.feed.length>50)c.feed.length=50;}
 function curTier(c){return tierInfo(c.path,c.path.tier);}
 function myTeamDef(c,info){const st={};const mb=Math.round((c.morale-50)/12);for(const k in c.attrs)st[k]=clamp(c.attrs[k]+mb,20,99);
- const star={slot:POS[c.pos].slot,st,name:c.name,num:c.num,skin:c.skin,hair:c.hair};
+ const star={slot:POS[c.pos].slot,st,name:c.name,num:c.num,skin:c.skin,hair:c.hair,en:c.energy};
  if(info.nat)return{name:'منتخب '+CBY[c.nat].n,short:CBY[c.nat].n.slice(0,5),kitArr:natKit(c.nat),R:natR(c.nat),nm:CBY[c.nat].nm,star};
  return{name:c.club.name,short:c.club.short,kit:c.club.kit,kitArr:c.club.kitArr,R:c.league.teams[0].R,nm:CBY[c.club.cc||c.path.home].nm,star,sq:squadDef(c,Object.assign({cc:c.path.abroad[c.path.tier]||c.path.home},c.club,{R:c.league.teams[0].R}))};}
 function applyResult(lg,a,b,ga,gb){const A=lg.teams[a],B=lg.teams[b];A.P++;B.P++;A.GF+=ga;A.GA+=gb;B.GF+=gb;B.GA+=ga;if(ga>gb){A.Wn++;B.Ls++;A.Pts+=3;}else if(ga<gb){B.Wn++;A.Ls++;B.Pts+=3;}else{A.D++;B.D++;A.Pts++;B.Pts++;}}
@@ -214,8 +214,8 @@ function openPre(){const c=App.c,f=c.sched[c.si];if(!f)return seasonEnd();
  $('preVs').innerHTML=`<div>${crestHTML(me)}<div class="tname">${esc(me.name)}</div><div class="sub" style="text-align:center">تقييم ${me.R}</div></div><div class="vsx">VS</div><div>${crestHTML(info.opp)}<div class="tname">${esc(info.opp.name)}</div><div class="sub" style="text-align:center">تقييم ${info.opp.R}</div></div>`;
  c.wx=c.wx&&c.wx.si===c.si?c.wx:{si:c.si,rain:Math.random()<.2};
  $('preInfo').innerHTML=`<span class="pill">معنويات ${c.morale}%</span><span class="pill">طاقة ${c.energy}%</span><span class="pill">ثقة المدرب ${c.coach}%</span><span class="pill">${c.wx.rain?'مطر — الكورة أسرع والأرض بتزحلق':'جو صافي'}</span><span class="pill ${pk.st==='start'?'':'warn'}">المدرب: ${esc(pickTxt(pk))}</span>${c.inj>0?'<span class="pill warn">مصاب — هتتفرج من المدرجات</span>':c.susp>0?'<span class="pill warn">موقوف — هتتفرج من المدرجات</span>':''}${c.energy<40?'<span class="pill warn">طاقتك قليلة</span>':''}`;
- const outP=c.inj>0||c.susp>0||pk.st==='out';$('preGo').classList.toggle('hidden',outP);$('preGo').textContent=pk.st==='bench'?'العب (من الدكة)':'العب الماتش';$('preSim').textContent=outP?'تابع النتيجة':'تخطّى الماتش (مش هتلعب)';
- $('preBack').onclick=()=>show('hub');$('preGo').onclick=()=>startFix(false);$('preSim').onclick=()=>startFix(true);App.quick=false;show('pre');}
+ const outP=c.inj>0||c.susp>0||pk.st==='out';$('preGo').classList.toggle('hidden',outP);$('preGo').textContent=pk.st==='bench'?'العب (من الدكة)':'العب الماتش';$('preSim').textContent=outP?'تابع النتيجة':(Ads.ready?'🎬 تخطّى الماتش (إعلان · مش هتلعب)':'تخطّى الماتش (مش هتلعب)');
+ $('preBack').onclick=()=>show('hub');$('preGo').onclick=()=>startFix(false);$('preSim').onclick=async()=>{const out=$('preGo').classList.contains('hidden');if(out||!Ads.ready)return startFix(true);const b=$('preSim');b.disabled=true;const t0=b.textContent;b.textContent='بيحمّل الإعلان…';const r=await Ads.reward();b.disabled=false;b.textContent=t0;if(r==='cancel'){toast('لازم تكمّل الإعلان للآخر عشان تتخطى الماتش');return;}if(r==='na')toast('مفيش إعلان متاح دلوقتي، اتخطّى المرة دي ببلاش');startFix(true);};App.quick=false;show('pre');}
 function startFix(sim){const c=App.c,f=c.sched[c.si],info=fixInfo(c,f);const home=myTeamDef(c,info);const away=Object.assign({},info.opp,{sqBoost:App.settings.diff,sq:info.nat?null:getSquad(c,Object.assign({cc:curTier(c).country},info.opp)),R:oppMatchR(c,info.opp.R),nm:info.opp.nm||(info.opp.cc?CBY[info.opp.cc].nm:CBY[curTier(c).country].nm)});
  const pk=coachPick(c,f,info);const absent=c.inj>0||c.susp>0||pk.st==='out';if(sim||absent)return simFix(info,home,away,true,pk,!absent);
  beginMatch(new Match({home,away,human:{lock:!!App.settings.lock},halfLen:App.settings.halfLen,intro:!!App.settings.intro,comp:info.comp+' · '+info.label,weather:c.wx&&c.wx.rain?'rain':'clear',onEvent:matchEvent,onEnd:r=>{const P=App.subPlan;if(r.star)r.star.min=P&&P.inMin?90-P.inMin:P&&P.outAt?P.outAt:90;App.subPlan=null;finishFix(r,false);}}),info,home,away);coachSetup(App.match,pk);}
@@ -243,9 +243,12 @@ function finishFix(r,simmed,absent){const c=App.c,f=c.sched[c.si],info=fixInfo(c
  const win=res>0;const bonus=Math.round(c.contract.wage*(win?.25:0)+(s?s.g*c.contract.wage*.15:0));const earn=c.contract.wage+c.sponsor+bonus;c.money+=earn;
  const folG=rt?Math.round((Math.max(0,rt-6)*35+(s.g*90)+(win?40:0))*(1+c.path.tier*.7)*(f.t!=='L'?1.6:1)+c.followers*.004*Math.max(0,rt-6.5)):Math.round(c.followers*.002);c.followers+=folG;
  c.morale=clamp(c.morale+(win?4:res<0?-5:0)+(rt?Math.round((rt-6.6)*3):-2)+(c.owned.length>2?1:0),5,100);c.fans=clamp(c.fans+(rt?Math.round((rt-6.6)*2):0)+(win?1:res<0?-1:0),0,100);c.coach=clamp(c.coach+(rt?Math.round((rt-6.5)*3):0),0,100);
- c.energy=Math.min(100,c.energy+(c.owned.includes('villa')?45:35));
+ // الطاقة: الماتش بيصرف طاقة على قد الدقايق والمجهود، والراحة بين الماتشات بترجّع جزء
+ {const mn=s?(s.min===undefined?90:s.min):0,endSt=s&&s.stam!=null?s.stam:100;const drain=s?Math.round(mn/90*22+(100-endSt)*.14):0;const rec=(c.owned.includes('villa')?24:16)+(s?0:12);
+  c.enBefore=c.energy;c.energy=clamp(Math.round(c.energy-drain+rec),0,100);c.enDrain=drain;c.enAd=false;c.adN=(c.adN||0)+1;
+  if(s&&!r.inj&&c.enBefore<40&&Math.random()<(c.enBefore<20?.14:.06)){r.inj=true;r.fatigue=true;}}
  if(absent&&c.susp>0)c.susp--;else if(c.inj>0){c.inj--;if(c.inj===0)mail(c,'medical','الجهاز الطبي','رجعت جاهز!','الأشعة الأخيرة سليمة. تقدر ترجع للتمرين والماتشات.');}
- if(r.inj){c.inj=RI(1,4);mail(c,'medical','الجهاز الطبي','إصابة','عندك شد في العضلة الخلفية. هتغيب '+c.inj+' ماتش تقريباً. ركّز في العلاج.');news.push('إصابة — غايب '+c.inj+' ماتش');addNews(c,'me',c.name+' يتعرض لإصابة ويغيب '+c.inj+' ماتش');c.morale=clamp(c.morale-6,0,100);}
+ if(r.inj){c.inj=RI(1,4);mail(c,'medical','الجهاز الطبي','إصابة',(r.fatigue?'لعبت وإنت مرهق وطاقتك قليلة، والعضلة ما استحملتش. ':'')+'عندك شد في العضلة الخلفية. هتغيب '+c.inj+' ماتش تقريباً. ركّز في العلاج.');news.push('إصابة — غايب '+c.inj+' ماتش');addNews(c,'me',c.name+' يتعرض لإصابة ويغيب '+c.inj+' ماتش');c.morale=clamp(c.morale-6,0,100);}
  if(s&&f.t!=='N'){wInit(c);const g0=c.tot.g;c.ss.apps++;c.ss.g+=s.g;c.ss.a+=s.a;c.ss.rs+=rt;c.ss.yc+=s.yc;c.tot.apps++;c.tot.g+=s.g;c.tot.a+=s.a;
   c.ss.sh+=s.sh||0;c.ss.sot+=s.sot||0;c.ss.p+=s.p||0;c.ss.pc+=s.pc||0;c.ss.tk+=s.tk||0;c.ss.rc+=s.rc||0;c.tot.yc+=s.yc||0;c.tot.rc+=s.rc||0;
   if(rt>=8){c.ss.motm++;c.tot.motm++;news.push('أحسن لاعب في الماتش!');addNews(c,'me',lastName(c.name)+' نجم ماتش '+c.club.short+' ضد '+info.opp.name+' بتقييم '+rt.toFixed(1),rt>=9);}
@@ -276,8 +279,15 @@ function finishFix(r,simmed,absent){const c=App.c,f=c.sched[c.si],info=fixInfo(c
  $('poStats').innerHTML=(s?`<div class="row" style="justify-content:space-between"><div><div class="sub">تقييمك</div><div class="rating" id="poRt">0.0</div></div><div style="text-align:left"><div class="sub">المكسب</div><div style="font-weight:800;font-size:16px">+${money(earn)}<br>+${num(folG)} متابع</div></div></div><div class="xp"><i id="poXp"></i></div><div class="statg"><div><b>${s.g}</b><span>أهداف</span></div><div><b>${s.a}</b><span>أسيست</span></div><div><b>${s.sot}/${s.sh}</b><span>على المرمى</span></div><div><b>${s.pc}/${s.p}</b><span>تمريرات صحيحة</span></div><div><b>${s.tk}</b><span>افتكاك</span></div><div><b>${s.stam!==undefined?s.stam+'%':'—'}</b><span>اللياقة في الآخر</span></div></div>`:`<div class="ttl" style="font-size:20px">${absent?'اتفرجت من المدرجات':'ماشاركتش'}</div><div class="sub">+${money(earn)} مرتب</div>`)+news.map(n=>`<div class="news">${esc(n)}</div>`).join('');
  if(rt){let v=0;const el=$('poRt');const iv=setInterval(()=>{v=Math.min(rt,v+rt/30);el.textContent=v.toFixed(1);if(v>=rt){clearInterval(iv);if(rt>=8){FX.confetti(120);flashDom();}}},30);setTimeout(()=>{const x=$('poXp');if(x)x.style.width=clamp((rt-4)/6*100,5,100)+'%';},100);}
  if(news.some(n=>n.includes('أبطال')||n.includes('استدعاء'))){setTimeout(()=>{FX.confetti(200);FX.fireworks(6);flashDom();},400);}
- $('poGo').onclick=()=>{const next=()=>{if(c.si>=c.sched.length)seasonEnd();else show('hub');};if(pressKind)openPress(pressKind,next);else next();};
- show('post');}
+ $('poGo').onclick=()=>{const b=$('poGo');if(b.disabled)return;const next=()=>{if(c.si>=c.sched.length)seasonEnd();else show('hub');};const go=()=>{if(pressKind)openPress(pressKind,next);else next();};if(!Ads.due(c))return go();b.disabled=true;Ads.afterMatch(c).catch(()=>{}).then(()=>{b.disabled=false;go();});};
+ enRow(c);show('post');}
+// طاقة اللاعب بعد الماتش + إعلان بمكافأة يرجّعها
+function enRow(c){const el=document.createElement('div');el.className='enrow';const col=c.energy<40?'var(--red)':c.energy<70?'var(--gold,#F5C542)':'var(--acc)';
+ el.innerHTML=`<div><div class="sub">طاقتك</div><div class="enbar"><i style="width:${c.energy}%;background:${col}"></i></div><b>${c.energy}%</b>${c.enDrain?`<div class="sub">الماتش صرف ${c.enDrain}% من طاقتك</div>`:''}${c.energy<40?'<div class="sub" style="color:var(--red)">طاقتك قليلة: المدرب ممكن يقعدك، وخطر الإصابة أعلى</div>':''}</div>${c.energy<100&&!c.enAd?`<button class="btn sm gold" id="poAdEn">🎬 إعلان قصير ← +${ADS.energyGain}% طاقة</button>`:''}`;
+ const ps=$('poStats');ps.insertBefore(el,ps.firstChild);const b=$('poAdEn');if(b)b.onclick=async()=>{b.disabled=true;b.textContent='بيحمّل الإعلان…';const r=await Ads.reward();
+  if(r==='ok'){c.energy=Math.min(100,c.energy+ADS.energyGain);c.enAd=true;store();toast('طاقتك رجعت '+c.energy+'%');el.remove();enRow(c);}
+  else if(r==='cancel'){toast('لازم تكمّل الإعلان للآخر عشان تاخد الطاقة');b.disabled=false;b.textContent=`🎬 إعلان قصير ← +${ADS.energyGain}% طاقة`;}
+  else{toast('مفيش إعلان متاح دلوقتي، جرّب كمان شوية');b.disabled=false;b.textContent=`🎬 إعلان قصير ← +${ADS.energyGain}% طاقة`;}};}
 function home_R(c,info){return info.nat?natR(c.nat):c.league.teams[0].R;}
 
 /* ---------- offers / negotiation / signing ---------- */

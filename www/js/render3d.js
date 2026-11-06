@@ -180,7 +180,7 @@ class R3D{
  player(p,m){const D=this.dyn,th=Math.atan2(p.fy,p.fx),c=Math.cos(th),s=Math.sin(th);const F=[c,0,-s],S0=[s,0,c],X=p.x,Z=-p.y;
   const tc=this.teamCols(p.team),gk=p.role==='GK';const shirt=gk?tc.gk:tc.shirt,shorts=gk?tc.gks:tc.shorts,socks=gk?tc.gk:tc.socks;
   if(!p._sk){p._sk=lin(p.skin);p._hr=lin(p.hair);}const skin=p._sk,hair=p._hr,boot=p.star?lin('#F5C542'):[0.012,0.012,0.014,1],glove=lin('#F5F5F5');
-  const sp=Math.hypot(p.vx,p.vy),amp=clamp(sp/7,0,1),ph=p.anim;const slide=p.slide>0,celeb=m.phase==='goal'&&p===m.celebrator;
+  const sp=Math.hypot(p.vx,p.vy),amp=p.ampS!=null?p.ampS:clamp(sp/7,0,1),ph=p.anim;const gw=clamp((amp-.03)/.14,0,1);const slide=p.slide>0,celeb=m.phase==='goal'&&p===m.celebrator;
   const b=m.ball,throwing=(b.owner===p&&m.restartKind==='throw')||p.throwT>0,kick=p.windT>0?.5*(1-p.windT/(p.windD||.1)):p.kickT>0?.5+.5*(1-p.kickT/.34):-1,dive=p.diveT>0?p.diveT/.75:0;
   const dH=p.diveH==null?1:p.diveH,hands=gk&&((b.owner===p&&b.inHands)||p.catchT>0),crouch=gk&&!hands&&!(dive>0)&&b.owner&&b.owner.team!==p.team&&sp<2.2&&Math.hypot(b.x-p.x,b.y-p.y)<24;
   // root rotation: pitch (slide) around side axis, roll (GK dive) around forward axis
@@ -194,7 +194,7 @@ class R3D{
   // ----- legs -----
   const legs=[];let drop=0;
   for(const k of [1,-1]){const phi=ph+(k>0?0:Math.PI);let a1=Math.sin(phi)*.78*amp,a2=amp*(.15+1.15*Math.max(0,-Math.cos(phi-.45)))+.12;
-   if(!slide&&sp<.6&&!celeb){a1=k*.04;a2=.14;}
+   if(!slide&&!celeb&&gw<1){a1=k*.04+(a1-k*.04)*gw;a2=.14+(a2-.14)*gw;}
    if(kick>=0&&k===-1){if(kick<.4){a1=-.95*(kick/.4);a2=.5+1.2*(kick/.4);}else if(kick<.7){const q=(kick-.4)/.3;a1=-.95+2.2*q;a2=1.7-1.65*q;}else{const q=(kick-.7)/.3;a1=1.25-1.1*q;a2=.05+.2*q;}}
    if(crouch){a1=.5;a2=.85;}
    if(slide){a1=1.35;a2=k>0?.05:.9;}if(dive>0){a1=.25*k;a2=.3;}
@@ -217,7 +217,7 @@ class R3D{
   {const o=this.seg(P(hdp[0]-.022-sl*.25,hdp[1]+.012-cl*.25,0),P(hdp[0]-.022+sl*.25,hdp[1]+.012+cl*.25,0),.232,.215,Sd);this.add(D.hair,o,hair);}
   // ----- arms -----
   for(const k of [1,-1]){const phi=ph+(k>0?0:Math.PI);let b1=-Math.sin(phi)*.75*amp,b2=.35+1.05*amp,out=0;
-   if(sp<.6&&!celeb){b1=.08;b2=.25;out=.02;}
+   if(!celeb&&gw<1){b1=.08+(b1-.08)*gw;b2=.25+(b2-.25)*gw;out=.02*(1-gw);}
    if(kick>=0){b1=k===1?.5:-.3;b2=.4;out=.12;}
    if(celeb){b1=2.7;b2=.12;out=.08;}if(slide){b1=-.9;b2=.25;out=.15;}
    if(throwing){b1=2.75-(p.throwT>0?(1-p.throwT/.4)*1.6:0);b2=1.3-(p.throwT>0?(1-p.throwT/.4)*1.1:0);out=-.03;}
@@ -237,11 +237,11 @@ class R3D{
   const q=this.quality;this.shadowSetup(q>=2?2048:1024);
   // camera
   const b=m.ball;if(!m._c3)m._c3={x:clamp(b.x,7,L-7),y:clamp(b.y,14,W-10)};const c3=m._c3;const dt=Math.min(0.05,(t-(c3.t||t))/1000)||0.016;c3.t=t;
-  const cel=m.phase==='goal'&&m.celebrator;const fx0=cel?cel.x:b.x+(b.owner?b.owner.fx*4:b.vx*0.3),fy0=cel?cel.y:b.y;const tx=clamp(fx0,7,L-7),ty=clamp(fy0,cel?4:14,W-12);c3.x+=(tx-c3.x)*Math.min(1,dt*2.2);c3.y+=(ty-c3.y)*Math.min(1,dt*1.6);
+  const cel=m.phase==='goal'&&m.celebrator;const ow=b.owner,pd=ow?ow.team.dir:(b.last?b.last.team.dir*.5:0);const wl=m.phase==='play'?pd*5.5+(ow?ow.vx*.35:b.vx*.25):0;c3.lx=(c3.lx||0)+(clamp(wl,-9,9)-(c3.lx||0))*Math.min(1,dt*1.1);const nearG=Math.min(b.x,L-b.x)<22&&Math.abs(b.y-CY)<24&&m.phase==='play';c3.zk=(c3.zk||1)+((nearG?.9:1)-(c3.zk||1))*Math.min(1,dt*1.3);const fx0=cel?cel.x:b.x+c3.lx,fy0=cel?cel.y:b.y;const tx=clamp(fx0,7,L-7),ty=clamp(fy0,cel?4:14,W-12);c3.x+=(tx-c3.x)*Math.min(1,dt*2.2);c3.y+=(ty-c3.y)*Math.min(1,dt*1.6);
   const aspect=w/h,zoomK=aspect<1.5?1.25:1;let eye,tgt,wf;
   if(m.phase==='intro'){const a=t/1000*.22+(c3.a0||(c3.a0=Math.random()*6));eye=[CX+Math.cos(a)*86,30+Math.sin(a*.6)*5,-CY+Math.sin(a)*52];tgt=[CX,2,-CY];wf=aspect<1.5?50:38;c3.f=wf;}
   else if(m.phase==='replay'){const d=m.rpDir||1;const wantE=[b.x-d*12,3.4,-b.y+11],wantT=[b.x+d*3,1,-b.y];if(!c3.re){c3.re=wantE.slice();c3.rt=wantT.slice();}for(let i=0;i<3;i++){c3.re[i]+=(wantE[i]-c3.re[i])*Math.min(1,dt*3);c3.rt[i]+=(wantT[i]-c3.rt[i])*Math.min(1,dt*4);}eye=c3.re.slice();tgt=c3.rt.slice();wf=aspect<1.5?44:34;c3.f=wf;}
-  else{c3.re=null;eye=[c3.x,17*zoomK,20*zoomK-(c3.y-34)*0.2];tgt=[c3.x,0,-(c3.y*0.9+2)];wf=(aspect<1.5?28:19)*(cel?0.62:1);c3.f=c3.f||wf;c3.f+=(wf-c3.f)*Math.min(1,dt*1.5);}
+  else{c3.re=null;eye=[c3.x,17*zoomK,20*zoomK-(c3.y-34)*0.2];tgt=[c3.x,0,-(c3.y*0.9+2)];wf=(aspect<1.5?28:19)*(cel?0.62:c3.zk);c3.f=c3.f||wf;c3.f+=(wf-c3.f)*Math.min(1,dt*1.5);}
   if(this.debugCam){eye=this.debugCam.eye.slice();tgt=this.debugCam.tgt.slice();c3.f=this.debugCam.fov;}
   if(m.shake>0){const k=m.shake*.45;eye[0]+=R(-k,k);eye[1]+=R(-k,k)*.6;tgt[1]+=R(-k,k)*.3;}
   M4.look(this.V,eye,tgt,[0,1,0]);M4.persp(this.Pm,c3.f*Math.PI/180,aspect,1,600);M4.mul(this.VP,this.Pm,this.V);this.eye=eye;

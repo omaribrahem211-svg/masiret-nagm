@@ -23,6 +23,18 @@ jobs:
       - name: Install Capacitor
         run: npm install
 
+      - name: Setup Python (for the Arabic commentary voice)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate the Arabic commentary voice (Azure if the key exists, otherwise Piper)
+        continue-on-error: true
+        env:
+          AZURE_SPEECH_KEY: ${{ secrets.AZURE_SPEECH_KEY }}
+          AZURE_SPEECH_REGION: ${{ secrets.AZURE_SPEECH_REGION }}
+        run: python scripts/gen_voice.py
+
       - name: Bundle the font and copy the game into the Android project
         run: |
           npm run fonts

@@ -16,6 +16,17 @@ function gCyl(S){const P=[],N=[],T=[],I=[];for(let i=0;i<=S;i++){const a=i/S*Mat
  for(const y of [-.5,.5]){const b=P.length/3;P.push(0,y,0);N.push(0,Math.sign(y),0);T.push(.5,.5);for(let i=0;i<=S;i++){const a=i/S*Math.PI*2;P.push(Math.cos(a)*.5,y,Math.sin(a)*.5);N.push(0,Math.sign(y),0);T.push(.5,.5);}for(let i=0;i<S;i++)I.push(b,b+1+i,b+2+i);}return{P,N,T,I};}
 function gSph(la,lo){const P=[],N=[],T=[],I=[];for(let j=0;j<=la;j++){const v=j/la,t=v*Math.PI;for(let i=0;i<=lo;i++){const u=i/lo,p=u*Math.PI*2;const x=Math.sin(t)*Math.cos(p),y=Math.cos(t),z=Math.sin(t)*Math.sin(p);P.push(x*.5,y*.5,z*.5);N.push(x,y,z);T.push(u,v);}}
  for(let j=0;j<la;j++)for(let i=0;i<lo;i++){const a=j*(lo+1)+i,b=a+lo+1;I.push(a,b,a+1,a+1,b,b+1);}return{P,N,T,I};}
+function gLathe(prof,S){const P=[],N=[],T=[],I=[];const n=prof.length;
+ for(let i=0;i<n;i++){const [r,y]=prof[i];const a=prof[Math.max(0,i-1)],b=prof[Math.min(n-1,i+1)];let dr=b[0]-a[0],dy=b[1]-a[1];let nr=dy,ny=-dr;const l=Math.hypot(nr,ny)||1;nr/=l;ny/=l;
+  for(let j=0;j<=S;j++){const t=j/S*Math.PI*2,c=Math.cos(t),s=Math.sin(t);P.push(r*c,y,r*s);N.push(nr*c,ny,nr*s);T.push(j/S,i/(n-1));}}
+ for(let i=0;i<n-1;i++)for(let j=0;j<S;j++){const a=i*(S+1)+j,b=a+S+1;I.push(a,b,a+1,a+1,b,b+1);}return{P,N,T,I};}
+const PROF={limb:[[0,-.5],[.3,-.48],[.45,-.42],[.5,-.3],[.5,.3],[.45,.42],[.3,.48],[0,.5]],
+ thigh:[[0,-.5],[.28,-.48],[.36,-.4],[.4,-.2],[.47,.12],[.5,.32],[.45,.44],[.3,.49],[0,.5]],
+ calf:[[0,-.5],[.24,-.48],[.29,-.4],[.31,-.15],[.44,.12],[.5,.28],[.45,.43],[.3,.49],[0,.5]],
+ fore:[[0,-.5],[.3,-.47],[.35,-.35],[.41,0],[.5,.3],[.45,.44],[.3,.49],[0,.5]],
+ torso:[[0,-.5],[.36,-.49],[.43,-.42],[.42,-.2],[.45,.04],[.5,.24],[.5,.35],[.45,.43],[.28,.49],[0,.5]],
+ shorts:[[0,-.5],[.44,-.5],[.5,-.38],[.49,.1],[.46,.4],[.3,.49],[0,.5]],
+ hair:[[.5,-.02],[.505,.12],[.47,.27],[.38,.39],[.24,.47],[0,.505]]};
 function gPlane(){return{P:[-.5,0,-.5,.5,0,-.5,.5,0,.5,-.5,0,.5],N:[0,1,0,0,1,0,0,1,0,0,1,0],T:[0,0,1,0,1,1,0,1],I:[0,1,2,0,2,3]};}
 function gQuad(){return{P:[-.5,-.5,0,.5,-.5,0,.5,.5,0,-.5,.5,0],N:[0,0,1,0,0,1,0,0,1,0,0,1],T:[0,1,1,1,1,0,0,0],I:[0,1,2,0,2,3]};}
 function gRing(S,ri){const P=[],N=[],T=[],I=[];for(let i=0;i<=S;i++){const a=i/S*Math.PI*2,c=Math.cos(a),s=Math.sin(a);P.push(c*ri,0,s*ri,c,0,s);N.push(0,1,0,0,1,0);T.push(0,0,1,1);}for(let i=0;i<S;i++){const a=i*2;I.push(a,a+1,a+3,a,a+3,a+2);}return{P,N,T,I};}
@@ -43,6 +54,7 @@ void main(){vec4 base=vC;
  else if(uMode==2){vec4 t=texture(uTex,vT);if(t.a<0.04)discard;base=vec4(vec3(0.9),t.a*0.85);}
  else if(uMode==3){vec4 t=texture(uTex,vT);base=vec4(base.rgb*t.a,1.0);}
  else if(uMode==4){vec4 t=texture(uTex,vT);base=vec4(0.0,0.0,0.0,t.a*vC.a);}
+ else if(uMode==5){vec4 t=texture(uTex,vT);if(t.a<0.45)discard;base=vec4(mix(vec3(0.015),vC.rgb,t.r),1.0);}
  vec3 col;
  if(uUnlit>0.0){col=base.rgb*uUnlit;}
  else{vec3 n=normalize(vN);float d=max(dot(n,uLd),0.0);float s=sh(n);
@@ -64,12 +76,12 @@ class R3D{
   const U=n=>gl.getUniformLocation(this.prog,n);this.u={VP:U('uVP'),LVP:U('uLVP'),Time:U('uTime'),Wave:U('uWave'),Tex:U('uTex'),Sh:U('uSh'),Mode:U('uMode'),Unlit:U('uUnlit'),ShOn:U('uShOn'),Ld:U('uLd'),Cam:U('uCam'),ShTex:U('uShTex')};
   this.du={LVP:gl.getUniformLocation(this.dprog,'uLVP')};
   this.aniso=gl.getExtension('EXT_texture_filter_anisotropic')||gl.getExtension('WEBKIT_EXT_texture_filter_anisotropic');
-  this.G={box:this.geo(gBox()),cyl:this.geo(gCyl(10)),sph:this.geo(gSph(10,16)),ball:this.geo(gSph(14,22)),plane:this.geo(gPlane()),quad:this.geo(gQuad()),ring:this.geo(gRing(40,.78))};
+  this.G={box:this.geo(gBox()),cyl:this.geo(gCyl(10)),sph:this.geo(gSph(10,16)),ball:this.geo(gSph(14,22)),plane:this.geo(gPlane()),quad:this.geo(gQuad()),ring:this.geo(gRing(40,.78))};for(const k in PROF)this.G[k]=this.geo(gLathe(PROF[k],k==='torso'||k==='hair'?14:9));
   this.VP=new Float32Array(16);this.V=new Float32Array(16);this.Pm=new Float32Array(16);this.LVP=new Float32Array(16);this.LV=new Float32Array(16);this.LP=new Float32Array(16);this.tm=new Float32Array(16);
   this.Ld=[0,1,0];{const l=[-0.5,0.8,0.55],n=Math.hypot(...l);this.Ld=l.map(v=>v/n);}
   this.quality=2;this.mkTextures();this.mkStatic();this.shadowSize=0;this.ballR=new Float32Array([1,0,0,0,1,0,0,0,1]);this.frameN=0;
   // dynamic batches
-  this.dyn={cyl:this.batch(this.G.cyl,500),box:this.batch(this.G.box,300),sph:this.batch(this.G.sph,120),ball:this.batch(this.G.ball,2),ring:this.batch(this.G.ring,4),glow:this.batch(this.G.quad,16),blob:this.batch(this.G.plane,30)};
+  this.dyn={cyl:this.batch(this.G.cyl,500),box:this.batch(this.G.box,300),sph:this.batch(this.G.sph,120),ball:this.batch(this.G.ball,2),ring:this.batch(this.G.ring,4),glow:this.batch(this.G.quad,16),blob:this.batch(this.G.plane,30),limb:this.batch(this.G.limb,200),thigh:this.batch(this.G.thigh,60),calf:this.batch(this.G.calf,60),fore:this.batch(this.G.fore,60),torso:this.batch(this.G.torso,30),shorts:this.batch(this.G.shorts,30),hair:this.batch(this.G.hair,30),num:this.batch(this.G.quad,30)};
  }
  mk(vs,fs){const gl=this.gl;const c=(t,s)=>{const x=gl.createShader(t);gl.shaderSource(x,s);gl.compileShader(x);if(!gl.getShaderParameter(x,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(x));return x;};const p=gl.createProgram();gl.attachShader(p,c(gl.VERTEX_SHADER,vs));gl.attachShader(p,c(gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p));return p;}
  geo(g){const gl=this.gl;const mkb=(d,t)=>{const b=gl.createBuffer();gl.bindBuffer(t,b);gl.bufferData(t,d,gl.STATIC_DRAW);return b;};return{p:mkb(new Float32Array(g.P),gl.ARRAY_BUFFER),n:mkb(new Float32Array(g.N),gl.ARRAY_BUFFER),t:mkb(new Float32Array(g.T),gl.ARRAY_BUFFER),i:mkb(new Uint16Array(g.I),gl.ELEMENT_ARRAY_BUFFER),cnt:g.I.length};}
@@ -117,6 +129,8 @@ class R3D{
   const bc=C(256,128),b2=bc.getContext('2d');b2.fillStyle='#f4f4f4';b2.fillRect(0,0,256,128);b2.fillStyle='#151515';for(let j=0;j<4;j++)for(let i=0;i<6;i++){const x=(i+(j%2)*.5)*256/6,y=(j+.5)*128/4;b2.beginPath();for(let k=0;k<5;k++){const a=k/5*Math.PI*2-Math.PI/2;const r=13*(j===0||j===3?.7:1);b2.lineTo(x+Math.cos(a)*r,y+Math.sin(a)*r);}b2.fill();}this.tBall=this.tex(bc,true);
   // glow
   const gc=C(128,128),g2=gc.getContext('2d');const gr=g2.createRadialGradient(64,64,0,64,64,64);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.2,'rgba(255,250,230,.55)');gr.addColorStop(1,'rgba(255,240,200,0)');g2.fillStyle=gr;g2.fillRect(0,0,128,128);this.tGlow=this.tex(gc);
+  // shirt numbers atlas
+  const na=C(1280,1280),nx=na.getContext('2d');nx.font='800 92px Changa, sans-serif';nx.textAlign='center';nx.textBaseline='middle';nx.lineJoin='round';for(let k=0;k<100;k++){const x=(k%10)*128+64,y=Math.floor(k/10)*128+68;nx.lineWidth=12;nx.strokeStyle='#000';nx.strokeText(String(k),x,y);nx.fillStyle='#fff';nx.fillText(String(k),x,y);}this.tNum=this.tex(na);
   // white
   const wc=C(4,4),w2=wc.getContext('2d');w2.fillStyle='#fff';w2.fillRect(0,0,4,4);this.tWhite=this.tex(wc);}
  refreshAds(){const gl=this.gl;gl.bindTexture(gl.TEXTURE_2D,this.tAds);}
@@ -163,38 +177,74 @@ class R3D{
   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_COMPARE_MODE,gl.COMPARE_REF_TO_TEXTURE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_COMPARE_FUNC,gl.LEQUAL);
   this.shFB=gl.createFramebuffer();gl.bindFramebuffer(gl.FRAMEBUFFER,this.shFB);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.TEXTURE_2D,this.shTex,0);gl.drawBuffers([gl.NONE]);gl.readBuffer(gl.NONE);gl.bindFramebuffer(gl.FRAMEBUFFER,null);}
  teamCols(t){if(!t._c)t._c={shirt:lin(t.kit[0]),shorts:lin(t.kit[1]),socks:lin(t.kit[2]),gk:lin(t.gkKit),gks:lin('#1B1B1B')};return t._c;}
- player(p,m){const D=this.dyn,th=Math.atan2(p.fy,p.fx),c=Math.cos(th),s=Math.sin(th);const F=[c,0,-s],S=[s,0,c],X=p.x,Z=-p.y;
-  const P=(f,u,sd)=>[X+F[0]*f+S[0]*sd,u,Z+F[2]*f+S[2]*sd];
+ player(p,m){const D=this.dyn,th=Math.atan2(p.fy,p.fx),c=Math.cos(th),s=Math.sin(th);const F=[c,0,-s],S0=[s,0,c],X=p.x,Z=-p.y;
   const tc=this.teamCols(p.team),gk=p.role==='GK';const shirt=gk?tc.gk:tc.shirt,shorts=gk?tc.gks:tc.shorts,socks=gk?tc.gk:tc.socks;
-  if(!p._sk){p._sk=lin(p.skin);p._hr=lin(p.hair);}const skin=p._sk,hair=p._hr,boot=p.star?lin('#F5C542'):[0.01,0.01,0.012,1];
-  const sp=Math.hypot(p.vx,p.vy),amp=clamp(sp/6.5,0,1),ph=p.anim;const slide=p.slide>0,celeb=m.phase==='goal'&&p===m.celebrator;
+  if(!p._sk){p._sk=lin(p.skin);p._hr=lin(p.hair);}const skin=p._sk,hair=p._hr,boot=p.star?lin('#F5C542'):[0.012,0.012,0.014,1],glove=lin('#F5F5F5');
+  const sp=Math.hypot(p.vx,p.vy),amp=clamp(sp/7,0,1),ph=p.anim;const slide=p.slide>0,celeb=m.phase==='goal'&&p===m.celebrator;
+  const b=m.ball,throwing=(b.owner===p&&m.restartKind==='throw')||p.throwT>0,kick=p.windT>0?.5*(1-p.windT/(p.windD||.1)):p.kickT>0?.5+.5*(1-p.kickT/.34):-1,dive=p.diveT>0?p.diveT/.75:0;
+  const dH=p.diveH==null?1:p.diveH,hands=gk&&((b.owner===p&&b.inHands)||p.catchT>0),crouch=gk&&!hands&&!(dive>0)&&b.owner&&b.owner.team!==p.team&&sp<2.2&&Math.hypot(b.x-p.x,b.y-p.y)<24;
+  // root rotation: pitch (slide) around side axis, roll (GK dive) around forward axis
+  let ap=0,ar=0,lift=0,piv=.95;if(slide){ap=-1.15;piv=.35;lift=-.28;}
+  if(dive>0){const dz=-(p.diveDir||1);const sg=Math.sign(S0[2]*dz)||1;const k=Math.sin(Math.min(1,(1-dive)*1.6)*Math.PI*.5);ar=sg*(dH<.6?1.45:1.3)*k;lift=(.12+.32*Math.min(dH,2))*Math.sin((1-dive)*Math.PI)+(-.2*k);}
+  if(p.jumpT>0&&!slide&&!(dive>0))lift+=.42*Math.sin(Math.PI*(1-p.jumpT/.45));
+  const cp=Math.cos(ap),spp=Math.sin(ap),cr=Math.cos(ar),sr=Math.sin(ar);
+  const P=(f,u,sd)=>{const du=u-piv;const f1=f*cp-du*spp,u1=f*spp+du*cp;const s2=sd*cr-u1*sr,u2=sd*sr+u1*cr;return[X+F[0]*f1+S0[0]*s2,u2+piv+lift,Z+F[2]*f1+S0[2]*s2];};
+  const Sd=(()=>{const a=P(0,piv,0),b2=P(0,piv,1);return[b2[0]-a[0],b2[1]-a[1],b2[2]-a[2]];})();
+  const SEG=(bt,A,B,w,d,col)=>this.add(bt,this.seg(A,B,w,d,Sd),col);
+  // ----- legs -----
   const legs=[];let drop=0;
-  for(const k of [1,-1]){const phi=ph+(k>0?0:Math.PI);let a1=Math.sin(phi)*0.72*amp,a2=amp*(0.2+1.0*Math.max(0,-Math.cos(phi-0.5)))+0.07;if(slide){a1=1.3;a2=0.05;}
-   const kf=Math.sin(a1)*0.45,ku=-Math.cos(a1)*0.45,af=kf+Math.sin(a1-a2)*0.44,au=ku-Math.cos(a1-a2)*0.44;legs.push({k,kf,ku,af,au,a:a1-a2});drop=Math.max(drop,-au);}
-  const hipY=slide?0.3:drop+0.08+(amp>0.2?Math.abs(Math.sin(ph))*0.03*amp:0);
-  const lean=slide?-0.95:0.04+amp*0.22;
-  for(const g of legs){const hip=P(0,hipY,g.k*0.1),knee=P(g.kf,hipY+g.ku,g.k*0.105),ank=P(g.af,hipY+g.au,g.k*0.1);
-   this.add(D.cyl,this.seg(hip,knee,0.15,0.15,S),skin);this.add(D.cyl,this.seg(knee,ank,0.12,0.12,S),socks);
-   const heel=P(g.af-0.05,hipY+g.au-0.02,g.k*0.1),toe=P(g.af+0.19,hipY+g.au-0.03,g.k*0.1);this.add(D.box,this.seg(heel,toe,0.09,0.11,S),boot);}
-  const pel=P(0,hipY,0),sl=Math.sin(lean),cl=Math.cos(lean);
-  this.add(D.box,this.seg(P(0,hipY-0.17,0),P(sl*0.1,hipY+0.09,0),0.27,0.42,S),shorts);
-  const nk=P(sl*0.56,hipY+cl*0.56,0);this.add(D.box,this.seg(P(sl*0.02,hipY+0.02,0),nk,0.25,0.42,S),shirt);
-  this.add(D.box,this.seg(P(sl*0.44,hipY+cl*0.44,0),P(sl*0.57,hipY+cl*0.57,0),0.27,0.46,S),shirt);
-  const hd=P(sl*0.72,hipY+cl*0.72,0);this.add(D.cyl,this.seg(nk,hd,0.11,0.11,S),skin);
-  this.add(D.sph,this.trs(hd[0],hd[1],hd[2],th,0.23,0.25,0.22),skin);
-  const hr=P(sl*0.72-0.025,hipY+cl*0.72+0.04,0);this.add(D.sph,this.trs(hr[0],hr[1],hr[2],th,0.235,0.22,0.235),hair);
-  for(const k of [1,-1]){const phi=ph+(k>0?0:Math.PI);let b1=-Math.sin(phi)*0.7*amp,b2=0.3+0.8*amp;if(celeb){b1=2.75;b2=0.15;}if(slide){b1=-0.6;b2=0.2;}
-   if(gk&&m.ball.shot&&m.ball.shot.by.team!==p.team){b1=2.2;b2=0.2;}
-   const shf=sl*0.5,shu=hipY+cl*0.5;const sh=P(shf,shu,k*0.27),el=P(shf+Math.sin(b1)*0.29,shu-Math.cos(b1)*0.29,k*0.3),ha=P(shf+Math.sin(b1)*0.29+Math.sin(b1+b2)*0.27,shu-Math.cos(b1)*0.29-Math.cos(b1+b2)*0.27,k*0.3);
-   this.add(D.cyl,this.seg(sh,P(shf+Math.sin(b1)*0.15,shu-Math.cos(b1)*0.15,k*0.285),0.13,0.13,S),shirt);
-   this.add(D.cyl,this.seg(P(shf+Math.sin(b1)*0.12,shu-Math.cos(b1)*0.12,k*0.285),el,0.1,0.1,S),skin);this.add(D.cyl,this.seg(el,ha,0.085,0.085,S),gk?lin('#F5F5F5'):skin);}}
+  for(const k of [1,-1]){const phi=ph+(k>0?0:Math.PI);let a1=Math.sin(phi)*.78*amp,a2=amp*(.15+1.15*Math.max(0,-Math.cos(phi-.45)))+.12;
+   if(!slide&&sp<.6&&!celeb){a1=k*.04;a2=.14;}
+   if(kick>=0&&k===-1){if(kick<.4){a1=-.95*(kick/.4);a2=.5+1.2*(kick/.4);}else if(kick<.7){const q=(kick-.4)/.3;a1=-.95+2.2*q;a2=1.7-1.65*q;}else{const q=(kick-.7)/.3;a1=1.25-1.1*q;a2=.05+.2*q;}}
+   if(crouch){a1=.5;a2=.85;}
+   if(slide){a1=1.35;a2=k>0?.05:.9;}if(dive>0){a1=.25*k;a2=.3;}
+   const kf=Math.sin(a1)*.46,ku=-Math.cos(a1)*.46,af=kf+Math.sin(a1-a2)*.45,au=ku-Math.cos(a1-a2)*.45;legs.push({k,kf,ku,af,au,a:a1-a2});drop=Math.max(drop,-au);}
+  const bob=amp>.2?Math.abs(Math.sin(ph))*.04*amp:0;const hipY=slide||dive>0?.95:drop+.085+bob;
+  for(const g of legs){const hw=g.k*.105;const hip=P(0,hipY,hw),knee=P(g.kf,hipY+g.ku,hw*1.02),ank=P(g.af,hipY+g.au,hw);
+   SEG(D.thigh,knee,hip,.19,.2,skin);SEG(D.calf,ank,knee,.145,.15,socks);
+   const ca=Math.cos(g.a*.3),sa=Math.sin(g.a*.3);const heel=P(g.af-.06*ca,hipY+g.au-.035+.06*sa,hw),toe=P(g.af+.2*ca,hipY+g.au-.055-.2*sa*.3,hw);SEG(D.limb,heel,toe,.085,.115,boot);}
+  // ----- body -----
+  const lean=slide?-.1:(.05+amp*.22-(kick>.3&&kick<.75?.15:0)+(celeb?-.08:0));const sl=Math.sin(lean),cl=Math.cos(lean);
+  const at=(d)=>[sl*d,hipY+cl*d];
+  SEG(D.shorts,P(0,hipY-.2,0),P(sl*.08,hipY+.1,0),.3,.46,shorts);
+  const w0=at(.02),w1=at(.62);SEG(D.torso,P(w0[0],w0[1],0),P(w1[0],w1[1],0),.27,.5,shirt);
+  // number on the back
+  {const nb=at(.36),n=p.num%100,o=this.tm;const bk=P(nb[0]-cl*.138,nb[1]+sl*.138,0),up=[F[0]*sl,cl,F[2]*sl],sx=-.2,sy=.2;
+   o[0]=Sd[0]*-sx;o[1]=Sd[1]*-sx;o[2]=Sd[2]*-sx;o[3]=0;o[4]=up[0]*sy;o[5]=up[1]*sy;o[6]=up[2]*sy;o[7]=0;o[8]=-F[0];o[9]=0;o[10]=-F[2];o[11]=0;o[12]=bk[0];o[13]=bk[1];o[14]=bk[2];o[15]=1;
+   this.add(D.num,o,lum(p.team.kit[0])>.6&&!gk?[0.02,0.02,0.03,1]:[1,1,1,1],[(n%10)/10,Math.floor(n/10)/10,.1,.1]);}
+  const nk=at(.64),hdp=at(.8);SEG(D.limb,P(nk[0],nk[1],0),P(hdp[0]-sl*.02,hdp[1]-.06,0),.11,.11,skin);
+  const hd=P(hdp[0],hdp[1],0);this.add(D.sph,this.trs(hd[0],hd[1],hd[2],th,.215,.25,.2),skin);
+  {const o=this.seg(P(hdp[0]-.022-sl*.25,hdp[1]+.012-cl*.25,0),P(hdp[0]-.022+sl*.25,hdp[1]+.012+cl*.25,0),.232,.215,Sd);this.add(D.hair,o,hair);}
+  // ----- arms -----
+  for(const k of [1,-1]){const phi=ph+(k>0?0:Math.PI);let b1=-Math.sin(phi)*.75*amp,b2=.35+1.05*amp,out=0;
+   if(sp<.6&&!celeb){b1=.08;b2=.25;out=.02;}
+   if(kick>=0){b1=k===1?.5:-.3;b2=.4;out=.12;}
+   if(celeb){b1=2.7;b2=.12;out=.08;}if(slide){b1=-.9;b2=.25;out=.15;}
+   if(throwing){b1=2.75-(p.throwT>0?(1-p.throwT/.4)*1.6:0);b2=1.3-(p.throwT>0?(1-p.throwT/.4)*1.1:0);out=-.03;}
+   if(crouch){b1=.55;b2=.55;out=.16;}
+   if(gk&&(dive>0||(b.shot&&b.shot.by.team!==p.team))){b1=2.4;b2=.15;out=.1;}
+   if(dive>0){b1=dH<.6?2.3:2.9;b2=.05;}
+   if(hands&&!(p.gkThrowT>0&&p.throwT>0)){b1=.5;b2=.8;out=-.09;}
+   const sh=at(.53);const shf=sh[0],shu=sh[1],sw=k*(.25+out);
+   const el=[shf+Math.sin(b1)*.29,shu-Math.cos(b1)*.29,k*(.27+out*1.6)],ha=[el[0]+Math.sin(b1+b2)*.27,el[1]-Math.cos(b1+b2)*.27,k*(.28+out*2)];
+   const S1=P(shf,shu,sw),E1=P(el[0],el[1],el[2]),H1=P(ha[0],ha[1],ha[2]);
+   this.add(D.sph,this.trs(S1[0],S1[1],S1[2],th,.15,.14,.15),shirt);
+   SEG(D.limb,S1,P(shf+Math.sin(b1)*.14,shu-Math.cos(b1)*.14,k*(.26+out*1.3)),.13,.13,shirt);
+   SEG(D.fore,E1,P(shf+Math.sin(b1)*.1,shu-Math.cos(b1)*.1,k*(.26+out*1.2)),.105,.105,skin);SEG(D.fore,H1,E1,.09,.09,skin);
+   this.add(D.sph,this.trs(H1[0],H1[1],H1[2],th,gk?.12:.09,gk?.12:.09,gk?.12:.09),gk?glove:skin);}
+  }
  render(m,w,h,dpr,t){const gl=this.gl,cv=this.cv;const W2=Math.round(w*dpr),H2=Math.round(h*dpr);if(cv.width!==W2||cv.height!==H2){cv.width=W2;cv.height=H2;}
   const q=this.quality;this.shadowSetup(q>=2?2048:1024);
   // camera
   const b=m.ball;if(!m._c3)m._c3={x:clamp(b.x,7,L-7),y:clamp(b.y,14,W-10)};const c3=m._c3;const dt=Math.min(0.05,(t-(c3.t||t))/1000)||0.016;c3.t=t;
   const cel=m.phase==='goal'&&m.celebrator;const fx0=cel?cel.x:b.x+(b.owner?b.owner.fx*4:b.vx*0.3),fy0=cel?cel.y:b.y;const tx=clamp(fx0,7,L-7),ty=clamp(fy0,cel?4:14,W-12);c3.x+=(tx-c3.x)*Math.min(1,dt*2.2);c3.y+=(ty-c3.y)*Math.min(1,dt*1.6);
-  const aspect=w/h,zoomK=aspect<1.5?1.25:1;const eye=[c3.x,17*zoomK,20*zoomK-(c3.y-34)*0.2],tgt=[c3.x,0,-(c3.y*0.9+2)];
-  M4.look(this.V,eye,tgt,[0,1,0]);const wf=(aspect<1.5?28:19)*(cel?0.62:1);c3.f=c3.f||wf;c3.f+=(wf-c3.f)*Math.min(1,dt*1.5);M4.persp(this.Pm,c3.f*Math.PI/180,aspect,1,600);M4.mul(this.VP,this.Pm,this.V);this.eye=eye;
+  const aspect=w/h,zoomK=aspect<1.5?1.25:1;let eye,tgt,wf;
+  if(m.phase==='intro'){const a=t/1000*.22+(c3.a0||(c3.a0=Math.random()*6));eye=[CX+Math.cos(a)*86,30+Math.sin(a*.6)*5,-CY+Math.sin(a)*52];tgt=[CX,2,-CY];wf=aspect<1.5?50:38;c3.f=wf;}
+  else if(m.phase==='replay'){const d=m.rpDir||1;const wantE=[b.x-d*12,3.4,-b.y+11],wantT=[b.x+d*3,1,-b.y];if(!c3.re){c3.re=wantE.slice();c3.rt=wantT.slice();}for(let i=0;i<3;i++){c3.re[i]+=(wantE[i]-c3.re[i])*Math.min(1,dt*3);c3.rt[i]+=(wantT[i]-c3.rt[i])*Math.min(1,dt*4);}eye=c3.re.slice();tgt=c3.rt.slice();wf=aspect<1.5?44:34;c3.f=wf;}
+  else{c3.re=null;eye=[c3.x,17*zoomK,20*zoomK-(c3.y-34)*0.2];tgt=[c3.x,0,-(c3.y*0.9+2)];wf=(aspect<1.5?28:19)*(cel?0.62:1);c3.f=c3.f||wf;c3.f+=(wf-c3.f)*Math.min(1,dt*1.5);}
+  if(this.debugCam){eye=this.debugCam.eye.slice();tgt=this.debugCam.tgt.slice();c3.f=this.debugCam.fov;}
+  if(m.shake>0){const k=m.shake*.45;eye[0]+=R(-k,k);eye[1]+=R(-k,k)*.6;tgt[1]+=R(-k,k)*.3;}
+  M4.look(this.V,eye,tgt,[0,1,0]);M4.persp(this.Pm,c3.f*Math.PI/180,aspect,1,600);M4.mul(this.VP,this.Pm,this.V);this.eye=eye;
   // light
   const Ld=this.Ld,ctr=[c3.x,0,-c3.y];M4.look(this.LV,[ctr[0]+Ld[0]*90,Ld[1]*90,ctr[2]+Ld[2]*90],ctr,[0,0,-1]);M4.ortho(this.LP,-58,58,-48,48,10,200);M4.mul(this.LVP,this.LP,this.LV);
   // dynamic
@@ -213,7 +263,7 @@ class R3D{
   // shadow pass
   gl.enable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);gl.disable(gl.BLEND);gl.depthMask(true);
   gl.bindFramebuffer(gl.FRAMEBUFFER,this.shFB);gl.viewport(0,0,this.shadowSize,this.shadowSize);gl.clear(gl.DEPTH_BUFFER_BIT);gl.useProgram(this.dprog);gl.uniformMatrix4fv(this.du.LVP,false,this.LVP);
-  gl.enable(gl.POLYGON_OFFSET_FILL);gl.polygonOffset(1.5,3);[D.cyl,D.box,D.sph,D.ball,this.st.cyl].forEach(x=>this.draw(x));gl.disable(gl.POLYGON_OFFSET_FILL);
+  gl.enable(gl.POLYGON_OFFSET_FILL);gl.polygonOffset(1.5,3);[D.cyl,D.box,D.sph,D.ball,D.limb,D.thigh,D.calf,D.fore,D.torso,D.shorts,D.hair,this.st.cyl].forEach(x=>this.draw(x));gl.disable(gl.POLYGON_OFFSET_FILL);
   gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.viewport(0,0,W2,H2);gl.clearColor(0.02,0.03,0.07,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
   gl.useProgram(this.prog);const u=this.u;gl.uniformMatrix4fv(u.VP,false,this.VP);gl.uniformMatrix4fv(u.LVP,false,this.LVP);gl.uniform1f(u.Time,t/1000);gl.uniform3fv(u.Ld,Ld);gl.uniform3fv(u.Cam,eye);gl.uniform2f(u.ShTex,1/this.shadowSize,1/this.shadowSize);
   gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,this.shTex);gl.uniform1i(u.Sh,1);gl.activeTexture(gl.TEXTURE0);gl.uniform1i(u.Tex,0);
@@ -225,7 +275,8 @@ class R3D{
   set(0,null,0,0,m.phase==='goal'?1:0.06);this.draw(this.st.crowd);
   set(0,null,1);this.draw(this.st.lamp);
   set(1,this.tAds,1.25);this.draw(this.st.ads);
-  set(0,null,0,1);this.draw(D.cyl);this.draw(D.box);this.draw(D.sph);
+  set(0,null,0,1);this.draw(D.cyl);this.draw(D.box);this.draw(D.sph);[D.limb,D.thigh,D.calf,D.fore,D.torso,D.shorts,D.hair].forEach(x=>this.draw(x));
+  set(5,this.tNum,0,1);gl.enable(gl.POLYGON_OFFSET_FILL);gl.polygonOffset(-1,-2);this.draw(D.num);gl.disable(gl.POLYGON_OFFSET_FILL);gl.activeTexture(gl.TEXTURE0);
   set(1,this.tBall,0,1);this.draw(D.ball);
   set(0,null,1.4);gl.enable(gl.POLYGON_OFFSET_FILL);gl.polygonOffset(-2,-4);this.draw(D.ring);gl.disable(gl.POLYGON_OFFSET_FILL);
   gl.enable(gl.BLEND);gl.depthMask(false);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);set(4,this.tGlow,1);this.draw(D.blob);set(2,this.tNet,0,0);this.draw(this.netB);
@@ -233,12 +284,3 @@ class R3D{
   gl.depthMask(true);gl.disable(gl.BLEND);}
  project(x,y,z,w,h){const v=this.VP,X=x,Y=z,Z=-y;const cx=v[0]*X+v[4]*Y+v[8]*Z+v[12],cy=v[1]*X+v[5]*Y+v[9]*Z+v[13],cw=v[3]*X+v[7]*Y+v[11]*Z+v[15];if(cw<=0.01)return null;return{x:(cx/cw*0.5+0.5)*w,y:(1-(cy/cw*0.5+0.5))*h};}
 }
-function drawOverlay(ctx,m,w,h,proj){ctx.clearRect(0,0,w,h);if(m.demo)return;const h0=m.human;
- ctx.textAlign='center';ctx.textBaseline='bottom';
- if(h0&&h0.ctrl){const c=h0.ctrl,g=proj(c.x,c.y,2.25);if(g){ctx.fillStyle='#C6F432';ctx.beginPath();ctx.moveTo(g.x,g.y+2);ctx.lineTo(g.x-6,g.y-7);ctx.lineTo(g.x+6,g.y-7);ctx.closePath();ctx.fill();
-  ctx.font='700 12px Changa, sans-serif';const nm=c.name.split(' ').slice(-1)[0];const tw=ctx.measureText(nm).width+14;ctx.fillStyle='rgba(7,11,22,.85)';ctx.fillRect(g.x-tw/2,g.y-26,tw,18);ctx.fillStyle='#EEF2FF';ctx.fillText(nm,g.x,g.y-9);
-  if(h0.charge>=0){const pw=Math.min(1,h0.charge);ctx.fillStyle='rgba(7,11,22,.85)';ctx.fillRect(g.x-28,g.y-38,56,9);ctx.fillStyle=pw>.85?'#FF5A5F':pw>.6?'#F5C542':'#C6F432';ctx.fillRect(g.x-27,g.y-37,54*pw,7);}
-  if(h0.call>0){ctx.fillStyle='#F5C542';ctx.font='800 14px Changa, sans-serif';ctx.fillText('اطلب!',g.x,g.y-40);}}}
- for(const p of m.all){if(!p.star||(h0&&p===h0.ctrl))continue;const g=proj(p.x,p.y,2.2);if(!g)continue;ctx.fillStyle='#F5C542';ctx.font='800 13px Changa, sans-serif';ctx.fillText('★ '+p.name.split(' ').slice(-1)[0],g.x,g.y);}
- m.radar(ctx,w,h);}
-

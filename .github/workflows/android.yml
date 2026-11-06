@@ -46,33 +46,39 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Build release bundle (AAB) and a test APK
-        working-directory: android
-        run: |
-          chmod +x gradlew
-          ./gradlew bundleRelease assembleDebug -PautoVersionCode=${{ github.run_number }}
-
-      # If the upload key is stored as repository secrets, sign here; otherwise the unsigned bundle is signed later.
-      - name: Sign the bundle (only when the key secrets exist)
+      # مفتاح الرفع من GitHub Secrets: KEYSTORE_BASE64 + KEYSTORE_PASSWORD (و KEY_ALIAS / KEY_PASSWORD اختياري)
+      - name: Prepare the upload key
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | tr -d ' \r\n' | base64 -d > "$RUNNER_TEMP/upload.jks"
+            echo "KS_FILE=$RUNNER_TEMP/upload.jks" >> "$GITHUB_ENV"
+            echo "Upload key found: the bundle will be signed"
+          else
+            echo "::warning::No KEYSTORE_BASE64 secret: the bundle will be unsigned"
+          fi
+
+      - name: Build release bundle (AAB) and a test APK
+        working-directory: android
+        env:
           KS_PASS: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASS: ${{ secrets.KEY_PASSWORD }}
-          ALIAS: ${{ secrets.KEY_ALIAS }}
-        if: env.KEYSTORE_BASE64 != ''
+          KS_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
-          echo "$KEYSTORE_BASE64" | base64 -d > upload.jks
-          jarsigner -sigalg SHA256withRSA -digestalg SHA-256 -keystore upload.jks -storepass "$KS_PASS" -keypass "$KEY_PASS" \
-            -signedjar android/app/build/outputs/bundle/release/app-release-signed.aab android/app/build/outputs/bundle/release/app-release.aab "$ALIAS"
-          rm upload.jks
+          chmod +x gradlew
+          VC=$(( ${{ github.run_number }} + 100 ))
+          echo "versionCode $VC"
+          ./gradlew bundleRelease assembleDebug -PautoVersionCode=$VC
+          rm -f "$RUNNER_TEMP/upload.jks"
 
       - name: Collect the files
         run: |
           mkdir -p out
-          N=${{ github.run_number }}
-          cp android/app/build/outputs/bundle/release/app-release.aab out/masiret-$N-unsigned.aab
-          [ -f android/app/build/outputs/bundle/release/app-release-signed.aab ] && cp android/app/build/outputs/bundle/release/app-release-signed.aab out/masiret-$N-signed.aab || true
-          cp android/app/build/outputs/apk/debug/app-debug.apk out/masiret-$N-test.apk
+          VC=$(( ${{ github.run_number }} + 100 ))
+          if [ -n "$KS_FILE" ]; then AAB=masiret-v$VC-play.aab; else AAB=masiret-v$VC-unsigned.aab; fi
+          cp android/app/build/outputs/bundle/release/app-release.aab out/$AAB
+          cp android/app/build/outputs/apk/debug/app-debug.apk out/masiret-v$VC-test.apk
           ls -la out
 
       - name: Keep them on the "builds" branch
@@ -80,7 +86,7 @@ jobs:
           cd out
           git init -q -b builds
           git add .
-          git -c user.name="build bot" -c user.email="actions@users.noreply.github.com" commit -q -m "Android build ${{ github.run_number }}"
+          git -c user.name="build bot" -c user.email="actions@users.noreply.github.com" commit -q -m "Android build $(( ${{ github.run_number }} + 100 ))"
           git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" builds
 
       - name: Upload as workflow artifact

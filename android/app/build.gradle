@@ -7,18 +7,36 @@ android {
         applicationId "com.asomygames.masiretnagm"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        // version code = the GitHub build number, so every build can be uploaded
+        // رقم النسخة بيزيد لوحده مع كل بناء على GitHub (رقم البناء + 100)، فكل AAB ينفع يترفع على جوجل بلاي
         def autoCode = project.hasProperty('autoVersionCode') ? project.property('autoVersionCode').toInteger() : 1
         versionCode autoCode
-        versionName "1.0." + autoCode
+        versionName "1." + (int)(autoCode / 100) + "." + (autoCode % 100)
         aaptOptions {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+    // التوقيع: مفتاح الرفع (upload key) بييجي من GitHub Secrets وقت البناء، وعمره ما بيتحط في الريبو
+    def ksFile = System.getenv("KS_FILE")
+    def hasKey = ksFile != null && ksFile != "" && file(ksFile).exists()
+    signingConfigs {
+        upload {
+            if (hasKey) {
+                storeFile file(ksFile)
+                storePassword System.getenv("KS_PASS")
+                keyAlias(System.getenv("KS_ALIAS") ?: "upload")
+                keyPassword(System.getenv("KEY_PASS") ?: System.getenv("KS_PASS"))
+            }
         }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (hasKey) signingConfig signingConfigs.upload
+        }
+        // نسخة التجربة بتتوقع بنفس المفتاح، فكل نسخة جديدة بتتسطب فوق القديمة والمسيرة ما تضيعش
+        debug {
+            if (hasKey) signingConfig signingConfigs.upload
         }
     }
 }

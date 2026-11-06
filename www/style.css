@@ -373,3 +373,25 @@ table.tbl{width:100%;border-collapse:collapse;font-size:clamp(12px,2.6vh,15px)}
 .stad .sub2{font-size:clamp(14px,3.6vh,20px);opacity:.9}
 .spot{position:absolute;top:-10%;width:30vw;height:120%;background:linear-gradient(180deg,rgba(255,255,255,.25),transparent 70%);transform-origin:top;animation:sweep 3s ease-in-out infinite alternate}
 @keyframes sweep{from{transform:rotate(18deg)}to{transform:rotate(-18deg)}}
+
+/* كارت اللاعب */
+.cdwrap{flex:1;min-height:0;display:flex;gap:16px;align-items:stretch;margin-top:8px}
+.cdprev{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+.cdprev canvas{height:100%;max-height:calc(100vh - 110px);width:auto;aspect-ratio:1080/1350;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.cdbtns{flex:.8;display:flex;flex-direction:column;gap:10px;justify-content:center;max-width:340px}
+.btn.gold{background:linear-gradient(180deg,#FFE08A,#F5C542);color:#1a1300}
+/* شاشات الحماية والتحديث */
+#guardBlk,#updBox{position:fixed;inset:0;z-index:200;background:rgba(5,8,18,.94);display:none;align-items:center;justify-content:center;padding:20px}
+#guardBlk.on,#updBox.on{display:flex}
+#updBox{z-index:190}
+.gbox{max-width:520px;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:22px 26px;display:flex;flex-direction:column;gap:10px;align-items:center}
+.gbox h2{margin:0;font-size:24px}.gbox p{margin:0;color:var(--mut);line-height:1.7;font-size:15px}
+.gico{width:56px;height:56px;border-radius:50%;background:var(--red);color:#fff;font-weight:800;font-size:32px;display:flex;align-items:center;justify-content:center}
+.gico.up{background:var(--acc);color:#0B1410}
+
+/* هدافين الماتش */
+.scorers{display:grid;grid-template-columns:1fr 1fr;gap:4px 18px;width:100%;max-height:34vh;overflow:auto;font-size:14px;margin-top:4px}
+.scorers>div{display:flex;flex-direction:column;gap:2px}
+.scorers>div:first-child{align-items:flex-start;text-align:right}.scorers>div:last-child{align-items:flex-end;text-align:left}
+.scorers .sc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;color:var(--txt)}.scorers .sc b{color:var(--acc);font-weight:800}.scorers .sc i{color:var(--mut);font-style:normal;font-size:12px}
+.big-score.bs2{direction:rtl;display:inline-flex;gap:.22em;align-items:center}

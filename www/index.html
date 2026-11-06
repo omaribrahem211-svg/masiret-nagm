@@ -74,7 +74,7 @@
 
 <!-- CAREER -->
 <section class="screen tab" id="scr-career">
-  <div class="topbar"><div><h2 class="ttl">مسيرتي</h2><div class="sub" id="caSub"></div></div><div class="row"><button class="btn ghost sm" id="caRet">اعتزل</button><button class="btn ghost sm" data-go="hub">رجوع</button></div></div>
+  <div class="topbar"><div><h2 class="ttl">مسيرتي</h2><div class="sub" id="caSub"></div></div><div class="row"><button class="btn gold sm" id="caCard">كارت اللاعب</button><button class="btn ghost sm" id="caRet">اعتزل</button><button class="btn ghost sm" data-go="hub">رجوع</button></div></div>
   <div class="ladder" id="lad"></div>
   <div class="split" style="flex:.9;margin-top:10px"><div class="panel scroll" style="flex:1" id="caTro"></div><div class="panel scroll" style="flex:1.4" id="caHist"></div></div>
 </section>
@@ -177,8 +177,14 @@
 </section>
 
 <!-- RETIRE -->
+<section class="screen" id="scr-card">
+  <div class="topbar"><div><h2 class="ttl">كارت اللاعب</h2><div class="sub">حط صورتك، احفظ الكارت أو شاركه مع صحابك</div></div><button class="btn ghost sm" id="cdBack">رجوع</button></div>
+  <div class="cdwrap"><div class="cdprev"><canvas id="cdCv" width="1080" height="1350" aria-label="كارت اللاعب"></canvas></div>
+   <div class="cdbtns"><button class="btn" id="cdPhoto">اختار صورتك</button><button class="btn gold" id="cdShare">شارك (فيسبوك وغيره)</button><button class="btn ghost" id="cdSave">احفظ على الجهاز</button><button class="btn ghost sm hidden" id="cdNoPh">شيل الصورة</button><input type="file" accept="image/*" id="cdFile" hidden></div></div>
+</section>
+
 <section class="screen" id="scr-retire">
-  <div class="awardwrap"><h2 class="brand" id="reT">الاعتزال</h2><div class="tag" id="reS"></div><div class="statg" id="reG" style="width:min(560px,90vw)"></div><div class="row"><button class="btn" id="reNew">ابدأ مسيرة جديدة</button><button class="btn ghost" data-go="title">القائمة الرئيسية</button></div></div>
+  <div class="awardwrap"><h2 class="brand" id="reT">الاعتزال</h2><div class="tag" id="reS"></div><div class="statg" id="reG" style="width:min(560px,90vw)"></div><div class="row"><button class="btn" id="reNew">ابدأ مسيرة جديدة</button><button class="btn gold" id="reCard">كارت المسيرة</button><button class="btn ghost" data-go="title">القائمة الرئيسية</button></div></div>
 </section>
 
 <!-- CAREER SHELL (header tabs + continue) -->
@@ -229,6 +235,8 @@
 <script src="js/world.js"></script>
 <script src="js/real.js"></script>
 <script src="js/season.js"></script>
+<script src="js/guard.js"></script>
 <script src="js/app.js"></script>
+<script src="js/card.js"></script>
 </body>
 </html>

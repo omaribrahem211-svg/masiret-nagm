@@ -36,6 +36,9 @@ dependencies {
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
     implementation project(':capacitor-android')
     implementation project(':capacitor-cordova-android-plugins')
+    // تحديثات Google Play من جوه اللعبة
+    implementation "com.google.android.play:app-update:2.1.0"
+    implementation "com.google.android.gms:play-services-tasks:18.1.0"
 }
 
 apply from: 'capacitor.build.gradle'

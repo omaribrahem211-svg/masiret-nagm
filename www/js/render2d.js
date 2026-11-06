@@ -43,7 +43,7 @@ render(ctx,w,h){const cam=this.cam;if(cam.w!==w||cam.h!==h)cam.fit(w,h);const P=
   for(const s of [0,1])this.drawPosts(ctx,P,s);
   // labels
   if(h0&&h0.ctrl){const c=h0.ctrl,g=P(c.x,c.y,2.3*1.35),k=g.k;ctx.fillStyle='#C6F432';ctx.beginPath();ctx.moveTo(g.x,g.y+2);ctx.lineTo(g.x-6,g.y-7);ctx.lineTo(g.x+6,g.y-7);ctx.closePath();ctx.fill();
-   ctx.font='700 12px Changa';ctx.textAlign='center';ctx.textBaseline='bottom';const nm=c.name.split(' ').slice(-1)[0];const tw=ctx.measureText(nm).width+12;ctx.fillStyle='rgba(7,11,22,.85)';ctx.fillRect(g.x-tw/2,g.y-25,tw,17);ctx.fillStyle='#EEF2FF';ctx.fillText(nm,g.x,g.y-9);
+   ctx.font='700 12px Changa';ctx.textAlign='center';ctx.textBaseline='bottom';const nm=typeof lastName==='function'?lastName(c.name):c.name.split(' ').slice(-1)[0];const tw=ctx.measureText(nm).width+12;ctx.fillStyle='rgba(7,11,22,.85)';ctx.fillRect(g.x-tw/2,g.y-25,tw,17);ctx.fillStyle='#EEF2FF';ctx.fillText(nm,g.x,g.y-9);
    if(h0.charge>=0){const pw=Math.min(1,h0.charge);ctx.fillStyle='rgba(7,11,22,.85)';ctx.fillRect(g.x-26,g.y-36,52,8);ctx.fillStyle=pw>.85?'#FF5A5F':pw>.6?'#F5C542':'#C6F432';ctx.fillRect(g.x-25,g.y-35,50*pw,6);}
    if(h0.call>0){ctx.fillStyle='#F5C542';ctx.font='800 13px Changa';ctx.fillText('اطلب!',g.x,g.y-38);}}
   for(const p of this.all){if(!p.star||(h0&&p===h0.ctrl))continue;const g=P(p.x,p.y,2.25*1.35);ctx.fillStyle='#F5C542';ctx.font='800 13px Changa';ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText('★',g.x,g.y);}

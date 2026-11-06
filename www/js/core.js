@@ -146,7 +146,7 @@ class Match{
   if(this.pen&&this.pen.live&&!b.shot)this.pen=null;
   const pbx=b.owner?b.x:b.x+b.vx*.4,pby=b.owner?b.y:b.y+b.vy*.4;
   for(const t of this.t){let c1=null,d1=1e9,c2=null,d2=1e9;for(const p of t.pl){if(p.role==='GK'||p.stun>0)continue;const d=hyp(p.x-pbx,p.y-pby);if(d<d1){c2=c1;d2=d1;c1=p;d1=d;}else if(d<d2){c2=p;d2=d;}}t.chaser=c1;t.second=c2;
-   const o=this.other(t);let m=0;for(const q of o.pl){if(q.role==='GK')continue;const qx=t.dir===1?q.x:L-q.x;if(qx>m)m=qx;}const bx=t.dir===1?b.x:L-b.x;t.offLine=Math.max(m,bx,52.5);this.tactic(t,o,bx);}
+   const o=this.other(t);let m=0;for(const q of o.pl){if(q.role==='GK')continue;const qx=t.dir===1?q.x:L-q.x;if(qx>m)m=qx;}const bx=t.dir===1?b.x:L-b.x;t.offLine=Math.max(m,bx,52.5);t.str=clamp(((t.R||60)-(o.R||60))/15,-1,1);this.tactic(t,o,bx);}
   const h=this.human;
   if(h)this.humanCtl(dt);
   const penWait=this.pen&&!this.pen.live;
@@ -170,11 +170,11 @@ class Match{
     if(c&&c.team!==t){const g=this.ownG(t);const gx=g[0]-c.x,gy=g[1]-c.y,gd=hyp(gx,gy)||1;const dC=hyp(p.x-c.x,p.y-c.y);
      const goalSide=((p.x-c.x)*gx+(p.y-c.y)*gy)/gd>0;
      if(dC>3.5||!goalSide)this.go(p,[c.x+gx/gd*1.3+c.vx*.3,c.y+gy/gd*1.3+c.vy*.3],1);else this.go(p,[c.x+gx/gd*1.15,c.y+gy/gd*1.15],Math.min(1,(hyp(c.vx,c.vy)+1.2)/p.mse));
-     if(p.tcool<=0){const og=this.ownG(t),inBox=Math.abs(c.x-og[0])<17&&Math.abs(c.y-CY)<20.5;const dB=hyp(p.x-b.x,p.y-b.y),exposed=hyp(b.x-c.x,b.y-c.y)>.75,front=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/(dC||1)>-.35;const skill=(.5+t.R/200)*(h&&c===h.ctrl?.8:1);
+     if(p.tcool<=0){const og=this.ownG(t),inBox=Math.abs(c.x-og[0])<17&&Math.abs(c.y-CY)<20.5;const dB=hyp(p.x-b.x,p.y-b.y),exposed=hyp(b.x-c.x,b.y-c.y)>.75,front=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/(dC||1)>-.35;const skill=(.5+t.R/200)*(1+(t.str||0)*.25)*(h&&c===h.ctrl?.85:1);
       if(dB<1.25&&front&&(exposed&&Math.random()<dt*2.6*skill||!exposed&&Math.random()<dt*.5*skill))this.tackle(p,false,inBox&&Math.random()<.8);
       else if(!inBox&&!front&&dC>1.6&&dC<2.8&&hyp(c.vx,c.vy)>4&&Math.random()<dt*.25*skill)this.tackle(p,true);}}
     else if(!b.owner&&b.target&&b.target.team!==t&&this.time-b.passT<.35)this.go(p,this.shape(p,false),.9);else this.go(p,b.owner?[pbx,pby]:this.intercept(p),1);continue;}
-   if(p===t.second&&b.owner&&b.owner.team!==t&&!this.restartKind){const g=this.ownG(t);const dx=g[0]-b.x,dy=g[1]-b.y,d=hyp(dx,dy)||1;this.go(p,[b.x+dx/d*7,b.y+dy/d*7],.92);continue;}
+   if(p===t.second&&b.owner&&b.owner.team!==t&&!this.restartKind){const g=this.ownG(t);const dx=g[0]-b.x,dy=g[1]-b.y,d=hyp(dx,dy)||1;const sd=clamp(7-(t.str||0)*3,3.5,9);this.go(p,[b.x+dx/d*sd,b.y+dy/d*sd],.92+Math.max(0,t.str||0)*.06);continue;}
    this.go(p,this.shape(p,poss===t.idx),.76);
   }
   if(this.restartKind&&b.owner&&this.restartKind!=='pen'){const md=this.restartKind==='throw'?3:this.restartKind==='ko'?9.15:9.15;const ot=this.other(b.owner.team);for(const q of ot.pl){if(!q.tgt||q.wallP||q.role==='GK')continue;const dx=q.tgt[0]-b.x,dy=q.tgt[1]-b.y,d=hyp(dx,dy)||1;if(d<md)q.tgt=[b.x+dx/d*md,b.y+dy/d*md];}
@@ -182,7 +182,7 @@ class Match{
  }
  tactic(t,o,bx){const b=this.ball,c=b.owner;
   let mn=105;for(const q of o.pl){if(q.role==='GK')continue;const qx=t.dir===1?q.x:L-q.x;if(qx<mn)mn=qx;}
-  let dl=clamp(15+(bx-52.5)*.5+(bx>70?4:0),7,44);dl=Math.max(8,Math.min(dl,mn-.4));t.dl=t.dl==null?dl:t.dl+(dl-t.dl)*.12;
+  let dl=clamp(15+(bx-52.5)*.5+(bx>70?4:0)+(t.str||0)*5,7,48);dl=Math.max(8,Math.min(dl,mn-.4));t.dl=t.dl==null?dl:t.dl+(dl-t.dl)*.12;
   if(this.time<(t.tacAt||0))return;t.tacAt=this.time+.3;t.sup=null;t.cut=null;if(this.restartKind||!c)return;const h=this.human;
   if(c.team===t){const cand=t.pl.filter(p=>p!==c&&p.role!=='GK'&&p.stun<=0&&!(h&&(p===h.ctrl||p===h.p2))).sort((a,q)=>hyp(a.x-c.x,a.y-c.y)-hyp(q.x-c.x,q.y-c.y)).slice(0,2);t.sup=cand;const used=[];
    cand.forEach((p,k)=>{let best=null,bs=-1e9;const rr=k?14:9;for(let a=0;a<14;a++){const an=a/14*6.2832,px=c.x+Math.cos(an)*rr,py=c.y+Math.sin(an)*rr;if(px<2||px>L-2||py<2.5||py>W-2.5)continue;const fwd=(px-c.x)*t.dir;if(fwd<-7)continue;const tx=t.dir===1?px:L-px;if(tx>t.offLine-.5)continue;
@@ -207,7 +207,7 @@ class Match{
    else if(p.role==='MF'){x=dl+14+(p.bx-32)*.4;y=34+(p.by-34)*.9+(by-34)*.32;}
    else{x=Math.min(dl+30+(p.bx-50)*.3,68);y=34+(p.by-34)*.9+(by-34)*.3;}
    return this.toW(t,clamp(x,6,90),clamp(y,2.5,W-2.5));}
-  let x=p.bx+(bx-52.5)*.55+(att?8:-3),y=p.by+(by-34)*.3;
+  let x=p.bx+(bx-52.5)*.55+(att?8+(t.str||0)*4:-3+(t.str||0)*3),y=p.by+(by-34)*.3;
   if(att&&p.role!=='DF'&&Math.abs(p.by-34)>13)y=34+(p.by-34)*1.12+(by-34)*.15;
   if(p.role==='DF')x=clamp(x,9,64);else if(p.role==='MF')x=clamp(x,16,84);else x=clamp(x,30,97);
   if(att&&p.role!=='DF')x=Math.min(x,t.offLine-.6-(p.role==='MF'?7:0));
@@ -266,7 +266,7 @@ class Match{
    for(const r of o.pl){recO=Math.min(recO,hyp(r.x-tx,r.y-ty));if(r.stun>0)continue;let u=((r.x-sx)*dx+(r.y-sy)*dy)/(d*d);u=clamp(u,0,1);const dd=hyp(r.x-(sx+dx*u),r.y-(sy+dy*u));const tb=u*d/vb,tr=Math.max(0,dd-.85)/((r.mse||7)*.9)+(dd<2?.1:.25);const m=tb-tr;if(dd<1.05&&u*d<4)risk=1;else if(m>-.2)risk=Math.max(risk,clamp(.45+m*1.4,0,1));}
    let lob=!!forceLob;if(!lob&&lobOK&&risk>.4&&d>18&&recO>2.5){lob=true;risk=clamp((3.5-recO)/4,0,.6)+.12+d/400;}
    if(!forceLob&&risk>.55)continue;if(recO<1.2&&!forceLob)continue;
-   const dG=hyp(g[0]-tx,g[1]-ty);let s=-risk*14+prog*.35+clamp(prog,0,25)*.15-Math.max(0,d-24)*.15+Math.min(recO,6)*.6+(dG<20?4:dG<30?1.5:0)+(q.star?2.5:0)+R(0,2.5);
+   const dG=hyp(g[0]-tx,g[1]-ty);let s=-risk*(14+(t.str||0)*2)+prog*.35*(1+(t.str||0)*.35)+clamp(prog,0,25)*.15-Math.max(0,d-24)*.15+Math.min(recO,6)*.6+(dG<20?4:dG<30?1.5:0)+(q.star?2.5:0)+R(0,2.5);
    if(forceLob){const inBox=Math.abs(g[0]-q.x)<17&&Math.abs(q.y-CY)<20;s+=inBox?10:-10;}
    if(s>bs){bs=s;best={p:q,lob,thru:!lob&&prog>8&&recO>5&&Math.random()<.3,risk};}}
   return best;}

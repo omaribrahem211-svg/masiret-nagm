@@ -219,6 +219,7 @@ class Match{
   if(this.pen&&!this.pen.live){p.des=[0,0];return;}
   const dB=hyp(b.x-g[0],b.y-g[1]);let depth=clamp(1.5+(dB<25?(25-dB)*.12:0),1,4.5);const dxB=Math.max(Math.abs(b.x-g[0]),depth+.1);let gy=CY+(b.y-CY)*clamp(depth/dxB,0,.65);gy=clamp(gy,CY-2.8,CY+2.8);
   let spd=p.ms*.75;
+  if(p.diveT>0&&p.smT>0){p.tgt=null;p.smT-=dt;p.vx=p.smX;p.vy=p.smY;p.des=[p.smX,p.smY];return;}
   if(p.diveT>0){p.tgt=null;const e=.75-p.diveT;if(e<.38){p.vx=0;p.vy=p.diveDir*p.diveSp;}p.des=[0,e<.38?p.diveDir*p.diveSp:0];return;}
   if(!b.owner&&!b.shot&&b.z>.8&&b.last&&b.last.team!==t){const tl=this.landT();if(tl>.25){const lp=this.ballAt(tl);const inA=Math.abs(lp[0]-g[0])<8.5&&Math.abs(lp[1]-CY)<10;
     if(p.claimK!==b.passT){p.claimK=b.passT;p.claim=inA&&Math.random()<.35+p.st.gk/160;}
@@ -228,11 +229,17 @@ class Match{
     if(Math.abs(need)>.7&&Math.abs(need)<GW/2+2.6&&tc<clamp(Math.abs(need)/6.5+.12,.2,.62)){p.diveT=.75;p.diveDir=Math.sign(need);p.diveSp=clamp(Math.abs(need)/.34,2,7)*(.85+p.st.gk/500);p.diveH=clamp(b.z+b.vz*tc-4.9*tc*tc,0,2.4);p.vx*=.3;return;}}}
   else if(b.owner&&b.owner.team!==t&&!b.inHands&&!this.restartKind){const c=b.owner,dG=hyp(c.x-g[0],c.y-g[1]);
    if(dG<21&&Math.abs(c.y-CY)<17){const ux=(c.x-g[0])/(dG||1),uy=(c.y-CY)/(dG||1);const cover=t.pl.some(q=>q.role!=='GK'&&q.stun<=0&&segDist(q.x,q.y,c.x,c.y,g[0],CY)<1.3&&hyp(q.x-c.x,q.y-c.y)<dG);
-    const adv=cover?clamp(dG*.22,1,3.2):clamp(dG*.6,1.2,10.5);const dc=hyp(p.x-c.x,p.y-c.y);
-    if(!cover&&dc<2.1&&p.tcool<=0&&dG<17){p.tcool=.65;p.diveT=.45;p.diveDir=Math.sign((c.y-p.y)||1);p.diveSp=2;p.diveH=0;const exposed=hyp(b.x-c.x,b.y-c.y)>.6;const ch=clamp(.42+p.st.gk/200-c.st.drib/280+(exposed?.2:0)+(hyp(c.vx,c.vy)>6.5?.08:0),.2,.88);
-     if(Math.random()<ch){c.stun=.4;c.stats.lost++;this.take(p);b.inHands=true;p.hold=R(1.2,1.8);p.catchT=.35;SFX.ooh();this.later({t:'الحارس خرج وخطفها!',life:1.1,small:true},.6);this.ev('save',{p,sh:c,rush:true});}
-     else if(Math.random()<.05&&dc<1.3){this.foul(p,c,true,false);}
-     else{p.stun=.35;}return;}
+    const adv=cover?clamp(dG*.22,1,3.2):clamp(dG*.6,1.2,10.5);const inBox=Math.abs(c.x-g[0])<16.5&&Math.abs(c.y-CY)<20.2;
+    const dBall=hyp(p.x-b.x,p.y-b.y),dAtt=hyp(c.x-b.x,c.y-b.y),exposed=dAtt>.6,cs=hyp(c.vx,c.vy);
+    // المهاجم دخل المنطقة ومفيش مدافع بينه وبين المرمى: الحارس بيطلع على الكورة نفسها ويرمي نفسه عليها ويمسكها بإيده
+    const charge=!cover&&(inBox&&dG<15||dG<7||inBox&&exposed&&dBall<dAtt+2.5);
+    if(charge&&p.tcool<=0&&dBall<(exposed?2.6:2.1)){p.tcool=.5;const dx=b.x-p.x,dy=b.y-p.y;p.diveT=.5;p.diveDir=Math.sign(dy||c.y-p.y||1);p.diveSp=clamp(hyp(dx,dy)/.3,2,5);p.diveH=0;p.smT=.28;const ss=clamp(dBall/.28,2,7)/(dBall||1);p.smX=dx*ss;p.smY=dy*ss;p.fx=dx/(dBall||1);p.fy=dy/(dBall||1);
+     const first=dBall<dAtt;const ch=clamp(.5+p.st.gk/220-c.st.drib/300+(exposed?.22:0)+(first?.18:0)+(cs>6.5?.06:0)-(this.human&&this.human.ctrl===c&&c.star?.04:0),.25,.95);
+     if(Math.random()<ch){c.stun=.4;c.stats.lost++;this.take(p);b.inHands=true;p.hold=R(1.2,1.8);p.catchT=.45;SFX.ooh();this.later({t:'الحارس خرج وخطفها!',life:1.1,small:true},.6);this.ev('save',{p,sh:c,rush:true});}
+     else if(Math.random()<.4){c.stats.lost++;b.owner=null;b.last=p;b.passFrom=null;const ox=c.x-g[0],oy=c.y-CY,od=hyp(ox,oy)||1;b.vx=ox/od*R(3,6)+R(-2,2);b.vy=oy/od*R(3,6)+R(-2,2);b.vz=R(0,1.2);p.stun=.45;c.stun=.2;SFX.kick(.4);this.later({t:'الحارس بعّدها!',life:1,small:true},.5);}
+     else if(Math.random()<.06&&!exposed){this.foul(p,c,true,false);}
+     else{p.stun=.45;}return;}
+    if(charge){const tx=b.x+b.vx*.15,ty=b.y+b.vy*.15;p.tgt=[tx,ty];p.spd=p.mse*1.05;return;}
     this.go(p,[g[0]+ux*adv,CY+uy*adv],cover?.8:1);return;}}
   if(!b.owner&&dB<14&&Math.abs(b.y-CY)<20){const near=this.other(t).pl.reduce((m,q)=>Math.min(m,hyp(q.x-b.x,q.y-b.y)),99);if(hyp(p.x-b.x,p.y-b.y)<near+1){this.go(p,[b.x,b.y],1);return;}}
   this.go(p,[g[0]+t.dir*depth,gy],spd/p.mse);}

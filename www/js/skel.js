@@ -68,7 +68,7 @@ const Skel=(()=>{
   const wI=Math.max(0,1-sp/1.0),wW=sp<1?sp:Math.max(0,1-(sp-1.8)/1.6),wJ=sp<1.8?Math.max(0,(sp-1)/.8):Math.max(0,1-(sp-4.6)/1.8),wS=Math.max(0,Math.min(1,(sp-4.4)/2));
   // حركة الرجلين حسب اتجاه الجري بالنسبة لاتجاه الجسم: لقدام، لورا، أو جنب (المدافع وهو بيراقب)
   const fwd=sp>.3?(p.vx*p.fx+p.vy*p.fy)/sp:1,lat=sp>.3?(p.vx*p.fy-p.vy*p.fx)/sp:0;const wB=has('jogB')?Math.max(0,Math.min(1,(-fwd-.25)/.5))*Math.min(1,sp/1.6):0,wSd=has('strL')?Math.max(0,Math.min(1,(Math.abs(lat)-.6)/.3))*(1-wB)*Math.min(1,sp/1.6)*(sp<6?1:0):0,wF=1-Math.max(wB,wSd);
-  {accClip(has('offIdle')&&!gk?'offIdle':'idle',has('offIdle')&&!gk?t/10.2+(p.i||0)*.13:t/2.5+(p.i||0)*.17,wI,true);accClip('walk',u,wW*.8*wF,true);accClip('jog',u,wJ*wF,true);accClip('sprint',u,wS*wF,true);
+  {if(has('offIdle')&&!gk){const q=(t/clips.offIdle.dur+(p.i||0)*.37)%2;accClip('offIdle',q<1?q:2-q,wI,false);}else accClip('idle',t/2.5+(p.i||0)*.17,wI,true);accClip('walk',u,wW*.8*wF,true);const dr=has('dribble')&&b.owner===p&&!b.inHands&&!m.restartKind&&sp>1.5,DM=META.dribble||{};if(dr)accClip('dribble',((u*.5+(DM.ph||0)*.5)%1+1)%1,(wJ+wS*.6)*wF,true);accClip('jog',u,wJ*wF*(dr?0:1),true);accClip('sprint',u,wS*wF*(dr?.4:1),true);
    if(wB>0)accClip('jogB',u,(1-wI)*wB,true);if(wSd>0)accClip(lat>0?'strR':'strL',u,(1-wI)*wSd,true);}
   if(gk&&!dive&&b.owner&&b.owner.team!==p.team&&sp<2.2&&Math.hypot(b.x-p.x,b.y-p.y)<24&&!(b.owner===p))accClip(has('gkIdle')?'gkIdle':'crouch',has('gkIdle')?t/4.6:t/2.93,1.2,true);
   if(p.stun>0&&!slide&&!dive&&!(p.stun>.4&&has('trip')))accClip('hit',1-Math.min(1,p.stun/.35),2,false);
@@ -80,13 +80,14 @@ const Skel=(()=>{
   else if(smother&&has('gkBlock')){act='gkBlock';au=.25+(1-dive)*.35;aw=1;}
   else if(dive>0&&has('gkDiveL')){const yw=Math.atan2(p.fx,-p.fy),left=Math.sin(yw)*(p.diveDir||1)>0;act=left?'gkDiveL':'gkDiveR';au=.2+(1-dive)*.28;aw=1;}
   else if(p.stun>.4&&has('trip')){act='trip';au=.15+(1-Math.min(1,p.stun/1.2))*.5;aw=1;}
-  else if(p.jumpT>0&&has('head')){act='head';au=.3+(1-p.jumpT/.45)*.3;aw=1;}
-  else if(kk>=0&&has('kick')&&!(b.owner===p&&m.restartKind==='throw')&&!(gk&&p.puntT>0)){const pen=m.restartKind==='pen'||(m.pen&&m.pen.live);act=pen&&has('pen')?'pen':'kick';const h=M_(act).hit||.5;const s0=act==='pen'?Math.max(0,h-.35/1.5):0;au=kk<.5?s0+(h-s0)*(kk/.5):h+(1-h)*.8*((kk-.5)/.5);aw=1;}
+  else if(p.jumpT>0&&has('head')){if(p.hdrHi&&has('headJ')){act='headJ';au=.28+(1-p.jumpT/.45)*.3;}else{act='head';au=.3+(1-p.jumpT/.45)*.3;}aw=1;}
+  else if(kk>=0&&has('kick')&&!(b.owner===p&&m.restartKind==='throw')&&!(gk&&p.puntT>0)){const pen=m.restartKind==='pen'||(m.pen&&m.pen.live);act=pen&&has('pen')?'pen':p.kType==='pass'&&has('pass')?'pass':p.kType==='shot'&&sp>3.2&&has('shotRun')?'shotRun':'kick';const h=M_(act).hit||.5;const s0=act==='kick'?0:Math.max(0,h-.32/clips[act].dur);au=kk<.5?s0+(h-s0)*(kk/.5):h+(1-h)*.8*((kk-.5)/.5);aw=1;}
   else if(gk&&p.puntT>0&&has('gkPunt')){const h=M_('gkPunt').hit||.5;au=h-.12+(1-p.puntT/.4)*.2;act='gkPunt';aw=1;}
   else if(((b.owner===p&&m.restartKind==='throw')||p.throwT>0)&&has('throwin')&&!gk){act='throwin';au=p.throwT>0?.52+(1-p.throwT/.4)*.18:.42;aw=1;}
   else if(gk&&p.throwT>0&&has('gkThrow')){act='gkThrow';au=.35+(1-p.throwT/.4)*.2;aw=1;}
   else if(gk&&p.catchT>0&&has('gkCatch')){act='gkCatch';au=.25+(1-p.catchT/.45)*.4;aw=1;}
   else if(gk&&b.owner===p&&b.inHands&&has('gkCatch')){act='gkCatch';au=.72;aw=1;}
+  if(!act&&p.spinT>0&&has('spin')&&b.owner===p){act='spin';au=.2+(1-p.spinT/.55)*.55;}
   if(act){accClear();accClip(act,au,1,false);}
   p._act=act;
   accApply();

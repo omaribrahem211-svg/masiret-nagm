@@ -60,8 +60,7 @@ const Skel=(()=>{
   const celeb=m.phase==='goal'&&p===m.celebrator,slide=p.slide>0,dive=p.diveT>0?p.diveT/.75:0;
   // locomotion blend by real speed (no foot sliding: cycle follows p.anim which follows speed)
   const wI=Math.max(0,1-sp/1.0),wW=sp<1?sp:Math.max(0,1-(sp-1.8)/1.6),wJ=sp<1.8?Math.max(0,(sp-1)/.8):Math.max(0,1-(sp-4.6)/1.8),wS=Math.max(0,Math.min(1,(sp-4.4)/2));
-  if(celeb)accClip('dance',t*1.1+p.i*.13,1,true);
-  else{accClip('idle',t/2.5+(p.i||0)*.17,wI,true);accClip('walk',u,wW*.8,true);accClip('jog',u,wJ,true);accClip('sprint',u,wS,true);}
+  {accClip('idle',t/2.5+(p.i||0)*.17,wI,true);accClip('walk',u,wW*.8,true);accClip('jog',u,wJ,true);accClip('sprint',u,wS,true);}
   if(gk&&!dive&&b.owner&&b.owner.team!==p.team&&sp<2.2&&Math.hypot(b.x-p.x,b.y-p.y)<24&&!(b.owner===p))accClip('crouch',t/2.93,1.2,true);
   if(p.stun>0&&!slide&&!dive)accClip('hit',1-Math.min(1,p.stun/.35),2,false);
   accApply();
@@ -77,6 +76,8 @@ const Skel=(()=>{
   const throwing=(b.owner===p&&m.restartKind==='throw')||p.throwT>0;
   if(throwing){const k=p.throwT>0?(1-p.throwT/.4):0;arm(1,2.75-k*1.6,1.3-k*1.1,-.03,1);arm(-1,2.75-k*1.6,1.3-k*1.1,-.03,1);}
   if(p.jumpT>0&&!slide&&!dive){const k=Math.sin(Math.PI*(1-p.jumpT/.45));arm(1,1.6*k,.3,.35,.8*k);arm(-1,1.6*k,.3,.35,.8*k);leg(1,.35*k,.9*k,.7*k);leg(-1,.15*k,.6*k,.7*k);}
+  if(celeb){if(sp>1.5){arm(1,.15,.15,1.3,1);arm(-1,.15,.15,1.3,1);add(J['spine.001'],Qz(Math.sin(t*2.2)*.18));}
+   else{const k=.5+.5*Math.sin(t*6);arm(1,2.7+k*.2,.35,.25,1);arm(-1,2.7+(1-k)*.2,.35,.25,1);add(J['spine.001'],Qx(-.12));}}
   if(!celeb&&!slide&&!dive&&kick<0)add(J['spine.001'],Qx(.02+Math.min(1,sp/7)*.12));
   computeGlobals();
   // world: lift/pitch/roll around a pivot, then yaw to facing

@@ -33,7 +33,11 @@ const Voice={on:true,ready:false,man:null,buf:{},cur:null,last:0,
  async load(k,i){const url=this.base+k+'_'+i+'.'+(this.man.ext||'mp3');if(this.buf[url])return this.buf[url];if(!SFX.ctx)return null;const ab=await(await fetch(url)).arrayBuffer();const b=await new Promise((ok,no)=>SFX.ctx.decodeAudioData(ab,ok,no));this.buf[url]=b;return b;},
  preload(){if(!this.ready||!SFX.ctx)return;for(const k in this.man.lines)for(let i=0;i<this.man.lines[k];i++)this.load(k,i).catch(()=>{});},
  play(k,prio){if(!this.on||!this.has(k)||!SFX.ctx||!SFX.on)return false;const now=performance.now();if(!prio&&(this.cur||now-this.last<2500))return true;this.last=now;const i=Math.floor(Math.random()*this.man.lines[k]);
-  this.load(k,i).then(b=>{if(!b)return;if(this.cur){try{this.cur.stop();}catch(e){}}const c=SFX.ctx,s=c.createBufferSource();s.buffer=b;const g=c.createGain();g.gain.value=1.15;s.connect(g);g.connect(c.destination);s.onended=()=>{if(this.cur===s)this.cur=null;};s.start();this.cur=s;}).catch(()=>{});return true;},
+  this.load(k,i).then(b=>{if(!b)return;if(this.cur){try{this.cur.stop();}catch(e){}}const c=SFX.ctx,s=c.createBufferSource();s.buffer=b;
+   // صوت المعلّق: فلتر بث خفيف + ضاغط، والجمهور بيوطى شوية وهو بيتكلم وبيرجع بعدها
+   if(!this.bus){const hp=c.createBiquadFilter();hp.type='highpass';hp.frequency.value=120;const pr=c.createBiquadFilter();pr.type='peaking';pr.frequency.value=2800;pr.gain.value=2.5;pr.Q.value=.9;const cp=c.createDynamicsCompressor();cp.threshold.value=-20;cp.ratio.value=3.5;cp.attack.value=.005;cp.release.value=.15;const og=c.createGain();og.gain.value=1.25;hp.connect(pr);pr.connect(cp);cp.connect(og);og.connect(c.destination);this.bus=hp;}
+   s.connect(this.bus);const dk=SFX.duckG,t0=c.currentTime;if(dk){dk.gain.cancelScheduledValues(t0);dk.gain.setTargetAtTime(.55,t0,.08);}
+   s.onended=()=>{if(this.cur===s){this.cur=null;if(dk)dk.gain.setTargetAtTime(1,c.currentTime,.35);}};s.start();this.cur=s;}).catch(()=>{});return true;},
  stop(){if(this.cur){try{this.cur.stop();}catch(e){}this.cur=null;}}
 };
 /* ---------- التعليق ---------- */

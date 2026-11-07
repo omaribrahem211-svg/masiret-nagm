@@ -81,7 +81,7 @@ const Skel=(()=>{
   else if(dive>0&&has('gkDiveL')){const yw=Math.atan2(p.fx,-p.fy),left=Math.sin(yw)*(p.diveDir||1)>0;act=left?'gkDiveL':'gkDiveR';au=.2+(1-dive)*.28;aw=1;}
   else if(p.stun>.4&&has('trip')){act='trip';au=.15+(1-Math.min(1,p.stun/1.2))*.5;aw=1;}
   else if(p.jumpT>0&&has('head')){if(p.hdrHi&&has('headJ')){act='headJ';au=.28+(1-p.jumpT/.45)*.3;}else{act='head';au=.3+(1-p.jumpT/.45)*.3;}aw=1;}
-  else if(kk>=0&&has('kick')&&!(b.owner===p&&m.restartKind==='throw')&&!(gk&&p.puntT>0)){const pen=m.restartKind==='pen'||(m.pen&&m.pen.live);act=pen&&has('pen')?'pen':p.kType==='pass'&&has('pass')?'pass':p.kType==='shot'&&sp>3.2&&has('shotRun')?'shotRun':'kick';const h=M_(act).hit||.5;const s0=act==='kick'?0:Math.max(0,h-.32/clips[act].dur);au=kk<.5?s0+(h-s0)*(kk/.5):h+(1-h)*.8*((kk-.5)/.5);aw=1;}
+  else if(kk>=0&&has('kick')&&!(b.owner===p&&m.restartKind==='throw')&&!(gk&&p.puntT>0)){const pen=m.restartKind==='pen'||(m.pen&&m.pen.live);act=pen&&has('pen')?'pen':p.kType==='pass'&&has('pass')?'pass':p.kType==='shot'&&sp>3.2&&has('shotRun')?'shotRun':p.kType==='shot'&&has('kickM')?'kickM':'kick';const h=M_(act).hit||.5;const s0=act==='kick'||act==='kickM'?0:Math.max(0,h-.32/clips[act].dur);au=kk<.5?s0+(h-s0)*(kk/.5):h+(1-h)*.8*((kk-.5)/.5);aw=1;}
   else if(gk&&p.puntT>0&&has('gkPunt')){const h=M_('gkPunt').hit||.5;au=h-.12+(1-p.puntT/.4)*.2;act='gkPunt';aw=1;}
   else if(((b.owner===p&&m.restartKind==='throw')||p.throwT>0)&&has('throwin')&&!gk){act='throwin';au=p.throwT>0?.52+(1-p.throwT/.4)*.18:.42;aw=1;}
   else if(gk&&p.throwT>0&&has('gkThrow')){act='gkThrow';au=.35+(1-p.throwT/.4)*.2;aw=1;}

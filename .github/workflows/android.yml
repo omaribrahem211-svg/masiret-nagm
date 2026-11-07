@@ -28,9 +28,22 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Generate the Arabic commentary voice (Azure if the key exists, otherwise Piper)
+      - name: Install ffmpeg (broadcast-style processing of the commentary voice)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+
+      - name: Cache the generated commentary voice
+        id: voicecache
+        uses: actions/cache@v4
+        with:
+          path: www/audio/voice
+          key: voice-v2-${{ hashFiles('voice/lines_*.json', 'scripts/gen_voice.py') }}-${{ secrets.ELEVENLABS_API_KEY != '' && 'el' || 'ms' }}
+
+      - name: Generate the Arabic commentary voice (ElevenLabs / Azure if keys exist, otherwise Microsoft neural)
+        if: steps.voicecache.outputs.cache-hit != 'true'
         continue-on-error: true
         env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID }}
           AZURE_SPEECH_KEY: ${{ secrets.AZURE_SPEECH_KEY }}
           AZURE_SPEECH_REGION: ${{ secrets.AZURE_SPEECH_REGION }}
         run: python scripts/gen_voice.py

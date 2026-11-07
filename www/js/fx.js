@@ -48,3 +48,31 @@ const Comm={last:0,el:null,voice:null,tts:false,text:false,
   if(!spoke&&this.tts&&this.voice){try{if(prio)speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt);u.voice=this.voice;u.lang=this.voice.lang;u.rate=1.08;u.pitch=prio?1.15:1;speechSynthesis.speak(u);}catch(e){}}},
  stop(){Voice.stop();try{speechSynthesis.cancel();}catch(e){}if(this.el)this.el.classList.remove('on');}
 };
+/* ---------- أجواء الجمهور: تصفيق وطبول وأغاني بإيقاع، بتعلى مع الهجمة الخطيرة والجون ---------- */
+const Stadium={on:false,next:0,busy:0,lvl:.07,out:null,
+ bus(){const c=SFX.ctx;if(!this.out){const g=c.createGain();g.gain.value=.9;const cp=c.createDynamicsCompressor();cp.threshold.value=-16;cp.ratio.value=3;g.connect(cp);cp.connect(c.destination);this.out=g;}return this.out;},
+ start(){if(!SFX.ctx)return;this.on=true;this.next=SFX.ctx.currentTime+3;this.busy=0;},
+ stop(){this.on=false;},
+ clap(t,v){const c=SFX.ctx,o=this.bus();for(let k=0;k<7;k++){const s=c.createBufferSource();s.buffer=SFX.noise;const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=1100+Math.random()*900;f.Q.value=1.2;const g=c.createGain();const t0=t+Math.random()*.035;g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(v*.11,t0+.004);g.gain.exponentialRampToValueAtTime(.0008,t0+.09);s.connect(f);f.connect(g);g.connect(o);s.start(t0,Math.random()*1.5);s.stop(t0+.11);}},
+ drum(t,v){const c=SFX.ctx,o=this.bus();const os=c.createOscillator(),g=c.createGain();os.frequency.setValueAtTime(95,t);os.frequency.exponentialRampToValueAtTime(42,t+.22);g.gain.setValueAtTime(v*.5,t);g.gain.exponentialRampToValueAtTime(.001,t+.32);os.connect(g);g.connect(o);os.start(t);os.stop(t+.34);
+  const s=c.createBufferSource();s.buffer=SFX.noise;const f=c.createBiquadFilter();f.type='lowpass';f.frequency.value=500;const g2=c.createGain();g2.gain.setValueAtTime(v*.18,t);g2.gain.exponentialRampToValueAtTime(.001,t+.12);s.connect(f);f.connect(g2);g2.connect(o);s.start(t,Math.random());s.stop(t+.14);},
+ shout(t,v,dur){const c=SFX.ctx,o=this.bus();const s=c.createBufferSource();s.buffer=SFX.noise;const g=c.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v*.16,t+.05);g.gain.setValueAtTime(v*.16,t+dur*.6);g.gain.exponentialRampToValueAtTime(.001,t+dur);
+  for(const [fq,q] of [[620,4],[1050,5],[2400,6]]){const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=fq;f.Q.value=q;s.connect(f);f.connect(g);}g.connect(o);s.start(t,Math.random());s.stop(t+dur+.05);},
+ // آلاف الأصوات بتغني لحن بسيط: أصوات كتير متباعدة شوية في الطبقة والتوقيت وبفلتر حرف "أوو"
+ sing(t,notes,step,v){const c=SFX.ctx,o=this.bus();const f1=c.createBiquadFilter();f1.type='bandpass';f1.frequency.value=560;f1.Q.value=2.2;const f2=c.createBiquadFilter();f2.type='bandpass';f2.frequency.value=950;f2.Q.value=3;const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1600;const g=c.createGain();g.gain.value=0;
+  f1.connect(lp);f2.connect(lp);lp.connect(g);g.connect(o);const end=t+notes.length*step;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v*.06,t+.25);g.gain.setValueAtTime(v*.06,end-.3);g.gain.linearRampToValueAtTime(0,end+.2);
+  for(let k=0;k<14;k++){const os=c.createOscillator();os.type='sawtooth';const det=(Math.random()-.5)*22,oct=k%3===0?.5:1,lag=Math.random()*.05;notes.forEach((n,i)=>{const fq=220*oct*Math.pow(2,n/12)*Math.pow(2,det/1200);os.frequency.setTargetAtTime(fq,t+i*step+lag,.03);});
+   const vib=c.createOscillator(),vg=c.createGain();vib.frequency.value=4+Math.random()*2;vg.gain.value=3;vib.connect(vg);vg.connect(os.frequency);os.connect(f1);os.connect(f2);os.start(t);vib.start(t);os.stop(end+.3);vib.stop(end+.3);}},
+ pattern(v){if(!SFX.ctx||!SFX.on)return 0;const t=SFX.ctx.currentTime+.05,P=Math.floor(Math.random()*4);
+  if(P===0){const b=.48;for(let bar=0;bar<4;bar++){const t0=t+bar*b*4;[0,1,2,2.5,3].forEach(x=>this.clap(t0+x*b,v));}return b*16;}  // تصفيق: تك تك تكتك تك
+  if(P===1){const b=.42;for(let bar=0;bar<4;bar++){const t0=t+bar*b*4;[0,1,2,2.5].forEach(x=>this.drum(t0+x*b,v));this.shout(t0+3*b,v,.32);}return b*16;}  // طبلة الألتراس وهتاف "هيه"
+  if(P===2){const notes=[0,0,4,7,5,4,2,0, 0,0,4,7,9,7,5,4],st=.32;this.sing(t,notes,st,v);for(let i=0;i<notes.length;i+=2)this.clap(t+i*st,v*.5);return notes.length*st;}  // أغنية الجمهور
+  const b=.5;for(let i=0;i<8;i++){this.drum(t+i*b,v*.8);if(i%2===1)this.clap(t+i*b,v);}this.shout(t+8*b,v*1.2,.6);return 8*b+.6;},
+ tick(m,dt){if(!this.on||!SFX.ctx||!SFX.on||!m)return;const c=SFX.ctx,now=c.currentTime,b=m.ball;
+  // علو الجمهور: هادي في نص الملعب وبيعلى لما الكورة تقرب من المرمى
+  let lv=.06;if(m.phase==='play'){const dG=Math.min(b.x,L-b.x);lv=.055+clamp((30-dG)/30,0,1)*.11;}
+  if(Math.abs(lv-this.lvl)>.01){this.lvl=lv;SFX.crowd(lv,.6);}
+  if(m.phase==='goal'||m.phase==='replay'){if(now>this.busy&&!m._chG){m._chG=1;this.busy=now+this.pattern(1.25);this.next=this.busy+R(4,8);}return;}m._chG=0;
+  if(m.phase!=='play'&&m.phase!=='kickoff'&&m.phase!=='restart')return;
+  if(now>this.next&&now>this.busy){const hot=m.score[0]>m.score[1]||Math.min(b.x,L-b.x)<35;this.busy=now+this.pattern(hot?1:.75);this.next=this.busy+R(5,12);}}
+};

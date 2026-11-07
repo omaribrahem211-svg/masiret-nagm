@@ -77,9 +77,9 @@ const Skel=(()=>{
   const kk=p.windT>0?.5*(1-p.windT/(p.windD||.1)):p.kickT>0?.5+.5*(1-p.kickT/.34):-1;
   const smother=dive>0&&p.smT>0;
   if(slide&&has('slide')){const S=p.slideMax||(p.slideMax=Math.max(p.slide,.5));const q=1-p.slide/S;act='slide';au=.22+q*.5;aw=1;}
-  else if(smother&&has('gkBlock')){act='gkBlock';au=.25+(1-dive)*.35;aw=1;}
-  else if(dive>0&&has('gkDiveL')){const yw=Math.atan2(p.fx,-p.fy),left=Math.sin(yw)*(p.diveDir||1)>0;act=left?'gkDiveL':'gkDiveR';au=.2+(1-dive)*.28;aw=1;}
-  else if(p.stun>.4&&has('trip')){act='trip';au=.15+(1-Math.min(1,p.stun/1.2))*.5;aw=1;}
+  else if(smother&&has('gkBlock')){act='gkBlock';p._smo=true;au=.25+(1-dive)*.35;aw=1;}
+  else if(dive>0&&has('gkDiveL')){const yw=Math.atan2(p.fx,-p.fy),left=Math.sin(yw)*(p.diveDir||1)>0;act=left?'gkDiveL':'gkDiveR';p._dvL=left;p._smo=false;au=.2+(1-dive)*.28;aw=1;}
+  else if(p.stun>.4&&has('trip')){act='trip';p._fallen=p.stun>.7||p._fallen;au=.15+(1-Math.min(1,p.stun/1.2))*.5;aw=1;}
   else if(p.jumpT>0&&has('head')){if(p.hdrHi&&has('headJ')){act='headJ';au=.28+(1-p.jumpT/.45)*.3;}else{act='head';au=.3+(1-p.jumpT/.45)*.3;}aw=1;}
   else if(kk>=0&&has('kick')&&!(b.owner===p&&m.restartKind==='throw')&&!(gk&&p.puntT>0)){const pen=m.restartKind==='pen'||(m.pen&&m.pen.live);act=pen&&has('pen')?'pen':p.kType==='pass'&&has('pass')?'pass':p.kType==='shot'&&sp>3.2&&has('shotRun')?'shotRun':p.kType==='shot'&&has('kickM')?'kickM':'kick';const h=M_(act).hit||.5;const s0=act==='kick'||act==='kickM'?0:Math.max(0,h-.32/clips[act].dur);au=kk<.5?s0+(h-s0)*(kk/.5):h+(1-h)*.8*((kk-.5)/.5);aw=1;}
   else if(gk&&p.puntT>0&&has('gkPunt')){const h=M_('gkPunt').hit||.5;au=h-.12+(1-p.puntT/.4)*.2;act='gkPunt';aw=1;}
@@ -87,6 +87,7 @@ const Skel=(()=>{
   else if(gk&&p.throwT>0&&has('gkThrow')){act='gkThrow';au=.35+(1-p.throwT/.4)*.2;aw=1;}
   else if(gk&&p.catchT>0&&has('gkCatch')){act='gkCatch';au=.25+(1-p.catchT/.45)*.4;aw=1;}
   else if(gk&&b.owner===p&&b.inHands&&has('gkCatch')){act='gkCatch';au=.72;aw=1;}
+  if(!act&&p.upT>0&&p.upClip&&has(p.upClip)){act=p.upClip;au=p.upA+(p.upB-p.upA)*(1-p.upT/p.upD);}
   if(!act&&p.spinT>0&&has('spin')&&b.owner===p){act='spin';au=.2+(1-p.spinT/.55)*.55;}
   if(act){accClear();accClip(act,au,1,false);}
   p._act=act;

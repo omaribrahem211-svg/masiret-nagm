@@ -59,7 +59,7 @@ def eleven(text, excited, path, dial):
 def azure(text, excited, path, dial):
     key, region = os.environ['AZURE_SPEECH_KEY'], os.environ['AZURE_SPEECH_REGION']
     lang, voice = VOICES[dial]
-    rate, pitch = (f'+{random.randint(16,24)}%', f'+{random.randint(9,15)}%') if excited else (f'+{random.randint(3,9)}%', f'{random.choice([-2,0,2,3])}%')
+    rate, pitch = (f'+{random.randint(16,24)}%', f'+{random.randint(9,15)}%') if excited else (f'+{random.randint(3,9)}%', '%+d%%' % random.choice([-2,0,2,3]))
     ssml = (f"<speak version='1.0' xml:lang='{lang}'><voice name='{voice}'>"
             f"<prosody rate='{rate}' pitch='{pitch}' volume='+10%'>{html.escape(text)}</prosody></voice></speak>")
     req = urllib.request.Request(
@@ -79,14 +79,21 @@ def edge(text, excited, path, dial):
         import edge_tts  # noqa
         _edge = edge_tts
     # تنويع السرعة والطبقة من جملة للتانية عشان مايبقاش نفس الرتم الآلي
-    rate, pitch = (f'+{random.randint(15,24)}%', f'+{random.randint(8,16)}Hz') if excited else (f'+{random.randint(4,11)}%', f'{random.choice([-3,0,2,4])}Hz')
+    rate, pitch = (f'+{random.randint(15,24)}%', f'+{random.randint(8,16)}Hz') if excited else (f'+{random.randint(4,11)}%', '%+dHz' % random.choice([-3,0,2,4]))
     vol = '+15%' if excited else '+0%'
     async def go():
         await _edge.Communicate(text, VOICES[dial][1], rate=rate, pitch=pitch, volume=vol).save(path + '.mp3')
-    asyncio.run(go())
-    if os.path.getsize(path + '.mp3') < 800:
-        raise RuntimeError('empty audio')
-    return 'mp3'
+    err = None
+    for attempt in range(4):  # الخدمة ساعات بترجع فاضي، نعيد المحاولة قبل ما ننزل لمحرك أضعف
+        try:
+            asyncio.run(go())
+            if os.path.getsize(path + '.mp3') >= 800:
+                return 'mp3'
+            err = RuntimeError('empty audio')
+        except Exception as e:
+            err = e
+        import time; time.sleep(1.5 * (attempt + 1))
+    raise err
 
 
 _piper = None

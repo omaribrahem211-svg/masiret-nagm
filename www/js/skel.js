@@ -5,7 +5,13 @@ const Skel=(()=>{
  const d64=(s,T)=>{const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return new T(u.buffer);};
  const nJ=RIG.nJ,par=RIG.par,names=RIG.names,IB=d64(RIG.ib,Float32Array),animJ=RIG.animJ,nA=animJ.length,FPS=RIG.fps;
  const J={};names.forEach((n,i)=>J[n.replace('DEF-','')]=i);
- const clips={};for(const k in RIG.clips){const c=RIG.clips[k];clips[k]={n:c.n,dur:c.dur,d:d64(c.d,Float32Array)};}
+ // أسماء موحّدة للعضم (موديل ميكسامو)
+ const AL={'spine.001':'Spine','spine.002':'Spine1','spine.003':'Spine2','neck':'Neck','head':'Head','hips':'Hips'};
+ for(const[s,l]of[['Left','L'],['Right','R']])Object.assign(AL,{['shoulder.'+l]:s+'Shoulder',['upper_arm.'+l]:s+'Arm',['forearm.'+l]:s+'ForeArm',['hand.'+l]:s+'Hand',['thigh.'+l]:s+'UpLeg',['shin.'+l]:s+'Leg',['foot.'+l]:s+'Foot',['toe.'+l]:s+'ToeBase'});
+ for(const a in AL)if(J[a]===undefined&&J[AL[a]]!==undefined)J[a]=J[AL[a]];
+ const META=RIG.meta||{};
+ const clips={};for(const k in RIG.clips){const c=RIG.clips[k];let d;if(RIG.q16){const q=d64(c.d,Int16Array);d=new Float32Array(q.length);for(let i=0;i<q.length;i+=7){d[i]=q[i]/1000;d[i+1]=q[i+1]/1000;d[i+2]=q[i+2]/1000;for(let k2=3;k2<7;k2++)d[i+k2]=q[i+k2]/32767;}}else d=d64(c.d,Float32Array);clips[k]={n:c.n,dur:c.dur,d};}
+ const has=k=>!!clips[k];
  // ---- quaternion helpers [x,y,z,w]
  const qmul=(a,b,o)=>{const ax=a[0],ay=a[1],az=a[2],aw=a[3],bx=b[0],by=b[1],bz=b[2],bw=b[3];o[0]=aw*bx+ax*bw+ay*bz-az*by;o[1]=aw*by-ax*bz+ay*bw+az*bx;o[2]=aw*bz+ax*by-ay*bx+az*bw;o[3]=aw*bw-ax*bx-ay*by-az*bz;return o;};
  const qax=(x,y,z,a,o)=>{const s=Math.sin(a/2);o[0]=x*s;o[1]=y*s;o[2]=z*s;o[3]=Math.cos(a/2);return o;};
@@ -55,36 +61,56 @@ const Skel=(()=>{
  function arm(side,b1,b2,out,w){const L=side>0?'.L':'.R';const down=Qz(-side*(Math.PI/2-out));const up=QQ(Qx(-b1),down),fo=QQ(Qx(-(b1+b2)),down);ov(J['upper_arm'+L],up,w);ov(J['forearm'+L],fo,w);ov(J['hand'+L],fo,w);}
  function leg(side,a1,a2,w){const L=side>0?'.L':'.R';ov(J['thigh'+L],Qx(-a1),w);ov(J['shin'+L],Qx(-(a1-a2)),w);ov(J['foot'+L],Qx(-(a1-a2)*.6),w);}
  // ---- main: pose player p into row
- function pose(p,m,t,out,off,W){resetRest();OV.clear();ADD.clear();accClear();
+ function pose(p,m,t,out,off,W){resetRest();if(!(p.slide>0))p.slideMax=0;OV.clear();ADD.clear();accClear();
   const sp=Math.hypot(p.vx,p.vy),b=m.ball,gk=p.role==='GK';const u=((p.anim||0)/(Math.PI*2));
   const celeb=m.phase==='goal'&&p===m.celebrator,slide=p.slide>0,dive=p.diveT>0?p.diveT/.75:0;
   // locomotion blend by real speed (no foot sliding: cycle follows p.anim which follows speed)
   const wI=Math.max(0,1-sp/1.0),wW=sp<1?sp:Math.max(0,1-(sp-1.8)/1.6),wJ=sp<1.8?Math.max(0,(sp-1)/.8):Math.max(0,1-(sp-4.6)/1.8),wS=Math.max(0,Math.min(1,(sp-4.4)/2));
-  {accClip('idle',t/2.5+(p.i||0)*.17,wI,true);accClip('walk',u,wW*.8,true);accClip('jog',u,wJ,true);accClip('sprint',u,wS,true);}
-  if(gk&&!dive&&b.owner&&b.owner.team!==p.team&&sp<2.2&&Math.hypot(b.x-p.x,b.y-p.y)<24&&!(b.owner===p))accClip('crouch',t/2.93,1.2,true);
-  if(p.stun>0&&!slide&&!dive)accClip('hit',1-Math.min(1,p.stun/.35),2,false);
+  // حركة الرجلين حسب اتجاه الجري بالنسبة لاتجاه الجسم: لقدام، لورا، أو جنب (المدافع وهو بيراقب)
+  const fwd=sp>.3?(p.vx*p.fx+p.vy*p.fy)/sp:1,lat=sp>.3?(p.vx*p.fy-p.vy*p.fx)/sp:0;const wB=has('jogB')?Math.max(0,Math.min(1,(-fwd-.25)/.5))*Math.min(1,sp/1.6):0,wSd=has('strL')?Math.max(0,Math.min(1,(Math.abs(lat)-.6)/.3))*(1-wB)*Math.min(1,sp/1.6)*(sp<6?1:0):0,wF=1-Math.max(wB,wSd);
+  {accClip(has('offIdle')&&!gk?'offIdle':'idle',has('offIdle')&&!gk?t/10.2+(p.i||0)*.13:t/2.5+(p.i||0)*.17,wI,true);accClip('walk',u,wW*.8*wF,true);accClip('jog',u,wJ*wF,true);accClip('sprint',u,wS*wF,true);
+   if(wB>0)accClip('jogB',u,(1-wI)*wB,true);if(wSd>0)accClip(lat>0?'strR':'strL',u,(1-wI)*wSd,true);}
+  if(gk&&!dive&&b.owner&&b.owner.team!==p.team&&sp<2.2&&Math.hypot(b.x-p.x,b.y-p.y)<24&&!(b.owner===p))accClip(has('gkIdle')?'gkIdle':'crouch',has('gkIdle')?t/4.6:t/2.93,1.2,true);
+  if(p.stun>0&&!slide&&!dive&&!(p.stun>.4&&has('trip')))accClip('hit',1-Math.min(1,p.stun/.35),2,false);
+  // ---- حركات الكورة الحقيقية (Mixamo): بتاخد الجسم كله
+  let act=null,au=0,aw=0;const M_=k=>META[k]||{};
+  const kk=p.windT>0?.5*(1-p.windT/(p.windD||.1)):p.kickT>0?.5+.5*(1-p.kickT/.34):-1;
+  const smother=dive>0&&p.smT>0;
+  if(slide&&has('slide')){const S=p.slideMax||(p.slideMax=Math.max(p.slide,.5));const q=1-p.slide/S;act='slide';au=.22+q*.5;aw=1;}
+  else if(smother&&has('gkBlock')){act='gkBlock';au=.25+(1-dive)*.35;aw=1;}
+  else if(dive>0&&has('gkDiveL')){const yw=Math.atan2(p.fx,-p.fy),left=Math.sin(yw)*(p.diveDir||1)>0;act=left?'gkDiveL':'gkDiveR';au=.2+(1-dive)*.28;aw=1;}
+  else if(p.stun>.4&&has('trip')){act='trip';au=.15+(1-Math.min(1,p.stun/1.2))*.5;aw=1;}
+  else if(p.jumpT>0&&has('head')){act='head';au=.3+(1-p.jumpT/.45)*.3;aw=1;}
+  else if(kk>=0&&has('kick')&&!(b.owner===p&&m.restartKind==='throw')&&!(gk&&p.puntT>0)){const pen=m.restartKind==='pen'||(m.pen&&m.pen.live);act=pen&&has('pen')?'pen':'kick';const h=M_(act).hit||.5;const s0=act==='pen'?Math.max(0,h-.35/1.5):0;au=kk<.5?s0+(h-s0)*(kk/.5):h+(1-h)*.8*((kk-.5)/.5);aw=1;}
+  else if(gk&&p.puntT>0&&has('gkPunt')){const h=M_('gkPunt').hit||.5;au=h-.12+(1-p.puntT/.4)*.2;act='gkPunt';aw=1;}
+  else if(((b.owner===p&&m.restartKind==='throw')||p.throwT>0)&&has('throwin')&&!gk){act='throwin';au=p.throwT>0?.52+(1-p.throwT/.4)*.18:.42;aw=1;}
+  else if(gk&&p.throwT>0&&has('gkThrow')){act='gkThrow';au=.35+(1-p.throwT/.4)*.2;aw=1;}
+  else if(gk&&p.catchT>0&&has('gkCatch')){act='gkCatch';au=.25+(1-p.catchT/.45)*.4;aw=1;}
+  else if(gk&&b.owner===p&&b.inHands&&has('gkCatch')){act='gkCatch';au=.72;aw=1;}
+  if(act){accClear();accClip(act,au,1,false);}
+  p._act=act;
   accApply();
   // kicking leg (right) — wind-up, strike, follow-through
   const kick=p.windT>0?.5*(1-p.windT/(p.windD||.1)):p.kickT>0?.5+.5*(1-p.kickT/.34):-1;
-  if(kick>=0){let a1,a2;if(kick<.4){a1=-.95*(kick/.4);a2=.5+1.2*(kick/.4);}else if(kick<.7){const q=(kick-.4)/.3;a1=-.95+2.2*q;a2=1.7-1.65*q;}else{const q=(kick-.7)/.3;a1=1.25-1.1*q;a2=.05+.2*q;}
+  if(kick>=0&&!act){let a1,a2;if(kick<.4){a1=-.95*(kick/.4);a2=.5+1.2*(kick/.4);}else if(kick<.7){const q=(kick-.4)/.3;a1=-.95+2.2*q;a2=1.7-1.65*q;}else{const q=(kick-.7)/.3;a1=1.25-1.1*q;a2=.05+.2*q;}
    leg(-1,a1,a2,.95);arm(1,.5,.4,.25,.7);arm(-1,-.3,.4,.25,.7);add(J['spine.001'],Qx(kick>.3&&kick<.75?-.15:.06));}
-  if(slide){leg(-1,.35,.05,1);leg(1,.55,1.1,1);arm(1,-.5,.3,.35,1);arm(-1,.6,.4,.3,1);}
-  if(dive>0){const dH=p.diveH==null?1:p.diveH;arm(1,dH<.6?2.3:2.9,.05,.1,1);arm(-1,dH<.6?2.3:2.9,.05,.1,1);leg(1,.25,.3,.8);leg(-1,-.25,.3,.8);}
+  if(slide&&!act){leg(-1,.35,.05,1);leg(1,.55,1.1,1);arm(1,-.5,.3,.35,1);arm(-1,.6,.4,.3,1);}
+  if(dive>0&&!act){const dH=p.diveH==null?1:p.diveH;arm(1,dH<.6?2.3:2.9,.05,.1,1);arm(-1,dH<.6?2.3:2.9,.05,.1,1);leg(1,.25,.3,.8);leg(-1,-.25,.3,.8);}
   const hands=gk&&((b.owner===p&&b.inHands)||p.catchT>0);
-  if(hands&&!(p.throwT>0)){arm(1,.5,.8,-.09,1);arm(-1,.5,.8,-.09,1);}
+  if(hands&&!(p.throwT>0)&&!act){arm(1,.5,.8,-.09,1);arm(-1,.5,.8,-.09,1);}
   else if(gk&&!dive&&b.shot&&b.shot.by.team!==p.team){arm(1,2.4,.15,.1,.8);arm(-1,2.4,.15,.1,.8);}
   const throwing=(b.owner===p&&m.restartKind==='throw')||p.throwT>0;
-  if(throwing){const k=p.throwT>0?(1-p.throwT/.4):0;arm(1,2.75-k*1.6,1.3-k*1.1,-.03,1);arm(-1,2.75-k*1.6,1.3-k*1.1,-.03,1);}
-  if(p.jumpT>0&&!slide&&!dive){const k=Math.sin(Math.PI*(1-p.jumpT/.45));arm(1,1.6*k,.3,.35,.8*k);arm(-1,1.6*k,.3,.35,.8*k);leg(1,.35*k,.9*k,.7*k);leg(-1,.15*k,.6*k,.7*k);}
+  if(throwing&&!act){const k=p.throwT>0?(1-p.throwT/.4):0;arm(1,2.75-k*1.6,1.3-k*1.1,-.03,1);arm(-1,2.75-k*1.6,1.3-k*1.1,-.03,1);}
+  if(p.jumpT>0&&!slide&&!dive&&!act){const k=Math.sin(Math.PI*(1-p.jumpT/.45));arm(1,1.6*k,.3,.35,.8*k);arm(-1,1.6*k,.3,.35,.8*k);leg(1,.35*k,.9*k,.7*k);leg(-1,.15*k,.6*k,.7*k);}
   if(celeb){if(sp>1.5){arm(1,.15,.15,1.3,1);arm(-1,.15,.15,1.3,1);add(J['spine.001'],Qz(Math.sin(t*2.2)*.18));}
    else{const k=.5+.5*Math.sin(t*6);arm(1,2.7+k*.2,.35,.25,1);arm(-1,2.7+(1-k)*.2,.35,.25,1);add(J['spine.001'],Qx(-.12));}}
-  if(!celeb&&!slide&&!dive&&kick<0)add(J['spine.001'],Qx(.02+Math.min(1,sp/7)*.12));
+  if(!celeb&&!slide&&!dive&&kick<0&&!act)add(J['spine.001'],Qx(.02+Math.min(1,sp/7)*.12));
   computeGlobals();
   // world: lift/pitch/roll around a pivot, then yaw to facing
   const yaw=Math.atan2(p.fx,-p.fy);let lift=0,pitch=0,roll=0,piv=.95;
-  if(slide){pitch=-1.15;piv=.35;lift=-.28;}
-  if(dive>0){const dH=p.diveH==null?1:p.diveH;const k=Math.sin(Math.min(1,(1-dive)*1.6)*Math.PI*.5);const sideW=-(p.diveDir||1);const fs=Math.sign(-Math.sin(yaw)*0+Math.cos(yaw)*sideW)||1;roll=fs*(dH<.6?1.45:1.3)*k;lift=(.12+.32*Math.min(dH,2))*Math.sin((1-dive)*Math.PI)-.2*k;}
-  if(p.jumpT>0&&!slide&&!dive)lift+=.42*Math.sin(Math.PI*(1-p.jumpT/.45));
+  if(slide&&!act){pitch=-1.15;piv=.35;lift=-.28;}
+  if(dive>0&&!act){const dH=p.diveH==null?1:p.diveH;const k=Math.sin(Math.min(1,(1-dive)*1.6)*Math.PI*.5);const sideW=-(p.diveDir||1);const fs=Math.sign(-Math.sin(yaw)*0+Math.cos(yaw)*sideW)||1;roll=fs*(dH<.6?1.45:1.3)*k;lift=(.12+.32*Math.min(dH,2))*Math.sin((1-dive)*Math.PI)-.2*k;}
+  if(p.jumpT>0&&!slide&&!dive)lift+=(act==='head'?.6:1)*.42*Math.sin(Math.PI*(1-p.jumpT/.45));
   const sc=p._hs||(p._hs=.95+((p.i*7919)%17)/170);
   const cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),spp=Math.sin(pitch),cr=Math.cos(roll),sr=Math.sin(roll);
   // R = Ry * Rx(pitch) * Rz(roll)

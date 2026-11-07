@@ -12,7 +12,8 @@ function gl(n){return n+(n>=3&&n<=10?' أهداف':' هدف');}
 function addNews(c,k,txt,big){wInit(c);c.news.unshift({k,txt,big:!!big,s:c.season,md:c.league?c.league.md:0});if(c.news.length>80)c.news.length=80;}
 
 /* ---- persistent leagues ---- */
-function lgKeyOf(ti,tier){return ti.country+'|'+tier;}
+// كل مستويات الاحتراف في نفس البلد (دوري أقوى/أوروبي كبير/نادي عملاق) هي نفس الدوري الحقيقي
+function lgKeyOf(ti,tier){return ti.lk||ti.country+'|'+tier;}
 function worldClubs(c,tier,ti,n){n=n||(typeof lgSize==='function'?lgSize(c,tier,ti)-1:7);const W=wInit(c);const k=lgKeyOf(ti,tier);let L=W.lg[k];
  if(!L){const used=new Set([c.club.name]);const real=realClubsFor(c,tier,ti,n);real.forEach(x=>used.add(x.name));L=W.lg[k]={clubs:real.concat(genClubs(ti.country,Math.max(0,n-real.length),ti.base,used,RI(0,20))),up:[],down:[],champ:null};}
  return L;}
@@ -47,7 +48,8 @@ function marketValue(c){const o=ovr(c),avg=c.ss.apps>=3?c.ss.rs/c.ss.apps:6.6;co
 
 /* ---- transfers ---- */
 function clubFor(c,tier){const ti=tierInfo(c.path,tier);const L=worldClubs(c,tier,ti);const cand=L.clubs.filter(x=>x.name!==c.club.name);
- const cl=cand.length&&Math.random()<.85?pick(cand):genClubs(ti.country,1,ti.base,new Set([c.club.name]),RI(0,15))[0];return{ti,cl};}
+ let pool=cand;if(!ti.domestic){const near=cand.filter(x=>Math.abs((x.R||ti.base)-ti.base)<=5);if(near.length)pool=near;else{const s2=cand.slice().sort((a,b)=>Math.abs(a.R-ti.base)-Math.abs(b.R-ti.base));pool=s2.slice(0,3);}}
+ const cl=pool.length&&(Math.random()<.85||!ti.domestic)?pick(pool):genClubs(ti.country,1,ti.base,new Set([c.club.name]),RI(0,15))[0];return{ti,cl};}
 function makeOfferW(c,tier,why){const{ti,cl}=clubFor(c,tier);const o=ovr(c),val=marketValue(c);
  const role=o>=cl.R+4?'أساسي':o>=cl.R-1?'أساسي غالباً':o>=cl.R-5?'بديل مهم':'للتطوير';
  const wage=Math.round(WAGE[tier]*R(.85,1.2)*(role==='أساسي'?1.15:role==='للتطوير'?.8:1)*clamp(1+(o-TIER_REQ[tier])*.03,.75,1.5)/10)*10;

@@ -71,7 +71,7 @@ function tierInfo(path,t){const H=CBY[path.home];
  const dom3=61+H.s*16;const presets=[72,77,82,86];let base=presets[0];let prev=dom3;for(let i=4;i<=t;i++){base=Math.max(presets[i-4],prev+3);prev=base;}
  const cc=path.abroad&&path.abroad[t]?path.abroad[t]:(t===4?(H.s>=.9?H.c:rpick(MID.filter(x=>x!==H.c))):rpick(BIG5));
  const names=['دوري أقوى','دوري أوروبي كبير','نادي عملاق','قمة العالم'];
- return{name:names[t-4]+' — '+CBY[cc].n,short:names[t-4],country:cc,base:Math.min(90,Math.round(base)),domestic:false};}
+ return{name:names[t-4]+' — '+CBY[cc].n,short:names[t-4],country:cc,base:Math.min(90,Math.round(base)),domestic:false,lk:cc===path.home?cc+'|3':cc+'|A'};}
 const TIER_REQ=[0,55,59,64,70,76,82,87];
 /* ---------- المراكز ---------- */
 const POS={ST:{n:'مهاجم صريح',slot:9,w:{shot:.38,pace:.2,drib:.17,phys:.15,pass:.1,def:0},st:{pace:60,shot:57,pass:46,drib:52,def:28,phys:56}},

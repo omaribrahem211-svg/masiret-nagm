@@ -30,7 +30,7 @@ function svgI(k,c,s){return`<svg width="${s||28}" height="${s||28}" viewBox="0 0
 /* ================= CAREER MODEL ================= */
 const WAGE=[700,1400,2800,6000,16000,42000,95000,190000];
 function rrDouble(n){const arr=[...Array(n).keys()],R1=[];for(let r=0;r<n-1;r++){const pr=[];for(let i=0;i<n/2;i++){const a=arr[i],b=arr[n-1-i];pr.push(r%2?[b,a]:[a,b]);}R1.push(pr);arr.splice(1,0,arr.pop());}return R1.concat(R1.map(r=>r.map(([a,b])=>[b,a])));}
-function genClubs(cc,n,base,used,kitStart){const out=[];for(let i=0;i<n;i++){const nm=teamName(cc,used);out.push({name:nm,short:shortOf(nm),kit:(kitStart+i*5)%KITS.length,R:Math.round(base+R(-4,6)),cc});}return out;}
+function genClubs(cc,n,base,used,kitStart){const out=[];const shs=new Set();for(let i=0;i<n;i++){let nm=teamName(cc,used);for(let k=0;k<8&&shs.has(shortOf(nm));k++){used.add(nm);nm=teamName(cc,used);}shs.add(shortOf(nm));out.push({name:nm,short:shortOf(nm),kit:(kitStart+i*5)%KITS.length,R:Math.round(base+R(-4,6)),cc});}return out;}
 function newCareer(o){const c={v:2,name:o.name,nat:o.nat,pos:o.pos,num:o.num,skin:o.skin,hair:o.hair,age:17,attrs:Object.assign({},POS[o.pos].st),sp:3,money:1500,followers:120,morale:62,fans:45,coach:55,energy:100,inj:0,
   path:{home:o.start,tier:0,abroad:{}},club:o.club,contract:{wage:WAGE[0],years:2},season:1,si:0,sched:[],ss:{apps:0,g:0,a:0,rs:0,yc:0,motm:0},tot:{apps:0,g:0,a:0},intl:{called:false,caps:0,g:0},
   trophies:[],history:[],inbox:[],feed:[],owned:[],lastPost:-1,contQ:false,sponsor:0,spLevel:0,won:0,msgId:1};
@@ -441,7 +441,7 @@ let hudCache='';function hud(m){const ph=m.phase;const H=$('hud');H.classList.to
  // أزرار التحكم والجويستيك بتختفي وقت الجون والإعادة والاحتفال ورجوع اللاعيبة لأماكنهم، وترجع مع بداية اللعب
  const noC=ph==='goal'||ph==='replay'||ph==='intro'||ph==='end'||ph==='half'||!!m.walk;if(noC!==H.classList.contains('noctl')){H.classList.toggle('noctl',noC);if(noC){Input.clear();Input.joy=null;const kn=$('joyKnob');if(kn)kn.style.transform='';}}H.classList.toggle('intro',ph==='intro');H.classList.toggle('replay',ph==='replay');
  const bn=m.banner;const s=`${m.score[0]}|${m.score[1]}|${m.minute()}|${bn?bn.t+(bn.s||''):''}|${ph}`;if(s===hudCache)return;hudCache=s;
- $('hA').textContent=m.t[0].short;$('hB').textContent=m.t[1].short;$('kA').style.background=m.t[0].kit[0];$('kB').style.background=m.t[1].kit[0];$('sc').textContent=m.score[0]+' - '+m.score[1];$('clk').textContent=m.clock();
+ {let a=m.t[0].short,b2=m.t[1].short;if(a===b2){a=(m.t[0].name||a).split(' ')[0];b2=(m.t[1].name||b2).split(' ')[0];if(a===b2){a=m.t[0].name;b2=m.t[1].name;}}$('hA').textContent=a;$('hB').textContent=b2;}$('kA').style.background=m.t[0].kit[0];$('kB').style.background=m.t[1].kit[0];$('sc').textContent=m.score[0]+' - '+m.score[1];$('clk').textContent=m.clock();
  const el=$('banner');if(bn&&ph!=='replay'){el.className='on'+(bn.small?' small':'')+(bn.card?' card':'')+(bn.goal?' goal'+(bn.team===0?'':' opp'):'');$('bnCard').style.background=bn.card==='yellow'?'#F5C542':'#E53935';$('bnT').textContent=bn.t;$('bnS').textContent=bn.s||'';}else el.className='';}
 
 /* ---------- LOOP ---------- */

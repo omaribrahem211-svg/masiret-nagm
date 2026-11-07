@@ -399,3 +399,6 @@ table.tbl{width:100%;border-collapse:collapse;font-size:clamp(12px,2.6vh,15px)}
 /* طاقة اللاعب بعد الماتش */
 .enrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 10px;margin-bottom:8px;border-radius:14px;background:rgba(255,255,255,.05)}
 .enrow b{font-size:16px}.enbar{display:inline-block;width:110px;height:8px;border-radius:6px;background:rgba(255,255,255,.12);overflow:hidden;vertical-align:middle;margin-left:6px}.enbar i{display:block;height:100%}
+
+#hud #btns,#hud #joyZone{transition:opacity .25s}
+#hud.noctl #btns,#hud.noctl #joyZone{opacity:0;pointer-events:none}

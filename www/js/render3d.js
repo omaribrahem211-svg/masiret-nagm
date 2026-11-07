@@ -294,7 +294,12 @@ class R3D{
   const q=this.quality;this.shadowSetup(q>=2?2048:1024);
   // camera
   const b=m.ball;if(!m._c3)m._c3={x:clamp(b.x,7,L-7),y:clamp(b.y,14,W-10)};const c3=m._c3;const dt=Math.min(0.05,(t-(c3.t||t))/1000)||0.016;c3.t=t;
-  const cel=m.phase==='goal'&&m.celebrator;const ow=b.owner,pd=ow?ow.team.dir:(b.last?b.last.team.dir*.5:0);const wl=m.phase==='play'?pd*5.5+(ow?ow.vx*.35:b.vx*.25):0;c3.lx=(c3.lx||0)+(clamp(wl,-9,9)-(c3.lx||0))*Math.min(1,dt*1.1);const nearG=Math.min(b.x,L-b.x)<22&&Math.abs(b.y-CY)<24&&m.phase==='play';c3.zk=(c3.zk||1)+((nearG?.9:1)-(c3.zk||1))*Math.min(1,dt*1.3);const fx0=cel?cel.x:b.x+c3.lx,fy0=cel?cel.y:b.y;const tx=clamp(fx0,7,L-7),ty=clamp(fy0,cel?4:14,W-12);c3.x+=(tx-c3.x)*Math.min(1,dt*2.2);c3.y+=(ty-c3.y)*Math.min(1,dt*1.6);
+  const cel=m.phase==='goal'&&m.celebrator;const ow=b.owner,pd=ow?ow.team.dir:(b.last?b.last.team.dir*.5:0);
+  // كاميرا ناعمة: زنبرك متخمّد (من غير قفزات)، سبقة بسيطة ناحية الهجمة، وزووم تدريجي كل ما الكورة تقرب من المرمى
+  const SD=(k,target,tau)=>{const v=k+'v';const om=2/tau,x=om*dt,ex=1/(1+x+.48*x*x+.235*x*x*x);const ch=(c3[k]==null?target:c3[k])-target,tmp=((c3[v]||0)+om*ch)*dt;c3[v]=((c3[v]||0)-om*tmp)*ex;c3[k]=target+(ch+tmp)*ex;return c3[k];};
+  const wl=m.phase==='play'?pd*5+(ow?ow.vx*.3:b.vx*.2):0;SD('lx',clamp(wl,-8,8),1.1);
+  const dGo=Math.min(b.x,L-b.x),zt=m.phase==='play'&&Math.abs(b.y-CY)<26?1-.1*clamp((30-dGo)/16,0,1):1;SD('zk',zt,.9);
+  const fx0=cel?cel.x:b.x+c3.lx,fy0=cel?cel.y:b.y;const tx=clamp(fx0,7,L-7),ty=clamp(fy0,cel?4:14,W-12);SD('x',tx,.42);SD('y',ty,.6);
   const aspect=w/h,zoomK=aspect<1.5?1.25:1;let eye,tgt,wf;
   if(m.phase==='intro'){const a=t/1000*.22+(c3.a0||(c3.a0=Math.random()*6));eye=[CX+Math.cos(a)*86,30+Math.sin(a*.6)*5,-CY+Math.sin(a)*52];tgt=[CX,2,-CY];wf=aspect<1.5?50:38;c3.f=wf;}
   else if(m.phase==='replay'){const d=m.rpDir||1;const wantE=[b.x-d*12,3.4,-b.y+11],wantT=[b.x+d*3,1,-b.y];if(!c3.re){c3.re=wantE.slice();c3.rt=wantT.slice();}for(let i=0;i<3;i++){c3.re[i]+=(wantE[i]-c3.re[i])*Math.min(1,dt*3);c3.rt[i]+=(wantT[i]-c3.rt[i])*Math.min(1,dt*4);}eye=c3.re.slice();tgt=c3.rt.slice();wf=aspect<1.5?44:34;c3.f=wf;}

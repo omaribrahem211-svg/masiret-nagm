@@ -8,7 +8,7 @@ function packSave(){if(App.c)Guard.protect(App.c);const d=JSON.stringify({c:App.
 function unpackSave(raw){if(!raw)return null;try{const o=JSON.parse(raw);if(o&&o.v===3){if(Guard.hash(o.d)!==o.h)return{bad:true,t:o.t};const d=JSON.parse(o.d);return{c:d.c,s:d.s,t:o.t};}if(o&&('c' in o))return{c:o.c,s:o.s,t:0};}catch(e){}return null;}
 function store(){let p;try{p=packSave();}catch(e){return;}try{localStorage.setItem(SAVE,p);}catch(e){}try{if(Nat&&Nat.saveSet)Nat.saveSet({k:SAVE,v:p}).catch(()=>{});}catch(e){}}
 function applySave(d){App.c=d.c||null;if(App.c)Guard.protect(App.c);Object.assign(App.settings,d.s||{});}
-function load(){const d=unpackSave(localStorage.getItem(SAVE));if(d&&!d.bad)applySave(d);App._lt=d&&!d.bad?d.t:-1;if(d&&d.bad)App._badSave=true;
+function load(){let raw=null;try{raw=localStorage.getItem(SAVE);}catch(e){}const d=unpackSave(raw);if(d&&!d.bad)applySave(d);App._lt=d&&!d.bad?d.t:-1;if(d&&d.bad)App._badSave=true;
  if(Nat&&Nat.saveGet)Nat.saveGet({k:SAVE}).then(r=>{const n=unpackSave(r&&r.v);if(!n||n.bad)return;if(n.t>App._lt&&!App.match){applySave(n);try{localStorage.setItem(SAVE,r.v);}catch(e){}const cur=document.querySelector('.screen.on');if(cur&&cur.id==='scr-title')renderTitle();}}).catch(()=>{});}
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2400);}
 function flashDom(){const f=$('flash');f.classList.remove('go');void f.offsetWidth;f.classList.add('go');}
@@ -434,7 +434,9 @@ $('paSubs').onclick=()=>{$('helpP').classList.add('hidden');$('subsP').classList
 $('paHelp').onclick=()=>{$('subsP').classList.add('hidden');const H=$('helpP');H.classList.toggle('hidden');const sv=id=>$(id).querySelector('svg').outerHTML;H.innerHTML=`<div class="help"><b></b><b>في الهجوم</b><b>في الدفاع</b>${sv('bX')}<span>تمرير أرضي</span><span>ضغط على حامل الكورة (اضغط مطوّل)</span>${sv('bO')}<span>عرضية / تمريرة طويلة</span><span>افتكاك واقف</span>${sv('bT')}<span>تمريرة بينية</span><span>زميل يضغط معاك (اضغط مطوّل)</span>${sv('bS')}<span>تسديد (اضغط مطوّل للقوة)</span><span>زحلقة</span></div><div class="sub" style="margin-top:8px">السرعة أوتوماتيك لما تزق الجويستيك لآخره. والتبديل للاعب الأقرب للكورة أوتوماتيك.</div>`;};
 
 /* ---------- HUD ---------- */
-let hudCache='';function hud(m){const ph=m.phase;const H=$('hud');H.classList.toggle('cine',ph==='intro'||ph==='replay');H.classList.toggle('intro',ph==='intro');H.classList.toggle('replay',ph==='replay');
+let hudCache='';function hud(m){const ph=m.phase;const H=$('hud');H.classList.toggle('cine',ph==='intro'||ph==='replay');
+ // أزرار التحكم والجويستيك بتختفي وقت الجون والإعادة والاحتفال ورجوع اللاعيبة لأماكنهم، وترجع مع بداية اللعب
+ const noC=ph==='goal'||ph==='replay'||ph==='intro'||ph==='end'||ph==='half'||!!m.walk;if(noC!==H.classList.contains('noctl')){H.classList.toggle('noctl',noC);if(noC){Input.clear();Input.joy=null;const kn=$('joyKnob');if(kn)kn.style.transform='';}}H.classList.toggle('intro',ph==='intro');H.classList.toggle('replay',ph==='replay');
  const bn=m.banner;const s=`${m.score[0]}|${m.score[1]}|${m.minute()}|${bn?bn.t+(bn.s||''):''}|${ph}`;if(s===hudCache)return;hudCache=s;
  $('hA').textContent=m.t[0].short;$('hB').textContent=m.t[1].short;$('kA').style.background=m.t[0].kit[0];$('kB').style.background=m.t[1].kit[0];$('sc').textContent=m.score[0]+' - '+m.score[1];$('clk').textContent=m.clock();
  const el=$('banner');if(bn&&ph!=='replay'){el.className='on'+(bn.small?' small':'')+(bn.card?' card':'')+(bn.goal?' goal'+(bn.team===0?'':' opp'):'');$('bnCard').style.background=bn.card==='yellow'?'#F5C542':'#E53935';$('bnT').textContent=bn.t;$('bnS').textContent=bn.s||'';}else el.className='';}

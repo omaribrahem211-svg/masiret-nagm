@@ -7,7 +7,7 @@ const SAVE='masiret-nagm-v2';
 function packSave(){if(App.c)Guard.protect(App.c);const d=JSON.stringify({c:App.c,s:App.settings});return JSON.stringify({v:3,t:Date.now(),d,h:Guard.hash(d)});}
 function unpackSave(raw){if(!raw)return null;try{const o=JSON.parse(raw);if(o&&o.v===3){if(Guard.hash(o.d)!==o.h)return{bad:true,t:o.t};const d=JSON.parse(o.d);return{c:d.c,s:d.s,t:o.t};}if(o&&('c' in o))return{c:o.c,s:o.s,t:0};}catch(e){}return null;}
 function store(){let p;try{p=packSave();}catch(e){return;}try{localStorage.setItem(SAVE,p);}catch(e){}try{if(Nat&&Nat.saveSet)Nat.saveSet({k:SAVE,v:p}).catch(()=>{});}catch(e){}}
-function applySave(d){App.c=d.c||null;if(App.c)Guard.protect(App.c);Object.assign(App.settings,d.s||{});}
+function applySave(d){setTimeout(()=>{if(typeof loadFace==='function')loadFace();},0);App.c=d.c||null;if(App.c)Guard.protect(App.c);Object.assign(App.settings,d.s||{});}
 function load(){let raw=null;try{raw=localStorage.getItem(SAVE);}catch(e){}const d=unpackSave(raw);if(d&&!d.bad)applySave(d);App._lt=d&&!d.bad?d.t:-1;if(d&&d.bad)App._badSave=true;
  if(Nat&&Nat.saveGet)Nat.saveGet({k:SAVE}).then(r=>{const n=unpackSave(r&&r.v);if(!n||n.bad)return;if(n.t>App._lt&&!App.match){applySave(n);try{localStorage.setItem(SAVE,r.v);}catch(e){}const cur=document.querySelector('.screen.on');if(cur&&cur.id==='scr-title')renderTitle();}}).catch(()=>{});}
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2400);}
@@ -198,7 +198,10 @@ function coachPick(c,f,info){if(f.pick)return f.pick;let p;const o=ovr(c);const 
   if(jan){p={st:'out',why:'مع المنتخب في '+X.name};}
   else{const role=c.pos==='CAM'||c.pos==='CM'?'MF':'FW';const S=squadDef(c,Object.assign({cc:curTier(c).country},c.club)).filter(x=>x.r===role).sort((a,b)=>b.ov-a.ov);const rival=S[2]||S[S.length-1]||{ov:o};
    const sc=(o-rival.ov)*1.1+(c.coach-55)*.16+(form-6.7)*4+(c.energy<40?-4:0)+(c.age<=18?-2:0)+(info.big&&c.coach<45?-3:0)+R(-1.5,1.5);
-   p=sc>=0?{st:'start',weak:sc<3}:sc>=-9?{st:'bench',min:clamp(Math.round(78-(sc+9)*2.2+R(-4,4)),46,86)}:{st:'out',why:'المدرب شايف إنك محتاج تشتغل أكتر في التمرين'};}}
+   const rot=(info.cup||/كأس/.test(info.comp||''))&&sc>-15&&Math.random()<.45;
+   p=sc>=0||rot?{st:'start',weak:sc<3}:sc>=-9?{st:'bench',min:clamp(Math.round(78-(sc+9)*2.2+R(-4,4)),46,86)}:sc>=-17&&Math.random()<.5?{st:'bench',min:RI(72,88)}:{st:'out',why:'المدرب شايف إنك محتاج تشتغل أكتر في التمرين'};
+   // اللي قاعد برّه القايمة بيكسب ثقة المدرب شوية شوية من التمرين، عشان ما يفضلش محبوس على الدكة للأبد
+   if(p.st==='out')c.coach=Math.min(100,(c.coach||50)+.6);}}
  f.pick=p;return p;}
 function pickTxt(p){return p.st==='start'?'أساسي في التشكيلة':p.st==='bench'?'احتياطي — هتنزل غالباً حوالي الدقيقة '+p.min:'مش في القايمة — '+(p.why||'');}
 function coachSetup(m,pk){App.subPlan={pk,done:false};if(pk.st!=='bench'||!m)return;const t=m.t[0],st=t.star;if(!st)return;const idx=t.pl.indexOf(st);const rep=t.bench.find(b=>b.role===st.role)||t.bench[0];Object.assign(rep,{i:st.i,role:st.role,bx:st.bx,by:st.by,x:st.x,y:st.y,vx:0,vy:0,team:t});t.pl[idx]=rep;t.bench=t.bench.filter(x=>x!==rep);m.all=[...m.t[0].pl,...m.t[1].pl];if(m.ball.owner===st)m.ball.owner=rep;
@@ -216,7 +219,7 @@ function openPre(){const c=App.c,f=c.sched[c.si];if(!f)return seasonEnd();
  $('preInfo').innerHTML=`<span class="pill">معنويات ${c.morale}%</span><span class="pill">طاقة ${c.energy}%</span><span class="pill">ثقة المدرب ${c.coach}%</span><span class="pill">${c.wx.rain?'مطر — الكورة أسرع والأرض بتزحلق':'جو صافي'}</span><span class="pill ${pk.st==='start'?'':'warn'}">المدرب: ${esc(pickTxt(pk))}</span>${c.inj>0?'<span class="pill warn">مصاب — هتتفرج من المدرجات</span>':c.susp>0?'<span class="pill warn">موقوف — هتتفرج من المدرجات</span>':''}${c.energy<40?'<span class="pill warn">طاقتك قليلة</span>':''}`;
  const outP=c.inj>0||c.susp>0||pk.st==='out';$('preGo').classList.toggle('hidden',outP);$('preGo').textContent=pk.st==='bench'?'العب (من الدكة)':'العب الماتش';$('preSim').textContent=outP?'تابع النتيجة':(Ads.ready?'🎬 تخطّى الماتش (إعلان · مش هتلعب)':'تخطّى الماتش (مش هتلعب)');
  $('preBack').onclick=()=>show('hub');$('preGo').onclick=()=>startFix(false);$('preSim').onclick=async()=>{const out=$('preGo').classList.contains('hidden');if(out||!Ads.ready)return startFix(true);const b=$('preSim');b.disabled=true;const t0=b.textContent;b.textContent='بيحمّل الإعلان…';const r=await Ads.reward();b.disabled=false;b.textContent=t0;if(r==='cancel'){toast('لازم تكمّل الإعلان للآخر عشان تتخطى الماتش');return;}if(r==='na')toast('مفيش إعلان متاح دلوقتي، اتخطّى المرة دي ببلاش');startFix(true);};App.quick=false;show('pre');}
-function startFix(sim){const c=App.c,f=c.sched[c.si],info=fixInfo(c,f);const home=myTeamDef(c,info);const away=Object.assign({},info.opp,{sqBoost:App.settings.diff,sq:info.nat?null:getSquad(c,Object.assign({cc:curTier(c).country},info.opp)),R:oppMatchR(c,info.opp.R),nm:info.opp.nm||(info.opp.cc?CBY[info.opp.cc].nm:CBY[curTier(c).country].nm)});
+function startFix(sim){const c=App.c,f=c.sched[c.si],info=fixInfo(c,f);const home=myTeamDef(c,info);const away=Object.assign({},info.opp,{sqBoost:App.settings.diff,sq:info.nat?null:getSquad(c,Object.assign({cc:curTier(c).country},info.opp)),R:sim?info.opp.R:oppMatchR(c,info.opp.R),nm:info.opp.nm||(info.opp.cc?CBY[info.opp.cc].nm:CBY[curTier(c).country].nm)});
  const pk=coachPick(c,f,info);const absent=c.inj>0||c.susp>0||pk.st==='out';if(sim||absent)return simFix(info,home,away,true,pk,!absent);
  beginMatch(new Match({home,away,human:{lock:!!App.settings.lock},halfLen:App.settings.halfLen,intro:!!App.settings.intro,comp:info.comp+' · '+info.label,weather:c.wx&&c.wx.rain?'rain':'clear',onEvent:matchEvent,onEnd:r=>{const P=App.subPlan;if(r.star)r.star.min=P&&P.inMin?90-P.inMin:P&&P.outAt?P.outAt:90;App.subPlan=null;finishFix(r,false);}}),info,home,away);coachSetup(App.match,pk);}
 // قوة الخصم في الماتش: مستوى الخصم الحقيقي، بس عمره ما يبقى أضعف بكتير من لاعبك (عشان البداية ماتبقاش سهلة) + الصعوبة
@@ -327,8 +330,8 @@ function seasonEnd(){const c=App.c;wInit(c);
  go();}
 function processSeason(c){seasonWrap(c);try{worldSeason(c);}catch(e){console.warn(e);}const lg=c.league,tb=sortTable(lg),pos=tb.findIndex(t=>t.me)+1;const avg=c.ss.apps?c.ss.rs/c.ss.apps:6;const o=ovr(c);const T=curTier(c);
  let objDone=0;(c.obj||[]).forEach(x=>{if(objProg(c,x)[1])objDone++;});if(objDone){c.coach=clamp(c.coach+objDone*4,0,100);c.money+=c.contract.wage*objDone;}
- const RR=c.league.rounds.length||30;let spG=c.ss.apps?Math.round(clamp((avg-6.2)*2.5+c.ss.apps/RR*2+objDone*.5,1,8)):1;
- let dev='';if(c.age<=23&&c.ss.apps>=RR*.3){const n=(c.age<=20?2:1)+(c.ss.apps>=RR*.7?1:0);const keys=Object.keys(POS[c.pos].w).filter(k=>POS[c.pos].w[k]>0);const up=[];for(let i=0;i<n;i++){const k=pick(keys);if(c.attrs[k]<99){c.attrs[k]++;up.push(ATTRN[k]);}}if(up.length)dev='تطوّر طبيعي من الماتشات: '+up.join('، ')+' +1';}
+ const RR=c.league.rounds.length||30;let spG=c.ss.apps?Math.round(clamp((avg-6.2)*4.2+c.ss.apps/RR*3+objDone*.8+(c.age<=21?2.5:c.age<=25?1.5:0)+(c.path.tier||0)*.5,1,14)):1;
+ let dev='';if(c.age<=23&&c.ss.apps>=RR*.3){const n=(c.age<=19?4:c.age<=21?3:2)+(c.ss.apps>=RR*.7?1:0);const keys=Object.keys(POS[c.pos].w).filter(k=>POS[c.pos].w[k]>0);const up=[];for(let i=0;i<n;i++){const k=pick(keys);if(c.attrs[k]<99){c.attrs[k]++;up.push(ATTRN[k]);}}if(up.length)dev='تطوّر طبيعي من الماتشات: '+up.join('، ')+' +1';}
  const won=[];if(pos===1){c.trophies.push({n:'بطولة '+c.tierName,s:c.season,k:'L'});won.push('أبطال الدوري!');addNews(c,'me',c.club.name+' بطل '+c.tierName+'!',true);}else addNews(c,'league',tb[0].name+' بطل '+c.tierName+' الموسم '+c.season);
  const la=lgAwards(c,tb);la.forEach(a=>{if(a.w.me){c.trophies.push({n:a.n+' — '+c.tierShort,s:c.season,k:'award'});won.push(a.n);addNews(c,'me',c.name+' يفوز بجائزة '+a.n+' ('+a.v+')',true);}else if(a.n!=='تشكيلة الموسم')addNews(c,'league',a.w.n+' ('+a.w.club+') يفوز بجائزة '+a.n+' — '+a.v);});
  const seasonTro=c.trophies.filter(t=>t.s===c.season&&t.k!=='award').length;let race=null,rank=0,ballon=false;

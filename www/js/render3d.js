@@ -55,6 +55,7 @@ void main(){vec4 base=vC;
  else if(uMode==3){vec4 t=texture(uTex,vT);base=vec4(base.rgb*t.a,1.0);}
  else if(uMode==4){vec4 t=texture(uTex,vT);base=vec4(0.0,0.0,0.0,t.a*vC.a);}
  else if(uMode==6){vec2 uv=vT;float cx=floor(uv.x*40.0),cy=floor(uv.y*8.0);float hs=fract(sin(cx*12.9898+cy*78.233)*43758.5453);uv.y+=max(0.0,sin(uTime*(7.0+hs*6.0)+hs*6.283))*uWave*0.028;vec4 t=texture(uTex,uv);base.rgb*=t.rgb;}
+ else if(uMode==7){vec4 t=texture(uTex,vT);if(t.a<0.5)discard;base.rgb=t.rgb;}
  else if(uMode==5){vec4 t=texture(uTex,vT);if(t.a<0.45)discard;base=vec4(mix(vec3(0.015),vC.rgb,t.r),1.0);}
  vec3 col;
  if(uUnlit>0.0){col=base.rgb*uUnlit;}
@@ -97,7 +98,7 @@ class R3D{
   this.skin=null;try{if(typeof Skel!=='undefined'&&Skel)this.initSkin();}catch(e){console.warn('skin off',e);this.skin=null;}
   this.quality=2;this.mkTextures();this.mkStatic();this.shadowSize=0;this.ballR=new Float32Array([1,0,0,0,1,0,0,0,1]);this.frameN=0;
   // dynamic batches
-  this.dyn={cyl:this.batch(this.G.cyl,500),box:this.batch(this.G.box,300),sph:this.batch(this.G.sph,120),ball:this.batch(this.G.ball,2),ring:this.batch(this.G.ring,4),glow:this.batch(this.G.quad,16),blob:this.batch(this.G.plane,30),limb:this.batch(this.G.limb,200),thigh:this.batch(this.G.thigh,60),calf:this.batch(this.G.calf,60),fore:this.batch(this.G.fore,60),torso:this.batch(this.G.torso,30),shorts:this.batch(this.G.shorts,30),hair:this.batch(this.G.hair,30),num:this.batch(this.G.quad,30)};
+  this.dyn={cyl:this.batch(this.G.cyl,500),box:this.batch(this.G.box,300),sph:this.batch(this.G.sph,120),ball:this.batch(this.G.ball,2),ring:this.batch(this.G.ring,4),glow:this.batch(this.G.quad,16),blob:this.batch(this.G.plane,30),limb:this.batch(this.G.limb,200),thigh:this.batch(this.G.thigh,60),calf:this.batch(this.G.calf,60),fore:this.batch(this.G.fore,60),torso:this.batch(this.G.torso,30),shorts:this.batch(this.G.shorts,30),hair:this.batch(this.G.hair,30),num:this.batch(this.G.quad,30),face:this.batch(this.G.quad,2)};
  }
  mk(vs,fs){const gl=this.gl;const c=(t,s)=>{const x=gl.createShader(t);gl.shaderSource(x,s);gl.compileShader(x);if(!gl.getShaderParameter(x,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(x));return x;};const p=gl.createProgram();gl.attachShader(p,c(gl.VERTEX_SHADER,vs));gl.attachShader(p,c(gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p));return p;}
  geo(g){const gl=this.gl;const mkb=(d,t)=>{const b=gl.createBuffer();gl.bindBuffer(t,b);gl.bufferData(t,d,gl.STATIC_DRAW);return b;};return{p:mkb(new Float32Array(g.P),gl.ARRAY_BUFFER),n:mkb(new Float32Array(g.N),gl.ARRAY_BUFFER),t:mkb(new Float32Array(g.T),gl.ARRAY_BUFFER),i:mkb(new Uint16Array(g.I),gl.ELEMENT_ARRAY_BUFFER),cnt:g.I.length};}
@@ -124,7 +125,11 @@ class R3D{
   // number on the back of the shirt, following spine.003
   const J=Skel.J,W=sk.W,P=Skel.jointPoint(J['spine.003'],W,[0,1.36,-0.165],[0,0,0]),up=Skel.jointDir(J['spine.003'],W,[0,1,0],[0,0,0]),rt=Skel.jointDir(J['spine.003'],W,[1,0,0],[0,0,0]),bk=Skel.jointDir(J['spine.003'],W,[0,0,-1],[0,0,0]);
   const n=p.num%100,mo=this.tm,sx=.21,sy=.21;mo[0]=rt[0]*sx;mo[1]=rt[1]*sx;mo[2]=rt[2]*sx;mo[3]=0;mo[4]=up[0]*sy;mo[5]=up[1]*sy;mo[6]=up[2]*sy;mo[7]=0;mo[8]=bk[0];mo[9]=bk[1];mo[10]=bk[2];mo[11]=0;mo[12]=P[0];mo[13]=P[1];mo[14]=P[2];mo[15]=1;
-  this.add(this.dyn.num,mo,lum(p.team.kit[0])>.6&&!gk?[0.02,0.02,0.03,1]:[1,1,1,1],[(n%10)/10,Math.floor(n/10)/10,.1,.1]);}
+  this.add(this.dyn.num,mo,lum(p.team.kit[0])>.6&&!gk?[0.02,0.02,0.03,1]:[1,1,1,1],[(n%10)/10,Math.floor(n/10)/10,.1,.1]);
+  // وش اللاعب من صورة المستخدم (لنجمك بس)
+  if(p.star&&window.FACE_IMG&&FACE_IMG.complete&&FACE_IMG.naturalWidth){if(this.faceSrc!==FACE_IMG.src){this.faceSrc=FACE_IMG.src;this.tFace=this.tex(FACE_IMG);}
+   const H=J['head'],fp=Skel.jointPoint(H,W,[0,1.665,0.118],[0,0,0]),fu=Skel.jointDir(H,W,[0,1,0],[0,0,0]),fr=Skel.jointDir(H,W,[-1,0,0],[0,0,0]),fn=Skel.jointDir(H,W,[0,0,1],[0,0,0]);const fx=.17,fy=.21;
+   mo[0]=fr[0]*fx;mo[1]=fr[1]*fx;mo[2]=fr[2]*fx;mo[3]=0;mo[4]=fu[0]*fy;mo[5]=fu[1]*fy;mo[6]=fu[2]*fy;mo[7]=0;mo[8]=fn[0];mo[9]=fn[1];mo[10]=fn[2];mo[11]=0;mo[12]=fp[0];mo[13]=fp[1];mo[14]=fp[2];mo[15]=1;this.add(this.dyn.face,mo,[1,1,1,1]);}}
  skinUpload(){const gl=this.gl,sk=this.skin;if(!sk.n)return;gl.bindTexture(gl.TEXTURE_2D,sk.tex);gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,sk.texW,sk.n,gl.RGBA,gl.FLOAT,sk.data,0);}
  batch(geo,max){const gl=this.gl;const b={geo,max,n:0,d:new Float32Array(max*24),vao:gl.createVertexArray(),ib:gl.createBuffer()};gl.bindVertexArray(b.vao);
   [[geo.p,0,3],[geo.n,1,3],[geo.t,2,2]].forEach(([buf,l,s])=>{gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.enableVertexAttribArray(l);gl.vertexAttribPointer(l,s,gl.FLOAT,false,0,0);});
@@ -345,7 +350,7 @@ class R3D{
    gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,this.shTex);gl.uniform1i(su.Sh,1);gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,sk.tex);gl.uniform1i(su.Bones,2);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,this.tWhite);gl.uniform1i(su.Tex,0);
    gl.uniform1i(su.Mode,0);gl.uniform1f(su.Unlit,0);gl.uniform1f(su.ShOn,1);gl.uniform1f(su.Wave,0);gl.uniform1i(su.NJ,sk.nJ);
    gl.bindVertexArray(sk.vao);gl.drawElementsInstanced(gl.TRIANGLES,sk.cnt,gl.UNSIGNED_SHORT,0,sk.n);gl.bindVertexArray(null);gl.useProgram(this.prog);}
-  set(5,this.tNum,0,1);gl.enable(gl.POLYGON_OFFSET_FILL);gl.polygonOffset(-1,-2);this.draw(D.num);gl.disable(gl.POLYGON_OFFSET_FILL);gl.activeTexture(gl.TEXTURE0);
+  set(5,this.tNum,0,1);gl.enable(gl.POLYGON_OFFSET_FILL);gl.polygonOffset(-1,-2);this.draw(D.num);if(this.tFace&&D.face.n){set(7,this.tFace,0,0);this.draw(D.face);}gl.disable(gl.POLYGON_OFFSET_FILL);gl.activeTexture(gl.TEXTURE0);
   set(1,this.tBall,0,1);this.draw(D.ball);
   set(0,null,1.4);gl.enable(gl.POLYGON_OFFSET_FILL);gl.polygonOffset(-2,-4);this.draw(D.ring);gl.disable(gl.POLYGON_OFFSET_FILL);
   gl.enable(gl.BLEND);gl.depthMask(false);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);set(4,this.tGlow,1);this.draw(D.blob);set(2,this.tNet,0,0);this.draw(this.netB);

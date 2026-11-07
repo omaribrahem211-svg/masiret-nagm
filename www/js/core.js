@@ -151,7 +151,7 @@ class Match{
   if(this.pen&&this.pen.live&&!b.shot)this.pen=null;
   const pbx=b.owner?b.x:b.x+b.vx*.4,pby=b.owner?b.y:b.y+b.vy*.4;
   for(const t of this.t){let c1=null,d1=1e9,c2=null,d2=1e9;for(const p of t.pl){if(p.role==='GK'||p.stun>0)continue;const d=hyp(p.x-pbx,p.y-pby);if(d<d1){c2=c1;d2=d1;c1=p;d1=d;}else if(d<d2){c2=p;d2=d;}}t.chaser=c1;t.second=c2;
-   const o=this.other(t);let m=0;for(const q of o.pl){if(q.role==='GK')continue;const qx=t.dir===1?q.x:L-q.x;if(qx>m)m=qx;}const bx=t.dir===1?b.x:L-b.x;t.offLine=Math.max(m,bx,52.5);t.str=clamp(((t.R||60)-(o.R||60))/15,-1,1);this.tactic(t,o,bx);}
+   const o=this.other(t);let m=0;for(const q of o.pl){if(q.role==='GK')continue;const qx=t.dir===1?q.x:L-q.x;if(qx>m)m=qx;}const bx=t.dir===1?b.x:L-b.x;t.offLine=Math.max(m,bx,52.5);t.str=clamp(((t.R||60)-(o.R||60))/15,-1,1);t.q=clamp(((t.R||60)-50)/35,0,1);this.tactic(t,o,bx);}
   const h=this.human;
   if(h)this.humanCtl(dt);
   const penWait=this.pen&&!this.pen.live;
@@ -269,13 +269,13 @@ class Match{
     // مساحة قدّامه؟ يكمّل لجوه المنطقة بدل ما يشوط من بعيد
     let blk=0;for(const q of o.pl){if(q.role==='GK')continue;const ax=(q.x-p.x)*t.dir;if(ax>0&&ax<9&&Math.abs(q.y-p.y)<3.2+ax*.25){blk++;}}
     const ang=Math.abs(p.y-CY)/Math.max(1,Math.abs(g[0]-p.x));
-    let ch=dG<11?.92:dG<16.5?.7:dG<22?(blk?.32+sk*.2:.1+sk*.12):dG<28?(blk?.08+sk*.14:.02+sk*.05):(blk?sk*.06:0);if(ang>1.1&&dG<16.5)ch*=.45;
+    const tq=t.q||0;let ch=dG<11?.94:dG<16.5?.72+tq*.12:dG<22?(blk?.32+sk*.2:.12+sk*.12+tq*.08):dG<28?(blk?.08+sk*.14+tq*.04:.02+sk*.05):(blk?sk*.06:0);if(ang>1.1&&dG<16.5)ch*=.45;
     if(Math.random()<ch){this.shoot(p,dG<12?R(.35,.75):R(.5,.95),R(-1,1));return;}}
    const tg=(nd<3.4&&Math.random()<.75)||Math.random()<.3?this.bestPass(p,true):null;if(tg&&(nd<3.4||t.dir*(tg.p.x-p.x)>9)){this.pass(p,tg.p,tg.thru,tg.lob);return;}}
   let dx=g[0]-p.x,dy=(g[1]-p.y)*(dG>25?.35:.9);let d=hyp(dx,dy)||1;dx/=d;dy/=d;
   if(no&&nd<6&&t.dir*(no.x-p.x)>-1){const ax=p.x-no.x,ay=p.y-no.y;const px=-dy,py=dx;const side=(ax*px+ay*py)>=0?1:-1;const f=(1-nd/6)*1.2;dx+=px*side*f;dy+=py*side*f;d=hyp(dx,dy)||1;dx/=d;dy/=d;}
   if(p.y<3)dy=Math.abs(dy)*.5+.2;if(p.y>W-3)dy=-Math.abs(dy)*.5-.2;
-  p.tgt=[p.x+dx*5,p.y+dy*5];p.spd=p.mse*(nd>6?.95:nd>3.5?.8:.64);}
+  p.tgt=[p.x+dx*5,p.y+dy*5];const tq=t.q||0;p.spd=p.mse*(nd>6?.95+tq*.04:nd>3.5?.8+tq*.12:.64+tq*.14);}
  bestPass(p,lobOK,forceLob){const t=p.team,o=this.other(t),b=this.ball;let best=null,bs=-1e9;let pnd=99;for(const q of o.pl)pnd=Math.min(pnd,hyp(q.x-p.x,q.y-p.y));const rmax=pnd<2.2?.55:pnd<4?.45:.36;const sx=b.owner===p?b.x:p.x,sy=b.owner===p?b.y:p.y;const g=this.attG(t);
   for(const q of t.pl){if(q===p||q.role==='GK'||q.off||q.stun>0)continue;const tx=q.x+q.vx*.35,ty=q.y+q.vy*.35,dx=tx-sx,dy=ty-sy,d=hyp(dx,dy);if(d<4.5||d>(p.role==='GK'?62:48))continue;
    const prog=t.dir*dx;if(prog<-24)continue;const vb=clamp(9+d*.45,10,24)*.82;let risk=0,recO=99;
@@ -284,7 +284,7 @@ class Match{
    if(!forceLob&&risk>rmax)continue;if(recO<1.2&&!forceLob)continue;
    const dG=hyp(g[0]-tx,g[1]-ty);let s=-risk*(14+(t.str||0)*2)+prog*.35*(1+(t.str||0)*.35)+clamp(prog,0,25)*.15-Math.max(0,d-24)*.15+Math.min(recO,6)*.6+(dG<20?4:dG<30?1.5:0)+(q.star?2.5:0)+R(0,2.5);
    if(forceLob){const inBox=Math.abs(g[0]-q.x)<17&&Math.abs(q.y-CY)<20;s+=inBox?10:-10;}
-   if(s>bs){bs=s;best={p:q,lob,thru:!lob&&prog>8&&recO>5&&Math.random()<.3,risk};}}
+   s+=(t.q||0)*clamp(prog,0,20)*.12;if(s>bs){bs=s;best={p:q,lob,thru:!lob&&prog>8&&recO>5&&Math.random()<.3+(t.q||0)*.3,risk};}}
   return best;}
  /* ---------- ACTIONS ---------- */
  gkThrow(p,q){const b=this.ball;const tx=q.x+q.vx*.4,ty=q.y+q.vy*.4,dx=tx-p.x,dy=ty-p.y,d=hyp(dx,dy)||1;p.fx=dx/d;p.fy=dy/d;const sp=clamp(7+d*.75,9,22);
@@ -492,7 +492,7 @@ class Match{
   for(const p of this.all){if(p.cool>0||(p.stun>0&&p.role!=='GK'))continue;if(p.role==='GK'){const g=this.ownG(p.team);if(Math.abs(b.x-g[0])>17.5&&!(b.z<1.3&&hyp(p.x-b.x,p.y-b.y)<.95))continue;const R0=this.gkReach(p);if(b.z<=R0.z&&R0.d<R0.r&&R0.d-.3<bd){bd=R0.d-.3;best=p;}continue;}
    if(b.z>2.6)continue;const d=fast&&b.z<1.25?segDist(p.x,p.y,b.px,b.py,b.x,b.y):hyp(p.x-b.x,p.y-b.y);const tg=b.target===p;if(b.z>1.25){if(p.wallP&&b.z>2.3)continue;if(d<(tg?.95:.85)){const sc=d-(tg?.12:0)-p.st.phys/100*.35-R(0,.35);if(sc<bd){bd=sc;best=p;}}continue;}const rr=tg?.9:(b.shot&&b.shot.by.team!==p.team?.62:.85);if(d<rr&&d-(tg?.25:0)<bd){bd=d-(tg?.25:0);best=p;}}
   if(!best)return;const sp=hyp(b.vx,b.vy);
-  if(best.role==='GK'&&b.shot&&b.shot.by.team!==best.team){const sh=b.shot.by,pen=b.shot.pen;sh.stats.sot++;b.shot=null;this.pen=null;const diving=best.diveT>0;const far=sh&&hyp(sh.x-best.x,sh.y-best.y)>20;const ch=clamp(best.st.gk/100+.28-(sp-20)/36-(pen?.2:0)-(diving?.06:0)+(far?.05:0),.22,.95);
+  if(best.role==='GK'&&b.shot&&b.shot.by.team!==best.team){const sh=b.shot.by,pen=b.shot.pen;sh.stats.sot++;b.shot=null;this.pen=null;const diving=best.diveT>0;const far=sh&&hyp(sh.x-best.x,sh.y-best.y)>20;const ch=clamp(best.st.gk/100+.26-(sp-20)/34-(pen?.2:0)-(diving?.06:0)+(far?.07:0)-((sh?sh.st.shot:60)-60)/170,.2,.95);
    const catchCh=clamp(.25+best.st.gk/160-(sp-16)/22-(diving?.25:0)-(b.z>2?.15:0),.05,.92);if(Math.random()<ch){if(Math.random()<catchCh){this.take(best);best.hold=R(1.6,2.4);b.inHands=true;best.catchT=.35;}else{const g=this.ownG(best.team);const out=g[0]<1?-1:1;if(Math.random()<.5){const vx=out*R(3,5),tl=Math.max(.15,Math.abs(g[0]-b.x)/Math.abs(vx)),side=Math.sign(b.y-CY)||(best.diveDir||1);b.vx=vx;b.vy=(CY+side*(GW/2+R(1.2,3.5))-b.y)/tl;b.vz=R(1.5,3.5);}else{b.vx=-out*R(3,7);b.vy=(best.diveDir||pick([-1,1]))*R(3,8);b.vz=R(1,3.5);}best.cool=.6;b.last=best;b.passFrom=null;}SFX.ooh();this.later({t:'تصدي!',life:1.1,small:true},.6);this.ev(pen?'save_pen':'save',{p:best,sh,great:diving||sp>26});}
    else{best.cool=.9;const g2=this.ownG(best.team);if(Math.random()<.58){b.vx=-b.vx*R(.08,.22);b.vy=b.vy*.3+R(-5,5);b.vz=R(.5,3);b.last=best;b.passFrom=null;SFX.kick(.5);this.later({t:'الحارس لمسها!',life:.9,small:true},.6);}else{b.vx*=.72;b.vy=b.vy*.7+R(-1.5,1.5);}}return;}
   if(best.role==='GK'){const g=this.ownG(best.team);if(Math.abs(b.x-g[0])<17&&Math.abs(b.y-CY)<20.2){const hard=sp>18||b.z>2.1;if(hard&&Math.random()<.45){const s2=R(4,8);b.vx=-b.vx*.25+(g[0]<1?1:-1)*s2;b.vy=R(-6,6);b.vz=R(2,5);best.cool=.6;b.last=best;b.passFrom=null;b.target=null;SFX.kick(.4);return;}this.take(best);best.hold=R(1.4,2.2);b.inHands=true;best.catchT=.35;return;}}

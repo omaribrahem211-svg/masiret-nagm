@@ -62,3 +62,20 @@ $('cdShare').onclick=async()=>{const c=App.c;const text=`${c.name} · تقييم
  try{const b=await cardBlob();const file=new File([b],cardName(),{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text});return;}}catch(e){if(e&&e.name==='AbortError')return;}
  cardDownload();toast('الكارت اتحمّل — ارفعه على فيسبوك من الصور');};
 $('reCard').onclick=()=>openCard('retire');
+
+// ---- وش اللاعب من صورتك: لون البشرة والشعر + صورة الوش على راس لاعبك في الملعب
+const FACE_KEY='masiret-nagm-face';window.FACE_IMG=null;
+function loadFace(){try{const u=App.c&&App.c.useFace?localStorage.getItem(FACE_KEY):null;if(u){const im=new Image();im.src=u;window.FACE_IMG=im;}else window.FACE_IMG=null;}catch(e){window.FACE_IMG=null;}}
+function avgCol(g,x,y,w,h,pick){const d=g.getImageData(x,y,w,h).data;let r=0,gg=0,b=0,n=0;for(let i=0;i<d.length;i+=4){const R0=d[i],G0=d[i+1],B0=d[i+2];if(pick&&!pick(R0,G0,B0))continue;r+=R0;gg+=G0;b+=B0;n++;}if(!n)return null;const hx=v=>Math.round(v/n).toString(16).padStart(2,'0');return'#'+hx(r)+hx(gg)+hx(b);}
+function faceFromPhoto(img){const S=256,cv=document.createElement('canvas');cv.width=S;cv.height=S;const g=cv.getContext('2d');
+ // نفترض إن الوش في نص الصورة من فوق (زي صورة السيلفي)
+ const w=img.width,h=img.height,side=Math.min(w,h*0.8),sx=(w-side)/2,sy=Math.max(0,h*0.05);g.drawImage(img,sx,sy,side,side,0,0,S,S);
+ const skin=avgCol(g,S*.38,S*.48,S*.24,S*.18,(r,gr,b)=>r>gr&&r>b&&r-b>12)||'#C68E64';
+ const hair=avgCol(g,S*.3,S*.04,S*.4,S*.12,(r,gr,b)=>r+gr+b<330)||'#1A1A1A';
+ const fc=document.createElement('canvas');fc.width=128;fc.height=160;const f=fc.getContext('2d');f.save();f.beginPath();f.ellipse(64,80,60,78,0,0,Math.PI*2);f.clip();f.drawImage(cv,S*.2,S*.12,S*.6,S*.75,0,0,128,160);f.restore();
+ return{skin,hair,face:fc.toDataURL('image/png')};}
+function applyFace(on){const c=App.c;if(!c)return;if(!on){c.useFace=false;store();loadFace();toast('رجعنا لشكل لاعبك الأصلي');renderCard();return;}
+ cardPhoto().then(img=>{if(!img){toast('اختار صورتك الأول');return;}const r=faceFromPhoto(img);try{localStorage.setItem(FACE_KEY,r.face);}catch(e){}c.skin=r.skin;c.hair=r.hair;c.useFace=true;store();loadFace();toast('لاعبك بقى شبهك! هتشوفه في الماتش الجاي');renderCard();});}
+(function(){const btns=$('cdNoPh')&&$('cdNoPh').parentNode;if(btns&&!$('cdFace')){const b=document.createElement('button');b.className='btn ghost';b.id='cdFace';b.textContent='خلّي لاعبي شبهي';btns.insertBefore(b,$('cdNoPh'));b.onclick=()=>applyFace(!(App.c&&App.c.useFace));}})();
+const _rc=renderCard;renderCard=function(){_rc();const b=$('cdFace');if(b)b.textContent=App.c&&App.c.useFace?'رجّع شكل لاعبي الأصلي':'خلّي لاعبي شبهي (من صورتك)';};
+setTimeout(loadFace,300);

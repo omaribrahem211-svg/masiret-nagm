@@ -1,0 +1,98 @@
+// مسيرة نجم — هيكل اللاعب وحركاته: بيمزج حركات الجري المتسجلة حسب السرعة، وفوقها حركات الكورة (شوط، تدخل، ارتماء، رأسية، رمية تماس، احتفال)
+'use strict';
+const Skel=(()=>{
+ if(typeof RIG==='undefined')return null;
+ const d64=(s,T)=>{const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return new T(u.buffer);};
+ const nJ=RIG.nJ,par=RIG.par,names=RIG.names,IB=d64(RIG.ib,Float32Array),animJ=RIG.animJ,nA=animJ.length,FPS=RIG.fps;
+ const J={};names.forEach((n,i)=>J[n.replace('DEF-','')]=i);
+ const clips={};for(const k in RIG.clips){const c=RIG.clips[k];clips[k]={n:c.n,dur:c.dur,d:d64(c.d,Float32Array)};}
+ // ---- quaternion helpers [x,y,z,w]
+ const qmul=(a,b,o)=>{const ax=a[0],ay=a[1],az=a[2],aw=a[3],bx=b[0],by=b[1],bz=b[2],bw=b[3];o[0]=aw*bx+ax*bw+ay*bz-az*by;o[1]=aw*by-ax*bz+ay*bw+az*bx;o[2]=aw*bz+ax*by-ay*bx+az*bw;o[3]=aw*bw-ax*bx-ay*by-az*bz;return o;};
+ const qax=(x,y,z,a,o)=>{const s=Math.sin(a/2);o[0]=x*s;o[1]=y*s;o[2]=z*s;o[3]=Math.cos(a/2);return o;};
+ const qinv=(a,o)=>{o[0]=-a[0];o[1]=-a[1];o[2]=-a[2];o[3]=a[3];return o;};
+ const qnrm=o=>{const l=Math.hypot(o[0],o[1],o[2],o[3])||1;o[0]/=l;o[1]/=l;o[2]/=l;o[3]/=l;return o;};
+ const qlerp=(a,b,t,o)=>{const d=a[0]*b[0]+a[1]*b[1]+a[2]*b[2]+a[3]*b[3],s=d<0?-1:1;for(let i=0;i<4;i++)o[i]=a[i]*(1-t)+b[i]*s*t;return qnrm(o);};
+ const qrot=(q,v,o)=>{const x=v[0],y=v[1],z=v[2],qx=q[0],qy=q[1],qz=q[2],qw=q[3];const ix=qw*x+qy*z-qz*y,iy=qw*y+qz*x-qx*z,iz=qw*z+qx*y-qy*x,iw=-qx*x-qy*y-qz*z;o[0]=ix*qw+iw*-qx+iy*-qz-iz*-qy;o[1]=iy*qw+iw*-qy+iz*-qx-ix*-qz;o[2]=iz*qw+iw*-qz+ix*-qy-iy*-qx;return o;};
+ // ---- rest pose
+ const rT=[],rR=[],rS=[];for(let i=0;i<nJ;i++){const r=RIG.rest[i];rT.push(r.slice(0,3));rR.push(r.slice(3,7));rS.push(r.slice(7,10));}
+ const gR=[],gT=[];for(let i=0;i<nJ;i++){const p=par[i];if(p<0){gR.push(rR[i].slice());gT.push(rT[i].slice());}else{const q=qmul(gR[p],rR[i],[0,0,0,1]);const t=qrot(gR[p],[rT[i][0]*rS[p][0],rT[i][1]*rS[p][1],rT[i][2]*rS[p][2]],[0,0,0]);gR.push(q);gT.push([gT[p][0]+t[0],gT[p][1]+t[1],gT[p][2]+t[2]]);}}
+ // ---- working buffers
+ const LT=new Float32Array(nJ*3),LR=new Float32Array(nJ*4),GR=[],GT=[];for(let i=0;i<nJ;i++){GR.push([0,0,0,1]);GT.push([0,0,0]);}
+ const tq=[0,0,0,1],tq2=[0,0,0,1],tq3=[0,0,0,1],tv=[0,0,0];
+ const aIdx=new Int16Array(nJ).fill(-1);animJ.forEach((j,k)=>aIdx[j]=k);
+ function resetRest(){for(let i=0;i<nJ;i++){LT[i*3]=rT[i][0];LT[i*3+1]=rT[i][1];LT[i*3+2]=rT[i][2];LR[i*4]=rR[i][0];LR[i*4+1]=rR[i][1];LR[i*4+2]=rR[i][2];LR[i*4+3]=rR[i][3];}}
+ // add w * clip(t) into accumulators
+ const accT=new Float32Array(nA*3),accR=new Float32Array(nA*4);let accW=0;
+ function accClear(){accT.fill(0);accR.fill(0);accW=0;}
+ function accClip(name,u,w,loop){if(w<=0.001)return;const c=clips[name];let f=loop?((u%1)+1)%1*(c.n-1):Math.max(0,Math.min(1,u))*(c.n-1);const f0=Math.floor(f),f1=Math.min(c.n-1,f0+1),a=f-f0;const d=c.d,s0=f0*nA*7,s1=f1*nA*7;
+  for(let k=0;k<nA;k++){const o0=s0+k*7,o1=s1+k*7;for(let i=0;i<3;i++)accT[k*3+i]+=(d[o0+i]*(1-a)+d[o1+i]*a)*w;
+   let x=d[o0+3]*(1-a)+d[o1+3]*a,y=d[o0+4]*(1-a)+d[o1+4]*a,z=d[o0+5]*(1-a)+d[o1+5]*a,ww=d[o0+6]*(1-a)+d[o1+6]*a;
+   if(accW>0&&(x*accR[k*4]+y*accR[k*4+1]+z*accR[k*4+2]+ww*accR[k*4+3])<0){x=-x;y=-y;z=-z;ww=-ww;}
+   accR[k*4]+=x*w;accR[k*4+1]+=y*w;accR[k*4+2]+=z*w;accR[k*4+3]+=ww*w;}
+  accW+=w;}
+ function accApply(){if(accW<=0)return;for(let k=0;k<nA;k++){const j=animJ[k];LT[j*3]=accT[k*3]/accW;LT[j*3+1]=accT[k*3+1]/accW;LT[j*3+2]=accT[k*3+2]/accW;tq[0]=accR[k*4];tq[1]=accR[k*4+1];tq[2]=accR[k*4+2];tq[3]=accR[k*4+3];qnrm(tq);LR[j*4]=tq[0];LR[j*4+1]=tq[1];LR[j*4+2]=tq[2];LR[j*4+3]=tq[3];}}
+ // per-joint model-space overrides: target global rotation = Q * restGlobal, blended with weight
+ const OV=new Map();
+ function ov(j,q,w){if(w<=0.001)return;OV.set(j,{q:q.slice(),w});}
+ const ADD=new Map();function add(j,q){const e=ADD.get(j);if(e)qmul(q,e,e);else ADD.set(j,q.slice());}
+ function computeGlobals(){for(let i=0;i<nJ;i++){const p=par[i];const lq=[LR[i*4],LR[i*4+1],LR[i*4+2],LR[i*4+3]];
+   if(p<0){GR[i][0]=lq[0];GR[i][1]=lq[1];GR[i][2]=lq[2];GR[i][3]=lq[3];GT[i][0]=LT[i*3];GT[i][1]=LT[i*3+1];GT[i][2]=LT[i*3+2];}
+   else{qmul(GR[p],lq,GR[i]);qrot(GR[p],[LT[i*3]*rS[p][0],LT[i*3+1]*rS[p][1],LT[i*3+2]*rS[p][2]],tv);GT[i][0]=GT[p][0]+tv[0];GT[i][1]=GT[p][1]+tv[1];GT[i][2]=GT[p][2]+tv[2];}
+   const a=ADD.get(i);if(a){qmul(a,GR[i],GR[i]);}
+   const o=OV.get(i);if(o){qmul(o.q,gR[i],tq2);qlerp(GR[i],tq2,o.w,GR[i]);}}}
+ // ---- write skin matrices (world * global * invBind) as 4 columns per joint
+ const M=new Float32Array(16),Wm=new Float32Array(16);
+ function writeRow(out,off,W){for(let i=0;i<nJ;i++){const q=GR[i],t=GT[i],s=rS[i];const x=q[0],y=q[1],z=q[2],w=q[3];
+   M[0]=(1-2*(y*y+z*z))*s[0];M[1]=2*(x*y+z*w)*s[0];M[2]=2*(x*z-y*w)*s[0];M[3]=0;M[4]=2*(x*y-z*w)*s[1];M[5]=(1-2*(x*x+z*z))*s[1];M[6]=2*(y*z+x*w)*s[1];M[7]=0;M[8]=2*(x*z+y*w)*s[2];M[9]=2*(y*z-x*w)*s[2];M[10]=(1-2*(x*x+y*y))*s[2];M[11]=0;M[12]=t[0];M[13]=t[1];M[14]=t[2];M[15]=1;
+   // tmp = M * IB_i ; res = W * tmp
+   const ib=i*16,o=off+i*16;for(let c=0;c<4;c++){const b0=IB[ib+c*4],b1=IB[ib+c*4+1],b2=IB[ib+c*4+2],b3=IB[ib+c*4+3];
+    const m0=M[0]*b0+M[4]*b1+M[8]*b2+M[12]*b3,m1=M[1]*b0+M[5]*b1+M[9]*b2+M[13]*b3,m2=M[2]*b0+M[6]*b1+M[10]*b2+M[14]*b3,m3=M[3]*b0+M[7]*b1+M[11]*b2+M[15]*b3;
+    out[o+c*4]=W[0]*m0+W[4]*m1+W[8]*m2+W[12]*m3;out[o+c*4+1]=W[1]*m0+W[5]*m1+W[9]*m2+W[13]*m3;out[o+c*4+2]=W[2]*m0+W[6]*m1+W[10]*m2+W[14]*m3;out[o+c*4+3]=W[3]*m0+W[7]*m1+W[11]*m2+W[15]*m3;}}}
+ // model axes: +x = left of the player, +y up, +z forward
+ const Qx=(a)=>qax(1,0,0,a,[0,0,0,1]),Qz=(a)=>qax(0,0,1,a,[0,0,0,1]),Qy=(a)=>qax(0,1,0,a,[0,0,0,1]);
+ const QQ=(a,b)=>qmul(a,b,[0,0,0,1]);
+ // arm: hang down (from T-pose) then swing forward by b1 and bend elbow by b2; side = +1 left, -1 right
+ function arm(side,b1,b2,out,w){const L=side>0?'.L':'.R';const down=Qz(-side*(Math.PI/2-out));const up=QQ(Qx(-b1),down),fo=QQ(Qx(-(b1+b2)),down);ov(J['upper_arm'+L],up,w);ov(J['forearm'+L],fo,w);ov(J['hand'+L],fo,w);}
+ function leg(side,a1,a2,w){const L=side>0?'.L':'.R';ov(J['thigh'+L],Qx(-a1),w);ov(J['shin'+L],Qx(-(a1-a2)),w);ov(J['foot'+L],Qx(-(a1-a2)*.6),w);}
+ // ---- main: pose player p into row
+ function pose(p,m,t,out,off,W){resetRest();OV.clear();ADD.clear();accClear();
+  const sp=Math.hypot(p.vx,p.vy),b=m.ball,gk=p.role==='GK';const u=((p.anim||0)/(Math.PI*2));
+  const celeb=m.phase==='goal'&&p===m.celebrator,slide=p.slide>0,dive=p.diveT>0?p.diveT/.75:0;
+  // locomotion blend by real speed (no foot sliding: cycle follows p.anim which follows speed)
+  const wI=Math.max(0,1-sp/1.0),wW=sp<1?sp:Math.max(0,1-(sp-1.8)/1.6),wJ=sp<1.8?Math.max(0,(sp-1)/.8):Math.max(0,1-(sp-4.6)/1.8),wS=Math.max(0,Math.min(1,(sp-4.4)/2));
+  if(celeb)accClip('dance',t*1.1+p.i*.13,1,true);
+  else{accClip('idle',t/2.5+(p.i||0)*.17,wI,true);accClip('walk',u,wW*.8,true);accClip('jog',u,wJ,true);accClip('sprint',u,wS,true);}
+  if(gk&&!dive&&b.owner&&b.owner.team!==p.team&&sp<2.2&&Math.hypot(b.x-p.x,b.y-p.y)<24&&!(b.owner===p))accClip('crouch',t/2.93,1.2,true);
+  if(p.stun>0&&!slide&&!dive)accClip('hit',1-Math.min(1,p.stun/.35),2,false);
+  accApply();
+  // kicking leg (right) — wind-up, strike, follow-through
+  const kick=p.windT>0?.5*(1-p.windT/(p.windD||.1)):p.kickT>0?.5+.5*(1-p.kickT/.34):-1;
+  if(kick>=0){let a1,a2;if(kick<.4){a1=-.95*(kick/.4);a2=.5+1.2*(kick/.4);}else if(kick<.7){const q=(kick-.4)/.3;a1=-.95+2.2*q;a2=1.7-1.65*q;}else{const q=(kick-.7)/.3;a1=1.25-1.1*q;a2=.05+.2*q;}
+   leg(-1,a1,a2,.95);arm(1,.5,.4,.25,.7);arm(-1,-.3,.4,.25,.7);add(J['spine.001'],Qx(kick>.3&&kick<.75?-.15:.06));}
+  if(slide){leg(-1,.35,.05,1);leg(1,.55,1.1,1);arm(1,-.5,.3,.35,1);arm(-1,.6,.4,.3,1);}
+  if(dive>0){const dH=p.diveH==null?1:p.diveH;arm(1,dH<.6?2.3:2.9,.05,.1,1);arm(-1,dH<.6?2.3:2.9,.05,.1,1);leg(1,.25,.3,.8);leg(-1,-.25,.3,.8);}
+  const hands=gk&&((b.owner===p&&b.inHands)||p.catchT>0);
+  if(hands&&!(p.throwT>0)){arm(1,.5,.8,-.09,1);arm(-1,.5,.8,-.09,1);}
+  else if(gk&&!dive&&b.shot&&b.shot.by.team!==p.team){arm(1,2.4,.15,.1,.8);arm(-1,2.4,.15,.1,.8);}
+  const throwing=(b.owner===p&&m.restartKind==='throw')||p.throwT>0;
+  if(throwing){const k=p.throwT>0?(1-p.throwT/.4):0;arm(1,2.75-k*1.6,1.3-k*1.1,-.03,1);arm(-1,2.75-k*1.6,1.3-k*1.1,-.03,1);}
+  if(p.jumpT>0&&!slide&&!dive){const k=Math.sin(Math.PI*(1-p.jumpT/.45));arm(1,1.6*k,.3,.35,.8*k);arm(-1,1.6*k,.3,.35,.8*k);leg(1,.35*k,.9*k,.7*k);leg(-1,.15*k,.6*k,.7*k);}
+  if(!celeb&&!slide&&!dive&&kick<0)add(J['spine.001'],Qx(.02+Math.min(1,sp/7)*.12));
+  computeGlobals();
+  // world: lift/pitch/roll around a pivot, then yaw to facing
+  const yaw=Math.atan2(p.fx,-p.fy);let lift=0,pitch=0,roll=0,piv=.95;
+  if(slide){pitch=-1.15;piv=.35;lift=-.28;}
+  if(dive>0){const dH=p.diveH==null?1:p.diveH;const k=Math.sin(Math.min(1,(1-dive)*1.6)*Math.PI*.5);const sideW=-(p.diveDir||1);const fs=Math.sign(-Math.sin(yaw)*0+Math.cos(yaw)*sideW)||1;roll=fs*(dH<.6?1.45:1.3)*k;lift=(.12+.32*Math.min(dH,2))*Math.sin((1-dive)*Math.PI)-.2*k;}
+  if(p.jumpT>0&&!slide&&!dive)lift+=.42*Math.sin(Math.PI*(1-p.jumpT/.45));
+  const sc=p._hs||(p._hs=.95+((p.i*7919)%17)/170);
+  const cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),spp=Math.sin(pitch),cr=Math.cos(roll),sr=Math.sin(roll);
+  // R = Ry * Rx(pitch) * Rz(roll)
+  const r00=cy*cr+sy*spp*sr,r01=-cy*sr+sy*spp*cr,r02=sy*cp,r10=cp*sr,r11=cp*cr,r12=-spp,r20=-sy*cr+cy*spp*sr,r21=sy*sr+cy*spp*cr,r22=cy*cp;
+  // world = T(x, lift, -y) * T(0,piv,0) * R * T(0,-piv,0) * S
+  W[0]=r00*sc;W[1]=r10*sc;W[2]=r20*sc;W[3]=0;W[4]=r01*sc;W[5]=r11*sc;W[6]=r21*sc;W[7]=0;W[8]=r02*sc;W[9]=r12*sc;W[10]=r22*sc;W[11]=0;
+  W[12]=p.x-r01*piv;W[13]=lift+piv-r11*piv;W[14]=-p.y-r21*piv;W[15]=1;
+  writeRow(out,off,W);}
+ // position/orientation of a bind-pose point after skinning by joint j (used for the shirt number)
+ function jointPoint(j,W,pt,o){const q=GR[j],t=GT[j];const v=[pt[0]-gT[j][0],pt[1]-gT[j][1],pt[2]-gT[j][2]];const ir=qinv(gR[j],[0,0,0,1]);qrot(ir,v,v);qrot(q,v,v);const x=v[0]+t[0],y=v[1]+t[1],z=v[2]+t[2];o[0]=W[0]*x+W[4]*y+W[8]*z+W[12];o[1]=W[1]*x+W[5]*y+W[9]*z+W[13];o[2]=W[2]*x+W[6]*y+W[10]*z+W[14];return o;}
+ function jointDir(j,W,d,o){const ir=qinv(gR[j],[0,0,0,1]);const v=qrot(ir,d,[0,0,0]);qrot(GR[j],v,v);o[0]=W[0]*v[0]+W[4]*v[1]+W[8]*v[2];o[1]=W[1]*v[0]+W[5]*v[1]+W[9]*v[2];o[2]=W[2]*v[0]+W[6]*v[1]+W[10]*v[2];return o;}
+ return{nJ,J,pose,jointPoint,jointDir,gT,rig:RIG,d64};})();

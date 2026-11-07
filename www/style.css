@@ -704,3 +704,9 @@ table.tbl{width:100%;border-collapse:collapse;font-size:clamp(12px,2.6vh,15px)}
 .instbox{width:100%;max-width:640px;background:rgba(245,197,66,.08);border:1px solid rgba(245,197,66,.35);border-radius:12px;padding:8px 14px;text-align:right}
 .instbox h4{margin:0 0 4px;color:#F5C542;font-size:14px}.instbox div{font-size:13px;padding:2px 0}
 #hud.noctl #camBtn,#hud.noctl #instr{display:none}
+
+/* شاشة ما قبل الماتش: تنزل لتحت لو المحتوى طويل، وزراير البداية دايماً ظاهرة تحت */
+.prepanel{min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;justify-content:safe center;gap:12px}
+.prepanel .prebtns{position:sticky;bottom:0;z-index:2;padding:8px 0 2px;background:linear-gradient(180deg,rgba(13,19,40,0),rgba(13,19,40,.96) 35%)}
+.instbox{margin:0 auto;padding:6px 12px}.instbox h4{font-size:13px;margin-bottom:2px}.instbox div{font-size:12px;padding:1px 0}
+@media (max-height:460px){.prepanel{gap:8px}.prepanel .crest{width:52px;height:52px}.prepanel .tname{font-size:14px;margin-top:2px}.prepanel .pill{padding:3px 8px;font-size:12px}}

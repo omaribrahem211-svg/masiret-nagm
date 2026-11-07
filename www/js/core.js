@@ -55,9 +55,9 @@ function newStats(){return{g:0,a:0,sh:0,sot:0,p:0,pc:0,pf:0,tk:0,lost:0,yc:0,rc:
 function mkTeam(def,dir,idx){const kit=def.kitArr||KITS[(def.kit||0)%KITS.length];
  const t={name:def.name,short:def.short||shortOf(def.name),kit,R:def.R,dir,idx,pl:[],off:[],gkKit:dir===1?'#26A69A':'#F06292'};
  const SQ=def.sq&&def.sq.length>=11?pickXI(def.sq):null;const bo=def.sqBoost||0;const boost=st=>{if(bo)for(const k in st)if(k!=='gk'||st.gk>20)st[k]=clamp(st[k]+bo,20,99);return st;};const used=new Set();const nmU=()=>{let n;for(let k=0;k<10;k++){n=randName(def.nm);if(!used.has(n))break;}used.add(n);return n;};
- F433.forEach((s,i)=>{const sp=SQ&&SQ.xi[i];const st=sp?boost(Object.assign({gk:20},sp.st)):genStats(def.R,s.r);const p={team:t,i,role:s.r,bx:s.x,by:s.y,x:0,y:0,vx:0,vy:0,fx:dir,fy:0,st,name:sp?sp.n:nmU(),num:NUMS[i],star:false,cool:0,tcool:0,stun:0,slide:0,anim:Math.random()*6,dec:R(0,.4),hold:0,skin:pick(SKINS),hair:pick(HAIRS),tgt:null,des:null,spd:0,stam:100,yc:0,inj:false,off:false,stats:newStats()};p.ms=6.1+p.st.pace/100*2.7;p.mse=p.ms;t.pl.push(p);});
- t.bench=['DF','MF','MF','FW','FW'].map((r,k)=>{const slot=F433.find(f=>f.r===r);const bp=SQ&&SQ.bench[k];const st=bp?boost(Object.assign({gk:20},bp.st)):genStats(def.R-2,r);const p={team:t,i:-1,role:r,bx:slot.x,by:slot.y,x:CX,y:-2,vx:0,vy:0,fx:dir,fy:0,st,name:randName(def.nm),num:[12,15,16,18,20][k],star:false,cool:0,tcool:0,stun:0,slide:0,anim:0,dec:0,hold:0,skin:pick(SKINS),hair:pick(HAIRS),tgt:null,des:null,spd:0,stam:100,yc:0,inj:false,off:false,stats:newStats()};if(bp)p.name=bp.n;else p.name=nmU();p.ms=6.1+p.st.pace/100*2.7;p.mse=p.ms;return p;});t.subs=0;
- if(def.star){const s=def.star,p=t.pl[s.slot];p.st=Object.assign({gk:20},s.st);p.ms=6.1+p.st.pace/100*2.7;p.mse=p.ms;p.name=s.name;p.num=s.num;p.star=true;if(s.en!=null){p.stam=clamp(45+s.en*.55,45,100);p.mse=p.ms*(.78+.22*p.stam/100);}p.skin=s.skin;p.hair=s.hair;if(s.slot===6)p.bx=38;if(s.slot===5)p.bx=34;t.star=p;}
+ F433.forEach((s,i)=>{const sp=SQ&&SQ.xi[i];const st=sp?boost(Object.assign({gk:20},sp.st)):genStats(def.R,s.r);const p={team:t,i,role:s.r,bx:s.x,by:s.y,x:0,y:0,vx:0,vy:0,fx:dir,fy:0,st,name:sp?sp.n:nmU(),num:NUMS[i],star:false,cool:0,tcool:0,stun:0,slide:0,anim:Math.random()*6,dec:R(0,.4),hold:0,skin:pick(SKINS),hair:pick(HAIRS),tgt:null,des:null,spd:0,stam:100,yc:0,inj:false,off:false,stats:newStats()};p.ms=6.4+p.st.pace/100*2.8;p.mse=p.ms;t.pl.push(p);});
+ t.bench=['DF','MF','MF','FW','FW'].map((r,k)=>{const slot=F433.find(f=>f.r===r);const bp=SQ&&SQ.bench[k];const st=bp?boost(Object.assign({gk:20},bp.st)):genStats(def.R-2,r);const p={team:t,i:-1,role:r,bx:slot.x,by:slot.y,x:CX,y:-2,vx:0,vy:0,fx:dir,fy:0,st,name:randName(def.nm),num:[12,15,16,18,20][k],star:false,cool:0,tcool:0,stun:0,slide:0,anim:0,dec:0,hold:0,skin:pick(SKINS),hair:pick(HAIRS),tgt:null,des:null,spd:0,stam:100,yc:0,inj:false,off:false,stats:newStats()};if(bp)p.name=bp.n;else p.name=nmU();p.ms=6.4+p.st.pace/100*2.8;p.mse=p.ms;return p;});t.subs=0;
+ if(def.star){const s=def.star,p=t.pl[s.slot];p.st=Object.assign({gk:20},s.st);p.ms=6.4+p.st.pace/100*2.8;p.mse=p.ms;p.name=s.name;p.num=s.num;p.star=true;if(s.en!=null){p.stam=clamp(45+s.en*.55,45,100);p.mse=p.ms*(.78+.22*p.stam/100);}p.skin=s.skin;p.hair=s.hair;if(s.slot===6)p.bx=38;if(s.slot===5)p.bx=34;t.star=p;}
  return t;}
 function pickXI(sq){const by=r=>sq.filter(p=>p.r===r).sort((a,b)=>b.ov-a.ov);const pool=new Set(sq);const take=(r,n)=>{const out=[];for(const p of by(r)){if(out.length>=n)break;if(pool.has(p)){out.push(p);pool.delete(p);}}while(out.length<n){const p=[...pool].sort((a,b)=>b.ov-a.ov)[0];if(!p)break;out.push(p);pool.delete(p);}return out;};
  const xi=[].concat(take('GK',1),take('DF',4),take('MF',3),take('FW',3));const bench=[].concat(take('DF',1),take('MF',2),take('FW',2));return{xi,bench};}
@@ -170,8 +170,8 @@ class Match{
     if(c&&c.team!==t){const g=this.ownG(t);const gx=g[0]-c.x,gy=g[1]-c.y,gd=hyp(gx,gy)||1;const dC=hyp(p.x-c.x,p.y-c.y);
      const goalSide=((p.x-c.x)*gx+(p.y-c.y)*gy)/gd>0;
      if(dC>3.5||!goalSide)this.go(p,[c.x+gx/gd*1.3+c.vx*.3,c.y+gy/gd*1.3+c.vy*.3],1);else this.go(p,[c.x+gx/gd*1.15,c.y+gy/gd*1.15],Math.min(1,(hyp(c.vx,c.vy)+1.2)/p.mse));
-     if(p.tcool<=0){const og=this.ownG(t),inBox=Math.abs(c.x-og[0])<17&&Math.abs(c.y-CY)<20.5;const dB=hyp(p.x-b.x,p.y-b.y),exposed=hyp(b.x-c.x,b.y-c.y)>.75,front=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/(dC||1)>-.35;const skill=(.5+t.R/200)*(1+(t.str||0)*.25)*(h&&c===h.ctrl?.85:1);
-      if(dB<1.25&&front&&(exposed&&Math.random()<dt*2.6*skill||!exposed&&Math.random()<dt*.5*skill))this.tackle(p,false,inBox&&Math.random()<.8);
+     if(p.tcool<=0){const og=this.ownG(t),inBox=Math.abs(c.x-og[0])<17&&Math.abs(c.y-CY)<20.5;const dB=hyp(p.x-b.x,p.y-b.y),exposed=hyp(b.x-c.x,b.y-c.y)>.62,front=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/(dC||1)>-.35;const skill=(.5+t.R/200)*(1+(t.str||0)*.25)*(h&&c===h.ctrl?.85:1);
+      if(dB<1.25&&front&&(exposed&&Math.random()<dt*2.8*skill||!exposed&&Math.random()<dt*1.3*skill))this.tackle(p,false,inBox&&Math.random()<.8);
       else if(!inBox&&!front&&dC>1.6&&dC<2.8&&hyp(c.vx,c.vy)>4&&Math.random()<dt*.25*skill)this.tackle(p,true);}}
     else if(!b.owner&&b.target&&b.target.team!==t&&this.time-b.passT<.35)this.go(p,this.shape(p,false),.9);else this.go(p,b.owner?[pbx,pby]:this.intercept(p),1);continue;}
    if(p===t.second&&b.owner&&b.owner.team!==t&&!this.restartKind){const g=this.ownG(t);const dx=g[0]-b.x,dy=g[1]-b.y,d=hyp(dx,dy)||1;const sd=clamp(7-(t.str||0)*3,3.5,9);this.go(p,[b.x+dx/d*sd,b.y+dy/d*sd],.92+Math.max(0,t.str||0)*.06);continue;}
@@ -317,7 +317,7 @@ class Match{
   const dB=hyp(b.x-p.x,b.y-p.y),dM=hyp(c.x-p.x,c.y-p.y)||.01;
   const behind=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/dM<-.35,exposedD=hyp(b.x-c.x,b.y-c.y);
   if(dB<1.25){const ux=(b.x-p.x)/(dB||1),uy=(b.y-p.y)/(dB||1);const face=p.fx*ux+p.fy*uy;const closing=p.vx*ux+p.vy*uy;const shield=segDist(c.x,c.y,p.x,p.y,b.x,b.y)<.33;
-   const sc=(p.st.def-c.st.drib)/110+clamp(exposedD-.75,-.3,.45)*.9+(face-.4)*.45-(shield?.5:0)-(behind?.35:0)-(closing>6.5?.22:0)-(dB>1.05?.15:0)-(c.st.phys-p.st.phys)/320+R(-.1,.1)-(c.star&&this.human&&c===this.human.ctrl?.04:0)-(clean?.1:0);
+   const sc=(p.st.def-c.st.drib)/110+clamp(exposedD-.58,-.3,.45)*.95+(face-.4)*.45-(shield?.5:0)-(behind?.35:0)-(closing>6.5?.22:0)-(dB>1.05?.15:0)-(c.st.phys-p.st.phys)/320+R(-.1,.1)-(c.star&&this.human&&c===this.human.ctrl?.04:0)-(clean?.1:0);
    if(clean&&behind){p.stun=.25;return;}
    if(sc>.22){this.winBall(p,c,dB<.95&&!behind&&sc>.36);return;}
    if(sc>.06){this.winBall(p,c,false);return;}
@@ -381,7 +381,7 @@ class Match{
   if(c.stun<=0&&c.slide<=0&&!setPiece&&!penWait){
    if(!has&&I.hold.X&&!h.lock&&(oppBall||!b.owner)){c.des=null;const o=b.owner;if(o){const g=this.ownG(c.team),gx=g[0]-o.x,gy=g[1]-o.y,gd=hyp(gx,gy)||1,dC=hyp(c.x-o.x,c.y-o.y);this.go(c,dC>2.4?[o.x+o.vx*.35+gx/gd*.8,o.y+o.vy*.35+gy/gd*.8]:[o.x+gx/gd*.95+o.vx*.15,o.y+gy/gd*.95+o.vy*.15],1);if(!b.inHands&&o.role!=='GK'&&c.tcool<=0&&hyp(b.x-c.x,b.y-c.y)<1.25){const front=((c.x-o.x)*o.fx+(c.y-o.y)*o.fy)/(dC||1)>-.3;if(front)this.tackle(c,false,true);}}else this.go(c,this.intercept(c),1);c.stam=Math.max(0,c.stam-dt*10/this.halfLen);}
    else if(!has&&ownPass&&b.target===c&&!h.stickRel){c.des=null;this.receive(c);}
-   else if(mag>.15){const sp=c.mse*(I.sprint||mag>.94?1:.16+.66*clamp((mag-.15)/.79,0,1))*(has?.93:1);const n=mag>1?mag:1;c.des=[jx/n*sp,jy/n*sp];if(I.sprint||mag>.94)c.stam=Math.max(0,c.stam-dt*14/this.halfLen);}
+   else if(mag>.15){const sp=c.mse*(I.sprint||mag>.94?1:.16+.66*clamp((mag-.15)/.79,0,1))*(has?.97:1);const n=mag>1?mag:1;c.des=[jx/n*sp,jy/n*sp];if(I.sprint||mag>.94)c.stam=Math.max(0,c.stam-dt*14/this.halfLen);}
    else if(!has){c.des=null;this.assistAI(c);}
    else c.des=[0,0];
   }else c.des=(has||penWait)?[0,0]:null;
@@ -422,19 +422,18 @@ class Match{
    else if(p.stun>0){p.vx*=Math.exp(-6*dt);p.vy*=Math.exp(-6*dt);}
    else{let tx=0,ty=0;if(p.des){tx=p.des[0];ty=p.des[1];}else if(p.tgt){const dx=p.tgt[0]-p.x,dy=p.tgt[1]-p.y,d=hyp(dx,dy);if(d>.05){let s=p.spd;if(d<2.5)s*=d/2.5;tx=dx/d*s;ty=dy/d*s;}}
     const own=this.ball.owner===p;p.ix=tx;p.iy=ty;
-    if(own&&!this.restartKind&&!this.ball.inHands&&this.phase==='play'&&!(p.hold>0)){const b=this.ball,rx=b.x+b.vx*.22-p.x,ry=b.y+b.vy*.22-p.y,rd=hyp(rx,ry);const w=clamp((rd-.75)/1.1,0,1);if(w>0){const cs=Math.min(p.mse*.98,Math.max(hyp(tx,ty),hyp(b.vx,b.vy)+1.2,3));tx=tx*(1-w)+rx/rd*cs*w;ty=ty*(1-w)+ry/rd*cs*w;}}
     const ts=hyp(tx,ty);p._steer=0;
     if(ts>.3&&p.role!=='GK'&&!(p.windT>0)&&!(own&&this.restartKind)){const sp0=hyp(p.vx,p.vy),ta=Math.atan2(ty,tx),ca=Math.atan2(p.fy,p.fx);
      const rate=(own?(sp0<2.5?13:Math.max(4.2,10.5-sp0*.75)):(sp0<2.5?22:Math.max(6.5,15.5-sp0*1.05)))*(this.rain?.9:1)*dt;
      const na=ca+clamp(angDiff(ta,ca),-rate,rate);p.fx=Math.cos(na);p.fy=Math.sin(na);p._steer=1;const rem=Math.abs(angDiff(ta,na));
      const along=rem>1.6?Math.min(ts,1.2):ts*Math.max(.25,Math.cos(rem));const lat=rem<.5?.35:0;
      tx=p.fx*along+(tx-p.fx*ts*Math.cos(rem))*lat;ty=p.fy*along+(ty-p.fy*ts*Math.cos(rem))*lat;}
-    {const tsp=hyp(tx,ty),cap=p.mse*1.02;if(tsp>cap){tx*=cap/tsp;ty*=cap/tsp;}}
+    {const tsp=hyp(tx,ty),cap=p.mse*1.04;if(tsp>cap){tx*=cap/tsp;ty*=cap/tsp;}}
     const slowing=tx*p.vx+ty*p.vy<p.vx*p.vx+p.vy*p.vy-.5;const acc=(own?9.5:12)*(slowing?1.5:1)*(this.rain?.88:1);let dvx=tx-p.vx,dvy=ty-p.vy;const m=hyp(dvx,dvy),lim=acc*dt;if(m>lim){dvx*=lim/m;dvy*=lim/m;}p.vx+=dvx;p.vy+=dvy;}
-   if(!(p.slide>0)&&!(p.diveT>0)){const v=hyp(p.vx,p.vy),cap=(p.mse||p.ms)*1.06;if(v>cap){p.vx*=cap/v;p.vy*=cap/v;}}
+   if(!(p.slide>0)&&!(p.diveT>0)){const v=hyp(p.vx,p.vy),cap=(p.mse||p.ms)*1.08;if(v>cap){p.vx*=cap/v;p.vy*=cap/v;}}
    p.x+=p.vx*dt;p.y+=p.vy*dt;const sp=hyp(p.vx,p.vy);p.anim+=sp*dt*6.283/(1.3+.24*sp);p.ampS=(p.ampS||0)+(Math.min(1,sp/7)-(p.ampS||0))*Math.min(1,dt*7);
    if(!this.demo&&this.phase==='play'){const f=sp/p.ms;p.stam=Math.max(0,p.stam-(.2+.95*f*f)*100/H2*(1.25-p.st.phys/200)*(p.role==='GK'?.2:1)*dt);if(sp<1.2)p.stam=Math.min(100,p.stam+28/H2*dt);}
-   p.mse=p.ms*(.78+.22*p.stam/100)*(p.inj?.84:1);
+   p.mse=p.ms*(.86+.14*p.stam/100)*(p.inj?.84:1);
    p.kickT=Math.max(0,(p.kickT||0)-dt);p.throwT=Math.max(0,(p.throwT||0)-dt);p.diveT=Math.max(0,(p.diveT||0)-dt);p.catchT=Math.max(0,(p.catchT||0)-dt);p.puntT=Math.max(0,(p.puntT||0)-dt);p.jumpT=Math.max(0,(p.jumpT||0)-dt);
    if(p._steer){}else if(sp>.4&&!(this.ball.owner===p&&this.restartKind)){const ta=Math.atan2(p.vy,p.vx),ca=Math.atan2(p.fy,p.fx);const da=angDiff(ta,ca);const mx=(this.ball.owner===p?(sp<3?14:9):22)*dt;const na=ca+clamp(da,-mx,mx);p.fx=Math.cos(na);p.fy=Math.sin(na);}else if(this.ball.owner!==p){const bx=this.ball.x-p.x,by=this.ball.y-p.y,bd=hyp(bx,by)||1;p.fx+=(bx/bd-p.fx)*.1;p.fy+=(by/bd-p.fy)*.1;const n=hyp(p.fx,p.fy)||1;p.fx/=n;p.fy/=n;}
    p.x=clamp(p.x,-3,L+3);p.y=clamp(p.y,-3,W+3);if(p.role==='GK'&&this.ball.owner===p&&this.ball.inHands){const g=this.ownG(p.team);if(g[0]<1)p.x=clamp(p.x,.5,15.8);else p.x=clamp(p.x,L-15.8,L-.5);p.y=clamp(p.y,CY-19.6,CY+19.6);}}
@@ -444,22 +443,19 @@ class Match{
    p.x-=nx*pen*wp;p.y-=ny*pen*wp;q.x+=nx*pen*wq;q.y+=ny*pen*wq;const rv=(q.vx-p.vx)*nx+(q.vy-p.vy)*ny;
    if(rv<0){const im=-rv*.85;p.vx-=nx*im*wp;p.vy-=ny*im*wp;q.vx+=nx*im*wq;q.vy+=ny*im*wq;
     if(this.phase==='play'&&!this.restartKind&&-rv>1.6&&p.team!==q.team){const own=b.owner===p?p:b.owner===q?q:null;if(own&&!b.inHands&&own.role!=='GK'){const ch=own===p?q:p;if(!(ch.tcool>0)&&!(own.shT>this.time)){own.shT=this.time+.6;const bh=((ch.x-own.x)*own.fx+(ch.y-own.y)*own.fy)/d<-.3;const hc=this.human&&this.human.ctrl===ch;if((bh||-rv>4.2)&&Math.random()<(hc?(bh&&-rv>4?.12:0):(bh?.5:.3))){this.foul(ch,own,false,bh);return;}const pr=clamp(.12+(ch.st.phys-own.st.phys)/130+(-rv-1.6)*.07+(hyp(b.x-own.x,b.y-own.y)>.7?.12:0),.03,.55);if(Math.random()<pr){own.stats.lost++;ch.stats.tk++;b.owner=null;b.last=ch;b.passFrom=null;const sx=own===p?-nx:nx,sy=own===p?-ny:ny;b.vx=own.vx*.5+sx*R(1,3)+R(-1.5,1.5);b.vy=own.vy*.5+sy*R(1,3)+R(-1.5,1.5);own.stun=.3;ch.tcool=.5;SFX.kick(.25);if(this.human&&ch.team.idx===this.human.team)this.ev('tackle',{p:ch},8);}}}}}}}}
- // المراوغة: اللمسة على إيقاع خطوة اللاعب (الرجل اللي قدّام بتلمس الكورة)، والكورة بتتقدّم قدّامه بمسافة على قد سرعته ومهارته
- dribble(o,dt){const b=this.ball;const sp=hyp(o.vx,o.vy);const rx=b.x-o.x,ry=b.y-o.y,dist=hyp(rx,ry);const ahead=rx*o.fx+ry*o.fy,lat=-rx*o.fy+ry*o.fx;o.touchT=(o.touchT||0)-dt;
-  const ph=Math.sin(o.anim||0),prev=o._ph==null?ph:o._ph;o._ph=ph;
-  if(dist>3.0||(ahead<-.8&&dist>1.6)){b.owner=null;b.last=o;b.passFrom=null;return;}
-  if(b.z>.5)return;const ctl=o.st.drib/100;
-  if(sp<2.2){const lead=.42-ctl*.06,tx=o.x+o.fx*lead,ty=o.y+o.fy*lead;const k=Math.min(1,dt*(7+ctl*5));b.vx+=((tx-b.x)*7+o.vx-b.vx)*k;b.vy+=((ty-b.y)*7+o.vy-b.vy)*k;b.vz=0;return;}
-  let ux=o.vx/sp,uy=o.vy/sp;const im=hyp(o.ix||0,o.iy||0);if(im>.5){ux=ux*.4+o.ix/im*.6;uy=uy*.4+o.iy/im*.6;const un=hyp(ux,uy)||1;ux/=un;uy/=un;}
-  const bs=hyp(b.vx,b.vy),dirOff=bs>.5?Math.acos(clamp((b.vx*ux+b.vy*uy)/bs,-1,1)):1;
-  const lead=.38+Math.min(sp,8.5)*(.045+(1-ctl)*.035);
-  const need=ahead<lead-.1||Math.abs(lat)>.28||dirOff>.45;
-  const footHit=(prev<0&&ph>=0)||(prev>0&&ph<=0&&sp<5);
-  if(o.touchT<=0&&dist<1.25&&need&&(footHit||ahead<.2||Math.abs(lat)>.45||dirOff>.9)){
-   const T=(1.3+.24*sp)/sp*(sp<5?.5:1),kf=this.rain?.62:.85,fT=(1-Math.exp(-kf*T))/kf;
-   let v0=(sp*T+lead-Math.max(0,ahead))/fT;v0=clamp(v0,sp*.95,sp*1.55)+(1-ctl)*R(0,.7);
-   const err=(1-ctl)*.1*R(-1,1),c=Math.cos(err),s2=Math.sin(err);b.vx=(ux*c-uy*s2)*v0;b.vy=(ux*s2+uy*c)*v0;b.vz=0;
-   o.touchT=.12;o.touchA=.16;SFX.kick&&sp>6&&Math.random()<.3&&SFX.kick(.06);}}
+ // المراوغة: الكورة بتمشي مع اللاعب على إيقاع خطوته — بتتقدّم لما الرجل تلمسها وترجع لحد ما اللمسة الجاية، وبتلف معاه بتأخير بسيط على قد مهارته
+ dribble(o,dt){const b=this.ball;const sp=hyp(o.vx,o.vy),ctl=o.st.drib/100;if(b.z>.35){return;}
+  if(o.bdx==null||o.bdOwn!==b.passT+'|'+o.i){o.bdOwn=b.passT+'|'+o.i;const rx=b.x-o.x,ry=b.y-o.y,rd=hyp(rx,ry);if(rd>.15){o.bdx=rx/rd;o.bdy=ry/rd;}else{o.bdx=o.fx;o.bdy=o.fy;}o.boff=Math.min(rd,1.6);}
+  // direction the ball sits in: turns toward where the player is going
+  let wx=o.fx,wy=o.fy;if(sp>.6){wx=o.vx/sp*.6+o.fx*.4;wy=o.vy/sp*.6+o.fy*.4;const n=hyp(wx,wy)||1;wx/=n;wy/=n;}
+  const ca=Math.atan2(o.bdy,o.bdx),ta=Math.atan2(wy,wx),rate=(5+ctl*7)*(sp<2?1.6:1)*dt,na=ca+clamp(angDiff(ta,ca),-rate,rate);o.bdx=Math.cos(na);o.bdy=Math.sin(na);
+  // distance ahead follows the stride: pushed out at the touch, comes back to the foot before the next one
+  const L=.36+Math.min(sp,9)*(.05+(1-ctl)*.035);const per=sp<4.5?Math.PI:Math.PI*2;const u=(((o.anim||0)%per)+per)%per/per;
+  const want=sp<.8?.36:L*(.62+.58*(1-u));o.boff=(o.boff==null?want:o.boff)+(want-o.boff)*Math.min(1,dt*10);
+  const step=Math.floor((o.anim||0)/Math.PI)%2?1:-1,side=sp>1.5?.07*step:0;
+  const tx=o.x+o.bdx*o.boff-o.bdy*side,ty=o.y+o.bdy*o.boff+o.bdx*side;
+  const nvx=(tx-b.x)/Math.max(dt,1e-3),nvy=(ty-b.y)/Math.max(dt,1e-3);const k=Math.min(1,dt*18);b.vx+=(nvx-b.vx)*k;b.vy+=(nvy-b.vy)*k;b.vz=0;b.z=0;
+  if(u<.08&&sp>4&&(o._lu||1)>=.08){o.touchA=.16;SFX.kick&&sp>6&&Math.random()<.3&&SFX.kick(.06);}o._lu=u;}
  ballSim(dt){const b=this.ball;b.px=b.x;b.py=b.y;
   if(b.owner&&b.inHands){const o=b.owner;b.x=o.x+o.fx*.4;b.y=o.y+o.fy*.4;b.z=1.14;b.vx=o.vx;b.vy=o.vy;b.vz=0;return;}
   if(b.owner&&!this.restartKind&&this.phase==='play'&&!(b.owner.hold>0)){this.dribble(b.owner,dt);}

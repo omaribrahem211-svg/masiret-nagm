@@ -314,13 +314,42 @@ function signWith(of){const c=App.c;const fromMid=c.si<c.sched.length;wInit(c);a
   const now=c.sched[c.si].d,oldN=c.ntc,ss=c.season;buildSeason(c);joinMidSeason(c,now,oldN);}
  mail(c,'club','إدارة '+of.club.name,'أهلاً بيك في عيلتك الجديدة','كلنا مستنيين نشوفك في الملعب. الجمهور هنا مابيرحمش، بس لو حبّك هيشيلك على راسه.');store();}
 function jerseySVG(k,name,num){const fg=lum(k[0])>.6?'#111':'#fff';const ln=esc(lastName(name).replace(/^[^ ]+\. /,''));return`<svg class="jersey" viewBox="0 0 200 220"><path d="M60 10 L30 22 L4 60 L30 82 L44 70 L44 210 L156 210 L156 70 L170 82 L196 60 L170 22 L140 10 Q100 34 60 10Z" fill="${k[0]}" stroke="rgba(0,0,0,.35)" stroke-width="3"/><path d="M4 60 L30 82 L44 70 L36 40 Z M196 60 L170 82 L156 70 L164 40 Z" fill="${k[1]}" opacity=".9"/><path d="M60 10 Q100 34 140 10" fill="none" stroke="${k[1]}" stroke-width="6"/><text x="100" y="78" text-anchor="middle" font-size="22" font-weight="800" fill="${fg}" font-family="Changa,sans-serif">${ln}</text><text x="100" y="168" text-anchor="middle" font-size="88" font-weight="800" fill="${fg}" font-family="Changa,sans-serif">${num}</text></svg>`;}
-function showSign(club,t,s,then){const c=App.c;const k=kitOf(club);const box=$('cer');let step=0,tm=null;const fresh=/أول عقد/.test(t),renew=/تجديد/.test(t);
- const scenes=[
-  ()=>`<div class="cs brk"><div class="flashes">${[0,1,2,3].map(i=>`<i style="left:${10+i*22}%;top:${15+(i%2)*40}%;animation-delay:${i*.37}s"></i>`).join('')}</div><div class="bar">عاجل</div><div class="hl">${fresh?'رسمياً: '+esc(c.name)+' يوقّع أول عقد احترافي مع '+esc(club.name):renew?esc(c.name)+' يجدد مع '+esc(club.name):'Here we go! '+esc(c.name)+' إلى '+esc(club.name)}</div><div class="sub">${esc(s)}</div><div class="tick"><span>${esc(club.name)} يعلن التعاقد مع ${esc(c.name)} · ${esc(s)} · الكشف الطبي تم بنجاح · الجماهير في انتظار التقديم الرسمي ·</span></div></div>`,
-  ()=>`<div class="cs desk"><div class="flashes">${[0,1,2].map(i=>`<i style="left:${5+i*35}%;top:${8+i*12}%;animation-delay:${.5+i*.6}s"></i>`).join('')}</div><div class="paper"><h3>${crestHTML(club,'s')} عقد لاعب محترف — ${esc(club.name)}</h3><div class="tr"><span>اللاعب</span><b>${esc(c.name)}</b></div><div class="tr"><span>المركز</span><b>${esc(POS[c.pos].n)}</b></div><div class="tr"><span>الشروط</span><b>${esc(s)}</b></div><div class="tr"><span>رقم القميص</span><b>${c.num}</b></div><div class="sig"><svg viewBox="0 0 400 56" preserveAspectRatio="none"><path d="M20 40 C40 10,60 50,80 26 S120 8,130 34 S170 50,190 20 S230 14,240 36 S290 46,310 22 S350 30,380 18"/></svg><span class="nm">توقيع اللاعب</span></div></div><div class="sub" style="margin-top:14px">${esc(c.name)} بيوقّع قدام الكاميرات…</div></div>`,
-  ()=>`<div class="cs stad" style="--c1:${k[0]};--c2:${k[1]}"><div class="crowd"></div><div class="spot" style="left:12%"></div><div class="spot" style="right:12%;animation-delay:1.5s"></div>${jerseySVG(k,c.name,c.num)}<div class="wel">${renew?'مكمّل معانا!':'أهلاً بيك في '+esc(club.name)}</div><div class="sub2">${esc(c.name)} · رقم ${c.num} · ${esc(POS[c.pos].n)}</div></div>`];
- const go=()=>{clearTimeout(tm);if(step>=scenes.length){box.onclick=null;then();return;}box.innerHTML=scenes[step]();if(step===0){SFX.whistle&&SFX.whistle(1);flashDom();}if(step===1){let n=0;const iv=setInterval(()=>{flashDom();if(++n>4)clearInterval(iv);},520);}if(step===2){setTimeout(()=>{FX.confetti(220,[k[0],k[1],'#F5C542','#FFFFFF']);FX.fireworks(8);SFX.chant&&SFX.chant();SFX.roar&&SFX.roar();},700);}step++;tm=setTimeout(go,step===3?4200:3400);};
- box.onclick=go;$('cerSkip').onclick=()=>{clearTimeout(tm);step=scenes.length;go();};show('cer');go();}
+function showSign(club,t,s,then){const c=App.c;const k=kitOf(club);const box=$('cer');const fresh=/أول عقد/.test(t),renew=/تجديد/.test(t);
+ const fg=lum(k[0])>.6?'#111':'#fff',sh=esc(club.short||shortOf(club.name)),cn=esc(club.name),pn=esc(c.name),Y=seasonYear(c);
+ const yrs=(c.contract&&c.contract.years)||2,parts=String(s).split(' · ');
+ let ph=null;try{ph=localStorage.getItem('masiret-nagm-photo')||(c.useFace?localStorage.getItem('masiret-nagm-face'):null);}catch(e){}
+ const crest=(cls)=>`<div class="fcrest ${cls||''}"><span>${sh}</span></div>`;
+ const sigP='M14 40 C30 12,44 50,62 28 S92 8,100 34 S128 50,144 22 S174 14,182 36 S218 46,234 22 S262 30,286 18';
+ const flashes=(n,d0)=>Array.from({length:n},(_,i)=>`<i style="left:${(i*37+11)%92}%;top:${(i*53+7)%70}%;animation-delay:${(d0+i*.33).toFixed(2)}s"></i>`).join('');
+ const portrait=ph?`<div class="fpic" style="background-image:url('${ph}')"></div>`:`<div class="fpic nopic">${jerseySVG(k,c.name,c.num)}</div>`;
+ box.innerHTML=`<div class="film" style="--c1:${k[0]};--c2:${k[1]};--fg:${fg}">
+ <div class="sh s1"><div class="rays"></div><i class="stk a"></i><i class="stk b"></i><i class="stk c"></i>
+  <div class="mid">${crest('xl')}<div class="t1">${renew?'تجديد رسمي':'رسمياً'}</div><div class="t2">${fresh?'بيان رسمي من إدارة '+cn:renew?cn+' تعلن تجديد عقد نجمها':'صفقة جديدة في '+cn+' — <bdi>Here we go!</bdi>'}</div></div></div>
+ <div class="sh s2"><div class="cam"><div class="wood"></div><div class="doc"><div class="wm">${sh}</div>
+  <div class="dh">${crest('sm')}<div><b>عقد لاعب محترف</b><small>${cn} · الموسم ${Y}-${Y+1}</small></div></div>
+  <div class="tr"><span>اللاعب</span><b>${pn}</b></div><div class="tr"><span>المركز</span><b>${esc(POS[c.pos].n)}</b></div><div class="tr"><span>الشروط</span><b>${esc(s)}</b></div><div class="tr"><span>رقم القميص</span><b>${c.num}</b></div>
+  <div class="sigw"><svg width="300" height="56" viewBox="0 0 300 56"><path pathLength="1" d="${sigP}"/></svg><div class="pen" style="offset-path:path('${sigP}')"><svg viewBox="0 0 20 120" width="14" height="84"><rect x="5" y="0" width="10" height="92" rx="5" fill="#111"/><rect x="5" y="20" width="10" height="5" fill="#C9A227"/><path d="M5 92 L15 92 L10 118Z" fill="#C9A227"/></svg></div><span class="nm">توقيع اللاعب</span></div>
+  <div class="stamp2">${renew?'مُجدَّد':'رسمي'}</div></div></div>
+  <div class="fls">${flashes(6,.4)}</div></div>
+ <div class="sh s3"><div class="stripes"></div><div class="bignum">${c.num}</div><div class="jw">${jerseySVG(k,c.name,c.num)}<i class="gl"></i></div>
+  <div class="side r"><small>القميص</small><b>${c.num}</b></div><div class="side l"><small>المركز</small><b>${esc(POS[c.pos].n)}</b></div></div>
+ <div class="sh s4"><div class="lights"></div><div class="crowd2"></div><div class="beam a"></div><div class="beam b"></div>
+  <div class="wrow">${portrait}<div class="wtx"><div class="w1">${renew?'مكمّل معانا!':'أهلاً بيك'}</div><div class="w2">${crest('sm')}<span>${cn}</span></div><div class="w3">${pn}</div>
+  <div class="chips">${parts.map(x=>`<span>${esc(x)}</span>`).join('')}<span>رقم ${c.num}</span><span>لحد ${Y+yrs}</span></div></div></div>
+  <button class="btn fgo">كمّل</button></div>
+ <div class="lt"><div class="ltc">${crest('xs')}</div><div class="ltt"><b>${pn}</b><small>${renew?'يجدد مع ':fresh?'يوقّع أول عقد مع ':'ينضم إلى '}${cn} · ${esc(parts[0]||'')}</small></div></div>
+ <div class="bug"><i></i>مسيرة نجم TV</div><div class="lb t"></div><div class="lb b"></div><div class="vig"></div><div class="grain"></div><div class="whip"></div></div>`;
+ const F=box.firstElementChild,S=[...F.querySelectorAll('.sh')],D=[3200,4900,3700,6500];let i=-1,tm=null,ti=[],done=false;
+ const later=(f,ms)=>ti.push(setTimeout(f,ms));const clr=()=>{clearTimeout(tm);ti.forEach(clearTimeout);ti=[];};
+ const snap=()=>{try{const C=SFX.ctx;if(!C||!SFX.on)return;const n=C.sampleRate*.06,bf=C.createBuffer(1,n,C.sampleRate),d=bf.getChannelData(0);for(let j=0;j<n;j++)d[j]=(Math.random()*2-1)*Math.pow(1-j/n,3);const sr=C.createBufferSource(),g=C.createGain();g.gain.value=.25;sr.buffer=bf;sr.connect(g);g.connect(C.destination);sr.start();}catch(e){}};
+ const finish=()=>{if(done)return;done=true;clr();box.onclick=null;then();};
+ const cue=n=>{if(n===0){SFX.whistle&&SFX.whistle(1);later(()=>flashDom(),350);}
+  if(n===1){F.classList.add('lton');[500,900,1250,2900,3300,3700].forEach(ms=>later(snap,ms));later(()=>{flashDom();F.classList.add('shake');later(()=>F.classList.remove('shake'),400);},3350);}
+  if(n===2){F.classList.remove('lton');later(()=>{SFX.roar&&SFX.roar();},500);}
+  if(n===3){later(()=>{FX.confetti(240,[k[0],k[1],'#F5C542','#FFFFFF']);FX.fireworks(8);SFX.chant&&SFX.chant();},500);}};
+ const go=n=>{clr();if(n>=S.length)return finish();F.classList.remove('wh');void F.offsetWidth;if(i>=0)F.classList.add('wh');
+  later(()=>{S.forEach(x=>x.classList.remove('on'));void F.offsetWidth;S[n].classList.add('on');i=n;cue(n);tm=setTimeout(()=>go(n+1),D[n]);},i>=0?230:0);};
+ box.onclick=e=>{if(e.target.closest('.fgo'))return finish();go(i+1);};$('cerSkip').onclick=e=>{e.stopPropagation();finish();};show('cer');go(0);}
 
 /* ---------- season end ---------- */
 function seasonEnd(){const c=App.c;wInit(c);

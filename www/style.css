@@ -697,3 +697,10 @@ table.tbl{width:100%;border-collapse:collapse;font-size:clamp(12px,2.6vh,15px)}
 .mocard{top:40%}
 #scr-press .press{align-items:flex-start;padding-right:3vw}#scr-press .answers{width:min(520px,58vw)}#scr-press .qbox{max-width:58vw}.prroom .pfig .fw{left:20%!important;height:60vh!important;bottom:14%!important}.prroom .ptable{left:4%;right:62%}.prroom .pressbg{opacity:.75}
 .prroom .pressbg{opacity:1;color:rgba(255,255,255,.28)}
+
+#camBtn{position:absolute;top:10px;right:64px;width:42px;height:42px;border-radius:10px;background:rgba(10,16,34,.75);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;z-index:5}
+#instr{position:absolute;top:58px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:700;color:#EEF2FF;background:rgba(10,16,34,.72);padding:3px 12px;border-radius:999px;white-space:nowrap;pointer-events:none;display:none}
+#instr.on{display:block}#instr b{color:#C6F432}#instr i{font-style:normal;color:#FF7A85}
+.instbox{width:100%;max-width:640px;background:rgba(245,197,66,.08);border:1px solid rgba(245,197,66,.35);border-radius:12px;padding:8px 14px;text-align:right}
+.instbox h4{margin:0 0 4px;color:#F5C542;font-size:14px}.instbox div{font-size:13px;padding:2px 0}
+#hud.noctl #camBtn,#hud.noctl #instr{display:none}

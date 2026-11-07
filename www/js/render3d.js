@@ -1,6 +1,6 @@
 // مسيرة نجم — الرسم ثلاثي الأبعاد بـ WebGL2 (لاعيبة، ملعب، جمهور، إضاءة وظلال)
 /* ================= 3D RENDERER (WebGL2) ================= */
-const lin=c=>{const n=parseInt(c.slice(1),16);return[Math.pow(((n>>16)&255)/255,2.2),Math.pow(((n>>8)&255)/255,2.2),Math.pow((n&255)/255,2.2),1];};
+const lin=c=>{let n=parseInt(String(c||'#888888').slice(1,7),16);if(!isFinite(n))n=0x888888;return[Math.pow(((n>>16)&255)/255,2.2),Math.pow(((n>>8)&255)/255,2.2),Math.pow((n&255)/255,2.2),1];};
 const M4={
  mul(o,a,b){for(let c=0;c<4;c++){const b0=b[c*4],b1=b[c*4+1],b2=b[c*4+2],b3=b[c*4+3];for(let r=0;r<4;r++)o[c*4+r]=a[r]*b0+a[4+r]*b1+a[8+r]*b2+a[12+r]*b3;}return o;},
  persp(o,fy,as,n,f){const t=1/Math.tan(fy/2);o.fill(0);o[0]=t/as;o[5]=t;o[10]=(f+n)/(n-f);o[11]=-1;o[14]=2*f*n/(n-f);return o;},
@@ -98,11 +98,11 @@ class R3D{
   this.skin=null;try{if(typeof Skel!=='undefined'&&Skel)this.initSkin();}catch(e){console.warn('skin off',e);this.skin=null;}
   this.quality=2;this.mkTextures();this.mkStatic();this.shadowSize=0;this.ballR=new Float32Array([1,0,0,0,1,0,0,0,1]);this.frameN=0;
   // dynamic batches
-  this.dyn={cyl:this.batch(this.G.cyl,500),box:this.batch(this.G.box,300),sph:this.batch(this.G.sph,120),ball:this.batch(this.G.ball,2),ring:this.batch(this.G.ring,4),glow:this.batch(this.G.quad,16),blob:this.batch(this.G.plane,30),limb:this.batch(this.G.limb,200),thigh:this.batch(this.G.thigh,60),calf:this.batch(this.G.calf,60),fore:this.batch(this.G.fore,60),torso:this.batch(this.G.torso,30),shorts:this.batch(this.G.shorts,30),hair:this.batch(this.G.hair,30),num:this.batch(this.G.quad,30),face:this.batch(this.G.quad,2)};
+  this.dyn={cyl:this.batch(this.G.cyl,500),box:this.batch(this.G.box,300),sph:this.batch(this.G.sph,120),ball:this.batch(this.G.ball,2),ring:this.batch(this.G.ring,4),glow:this.batch(this.G.quad,16),blob:this.batch(this.G.plane,44),limb:this.batch(this.G.limb,200),thigh:this.batch(this.G.thigh,60),calf:this.batch(this.G.calf,60),fore:this.batch(this.G.fore,60),torso:this.batch(this.G.torso,30),shorts:this.batch(this.G.shorts,30),hair:this.batch(this.G.hair,30),num:this.batch(this.G.quad,40),face:this.batch(this.G.quad,2)};
  }
  mk(vs,fs){const gl=this.gl;const c=(t,s)=>{const x=gl.createShader(t);gl.shaderSource(x,s);gl.compileShader(x);if(!gl.getShaderParameter(x,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(x));return x;};const p=gl.createProgram();gl.attachShader(p,c(gl.VERTEX_SHADER,vs));gl.attachShader(p,c(gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p));return p;}
  geo(g){const gl=this.gl;const mkb=(d,t)=>{const b=gl.createBuffer();gl.bindBuffer(t,b);gl.bufferData(t,d,gl.STATIC_DRAW);return b;};return{p:mkb(new Float32Array(g.P),gl.ARRAY_BUFFER),n:mkb(new Float32Array(g.N),gl.ARRAY_BUFFER),t:mkb(new Float32Array(g.T),gl.ARRAY_BUFFER),i:mkb(new Uint16Array(g.I),gl.ELEMENT_ARRAY_BUFFER),cnt:g.I.length};}
- initSkin(){const gl=this.gl,R=Skel.rig,d=Skel.d64;const sk={nJ:Skel.nJ,max:24};
+ initSkin(){const gl=this.gl,R=Skel.rig,d=Skel.d64;const sk={nJ:Skel.nJ,max:32};
   sk.prog=this.mk(SVS,FS);sk.dprog=this.mk(SDVS,DFS);const U=n=>gl.getUniformLocation(sk.prog,n);
   sk.u={VP:U('uVP'),LVP:U('uLVP'),Time:U('uTime'),Wave:U('uWave'),Tex:U('uTex'),Sh:U('uSh'),Mode:U('uMode'),Unlit:U('uUnlit'),ShOn:U('uShOn'),Ld:U('uLd'),Cam:U('uCam'),ShTex:U('uShTex'),Bones:U('uBones'),NJ:U('uNJ')};
   sk.du={LVP:gl.getUniformLocation(sk.dprog,'uLVP'),Bones:gl.getUniformLocation(sk.dprog,'uBones')};
@@ -119,7 +119,10 @@ class R3D{
  // لاعب بالموديل الجديد: الوضعية في صف من تكستشر العضم + ألوان الطقم + الرقم على الضهر
  skinPlayer(p,m,t){const sk=this.skin;if(sk.n>=sk.max)return;const row=sk.n++;const tc=this.teamCols(p.team),gk=p.role==='GK';
   if(!p._sk){p._sk=lin(p.skin);p._hr=lin(p.hair);}
-  Skel.pose(p,m,t,sk.mat,0,sk.W);const o=row*sk.texW*4;sk.data.set(sk.mat,o);
+  if(!isFinite(p.x)||!isFinite(p.y)){sk.n--;return;}if(!isFinite(p.fx)||!isFinite(p.fy)||(p.fx===0&&p.fy===0)){p.fx=p.team&&p.team.dir||1;p.fy=0;}if(!isFinite(p.anim))p.anim=0;if(!isFinite(p.ampS))p.ampS=0;
+  Skel.pose(p,m,t,sk.mat,0,sk.W);{let ok=true;for(let i=0;i<sk.mat.length;i+=7)if(!isFinite(sk.mat[i])){ok=false;break;}if(!ok){// وضع آمن لو الحركة طلعت أرقام بايظة: اللاعب يفضل باين
+   const sv=[p.kickT,p.windT,p.slide,p.diveT,p.jumpT,p.catchT,p.throwT,p.lungeT];p.kickT=p.windT=p.slide=p.diveT=p.jumpT=p.catchT=p.throwT=p.lungeT=0;p.anim=0;p.ampS=0;Skel.pose(p,m,t,sk.mat,0,sk.W);}}
+  const o=row*sk.texW*4;sk.data.set(sk.mat,o);
   const cols=[p._sk,gk?tc.gk:tc.shirt,gk?tc.gks:tc.shorts,gk?tc.gk:tc.socks,p.star?lin('#F5C542'):[0.012,0.012,0.014,1],p._hr,gk?lin('#F5F5F5'):p._sk];
   for(let k=0;k<7;k++){const c=cols[k],q=o+(sk.nJ*4+k)*4;sk.data[q]=c[0];sk.data[q+1]=c[1];sk.data[q+2]=c[2];sk.data[q+3]=1;}
   // number on the back of the shirt, following spine.003
@@ -304,11 +307,16 @@ class R3D{
   const SD=(k,target,tau)=>{const v=k+'v';const om=2/tau,x=om*dt,ex=1/(1+x+.48*x*x+.235*x*x*x);const ch=(c3[k]==null?target:c3[k])-target,tmp=((c3[v]||0)+om*ch)*dt;c3[v]=((c3[v]||0)-om*tmp)*ex;c3[k]=target+(ch+tmp)*ex;return c3[k];};
   const wl=m.phase==='play'?pd*5+(ow?ow.vx*.3:b.vx*.2):0;SD('lx',clamp(wl,-8,8),1.1);
   const dGo=Math.min(b.x,L-b.x),zt=m.phase==='play'&&Math.abs(b.y-CY)<26?1-.1*clamp((30-dGo)/16,0,1):1;SD('zk',zt,.9);
-  const fx0=cel?cel.x:b.x+c3.lx,fy0=cel?cel.y:b.y;const tx=clamp(fx0,7,L-7),ty=clamp(fy0,cel?4:14,W-12);SD('x',tx,.42);SD('y',ty,.6);
+  const CM=+((typeof App!=='undefined'&&App.settings&&App.settings.cam)||0),hu=m.human,stp=m.t&&m.t[0].star&&!m.t[0].star.off&&m.t[0].pl.includes(m.t[0].star)?m.t[0].star:null;
+  // في وضع "لاعبي بس" أو كاميرا اللاعب: الكاميرا بتجمع بين الكورة ولاعبك عشان يفضل باين دايماً
+  const follow=stp&&!cel&&m.phase!=='intro'&&(CM===3||(hu&&hu.lock));const fw=CM===3?.75:.42;
+  const fx0=cel?cel.x:follow?stp.x*fw+(b.x+c3.lx)*(1-fw):b.x+c3.lx,fy0=cel?cel.y:follow?stp.y*fw+b.y*(1-fw):b.y;const tx=clamp(fx0,7,L-7),ty=clamp(fy0,cel?4:14,W-12);SD('x',tx,.42);SD('y',ty,.6);
   const aspect=w/h,zoomK=aspect<1.5?1.25:1;let eye,tgt,wf;
   if(m.phase==='intro'){const a=t/1000*.22+(c3.a0||(c3.a0=Math.random()*6));eye=[CX+Math.cos(a)*86,30+Math.sin(a*.6)*5,-CY+Math.sin(a)*52];tgt=[CX,2,-CY];wf=aspect<1.5?50:38;c3.f=wf;}
   else if(m.phase==='replay'){const d=m.rpDir||1;const wantE=[b.x-d*12,3.4,-b.y+11],wantT=[b.x+d*3,1,-b.y];if(!c3.re){c3.re=wantE.slice();c3.rt=wantT.slice();}for(let i=0;i<3;i++){c3.re[i]+=(wantE[i]-c3.re[i])*Math.min(1,dt*3);c3.rt[i]+=(wantT[i]-c3.rt[i])*Math.min(1,dt*4);}eye=c3.re.slice();tgt=c3.rt.slice();wf=aspect<1.5?44:34;c3.f=wf;}
-  else{c3.re=null;eye=[c3.x,13.5*zoomK,21*zoomK-(c3.y-34)*0.28];tgt=[c3.x,0.6,-(c3.y*0.88+3.5)];wf=(aspect<1.5?34:23)*(cel?0.62:c3.zk);c3.f=c3.f||wf;c3.f+=(wf-c3.f)*Math.min(1,dt*1.5);}
+  else if(CM===3&&follow){c3.re=null;const dir=m.t[0].dir;SD('pd',dir,1.2);const d=c3.pd;// كاميرا ورا لاعبك (زي وضع احترف)
+   eye=[c3.x-d*12.5,7.6,-c3.y+1.2];tgt=[c3.x+d*5.5,-0.6,-c3.y];wf=aspect<1.5?62:50;c3.f=c3.f||wf;c3.f+=(wf-c3.f)*Math.min(1,dt*1.5);}
+  else{c3.re=null;const H=CM===1?9.6:CM===2?19:13.5,Dz=CM===1?14.5:CM===2?28:21,fk=CM===1?.88:CM===2?1.12:1;eye=[c3.x,H*zoomK,Dz*zoomK-(c3.y-34)*0.28];tgt=[c3.x,0.6,-(c3.y*0.88+3.5)];wf=(aspect<1.5?34:23)*fk*(cel?0.62:c3.zk);c3.f=c3.f||wf;c3.f+=(wf-c3.f)*Math.min(1,dt*1.5);}
   if(this.debugCam){eye=this.debugCam.eye.slice();tgt=this.debugCam.tgt.slice();c3.f=this.debugCam.fov;}
   if(m.shake>0){const k=m.shake*.45;eye[0]+=R(-k,k);eye[1]+=R(-k,k)*.6;tgt[1]+=R(-k,k)*.3;}
   M4.look(this.V,eye,tgt,[0,1,0]);M4.persp(this.Pm,c3.f*Math.PI/180,aspect,1,600);M4.mul(this.VP,this.Pm,this.V);this.eye=eye;
@@ -316,8 +324,8 @@ class R3D{
   const Ld=this.Ld,ctr=[c3.x,0,-c3.y];M4.look(this.LV,[ctr[0]+Ld[0]*90,Ld[1]*90,ctr[2]+Ld[2]*90],ctr,[0,0,-1]);M4.ortho(this.LP,-58,58,-48,48,10,200);M4.mul(this.LVP,this.LP,this.LV);
   // dynamic
   const D=this.dyn;for(const k in D)D[k].n=0;
-  const useSk=this.skin&&!(window.App&&App.settings&&+App.settings.plm===1);if(this.skin)this.skin.n=0;
-  const drawL=m.leave&&m.leave.length?m.all.concat(m.leave.map(l=>l.p)):m.all;
+  const useSk=this.skin&&!(typeof App!=='undefined'&&App.settings&&+App.settings.plm===1);if(this.skin)this.skin.n=0;
+  let drawL=m.leave&&m.leave.length?m.all.concat(m.leave.map(l=>l.p)):m.all;{const st0=m.t&&m.t[0].star;if(st0&&drawL.includes(st0)&&drawL[0]!==st0)drawL=[st0].concat(drawL.filter(q=>q!==st0));}
   for(const p of drawL){const sx=p.x-c3.x;if(sx<-60||sx>60)continue;if(useSk)this.skinPlayer(p,m,t/1000);else this.player(p,m);this.add(D.blob,this.trs(p.x+0.15,0.012,-p.y-0.1,0,1.25,1,1.0),[0,0,0,0.5]);}this.add(D.blob,this.trs(b.x,0.013,-b.y,0,0.5,1,0.5),[0,0,0,clamp(0.55-b.z*0.08,0.12,0.55)]);
   // ball
   const bv=Math.hypot(b.vx,b.vy);if(bv>0.05){const ax=-b.vy/bv,az=-b.vx/bv,ang=bv*dt/0.14;const co=Math.cos(ang),si=Math.sin(ang),oc=1-co;const Rm=[co+ax*ax*oc,az*si,ax*az*oc, -az*si,co,ax*si, az*ax*oc,-ax*si,co+az*az*oc];const B=this.ballR,n=new Float32Array(9);

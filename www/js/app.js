@@ -1,7 +1,7 @@
 // مسيرة نجم — المسيرة والحياة: إنشاء اللاعب، المواسم والبطولات، المنتخب، المؤتمرات، السوشيال، العقود، الحياة الشخصية، الجوائز، وحلقة اللعبة
 'use strict';
 const $=id=>document.getElementById(id);
-const App={match:null,demo:null,c:null,settings:{halfLen:120,diff:0,lock:0,sound:1,gfx:2,plm:0,films:1,intro:1,replay:1,voice:1,ctext:0,dial:0},returnTo:'title',quick:false};
+const App={match:null,demo:null,c:null,settings:{halfLen:120,diff:0,lock:0,sound:1,gfx:2,plm:0,films:1,cam:0,intro:1,replay:1,voice:1,ctext:0,dial:0},returnTo:'title',quick:false};
 const SAVE='masiret-nagm-v2';
 // الحفظ: نسخة في المتصفح + نسخة في ذاكرة الجهاز (SharedPreferences) عشان المسيرة ماتضيعش لو أندرويد قفل اللعبة فجأة، ومعاها بصمة تكشف أي تعديل في ملف الحفظ
 function packSave(){if(App.c)Guard.protect(App.c);const d=JSON.stringify({c:App.c,s:App.settings});return JSON.stringify({v:3,t:Date.now(),d,h:Guard.hash(d)});}
@@ -182,7 +182,9 @@ function renderLife(){const c=App.c;$('liSub').textContent='رصيدك '+money(c
  $('liGrid').querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{const it=LIFE.find(x=>x.id===b.dataset.b);if(c.money<it.p)return;if(lifeArm!==it.id){lifeArm=it.id;renderLife();return;}lifeArm=null;c.money-=it.p;c.owned.push(it.id);c.morale=clamp(c.morale+it.morale,0,100);c.followers+=it.fol;c.fans=clamp(c.fans+(it.fans||0),0,100);feedPost(c,'@'+c.name.replace(/\s+/g,'_'),'ألف مبروك عليا: '+it.n,true);flashDom();FX.confetti(90,['#F5C542','#FFFFFF','#C6F432']);toast('مبروك! '+it.n);store();renderLife();});}
 
 /* ---------- press conference ---------- */
-function openPress(kind,then){const c=App.c;const pool=PRESS[kind]||PRESS.pre;const Q=pick(pool);const who=pick(JOURNALISTS)+' — '+pick(OUTLETS);
+function openPress(kind,then){const c=App.c;const X=App.pressCtx||{};let pool=(PRESS[kind]||PRESS.pre).filter(q=>!q.w||(X&&q.w(X)));if(!pool.length)pool=(PRESS[kind]||PRESS.pre).filter(q=>!q.w);if(!pool.length)pool=PRESS.pre;
+ // الأسئلة بتتكلم عن اللي حصل فعلاً في الماتش (أهدافك، تقييمك، النتيجة، لو نزلت بديل أو طلعت)
+ const fill=t=>String(t).replace(/\{(\w+)\}/g,(m0,k)=>X[k]!=null?X[k]:'');const Q0=pick(pool);const Q={q:fill(Q0.q),a:Q0.a.map(a=>[fill(a[0]),a[1]])};const who=pick(JOURNALISTS)+' — '+pick(OUTLETS);
  $('prSub').textContent=kind==='pre'?'قبل الماتش':kind==='transfer'?'تقديمك للإعلام':'بعد الماتش';{const sc=$('scr-press');let rm=sc.querySelector('.prroom');if(rm)rm.remove();sc.insertAdjacentHTML('afterbegin',pressRoomHTML(kitOf(c.club),c));}$('prWho').textContent=who;$('prQ').textContent='';$('prA').innerHTML='';show('press');
  let i=0;const full=Q.q;const fl=setInterval(()=>{if(Math.random()<.35)flashDom();},900);
  const ty=setInterval(()=>{i++;$('prQ').textContent=full.slice(0,i);if(i>=full.length){clearInterval(ty);
@@ -205,12 +207,25 @@ function coachPick(c,f,info){if(f.pick)return f.pick;if(c.punish>0&&!info.nat){c
    // اللي قاعد برّه القايمة بيكسب ثقة المدرب شوية شوية من التمرين، عشان ما يفضلش محبوس على الدكة للأبد
    if(p.st==='out')c.coach=Math.min(100,(c.coach||50)+.6);}}
  f.pick=p;return p;}
+/* ---------- تعليمات المدرب قبل كل ماتش ---------- */
+const INST={sh:n=>'سدد كتير: '+n+' تسديدات على الأقل',deep:()=>'ماتنزلش تستلم من تحت — خليك في نص ملعب الخصم',lost:n=>'حافظ على الكورة: ماتضيّعهاش أكتر من '+n+' مرات',pc:n=>'مرر كتير: '+n+' تمريرة صحيحة',tk:n=>'ساعد في الدفاع: '+n+' افتكاك على الأقل',yc:()=>'أعصابك: ماتاخدش كارت',g:()=>'عايزك تسجل النهارده'};
+function coachInst(c,f){if(f.inst)return f.inst;const pos=c.pos,att=pos==='ST'||pos==='LW'||pos==='RW',cam=pos==='CAM';
+ const pool=att?[['sh',3],['deep',.35],['lost',7],['g',1],['yc',0]]:cam?[['pc',14],['sh',2],['lost',8],['tk',2],['deep',.4]]:[['pc',18],['tk',3],['lost',7],['yc',0]];
+ const n=c.coach<40?2:Math.random()<.5?2:1;const out=[];const P=pool.slice();while(out.length<n&&P.length){const j=RI(0,P.length-1);out.push({k:P[j][0],n:P[j][1]});P.splice(j,1);}f.inst=out;return out;}
+function instTxt(x){return INST[x.k](x.n);}
+function instNeed(x,mins){const f=Math.max(.35,mins/90);return x.k==='sh'||x.k==='pc'||x.k==='tk'?Math.max(1,Math.round(x.n*f)):x.n;}
+function instProg(x,s,mins){const need=instNeed(x,mins);if(x.k==='sh')return[s.sh||0,need,(s.sh||0)>=need];if(x.k==='pc')return[s.pc||0,need,(s.pc||0)>=need];if(x.k==='tk')return[s.tk||0,need,(s.tk||0)>=need];
+ if(x.k==='lost')return[s.lost||0,need,(s.lost||0)<=need];if(x.k==='yc')return[s.yc||0,0,!(s.yc||s.rc)];if(x.k==='g')return[s.g||0,1,(s.g||0)>=1];if(x.k==='deep'){const v=s.ownPct==null?0:s.ownPct;return[Math.round(v*100),Math.round(need*100),v<=need];}return[0,0,true];}
+function instLive(m){const el=$('instr');if(!el)return;const P=App.subPlan,f=App.c&&App.c.sched[App.c.si];const st=m&&m.t[0].star;if(!f||!f.inst||!st||!m.t[0].pl.includes(st)||App.quick){el.classList.remove('on');return;}
+ const s=Object.assign({},st.stats,{ownPct:st.tT>10?(st.ownT||0)/st.tT:0});const mins=P&&P.inMin?90-P.inMin:90;
+ el.innerHTML='المدرب: '+f.inst.map(x=>{const p=instProg(x,s,mins);const lab={sh:'تسديدات',pc:'تمريرات',tk:'افتكاك',lost:'كورة ضايعة',yc:'كروت',g:'أهداف',deep:'وقتك ورا'}[x.k];return (p[2]?'<b>':'<i>')+(x.k==='deep'?'وقتك في نصنا '+p[0]+'% (الحد '+p[1]+'%)':lab+' '+p[0]+'/'+p[1])+(p[2]?'</b>':'</i>');}).join(' · ');el.classList.add('on');}
 function pickTxt(p){return p.st==='start'?'أساسي في التشكيلة':p.st==='bench'?'احتياطي — هتنزل غالباً حوالي الدقيقة '+p.min:'مش في القايمة — '+(p.why||'');}
-function coachSetup(m,pk){App.subPlan={pk,done:false};if(pk.st!=='bench'||!m)return;const t=m.t[0],st=t.star;if(!st)return;const idx=t.pl.indexOf(st);const rep=t.bench.find(b=>b.role===st.role)||t.bench[0];Object.assign(rep,{i:st.i,role:st.role,bx:st.bx,by:st.by,x:st.x,y:st.y,vx:0,vy:0,team:t});t.pl[idx]=rep;t.bench=t.bench.filter(x=>x!==rep);m.all=[...m.t[0].pl,...m.t[1].pl];if(m.ball.owner===st)m.ball.owner=rep;
+function coachSetup(m,pk){App.subPlan={pk,done:false};if(pk.st!=='bench'||!m)return;const t=m.t[0],st=t.star;if(!st)return;const idx=t.pl.indexOf(st);const rep=t.bench.find(b=>b.role===st.role)||t.bench[0];Object.assign(rep,{i:st.i,role:st.role,bx:st.bx,by:st.by,x:st.x,y:st.y,vx:0,vy:0,team:t,noSub:true});t.pl[idx]=rep;t.bench=t.bench.filter(x=>x!==rep);m.all=[...m.t[0].pl,...m.t[1].pl];if(m.ball.owner===st)m.ball.owner=rep;
  const hh=m.human;if(hh&&hh.ctrl===st)hh.ctrl=rep;m.human=null;m.skip();let g=0;while(m.minute()<pk.min&&m.phase!=='end'&&g++<400000){if(m.phase==='replay')m.endReplay();if(m.phase!=='play')m.pt=Math.min(m.pt,.01);m.update(1/30);}
- m.human=hh;m.rec=[];m.sub(t,rep,st);if(hh){hh.ctrl=st;}App.subPlan.inMin=m.minute();m.banner={t:'نزلت الملعب!',s:'الدقيقة '+m.minute()+' — النتيجة '+m.score[0]+'-'+m.score[1],life:2.6};}
+ m.human=hh;m.rec=[];let ok=m.sub(t,rep,st);if(!ok){const alt=t.pl.filter(q=>q.role===st.role&&q.role!=='GK')[0]||t.pl.filter(q=>q.role!=='GK')[0];st.subbed=false;ok=m.sub(t,alt,st);}if(hh){hh.ctrl=st;}App.subPlan.inMin=m.minute();m.banner={t:'نزلت الملعب!',s:'الدقيقة '+m.minute()+' — النتيجة '+m.score[0]+'-'+m.score[1],life:2.6};}
 function commTick(m,dt){if(m.phase!=='play'||!App.settings.voice)return;m.cT=(m.cT||0)+dt;if(m.cT<R(9,13))return;m.cT=0;if(Voice.cur)return;const b=m.ball,t=m.t[0];const ax=t.dir===1?b.x:L-b.x;const mn=m.minute();if(mn>=84&&m.score[0]<=m.score[1]&&!m.prs){m.prs=1;Comm.say('pressure',{},1);return;}if(Math.random()<.55)Comm.say(ax>70?'build_att':ax<35?'build_def':'build_mid');}
-function coachTick(m){const P=App.subPlan;if(!P||P.done||!m||m.phase!=='play')return;const t=m.t[0],st=t.star;if(!st||st.off)return;if(P.pk.st==='start'&&P.pk.weak&&m.minute()>=(P.chk||(P.chk=RI(64,78)))){P.done=true;const res=Math.sign(m.score[0]-m.score[1]);if(rate(st.stats,res)<6.5&&t.subs<5&&t.bench.length){const inp=t.bench.find(b=>b.role===st.role)||t.bench[0];P.outAt=m.minute();m.sub(t,st,inp);m.banner={t:'المدرب طلّعك',s:'تقييمك لحد دلوقتي ضعيف',life:2.4};if(m.human&&m.human.lock){m.human=null;m.ff=true;}}}}
+function coachTick(m){const P=App.subPlan;if(!P||P.done||!m||m.phase!=='play')return;const t=m.t[0],st=t.star;if(!st||st.off||!t.pl.includes(st))return;
+ if(!P.perf&&!App.quick&&m.minute()>=(P.pchk||(P.pchk=RI(60,72)))){P.perf=1;const lr=m.liveR(st);const c=App.c;if(t.bench.length&&t.subs<5&&(lr<5.6&&c.coach<62||st.stam<28)){P.done=true;const inp=t.bench.find(b=>b.role===st.role)||t.bench[0];P.outAt=m.minute();m.sub(t,st,inp);m.banner={t:'المدرب طلّعك',s:st.stam<28?'خلصت طاقتك':'أداءك لحد دلوقتي مش مقنع (تقييم '+Math.max(4,lr).toFixed(1)+')',life:2.6};if(m.human&&m.human.lock){m.human=null;m.ff=true;}return;}}if(P.pk.st==='start'&&P.pk.weak&&m.minute()>=(P.chk||(P.chk=RI(64,78)))){P.done=true;const res=Math.sign(m.score[0]-m.score[1]);if(rate(st.stats,res)<6.5&&t.subs<5&&t.bench.length){const inp=t.bench.find(b=>b.role===st.role)||t.bench[0];P.outAt=m.minute();m.sub(t,st,inp);m.banner={t:'المدرب طلّعك',s:'تقييمك لحد دلوقتي ضعيف',life:2.4};if(m.human&&m.human.lock){m.human=null;m.ff=true;}}}}
 /* ---------- prematch ---------- */
 function openPre(){const c=App.c,f=c.sched[c.si];if(!f)return seasonEnd();
  if(f.press&&!f.pressDone&&c.inj<=0&&!c.susp){f.pressDone=true;store();openPress('pre',openPre);return;}
@@ -219,6 +234,7 @@ function openPre(){const c=App.c,f=c.sched[c.si];if(!f)return seasonEnd();
  $('preVs').innerHTML=`<div>${crestHTML(me)}<div class="tname">${esc(me.name)}</div><div class="sub" style="text-align:center">تقييم ${me.R}</div></div><div class="vsx">VS</div><div>${crestHTML(info.opp)}<div class="tname">${esc(info.opp.name)}</div><div class="sub" style="text-align:center">تقييم ${info.opp.R}</div></div>`;
  c.wx=c.wx&&c.wx.si===c.si?c.wx:{si:c.si,rain:Math.random()<.2};
  $('preInfo').innerHTML=`<span class="pill">معنويات ${c.morale}%</span><span class="pill">طاقة ${c.energy}%</span><span class="pill">ثقة المدرب ${c.coach}%</span><span class="pill">${c.wx.rain?'مطر — الكورة أسرع والأرض بتزحلق':'جو صافي'}</span><span class="pill ${pk.st==='start'?'':'warn'}">المدرب: ${esc(pickTxt(pk))}</span>${c.inj>0?'<span class="pill warn">مصاب — هتتفرج من المدرجات</span>':c.susp>0?'<span class="pill warn">موقوف — هتتفرج من المدرجات</span>':''}${c.energy<40?'<span class="pill warn">طاقتك قليلة</span>':''}`;
+ {const old=$('preInst');if(old)old.remove();if(!(c.inj>0||c.susp>0||pk.st==='out')){const I=coachInst(c,f);$('preInfo').insertAdjacentHTML('afterend',`<div class="instbox" id="preInst"><h4>تعليمات المدرب ليك في الماتش ده</h4>${I.map(x=>`<div>• ${esc(instTxt(x))}</div>`).join('')}<div class="sub">لو ماسمعتش الكلام، ممكن تقعد على الدكة الماتش الجاي.</div></div>`);}}
  const outP=c.inj>0||c.susp>0||pk.st==='out';$('preGo').classList.toggle('hidden',outP);$('preGo').textContent=pk.st==='bench'?'العب (من الدكة)':'العب الماتش';$('preSim').textContent=outP?'تابع النتيجة':(Ads.ready?'🎬 تخطّى الماتش (إعلان · مش هتلعب)':'تخطّى الماتش (مش هتلعب)');
  $('preBack').onclick=()=>show('hub');$('preGo').onclick=()=>startFix(false);$('preSim').onclick=async()=>{const out=$('preGo').classList.contains('hidden');if(out||!Ads.ready)return startFix(true);const b=$('preSim');b.disabled=true;const t0=b.textContent;b.textContent='بيحمّل الإعلان…';const r=await Ads.reward();b.disabled=false;b.textContent=t0;if(r==='cancel'){toast('لازم تكمّل الإعلان للآخر عشان تتخطى الماتش');return;}if(r==='na')toast('مفيش إعلان متاح دلوقتي، اتخطّى المرة دي ببلاش');startFix(true);};App.quick=false;show('pre');}
 function startFix(sim){const c=App.c,f=c.sched[c.si],info=fixInfo(c,f);const home=myTeamDef(c,info);const away=Object.assign({},info.opp,{sqBoost:App.settings.diff,sq:info.nat?null:getSquad(c,Object.assign({cc:curTier(c).country},info.opp)),R:sim?info.opp.R:oppMatchR(c,info.opp.R),nm:info.opp.nm||(info.opp.cc?CBY[info.opp.cc].nm:CBY[curTier(c).country].nm)});
@@ -259,6 +275,9 @@ function finishFix(r,simmed,absent){const c=App.c,f=c.sched[c.si],info=fixInfo(c
   if(rt>=8){c.ss.motm++;c.tot.motm++;news.push('أحسن لاعب في الماتش!');addNews(c,'me',lastName(c.name)+' نجم ماتش '+c.club.short+' ضد '+info.opp.name+' بتقييم '+rt.toFixed(1),rt>=9);}
   else if(rt<=5.4)addNews(c,'me','انتقادات لـ'+c.name+' بعد أداء باهت ضد '+info.opp.name+' (تقييم '+rt.toFixed(1)+')');
   for(const ms of [1,10,25,50,100,150,200,300,400])if(g0<ms&&c.tot.g>=ms)addNews(c,'me',ms===1?c.name+' يسجل أول أهدافه كمحترف!':c.name+' يوصل للهدف رقم '+ms+' في مسيرته',ms>=50);}
+ if(s&&!simmed&&f.inst&&(s.min===undefined?90:s.min)>=25){const mins=s.min===undefined?90:s.min;let ok=0,bad=[];for(const x of f.inst){const p=instProg(x,s,mins);if(p[2])ok++;else bad.push(instTxt(x));}
+  c.coach=clamp(c.coach+ok*3-bad.length*6,0,100);if(!bad.length){news.push('نفّذت تعليمات المدرب بالظبط — ثقته فيك زادت');}
+  else{news.push('ماسمعتش كلام المدرب: '+bad.join('، '));c.morale=clamp(c.morale-2,0,100);if(!(c.punish>0)&&Math.random()<(bad.length>1?.6:.3)+(c.coach<45?.2:0)&&!info.nat){c.punish=1;mail(c,'coach','المدرب','ماسمعتش الكلام','قلتلك قبل الماتش: '+bad.join('، ')+'. ومعملتش كده. هتبدأ على الدكة الماتش الجاي، يمكن تفهم إن التعليمات مش اختيارية.');addNews(c,'me','المدرب يستبعد '+c.name+' من التشكيلة الأساسية بعد عدم التزامه بالتعليمات');news.push('المدرب قرر يقعدك دكة الماتش الجاي');}}}
  if(s&&s.rc){const fine=Math.round(c.contract.wage*.6);c.money-=fine;c.inj=Math.max(c.inj,0);mail(c,'club','إدارة النادي','غرامة الطرد','الطرد ده كلّف الفريق كتير. اتخصم منك '+money(fine)+'. وهتغيب الماتش الجاي.');c.susp=1;c.coach=clamp(c.coach-8,0,100);news.push('كارت أحمر — غرامة '+money(fine));addNews(c,'me','طرد '+c.name+' في ماتش '+info.opp.name+'… وغرامة من النادي');}
  if(s&&s.g>=3){news.push('هاتريك!!');addNews(c,'me','هاتريك لـ'+c.name+'! '+s.g+' أهداف في شباك '+info.opp.name,true);c.followers+=Math.round(1500*(1+c.path.tier));mail(c,'media','الصحافة','الكل بيتكلم عن الهاتريك','صورتك على الصفحة الأولى في كل الجرايد النهارده.');}
  // social reactions
@@ -275,7 +294,9 @@ function finishFix(r,simmed,absent){const c=App.c,f=c.sched[c.si],info=fixInfo(c
  if(f.t==='L'&&(f.md===Math.round(c.league.rounds.length*.25)||f.md===Math.round(c.league.rounds.length*.7))&&avg>=6.9&&c.ss.apps>=3&&c.path.tier<7){const{ti,cl}=clubFor(c,Math.min(7,c.path.tier+1));addNews(c,'transfer','كشافين من '+cl.name+' ('+ti.short+') في المدرجات لمتابعة '+c.name+' — قيمته السوقية '+money(marketValue(c)));}
  // coach warning
  if(c.coach<25&&Math.random()<.5)mail(c,'coach','المدرب','لازم نتكلم','مستواك نازل وكلامك برّه مش عاجبني. لو فضلت كده هتقعد على الدكة.');
- if(rt&&!App._skipped)pressKind=win?'win':res<0?'loss':'draw';
+ if(rt&&!App._skipped){pressKind=win?'win':res<0?'loss':'draw';const st0=f.pick?f.pick.st:'start',mn=s.min===undefined?90:s.min;
+  App.pressCtx={rt:rt.toFixed(1),g:s.g,a:s.a,sc:r.score[0]+'-'+r.score[1],ga:r.score[1],opp:info.opp.name,started:st0==='start',subIn:st0==='bench'&&mn<90,inMin:90-mn,subOut:st0==='start'&&mn<88,outMin:mn,prevBench:c.lastPickSt&&c.lastPickSt!=='start',offers:(c.inbox||[]).some(x=>x.action&&x.action.k==='offer'&&!x.read),motm:false};App.pressCtx.rt=+App.pressCtx.rt;}
+ c.lastPickSt=f.pick?f.pick.st:'start';
  c.si++;skipInvalid(c);store();
  // post screen
  const hn=info.nat?{name:'منتخب '+CBY[c.nat].n,short:CBY[c.nat].n.slice(0,5),kitArr:natKit(c.nat)}:c.club;
@@ -286,7 +307,7 @@ function finishFix(r,simmed,absent){const c=App.c,f=c.sched[c.si],info=fixInfo(c
  if(news.some(n=>n.includes('أبطال')||n.includes('استدعاء'))){setTimeout(()=>{FX.confetti(200);FX.fireworks(6);flashDom();},400);}
  $('poGo').onclick=()=>{const b=$('poGo');if(b.disabled)return;const next=()=>{if(c.si>=c.sched.length)seasonEnd();else show('hub');};const go=()=>{if(pressKind)openPress(pressKind,next);else next();};if(!Ads.due(c))return go();b.disabled=true;Ads.afterMatch(c).catch(()=>{}).then(()=>{b.disabled=false;go();});};
  enRow(c);
- const M=motmPick(c,r,info,hn,rt,res,s,simmed);const seq=[];(App.troQ||[]).splice(0).forEach(t=>seq.push(d=>trophyFilm(t,d)));if(M&&+App.settings.films!==0)seq.push(d=>motmFilm(M,d));runSeq(seq,()=>show('post'));}
+ const M=motmPick(c,r,info,hn,rt,res,s,simmed);if(App.pressCtx&&M&&M.me)App.pressCtx.motm=true;const seq=[];(App.troQ||[]).splice(0).forEach(t=>seq.push(d=>trophyFilm(t,d)));if(M&&+App.settings.films!==0)seq.push(d=>motmFilm(M,d));runSeq(seq,()=>show('post'));}
 function runSeq(list,done){let i=0;const nx=()=>{if(i<list.length){const f=list[i++];try{f(nx);}catch(e){console.warn(e);nx();}}else done();};nx();}
 // رجل الماتش: أعلى تقييم في الماتش (من اللاعيبة كلها لو الماتش اتلعب، ومن الهدافين لو محاكاة)
 function motmPick(c,r,info,hn,rt,res,s,simmed){const tk=[kitOf(hn),kitOf(info.opp)],tn=[hn.name,info.opp.name];const match=tn[0]+' '+r.score[0]+'-'+r.score[1]+' '+tn[1];let best=null;
@@ -455,8 +476,8 @@ $('mNew').onclick=()=>{SFX.init();if(App.c&&!App.c.retired&&!confirmNew())return
 function confirmNew(){if(confirmNew.armed){confirmNew.armed=false;return true;}confirmNew.armed=true;toast('دوس تاني عشان تمسح المسيرة الحالية وتبدأ جديد');setTimeout(()=>confirmNew.armed=false,3000);return false;}
 $('mContinue').onclick=()=>{SFX.init();show('hub');};$('mSettings').onclick=()=>{App.returnTo='title';show('settings');};
 $('mFull').onclick=()=>{try{const el=document.documentElement;const p=el.requestFullscreen?el.requestFullscreen():el.webkitRequestFullscreen&&el.webkitRequestFullscreen();if(p&&p.then)p.then(()=>{try{screen.orientation.lock('landscape').catch(()=>{});}catch(e){}}).catch(()=>toast('ملء الشاشة مش متاح هنا'));}catch(e){toast('ملء الشاشة مش متاح هنا');}};
-function togglePause(){const m=App.match;if(!m)return;m.paused=!m.paused;$('pause').classList.toggle('on',m.paused);$('subsP').classList.add('hidden');$('helpP').classList.add('hidden');}
-$('pauseBtn').onclick=togglePause;$('paRes').onclick=togglePause;
+function togglePause(){const m=App.match;if(!m)return;m.paused=!m.paused;$('pause').classList.toggle('on',m.paused);$('paSubs').classList.toggle('hidden',!App.quick);$('subsP').classList.add('hidden');$('helpP').classList.add('hidden');}
+$('pauseBtn').onclick=togglePause;$('camBtn').onclick=()=>{const n=((+App.settings.cam||0)+1)%4;App.settings.cam=n;try{store();}catch(e){}const m=App.match;if(m)m.banner={t:'الكاميرا: '+['عادية','قريبة','بعيدة','ورا لاعبي'][n],life:1.2,small:true};};$('paRes').onclick=togglePause;
 $('paQuit').onclick=()=>{const m=App.match;$('pause').classList.remove('on');if(!m)return;if(App.quick||!App.c){App.match=null;Comm.stop();SFX.rain(false);show('title');return;}m.paused=false;const r=m.result();r.score=[0,3];r.events.push({type:'goal',team:1,min:90,name:'انسحاب'});finishFix(r,false);};
 $('skipBtn').onclick=()=>{if(App.match)App.match.skip();};
 
@@ -498,7 +519,7 @@ let last=performance.now();
 function frame(ts){const dt=Math.min(.033,Math.max(0,(ts-last)/1000));last=ts;FX.update(dt);const m=App.match||App.demo;
  if(m&&gfxReady){try{
   if(App.match&&(m.phase==='intro'||m.phase==='replay')){if(Input.take('Xd')|Input.take('Od')|Input.take('Td')|Input.take('Sd'))m.skip();Input.take('Su');Input.take('Xu');}
-  if(App.match&&m.phase==='replay'&&!App.settings.replay)m.skip();if(App.match){coachTick(App.match);commTick(App.match,dt);}
+  if(App.match&&m.phase==='replay'&&!App.settings.replay)m.skip();if(App.match){coachTick(App.match);commTick(App.match,dt);App._iT=(App._iT||0)+dt;if(App._iT>.5){App._iT=0;instLive(App.match);}}
   m.update(dt);
   if(R3){R3.quality=App.settings.gfx;const d0=window.devicePixelRatio||1;R3.render(m,CW,CH,App.settings.gfx>=2?Math.min(2,d0):Math.min(1.25,d0),ts);drawOverlay(octx,m,CW,CH,(x,y,z)=>R3.project(x,y,z,CW,CH));}
   else if(ctx){m.render(ctx,CW,CH);octx.clearRect(0,0,CW,CH);FX.draw(octx,CW,CH,m);}

@@ -22,7 +22,7 @@ const Guard=(()=>{
    apps:['لازم تقفل برامج التهكير','لقينا على جهازك برامج بتستخدم في تهكير الألعاب'+(extra?': '+extra:'')+'. امسحها أو اقفلها وبعدين دوس «جرّب تاني».'],
    ads:['اقفل مانع الإعلانات','الإعلانات هي اللي بتخلّي اللعبة مجانية. اقفل مانع الإعلانات (أو الـ Private DNS زي AdGuard) وبعدين دوس «جرّب تاني».']}[kind];
   el.innerHTML=`<div class="gbox"><div class="gico">!</div><h2>${T[0]}</h2><p>${T[1]}</p>${kind==='cheat'?'':'<button class="btn" id="guardRe">جرّب تاني</button>'}</div>`;el.className='on';
-  if(window.App&&App.match&&!App.match.paused&&typeof togglePause==='function')togglePause();
+  if(typeof App!=='undefined'&&App.match&&!App.match.paused&&typeof togglePause==='function')togglePause();
   const b=document.getElementById('guardRe');if(b)b.onclick=()=>{b.textContent='بنتأكد…';(kind==='ads'?adCheck():appCheck()).then(bad=>{if(!bad)el.className='';else b.textContent='جرّب تاني';});};}
  // برامج الغش المعروفة (لازم تبقى مكتوبة كمان في AndroidManifest جوه <queries>)
  async function appCheck(){if(!Nat||!Nat.info)return false;try{const r=await Nat.info();const bad=(r&&r.bad)||[];if(bad.length){block('apps',bad.join('، '));return true;}}catch(e){}return false;}

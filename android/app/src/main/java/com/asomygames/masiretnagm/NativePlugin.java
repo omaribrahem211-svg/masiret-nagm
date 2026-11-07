@@ -220,6 +220,20 @@ public class NativePlugin extends Plugin {
     }
 
     @PluginMethod
+    public void openUrl(PluginCall call) {
+        String url = call.getString("url");
+        if (url == null || !(url.startsWith("https://") || url.startsWith("http://"))) { call.reject("bad url"); return; }
+        try {
+            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getContext().startActivity(i);
+            call.resolve();
+        } catch (Exception e) {
+            call.reject("no app", e);
+        }
+    }
+
+    @PluginMethod
     public void startUpdate(PluginCall call) {
         try {
             AppUpdateManager m = AppUpdateManagerFactory.create(getContext());

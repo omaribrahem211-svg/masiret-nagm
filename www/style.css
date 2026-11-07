@@ -720,3 +720,8 @@ table.tbl{width:100%;border-collapse:collapse;font-size:clamp(12px,2.6vh,15px)}
 .prerow .tacbox{display:block}.prerow .tacbox>div+div{margin-top:4px;padding-top:4px;border-top:1px solid rgba(255,255,255,.08)}
 .prepanel .vs .crest{width:clamp(44px,11vh,80px);height:clamp(44px,11vh,80px)}
 @media (max-height:460px){.prepanel{gap:6px;padding-top:6px}.prepanel .vs .crest{width:44px;height:44px}.prepanel .vsx{font-size:24px}.prepanel .vs .sub{font-size:11px}.tacrow .btn{min-height:24px;padding:1px 7px;font-size:11px}.prerow .sub{font-size:11px}.prerow h4{font-size:12px}}
+
+.fbbtn{position:absolute;left:max(18px,env(safe-area-inset-left));bottom:max(40px,calc(env(safe-area-inset-bottom) + 30px));display:flex;align-items:center;gap:8px;background:#1877F2;color:#fff;border:none;border-radius:999px;padding:7px 16px 7px 12px;font:700 14px Changa,sans-serif;box-shadow:0 6px 18px rgba(24,119,242,.35);cursor:pointer;z-index:3}
+.fbbtn:active{transform:scale(.96)}
+.ctlpick{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}.ctlpick .btn{min-height:32px;padding:3px 14px;font-size:13px}
+.ctlpick .lbl{align-self:center;font-weight:700;font-size:13px;color:var(--mut)}

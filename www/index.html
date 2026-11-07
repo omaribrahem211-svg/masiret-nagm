@@ -169,6 +169,7 @@
     <div class="field"><label>جودة الجرافيكس</label><div class="seg" data-k="gfx"><button data-v="2">عالية</button><button data-v="1">متوسطة (أسرع)</button></div></div>
     <div class="field"><label>مقدمة الماتش السينمائية</label><div class="seg" data-k="intro"><button data-v="1">شغّالة</button><button data-v="0">مقفولة</button></div></div>
     <div class="field"><label>إعادة الأهداف</label><div class="seg" data-k="replay"><button data-v="1">شغّالة</button><button data-v="0">مقفولة</button></div></div>
+    <div class="field"><label>فيديو رجل الماتش بعد كل ماتش</label><div class="seg" data-k="films"><button data-v="1">شغّال</button><button data-v="0">مقفول</button></div></div>
     <div class="field"><label>شكل اللاعيبة</label><div class="seg" data-k="plm"><button data-v="0">موديلات حقيقية</button><button data-v="1">بسيط (للموبايلات الضعيفة)</button></div></div>
     <div class="field"><label>لهجة المعلّق</label><div class="seg" data-k="dial"><button data-v="0">مصري</button><button data-v="1">خليجي</button></div></div>
     <div class="field"><label>التعليق الصوتي العربي</label><div class="seg" data-k="voice"><button data-v="1">شغّال</button><button data-v="0">مقفول</button></div><div class="sub" id="voiceInfo"></div></div>
@@ -208,6 +209,7 @@
   <div id="compTag"></div>
   <button id="pauseBtn" aria-label="إيقاف مؤقت"><svg width="20" height="20" viewBox="0 0 24 24" fill="#EEF2FF" aria-hidden="true"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></button>
   <div id="banner"><div class="cardic" id="bnCard"></div><div id="bnT"></div><div id="bnS"></div></div>
+  <div id="subBoard" aria-live="polite"><div class="sbh"><i id="sbK"></i><span id="sbTm"></span><em>تبديل</em></div><div class="sbr sbo"><b id="sbO"></b><span id="sbON"></span><s>▼</s></div><div class="sbr sbi"><b id="sbI"></b><span id="sbIN"></span><s>▲</s></div></div>
   <div id="comm" aria-live="polite"></div>
   <div id="joyZone"><div id="joyBase"><div id="joyKnob"></div></div></div>
   <div id="btns">
@@ -241,6 +243,7 @@
 <script src="js/guard.js"></script>
 <script src="js/ads.js"></script>
 <script src="js/app.js"></script>
+<script src="js/films.js"></script>
 <script src="js/card.js"></script>
 </body>
 </html>

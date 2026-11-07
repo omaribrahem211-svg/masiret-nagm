@@ -37,7 +37,7 @@ render(ctx,w,h){const cam=this.cam;if(cam.w!==w||cam.h!==h)cam.fit(w,h);const P=
    ctx.fillStyle='rgba(0,0,0,.32)';ctx.beginPath();ctx.ellipse(g.x+.18*k,g.y,.42*k,.13*k,0,0,7);ctx.fill();}
   const b=this.ball;{const g=P(b.x,b.y,0);const r=Math.max(2,.22*g.k*1.35);ctx.fillStyle=`rgba(0,0,0,${clamp(.35-b.z*.05,.08,.35)})`;ctx.beginPath();ctx.ellipse(g.x+b.z*.15*g.k,g.y,r*1.1,r*.45,0,0,7);ctx.fill();}
   // sorted bodies
-  const list=this.all.map(p=>({y:p.y,p}));list.push({y:b.y-.01,ball:true});list.sort((a,c)=>c.y-a.y);
+  const list=this.all.concat((this.leave||[]).map(l=>l.p)).map(p=>({y:p.y,p}));list.push({y:b.y-.01,ball:true});list.sort((a,c)=>c.y-a.y);
   for(const it of list){if(it.ball)this.drawBall(ctx,P);else this.drawPl(ctx,P,it.p,w);}
   // goal front posts
   for(const s of [0,1])this.drawPosts(ctx,P,s);

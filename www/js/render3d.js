@@ -317,7 +317,8 @@ class R3D{
   // dynamic
   const D=this.dyn;for(const k in D)D[k].n=0;
   const useSk=this.skin&&!(window.App&&App.settings&&+App.settings.plm===1);if(this.skin)this.skin.n=0;
-  for(const p of m.all){const sx=p.x-c3.x;if(sx<-60||sx>60)continue;if(useSk)this.skinPlayer(p,m,t/1000);else this.player(p,m);this.add(D.blob,this.trs(p.x+0.15,0.012,-p.y-0.1,0,1.25,1,1.0),[0,0,0,0.5]);}this.add(D.blob,this.trs(b.x,0.013,-b.y,0,0.5,1,0.5),[0,0,0,clamp(0.55-b.z*0.08,0.12,0.55)]);
+  const drawL=m.leave&&m.leave.length?m.all.concat(m.leave.map(l=>l.p)):m.all;
+  for(const p of drawL){const sx=p.x-c3.x;if(sx<-60||sx>60)continue;if(useSk)this.skinPlayer(p,m,t/1000);else this.player(p,m);this.add(D.blob,this.trs(p.x+0.15,0.012,-p.y-0.1,0,1.25,1,1.0),[0,0,0,0.5]);}this.add(D.blob,this.trs(b.x,0.013,-b.y,0,0.5,1,0.5),[0,0,0,clamp(0.55-b.z*0.08,0.12,0.55)]);
   // ball
   const bv=Math.hypot(b.vx,b.vy);if(bv>0.05){const ax=-b.vy/bv,az=-b.vx/bv,ang=bv*dt/0.14;const co=Math.cos(ang),si=Math.sin(ang),oc=1-co;const Rm=[co+ax*ax*oc,az*si,ax*az*oc, -az*si,co,ax*si, az*ax*oc,-ax*si,co+az*az*oc];const B=this.ballR,n=new Float32Array(9);
    for(let cc=0;cc<3;cc++)for(let r=0;r<3;r++)n[cc*3+r]=Rm[r]*B[cc*3]+Rm[3+r]*B[cc*3+1]+Rm[6+r]*B[cc*3+2];this.ballR=n;if((++this.frameN)%120===0){const v0=[n[0],n[1],n[2]],l0=Math.hypot(...v0);v0.forEach((v,i)=>n[i]=v/l0);let d=n[3]*n[0]+n[4]*n[1]+n[5]*n[2];for(let i=0;i<3;i++)n[3+i]-=d*n[i];const l1=Math.hypot(n[3],n[4],n[5]);for(let i=0;i<3;i++)n[3+i]/=l1;n[6]=n[1]*n[5]-n[2]*n[4];n[7]=n[2]*n[3]-n[0]*n[5];n[8]=n[0]*n[4]-n[1]*n[3];}}

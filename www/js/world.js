@@ -18,7 +18,10 @@ function worldClubs(c,tier,ti,n){n=n||(typeof lgSize==='function'?lgSize(c,tier,
  if(!L){const used=new Set([c.club.name]);const real=realClubsFor(c,tier,ti,n);real.forEach(x=>used.add(x.name));L=W.lg[k]={clubs:real.concat(genClubs(ti.country,Math.max(0,n-real.length),ti.base,used,RI(0,20))),up:[],down:[],champ:null};}
  return L;}
 function seasonClubs(c,tier,ti,n){n=n||7;const L=worldClubs(c,tier,ti,n);const used=new Set(L.clubs.map(x=>x.name).concat([c.club.name]));
- let pool=L.clubs.filter(x=>x.name!==c.club.name&&!L.up.includes(x.name)&&!L.down.includes(x.name));const fresh=[];
+ const realLg=!ti.domestic||tier===3;
+ // الدوريات الحقيقية: مفيش هبوط لأندية وهمية بره مصر، والأندية الصاعدة للدوري الممتاز من القايمة الحقيقية للدرجة التانية
+ let pool=L.clubs.filter(x=>x.name!==c.club.name&&(!ti.domestic||(!L.up.includes(x.name)&&!L.down.includes(x.name))));const fresh=[];
+ if(realLg&&pool.length<n){const rows=(ti.domestic?(REAL_D2[ti.country]||[]):[]).concat(REAL[ti.country]||[],ti.domestic?[]:(REAL_D2[ti.country]||[]));for(const r of rows){if(pool.length>=n)break;if(used.has(r[0]))continue;used.add(r[0]);pool.push({name:r[0],short:r[6]||realShort(r[0]),kitArr:[r[2],r[3],r[4]],R:r[1],cc:ti.country,real:true,newcomer:true});fresh.push(r[0]);}}
  while(pool.length<n){const nc=genClubs(ti.country,1,ti.base+(L.down.length?R(-1,2):0),used,RI(0,20))[0];nc.newcomer=true;pool.push(nc);fresh.push(nc.name);}
  if(pool.length>n)pool=pool.sort((a,b)=>(b.pro?100:0)+b.R-(a.pro?100:0)-a.R).slice(0,n);
  pool.forEach(x=>{x.R=Math.round(clamp(x.R+R(-2,2.4),ti.base-6,ti.base+(x.real?10:8)));if(c.season>1)ageSquad(c,x);});if(c.season>1)ageSquad(c,c.club);
@@ -100,7 +103,7 @@ function worldSeason(c){const W=wInit(c);const myKey=curTier(c).country;const Y=
  const yr=Y+1;const confs=['eu','af','as','sa','na'];const mine=c.ntc&&(c.ntc.tt||c.ntc.tj);
  if(yr%4===2){if(!(mine&&mine.wc)){const pool=['البرازيل','الأرجنتين','فرنسا','إسبانيا','إنجلترا','ألمانيا','البرتغال','هولندا','المغرب','إيطاليا','بلجيكا','كرواتيا','أوروجواي','كولومبيا','اليابان','السنغال','المكسيك','أمريكا','مصر','السعودية'];const w=wPick(pool.map(natByName),t=>t.R,2.2);addNews(c,'world',w.name+' بطل كأس العالم '+yr+'!',true);}}
  for(const cf of confs){const T=TOURN[cf]&&TOURN[cf][yr];if(!T)continue;if(mine&&mine.name===T)continue;const w=wPick(CONF_NATS[cf].map(natByName),t=>t.R,2.2);addNews(c,'world',w.name+' بطل '+T+' '+yr,true);}
- if(c.path.tier<4){const race=ballonRace(c,0).filter(x=>!x.me);addNews(c,'world',race[0].n+' يفوز بالكرة الذهبية '+(yr)+'، ووصيفه '+race[1].n,true);}
+ if(c.path.tier<4){const race=ballonRace(c,0).filter(x=>!x.me);W.lastBallon=race.slice(0,3).map(x=>({n:x.n,cc:x.cc,club:(W.stars.find(s=>s.n===x.n)||{}).club||''}));addNews(c,'world',race[0].n+' يفوز بالكرة الذهبية '+(yr)+'، ووصيفه '+race[1].n,true);}
  for(let i=0;i<2;i++){const s=pick(W.stars);const eu=['EN','ES','FR','DE','IT'];const cc=pick(eu);const dest=pick(REAL[cc].slice(0,6));const fee=Math.round(R(60,180));addNews(c,'transfer','صفقة الصيف: '+s.n+' ينتقل إلى '+dest[0]+' مقابل '+fee+' مليون دولار',true);s.club=dest[0];if(W.sq){let pl=null;for(const k in W.sq){const i=W.sq[k].findIndex(p=>p.n===s.n);if(i>=0){pl=W.sq[k][i];W.sq[k].splice(i,1);}}if(pl&&W.sq[dest[0]])W.sq[dest[0]].push(pl);}}
  if(ASIAN_CUP_JAN[yr]&&!(c.ntc&&c.ntc.tj)){const w=wPick(CONF_NATS.as.map(natByName),t=>t.R,2.2);addNews(c,'world',w.name+' بطل '+ASIAN_CUP_JAN[yr]+' '+yr,true);}
 }

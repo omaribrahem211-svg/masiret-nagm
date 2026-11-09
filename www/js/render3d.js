@@ -207,19 +207,21 @@ class R3D{
   const concrete=lin('#1d2335'),seat=lin('#232c48'),seat2=lin('#1a2340'),roof=lin('#0c1020'),tower=lin('#2a3040');
   const crowdCols=['#7a2b2b','#8a7a3a','#b8b8b4','#2f4a72','#1c1c1e','#2a2a30','#3b3b44','#5a4636','#46505a','#6b6b70','#8c3a3a','#d0ccc4','#24324a','#3a2f28','#9a8f80','#1e2a1e'].map(lin);
   const skin=['#F1C27D','#E0AC69','#C68642','#8D5524'].map(lin);
-  const rows=20;for(let r=0;r<rows;r++){const y=W+6.5+r*1.05,h=0.6+r*0.62;this.add(st.box,this.trs(CX,h/2,-y,0,L+70,h,1.05),r%2?seat:seat2);}
+  const HS=typeof STAD!=='undefined';
+  if(!HS){const rows=20;for(let r=0;r<rows;r++){const y=W+6.5+r*1.05,h=0.6+r*0.62;this.add(st.box,this.trs(CX,h/2,-y,0,L+70,h,1.05),r%2?seat:seat2);}
   this.add(st.box,this.trs(CX,0.6+rows*0.62+3,-(W+6.5+rows*1.05+.5),0,L+70,7,1.2),concrete);
   this.add(st.box,this.trs(CX,0.6+rows*0.62+7.2,-(W+6.5+rows*1.05*.55),0,L+74,0.6,rows*1.05+6),roof);
   this.add(st.lamp,this.trs(CX,0.6+rows*0.62+6.8,-(W+6.5),0,L+74,0.25,0.4),[3.2,3.1,2.8,1]);
   // end stands
-  for(const s of [0,1]){for(let r=0;r<13;r++){const off=8+r*1.05,x=s?L+off:-off,h=0.6+r*0.6;this.add(st.box,this.trs(x,h/2,-CY,Math.PI/2,W+30,h,1.05),r%2?seat:seat2);}
+  }
+  if(!HS)  for(const s of [0,1]){for(let r=0;r<13;r++){const off=8+r*1.05,x=s?L+off:-off,h=0.6+r*0.6;this.add(st.box,this.trs(x,h/2,-CY,Math.PI/2,W+30,h,1.05),r%2?seat:seat2);}
    const bx=s?L+8+13*1.05:-(8+13*1.05);this.add(st.box,this.trs(bx,4.5,-CY,0,1.2,9,W+30),concrete);}
   // ad boards
   for(let x=-4;x<L+4;x+=12){this.add(st.ads,this.trs(x+6,0.5,-(W+3.2),0,12,1,1),[1,1,1,1],[((x/12)|0)*0.125,0,0.125*1.0,1]);this.add(st.box,this.trs(x+6,0.5,-(W+3.35),0,12,1,0.2),concrete);}
   for(const s of [0,1])for(let y=-2;y<W+2;y+=12){const x=s?L+4:-4,ry=s?-Math.PI/2:Math.PI/2;this.add(st.ads,this.trs(x,0.5,-(y+6),ry,12,1,1),[1,1,1,1],[(((y/12)|0)+3)*0.125,0,0.125,1]);}
   // dugouts
   // floodlight towers
-  this.lamps=[];for(const [x,y] of [[-18,W+20],[L+18,W+20],[-18,-14],[L+18,-14]]){this.add(st.cyl,this.trs(x,19,-y,0,1.1,38,1.1),tower);this.add(st.box,this.trs(x,38.5,-y,Math.atan2(CY-y,CX-x),2,3.4,6.5),tower);this.add(st.lamp,this.trs(x+(CX-x)*0.025,38.5,-y-(CY-y)*0.025,Math.atan2(CY-y,CX-x),1.9,3,6.2),[4,3.9,3.5,1]);this.lamps.push([x+(CX-x)*0.04,38.5,-y-(CY-y)*0.04]);}
+  this.lamps=[];if(HS){this.mkStad();}else for(const [x,y] of [[-18,W+20],[L+18,W+20],[-18,-14],[L+18,-14]]){this.add(st.cyl,this.trs(x,19,-y,0,1.1,38,1.1),tower);this.add(st.box,this.trs(x,38.5,-y,Math.atan2(CY-y,CX-x),2,3.4,6.5),tower);this.add(st.lamp,this.trs(x+(CX-x)*0.025,38.5,-y-(CY-y)*0.025,Math.atan2(CY-y,CX-x),1.9,3,6.2),[4,3.9,3.5,1]);this.lamps.push([x+(CX-x)*0.04,38.5,-y-(CY-y)*0.04]);}
   // goals
   const white=lin('#F4F6F8');this.goalNet=[];
   for(const s of [0,1]){const gx=s?L:0,gb=s?L+2.5:-2.5,y1=CY-GW/2,y2=CY+GW/2,r=0.15;
@@ -232,7 +234,7 @@ class R3D{
   this.netB=this.batch(this.geo({P,N:Nn,T,I}),1);const idm=new Float32Array([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]);this.add(this.netB,idm,[1,1,1,1]);
   for(const k in st)this.up(st[k]);this.up(this.netB);
   this.sur=this.batch(this.G.plane,1);this.add(this.sur,this.surMat,[1,1,1,1],[0,0,40,30]);this.up(this.sur);
-  {const P=[],N=[],T=[],I=[];const NX=this.crowdNX,NY=this.crowdNY;
+  if(!HS){const P=[],N=[],T=[],I=[];const NX=this.crowdNX,NY=this.crowdNY;
    const quad=(a,b,c,d,us,vs)=>{const o=P.length/3;for(const v of [a,b,c,d])P.push(...v);const e1=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],e2=[d[0]-a[0],d[1]-a[1],d[2]-a[2]];let n=[e1[1]*e2[2]-e1[2]*e2[1],e1[2]*e2[0]-e1[0]*e2[2],e1[0]*e2[1]-e1[1]*e2[0]];const l=Math.hypot(...n)||1;n=n.map(x=>Math.abs(x/l)*(x<0&&n[1]<0?-1:1));for(let k=0;k<4;k++)N.push(0,.8,.6);T.push(0,vs,us,vs,us,0,0,0);I.push(o,o+1,o+2,o,o+2,o+3);};
    const r0=W+6.5,r1=W+6.5+19*1.05,h0=0.6+0.05,h1=0.6+19*0.62+0.95;
    quad([-32,h0,-r0],[L+32,h0,-r0],[L+32,h1,-r1],[-32,h1,-r1],(L+64)/0.72/NX,20/NY);
@@ -240,6 +242,18 @@ class R3D{
     quad([x0,e0,-(W+12)],[x0,e0,12],[x1,e1,12],[x1,e1,-(W+12)],(W+24)/0.75/NX,13/NY);}
    this.G.crowdS=this.geo({P,N,T,I});this.crowdS=this.batch(this.G.crowdS,1);this.add(this.crowdS,new Float32Array([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]),[0.95,0.95,0.95,1]);this.up(this.crowdS);}
   this.crowdCount=st.crowd.n;}
+ // الاستاد: الهيكل من الموديل + جمهور قاعد على كل كرسي (كارت من صورة الجمهور)
+ mkStad(){const S=STAD,sc=1/S.sc,dec=b=>{const r=atob(b),u=new Uint8Array(r.length);for(let i=0;i<r.length;i++)u[i]=r.charCodeAt(i);return u.buffer;};this.stadB=[];
+  for(const pt of S.parts){const P16=new Int16Array(dec(pt.p)),N8=new Int8Array(dec(pt.n)),I=new Uint16Array(dec(pt.i));const P=new Float32Array(P16.length),N=new Float32Array(N8.length);for(let i=0;i<P.length;i++){P[i]=P16[i]*sc;N[i]=N8[i]/127;}
+   const g=this.geo({P,N,T:new Float32Array(pt.nv*2),I});const b=this.batch(g,1);const mt=S.mats[pt.m];const e=mt.e[0]+mt.e[1]+mt.e[2]>0;this.add(b,new Float32Array([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]),e?[mt.c[0]*3,mt.c[1]*3,mt.c[2]*3,1]:[mt.c[0],mt.c[1],mt.c[2],1]);this.up(b);b.emis=e;this.stadB.push(b);}
+  for(let k=0;k<S.lights.length;k+=3)this.lamps.push(S.lights[k]);
+  // جمهور: كارت لكل كرسي (حوالي 88% من الكراسي مليانة)
+  const ST=new Int16Array(dec(S.seats)),NX=this.crowdNX,NY=this.crowdNY;let rs=12345;const rnd=()=>{rs=(rs*1103515245+12345)&0x7fffffff;return rs/0x7fffffff;};
+  let P=[],N=[],T=[],I=[];this.crowdS=[];const flush=()=>{if(!I.length)return;const b=this.batch(this.geo({P,N,T,I}),1);this.add(b,new Float32Array([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]),[0.95,0.95,0.95,1]);this.up(b);this.crowdS.push(b);P=[];N=[];T=[];I=[];};
+  for(let k=0;k<S.ns;k++){if(rnd()<.12)continue;const x=ST[k*5]*sc,y=ST[k*5+1]*sc,z=ST[k*5+2]*sc,yw=ST[k*5+3]/127*Math.PI;const fx=Math.sin(yw),fz=Math.cos(yw),rx=fz,rz=-fx,hw=.36,h=1.05,y0=y-.12,cx=x-fx*.05,cz=z-fz*.05;
+   const o=P.length/3;P.push(cx-rx*hw,y0,cz-rz*hw,cx+rx*hw,y0,cz+rz*hw,cx+rx*hw,y0+h,cz+rz*hw,cx-rx*hw,y0+h,cz-rz*hw);for(let q=0;q<4;q++)N.push(fx*.6,.8,fz*.6);
+   const ci=(rnd()*NX)|0,cj=(rnd()*NY)|0,u0=ci/NX+.002,u1=(ci+1)/NX-.002,v0=cj/NY+.01,v1=(cj+.93)/NY;T.push(u0,v1,u1,v1,u1,v0,u0,v0);I.push(o,o+1,o+2,o,o+2,o+3);if(P.length/3>64000)flush();}
+  flush();}
  shadowSetup(size){const gl=this.gl;if(this.shadowSize===size)return;this.shadowSize=size;if(this.shTex)gl.deleteTexture(this.shTex);if(this.shFB)gl.deleteFramebuffer(this.shFB);
   this.shTex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,this.shTex);gl.texStorage2D(gl.TEXTURE_2D,1,gl.DEPTH_COMPONENT24,size,size);
   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
@@ -355,7 +369,8 @@ class R3D{
   set(1,this.tSur,0,1);this.draw(this.sur);
   set(1,this.tPitch,0,1);this.draw(this.st.plane);
   set(0,null,0,0);this.draw(this.st.box);this.draw(this.st.cyl);
-  set(6,this.tCrowd,0,0,m.phase==='goal'||m.phase==='end'?1:0.08);this.draw(this.crowdS);
+  if(this.stadB){set(0,null,0,0);for(const b of this.stadB)if(!b.emis)this.draw(b);set(0,null,1);for(const b of this.stadB)if(b.emis)this.draw(b);}
+  set(6,this.tCrowd,0,0,m.phase==='goal'||m.phase==='end'?1:0.08);if(Array.isArray(this.crowdS))this.crowdS.forEach(b=>this.draw(b));else this.draw(this.crowdS);
   set(0,null,1);this.draw(this.st.lamp);
   set(1,this.tAds,1.25);this.draw(this.st.ads);
   set(0,null,0,1);this.draw(D.cyl);this.draw(D.box);this.draw(D.sph);[D.limb,D.thigh,D.calf,D.fore,D.torso,D.shorts,D.hair].forEach(x=>this.draw(x));

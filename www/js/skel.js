@@ -92,6 +92,11 @@ const Skel=(()=>{
   else if(gk&&p.catchT>0&&!(p.gkHi>0)&&has('gkCatch')){act='gkCatch';au=.25+(1-p.catchT/.45)*.4;aw=1;}
   else if(gk&&b.owner===p&&b.inHands&&has('gkCatch')){act='gkCatch';au=.72;aw=1;}
   if(!(p.stun>.4))p._kS=0;
+  // احتفال/حزن بعد الجول ونهاية الماتش (Mixamo: Victory, Cheering, Fist Pump, Defeated)
+  if(!act&&!slide&&!dive&&sp<1.6&&(m.phase==='goal'||m.phase==='end')&&has('cheer')){let wt=null;if(m.phase==='goal')wt=m.celebrator&&m.celebrator.team;else{const sc=m.score;if(sc[0]!==sc[1])wt=m.t[sc[0]>sc[1]?0:1];}
+   if(wt){const off=(p.i||0)*.37,lp=(c,a0,a1)=>{const d=clips[c].dur,q=((t+off*d)/((a1-a0)*d))%2;return a0+(a1-a0)*(q<1?q:2-q);};
+    if(p.team===wt){const near=m.phase==='end'||(m.celebrator&&Math.hypot(m.celebrator.x-p.x,m.celebrator.y-p.y)<20);if(p===m.celebrator){act=p.i%2?'victory':'fistp';au=act==='victory'?lp('victory',.2,.68):lp('fistp',.05,.95);}else if(near&&!gk){act='cheer';au=lp('cheer',0,1);}}
+    else{act='defeat';au=lp('defeat',.08,.9);}}}
   if(!act&&p.protT>0&&sp<1.3&&!gk&&has('protest')){act='protest';au=(t/clips.protest.dur+(p.i||0)*.13)%1*.96;}
   if(!act&&!gk&&sp<.4&&(p.i%3===1)&&has('fold')&&(m.restartKind==='fk'||m.restartKind==='pen'||(m.pen&&!m.pen.live))&&Math.hypot(b.x-p.x,b.y-p.y)>20)accClip('fold',(t/clips.fold.dur+(p.i||0)*.21)%1,3,true);
   if(!act&&p.upT>0&&p.upClip&&has(p.upClip)){act=p.upClip;au=p.upA+(p.upB-p.upA)*(1-p.upT/p.upD);}
@@ -113,7 +118,7 @@ const Skel=(()=>{
   const throwing=(b.owner===p&&m.restartKind==='throw')||p.throwT>0;
   if(throwing&&!act){const k=p.throwT>0?(1-p.throwT/.4):0;arm(1,2.75-k*1.6,1.3-k*1.1,-.03,1);arm(-1,2.75-k*1.6,1.3-k*1.1,-.03,1);}
   if(p.jumpT>0&&!slide&&!dive&&!act){const k=Math.sin(Math.PI*(1-p.jumpT/.45));arm(1,1.6*k,.3,.35,.8*k);arm(-1,1.6*k,.3,.35,.8*k);leg(1,.35*k,.9*k,.7*k);leg(-1,.15*k,.6*k,.7*k);}
-  if(celeb){if(sp>1.5){arm(1,.15,.15,1.3,1);arm(-1,.15,.15,1.3,1);add(J['spine.001'],Qz(Math.sin(t*2.2)*.18));}
+  if(celeb&&!act){if(sp>1.5){arm(1,.15,.15,1.3,1);arm(-1,.15,.15,1.3,1);add(J['spine.001'],Qz(Math.sin(t*2.2)*.18));}
    else{const k=.5+.5*Math.sin(t*6);arm(1,2.7+k*.2,.35,.25,1);arm(-1,2.7+(1-k)*.2,.35,.25,1);add(J['spine.001'],Qx(-.12));}}
   if(!celeb&&!slide&&!dive&&kick<0&&!act)add(J['spine.001'],Qx(.02+Math.min(1,sp/7)*.12));
   computeGlobals();

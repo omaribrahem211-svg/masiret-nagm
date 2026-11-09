@@ -64,11 +64,12 @@ const Skel=(()=>{
  function pose(p,m,t,out,off,W){resetRest();if(!(p.slide>0))p.slideMax=0;OV.clear();ADD.clear();accClear();
   const sp=Math.hypot(p.vx,p.vy),b=m.ball,gk=p.role==='GK';const u=((p.anim||0)/(Math.PI*2));
   const celeb=m.phase==='goal'&&p===m.celebrator,slide=p.slide>0,dive=p.diveT>0?p.diveT/.75:0;
+  const M_r=k=>META[k]||{};
   // locomotion blend by real speed (no foot sliding: cycle follows p.anim which follows speed)
-  const wI=Math.max(0,1-sp/1.0),wW=sp<1?sp:Math.max(0,1-(sp-1.8)/1.6),wJ=sp<1.8?Math.max(0,(sp-1)/.8):Math.max(0,1-(sp-4.6)/1.8),wS=Math.max(0,Math.min(1,(sp-4.4)/2));
+  const wI=Math.max(0,1-sp/1.0),wW=sp<1?sp:Math.max(0,1-(sp-1.8)/1.6),MR=has('runM'),wJ=sp<1.8?Math.max(0,(sp-1)/.8):Math.max(0,1-(sp-(MR?3.8:4.6))/(MR?1.2:1.8)),wR=MR?(sp<3.8?0:sp<5?(sp-3.8)/1.2:Math.max(0,1-(sp-6.6)/1)):0,wS=MR?Math.max(0,Math.min(1,(sp-6.6)/1)):Math.max(0,Math.min(1,(sp-4.4)/2));
   // حركة الرجلين حسب اتجاه الجري بالنسبة لاتجاه الجسم: لقدام، لورا، أو جنب (المدافع وهو بيراقب)
   const fwd=sp>.3?(p.vx*p.fx+p.vy*p.fy)/sp:1,lat=sp>.3?(p.vx*p.fy-p.vy*p.fx)/sp:0;const wB=has('jogB')?Math.max(0,Math.min(1,(-fwd-.25)/.5))*Math.min(1,sp/1.6):0,wSd=has('strL')?Math.max(0,Math.min(1,(Math.abs(lat)-.6)/.3))*(1-wB)*Math.min(1,sp/1.6)*(sp<6?1:0):0,wF=1-Math.max(wB,wSd);
-  {if(has('offIdle')&&!gk){const q=(t/clips.offIdle.dur+(p.i||0)*.37)%2;accClip('offIdle',q<1?q:2-q,wI,false);}else accClip('idle',t/2.5+(p.i||0)*.17,wI,true);accClip('walk',u,wW*.8*wF,true);const dr=has('dribble')&&b.owner===p&&!b.inHands&&!m.restartKind&&sp>1.5,DM=META.dribble||{};if(dr)accClip('dribble',((u*.5+(DM.ph||0)*.5)%1+1)%1,(wJ+wS*.6)*wF,true);accClip('jog',u,wJ*wF*(dr?0:1),true);accClip('sprint',u,wS*wF*(dr?.4:1),true);
+  {if(has('offIdle')&&!gk){const q=(t/clips.offIdle.dur+(p.i||0)*.37)%2;accClip('offIdle',q<1?q:2-q,wI,false);}else accClip('idle',t/2.5+(p.i||0)*.17,wI,true);accClip('walk',u,wW*.8*wF,true);const dr=has('dribble')&&b.owner===p&&!b.inHands&&!m.restartKind&&sp>1.5,DM=META.dribble||{};if(dr)accClip('dribble',((u*.5+(DM.ph||0)*.5)%1+1)%1,(wJ+wR+wS*.6)*wF,true);accClip('jog',u,wJ*wF*(dr?0:1),true);if(MR){if(wR>0)accClip('runM',((u+(M_r('runM').ph||0))%1+1)%1,wR*wF*(dr?0:1),true);if(wS>0)accClip('sprM',((u+(M_r('sprM').ph||0))%1+1)%1,wS*wF*(dr?.4:1),true);}else accClip('sprint',u,wS*wF*(dr?.4:1),true);
    if(wB>0)accClip('jogB',u,(1-wI)*wB,true);if(wSd>0)accClip(lat>0?'strR':'strL',u,(1-wI)*wSd,true);}
   if(gk&&!dive&&b.owner&&b.owner.team!==p.team&&sp<2.2&&Math.hypot(b.x-p.x,b.y-p.y)<24&&!(b.owner===p))accClip(has('gkIdle')?'gkIdle':'crouch',has('gkIdle')?t/4.6:t/2.93,1.2,true);
   if(p.stun>0&&!slide&&!dive&&!(p.stun>.4&&has('trip')))accClip('hit',1-Math.min(1,p.stun/.35),2,false);
@@ -85,11 +86,13 @@ const Skel=(()=>{
   else if(gk&&p.puntT>0&&has('gkPunt')){const h=M_('gkPunt').hit||.5;au=h-.12+(1-p.puntT/.4)*.2;act='gkPunt';aw=1;}
   else if(((b.owner===p&&m.restartKind==='throw')||p.throwT>0)&&has('throwin')&&!gk){act='throwin';au=p.throwT>0?.52+(1-p.throwT/.4)*.18:.42;aw=1;}
   else if(gk&&p.throwT>0&&has('gkThrow')){act='gkThrow';au=.35+(1-p.throwT/.4)*.2;aw=1;}
+  else if(gk&&p.gkHi>0&&!dive&&p.gkLeap&&has('gkLeap')){act='gkLeap';au=.3+(1-p.gkHi/.5)*.55;aw=1;}
   else if(gk&&p.gkHi>0&&!dive&&has('gkCatchHi')){act='gkCatchHi';au=.18+(1-p.gkHi/.5)*.5;aw=1;}
   else if(gk&&p.catchT>0&&!(p.gkHi>0)&&has('gkCatch')){act='gkCatch';au=.25+(1-p.catchT/.45)*.4;aw=1;}
   else if(gk&&b.owner===p&&b.inHands&&has('gkCatch')){act='gkCatch';au=.72;aw=1;}
   if(!act&&p.upT>0&&p.upClip&&has(p.upClip)){act=p.upClip;au=p.upA+(p.upB-p.upA)*(1-p.upT/p.upD);}
   if(!act&&p.spinT>0&&has('spin')&&b.owner===p){act='spin';au=.2+(1-p.spinT/.55)*.55;}
+  if(!act&&p.stopT>0&&has('stop')&&!gk&&b.owner!==p){const q=1-p.stopT/.6,fd=Math.min(1,p.stopT/.15)*Math.min(1,q/.1+.3);accClip('stop',.05+q*.85,fd*3*Math.max(.2,1-sp/3),false);}
   if(act){accClear();accClip(act,au,1,false);}
   p._act=act;
   accApply();

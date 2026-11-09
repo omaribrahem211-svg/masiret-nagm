@@ -22,9 +22,12 @@ function drawOverlay(ctx,m,w,h,proj){ctx.clearRect(0,0,w,h);
   const st=c.stam/100;ctx.fillStyle='rgba(255,255,255,.18)';ctx.fillRect(g.x-tw/2+4,g.y-12,tw-8,3);ctx.fillStyle=st>.5?'#C6F432':st>.25?'#F5C542':'#FF5A5F';ctx.fillRect(g.x-tw/2+4,g.y-12,(tw-8)*st,3);
   if(c.inj){ctx.fillStyle='#FF5A5F';ctx.font='800 12px Changa, sans-serif';ctx.fillText('مصاب',g.x,g.y-32);}
   if(h0.charge>=0){const pw=Math.min(1,h0.charge);ctx.fillStyle='rgba(7,11,22,.85)';ctx.fillRect(g.x-28,g.y-44,56,9);ctx.fillStyle=pw>.85?'#FF5A5F':pw>.6?'#F5C542':'#C6F432';ctx.fillRect(g.x-27,g.y-43,54*pw,7);}
+  if(h0.charge>=0&&m.ball.owner===c){const g2=m.attG(c.team),pw=Math.min(1,h0.charge),a=h0.aimNow||0,pn=m.restartKind==='pen';const ty=CY+a*(pn?2.9:h0.fin?3.05:2.7),q=proj(g2[0],ty,pn?.35+pw*1.4:.25+pw*1.3);
+   if(q){const col=pw>.88?'#FF5A5F':pw>.6?'#F5C542':'#C6F432';ctx.save();ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.shadowColor='rgba(0,0,0,.7)';ctx.shadowBlur=4;ctx.beginPath();ctx.arc(q.x,q.y,10,0,6.2832);ctx.stroke();ctx.beginPath();ctx.moveTo(q.x-15,q.y);ctx.lineTo(q.x-5,q.y);ctx.moveTo(q.x+5,q.y);ctx.lineTo(q.x+15,q.y);ctx.moveTo(q.x,q.y-15);ctx.lineTo(q.x,q.y-5);ctx.moveTo(q.x,q.y+5);ctx.lineTo(q.x,q.y+15);ctx.stroke();
+    if(h0.fin){ctx.font='800 11px Changa, sans-serif';ctx.fillStyle='#F5C542';ctx.fillText('لفّة',q.x,q.y-17);}ctx.restore();}}
   if(h0.call>0){ctx.fillStyle='#F5C542';ctx.font='800 14px Changa, sans-serif';ctx.fillText('اطلب!',g.x,g.y-46);}}}
  for(const p of m.all){if(!p.star||(h0&&p===h0.ctrl))continue;const g=proj(p.x,p.y,2.2);if(!g)continue;ctx.fillStyle='#F5C542';ctx.font='800 13px Changa, sans-serif';ctx.fillText('★ '+p.name.split(' ').slice(-1)[0],g.x,g.y);}
- if(m.pen&&!m.pen.live&&m.ball.owner&&h0&&m.ball.owner===h0.ctrl){ctx.fillStyle='rgba(7,11,22,.75)';ctx.fillRect(w/2-150,h*.62,300,30);ctx.fillStyle='#F5C542';ctx.font='700 14px Changa, sans-serif';ctx.fillText('وجّه بالجويستيك فوق/تحت واضغط تسديد',w/2,h*.62+23);}
+ if(m.pen&&!m.pen.live&&m.ball.owner&&h0&&m.ball.owner===h0.ctrl){ctx.fillStyle='rgba(7,11,22,.75)';ctx.fillRect(w/2-150,h*.62,300,30);ctx.fillStyle='#F5C542';ctx.font='700 14px Changa, sans-serif';ctx.fillText('وجّه الدايرة بالجويستيك فوق/تحت · سيب الزرار قبل الأحمر',w/2,h*.62+23);}
  m.radar(ctx,w,h);FX.draw(ctx,w,h,m);}
 /* ---------- التعليق الصوتي (ملفات متولدة بالذكاء الاصطناعي وقت البناء) ---------- */
 const Voice={on:true,ready:false,man:null,buf:{},cur:null,last:0,

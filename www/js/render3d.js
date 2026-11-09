@@ -222,7 +222,7 @@ class R3D{
   this.lamps=[];for(const [x,y] of [[-18,W+20],[L+18,W+20],[-18,-14],[L+18,-14]]){this.add(st.cyl,this.trs(x,19,-y,0,1.1,38,1.1),tower);this.add(st.box,this.trs(x,38.5,-y,Math.atan2(CY-y,CX-x),2,3.4,6.5),tower);this.add(st.lamp,this.trs(x+(CX-x)*0.025,38.5,-y-(CY-y)*0.025,Math.atan2(CY-y,CX-x),1.9,3,6.2),[4,3.9,3.5,1]);this.lamps.push([x+(CX-x)*0.04,38.5,-y-(CY-y)*0.04]);}
   // goals
   const white=lin('#F4F6F8');this.goalNet=[];
-  for(const s of [0,1]){const gx=s?L:0,gb=s?L+2.1:-2.1,y1=CY-GW/2,y2=CY+GW/2,r=0.12;
+  for(const s of [0,1]){const gx=s?L:0,gb=s?L+2.5:-2.5,y1=CY-GW/2,y2=CY+GW/2,r=0.15;
    this.add(st.cyl,this.seg([gx,0,-y1],[gx,GH+r/2,-y1],r,r,[1,0,0]),white);this.add(st.cyl,this.seg([gx,0,-y2],[gx,GH+r/2,-y2],r,r,[1,0,0]),white);this.add(st.cyl,this.seg([gx,GH,-y1+r/2],[gx,GH,-y2-r/2],r,r,[1,0,0]),white);
    const gr=lin('#9aa0a6');this.add(st.cyl,this.seg([gb,0,-y1],[gb,GH*.8,-y1],.05,.05,[1,0,0]),gr);this.add(st.cyl,this.seg([gb,0,-y2],[gb,GH*.8,-y2],.05,.05,[1,0,0]),gr);this.add(st.cyl,this.seg([gb,GH*.8,-y1],[gb,GH*.8,-y2],.05,.05,[1,0,0]),gr);
    this.add(st.cyl,this.seg([gx,GH,-y1],[gb,GH*.8,-y1],.05,.05,[0,0,1]),gr);this.add(st.cyl,this.seg([gx,GH,-y2],[gb,GH*.8,-y2],.05,.05,[0,0,1]),gr);

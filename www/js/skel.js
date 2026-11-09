@@ -85,7 +85,8 @@ const Skel=(()=>{
   else if(gk&&p.puntT>0&&has('gkPunt')){const h=M_('gkPunt').hit||.5;au=h-.12+(1-p.puntT/.4)*.2;act='gkPunt';aw=1;}
   else if(((b.owner===p&&m.restartKind==='throw')||p.throwT>0)&&has('throwin')&&!gk){act='throwin';au=p.throwT>0?.52+(1-p.throwT/.4)*.18:.42;aw=1;}
   else if(gk&&p.throwT>0&&has('gkThrow')){act='gkThrow';au=.35+(1-p.throwT/.4)*.2;aw=1;}
-  else if(gk&&p.catchT>0&&has('gkCatch')){act='gkCatch';au=.25+(1-p.catchT/.45)*.4;aw=1;}
+  else if(gk&&p.gkHi>0&&!dive&&has('gkCatchHi')){act='gkCatchHi';au=.18+(1-p.gkHi/.5)*.5;aw=1;}
+  else if(gk&&p.catchT>0&&!(p.gkHi>0)&&has('gkCatch')){act='gkCatch';au=.25+(1-p.catchT/.45)*.4;aw=1;}
   else if(gk&&b.owner===p&&b.inHands&&has('gkCatch')){act='gkCatch';au=.72;aw=1;}
   if(!act&&p.upT>0&&p.upClip&&has(p.upClip)){act=p.upClip;au=p.upA+(p.upB-p.upA)*(1-p.upT/p.upD);}
   if(!act&&p.spinT>0&&has('spin')&&b.owner===p){act='spin';au=.2+(1-p.spinT/.55)*.55;}
@@ -99,7 +100,8 @@ const Skel=(()=>{
   if(slide&&!act){leg(-1,.35,.05,1);leg(1,.55,1.1,1);arm(1,-.5,.3,.35,1);arm(-1,.6,.4,.3,1);}
   if(dive>0&&!act){const dH=p.diveH==null?1:p.diveH;arm(1,dH<.6?2.3:2.9,.05,.1,1);arm(-1,dH<.6?2.3:2.9,.05,.1,1);leg(1,.25,.3,.8);leg(-1,-.25,.3,.8);}
   const hands=gk&&((b.owner===p&&b.inHands)||p.catchT>0);
-  if(hands&&!(p.throwT>0)&&!act){arm(1,.5,.8,-.09,1);arm(-1,.5,.8,-.09,1);}
+  if(gk&&p.gkHi>0&&!act&&!dive){const k=Math.sin(Math.PI*(1-p.gkHi/.5));arm(1,2.95,.12,.05,1);arm(-1,2.95,.12,.05,1);leg(1,.5*k,1.05*k,.7*k);leg(-1,.12*k,.45*k,.7*k);}
+  else if(hands&&!(p.throwT>0)&&!act){arm(1,.5,.8,-.09,1);arm(-1,.5,.8,-.09,1);}
   else if(gk&&!dive&&b.shot&&b.shot.by.team!==p.team){arm(1,2.4,.15,.1,.8);arm(-1,2.4,.15,.1,.8);}
   const throwing=(b.owner===p&&m.restartKind==='throw')||p.throwT>0;
   if(throwing&&!act){const k=p.throwT>0?(1-p.throwT/.4):0;arm(1,2.75-k*1.6,1.3-k*1.1,-.03,1);arm(-1,2.75-k*1.6,1.3-k*1.1,-.03,1);}
@@ -112,6 +114,7 @@ const Skel=(()=>{
   const yaw=Math.atan2(p.fx,-p.fy);let lift=0,pitch=0,roll=0,piv=.95;
   if(slide&&!act){pitch=-1.15;piv=.35;lift=-.28;}
   if(dive>0&&!act){const dH=p.diveH==null?1:p.diveH;const k=Math.sin(Math.min(1,(1-dive)*1.6)*Math.PI*.5);const sideW=-(p.diveDir||1);const fs=Math.sign(-Math.sin(yaw)*0+Math.cos(yaw)*sideW)||1;roll=fs*(dH<.6?1.45:1.3)*k;lift=(.12+.32*Math.min(dH,2))*Math.sin((1-dive)*Math.PI)-.2*k;}
+  if(gk&&p.gkHi>0&&!dive&&!act)lift+=.5*Math.sin(Math.PI*(1-p.gkHi/.5));
   if(p.jumpT>0&&!slide&&!dive)lift+=(act==='head'?.6:1)*.42*Math.sin(Math.PI*(1-p.jumpT/.45));
   const sc=p._hs||(p._hs=.95+((p.i*7919)%17)/170);
   const cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),spp=Math.sin(pitch),cr=Math.cos(roll),sr=Math.sin(roll);

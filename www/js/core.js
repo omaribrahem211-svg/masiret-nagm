@@ -84,7 +84,7 @@ class Match{
   this.time=0;this.ht=0;this.added=[RI(1,3),RI(2,5)];this.subT=0;this.half=1;this.halfLen=o.halfLen||120;this.score=[0,0];this.events=[];this.possF=[0,0];this.shotsT=[0,0];
   this.cam=new Camera();this.demo=!!o.demo;this.onEnd=o.onEnd;this.onEvent=o.onEvent;this.banner=null;this.paused=false;
   this.rain=o.weather==='rain';this.comp=o.comp||'';this.shake=0;this.rec=[];this.recT=0;this.ff=false;this.pen=null;this.lastEv={};this.starInj=false;
-  this.human=o.human?{team:0,lock:!!o.human.lock,hl:!!o.human.hl,ctrl:null,charge:-1,call:0}:null;this.hlFF=false;this.hlKeep=0;
+  this.human=o.human?{team:0,lock:!!o.human.lock,ctrl:null,charge:-1,call:0}:null;
   {const dv=o.diff!=null?+o.diff:(typeof App!=='undefined'&&App.settings?+App.settings.diff||0:0);const k=dv<=-3?-1:dv>=8?2:dv>=3?1:0;this.aiK=k;if(this.human&&k){const op=this.t[1];op.aiK=k;for(const p of [...op.pl,...(op.bench||[])]){p.ms*=1+k*.03;p.mse=p.ms;p.st.def=clamp(p.st.def+k*5,20,99);p.st.gk=clamp((p.st.gk||20)+(p.role==='GK'?k*5:0),10,99);p.st.pass=clamp(p.st.pass+k*3,20,99);}}}
   this.firstKick=Math.random()<.5?0:1;this.kickoff(this.firstKick);
   if(o.intro&&!this.demo){this.phase='intro';this.pt=5;}
@@ -118,12 +118,6 @@ class Match{
   if(done&&w.t>.4||w.t>w.max)this.endWalk();}
  endWalk(){const w=this.walk,b=this.ball;if(!w)return;for(const p of this.all){const T=p.wT;if(!T)continue;if(hyp(p.x-T[0],p.y-T[1])>.5){p.x=T[0];p.y=T[1];}p.fx=T[2];p.fy=T[3];p.vx=p.vy=0;p.wT=null;}b.owner=w.own;b.x=w.bx;b.y=w.by;this.walk=null;}
  later(bn,d){this.bq=bn;this.bqT=d;}
- // وضع «لقطاتي بس»: الماتش بيتقدّم بسرعة لحد ما الكورة تقرب من لاعبك أو فريقك يهاجم وهو قريب
- hlTick(dt){const h=this.human;if(!h||!h.hl||!h.lock){this.hlFF=false;return;}const s=h.ctrl,b=this.ball;if(!s||s.off){this.hlFF=false;return;}
-  if(this.phase!=='play'&&this.phase!=='kickoff'&&this.phase!=='restart'){this.hlFF=false;return;}
-  const dS=hyp(b.x-s.x,b.y-s.y),att=b.owner&&b.owner.team===s.team,ax=s.team.dir===1?b.x:L-b.x;
-  let near=!b.owner&&dS<11;if(near)for(const q of s.team.pl)if(q!==s&&hyp(b.x-q.x,b.y-q.y)<dS-1){near=false;break;}const inv=b.owner===s||b.target===s||near||(att&&ax>60&&dS<17)||(b.owner&&!att&&dS<7)||(b.shot&&b.shot.by===s);
-  if(inv)this.hlKeep=1.6;else this.hlKeep-=dt;this.hlFF=this.hlKeep<=0;}
  skip(){if(this.walk)this.walk.t=1e9;else if(this.phase==='intro'){this.phase='kickoff';this.pt=1.2;}else if(this.phase==='replay')this.endReplay();else if(this.phase==='goal'&&this.pt>.4)this.pt=.4;}
  update(dt){
   if(this.paused)return;

@@ -346,7 +346,10 @@ class R3D{
   let drawL=m.leave&&m.leave.length?m.all.concat(m.leave.map(l=>l.p)):m.all;{const st0=m.t&&m.t[0].star;if(st0&&drawL.includes(st0)&&drawL[0]!==st0)drawL=[st0].concat(drawL.filter(q=>q!==st0));}
   for(const p of drawL){const sx=p.x-c3.x;if(sx<-60||sx>60)continue;if(useSk)this.skinPlayer(p,m,t/1000);else this.player(p,m);this.add(D.blob,this.trs(p.x+0.15,0.012,-p.y-0.1,0,1.25,1,1.0),[0,0,0,0.5]);}this.add(D.blob,this.trs(b.x,0.013,-b.y,0,0.5,1,0.5),[0,0,0,clamp(0.55-b.z*0.08,0.12,0.55)]);
   // ball
-  const bv=Math.hypot(b.vx,b.vy);if(bv>0.05){const ax=-b.vy/bv,az=-b.vx/bv,ang=bv*dt/0.14;const co=Math.cos(ang),si=Math.sin(ang),oc=1-co;const Rm=[co+ax*ax*oc,az*si,ax*az*oc, -az*si,co,ax*si, az*ax*oc,-ax*si,co+az*az*oc];const B=this.ballR,n=new Float32Array(9);
+  // دوران الكورة من المسافة اللي اتحركتها فعلاً على الأرض (مافيش انزلاق)، وفي الهوا بتحتفظ بلفّتها
+  let bvx,bvy;{const lx=this._bpx==null?b.x:this._bpx,ly=this._bpy==null?b.y:this._bpy;this._bpx=b.x;this._bpy=b.y;const ddt=Math.max(dt,1e-3);let mx=(b.x-lx)/ddt,my=(b.y-ly)/ddt;if(Math.hypot(mx,my)>45){mx=b.vx;my=b.vy;}
+   if(b.z<.08){bvx=mx;bvy=my;this._bsp=[mx,my];}else{const sp0=this._bsp||[b.vx,b.vy];sp0[0]*=1-dt*.15;sp0[1]*=1-dt*.15;bvx=sp0[0];bvy=sp0[1];}}
+  const bv=Math.hypot(bvx,bvy);if(bv>0.05){const ax=-bvy/bv,az=-bvx/bv,ang=bv*dt/0.15;const co=Math.cos(ang),si=Math.sin(ang),oc=1-co;const Rm=[co+ax*ax*oc,az*si,ax*az*oc, -az*si,co,ax*si, az*ax*oc,-ax*si,co+az*az*oc];const B=this.ballR,n=new Float32Array(9);
    for(let cc=0;cc<3;cc++)for(let r=0;r<3;r++)n[cc*3+r]=Rm[r]*B[cc*3]+Rm[3+r]*B[cc*3+1]+Rm[6+r]*B[cc*3+2];this.ballR=n;if((++this.frameN)%120===0){const v0=[n[0],n[1],n[2]],l0=Math.hypot(...v0);v0.forEach((v,i)=>n[i]=v/l0);let d=n[3]*n[0]+n[4]*n[1]+n[5]*n[2];for(let i=0;i<3;i++)n[3+i]-=d*n[i];const l1=Math.hypot(n[3],n[4],n[5]);for(let i=0;i<3;i++)n[3+i]/=l1;n[6]=n[1]*n[5]-n[2]*n[4];n[7]=n[2]*n[3]-n[0]*n[5];n[8]=n[0]*n[4]-n[1]*n[3];}}
   {const B=this.ballR,sc=0.3,o=this.tm;o[0]=B[0]*sc;o[1]=B[1]*sc;o[2]=B[2]*sc;o[3]=0;o[4]=B[3]*sc;o[5]=B[4]*sc;o[6]=B[5]*sc;o[7]=0;o[8]=B[6]*sc;o[9]=B[7]*sc;o[10]=B[8]*sc;o[11]=0;o[12]=b.x;o[13]=b.z+0.15;o[14]=-b.y;o[15]=1;this.add(D.ball,o,[1,1,1,1]);}
   // rings

@@ -240,8 +240,11 @@ function runMatch(id, seed) {
     m.__tkp = null; const p = c.p; if (!c.own || T(c.own) === T(p) || c.inH) return; // only real challenges on an opponent in possession
     const ti = T(p); if (c.slide) { S.def.slides[ti]++; tk.set(p, { slide: true, t: now(), tk0: c.tk0, ti }); return; }
     S.def.tackles[ti]++;
+    if (p.tkL) return; // contact-time tackles (Phase 1.9+) are classified when the foot reaches the ball, in tkResolve below
     if (p.stats.tk > c.tk0) S.def.tklWon[ti]++; else if (m.__tkFoul) S.def.tklFoul[ti]++; else S.def.tklFail[ti]++;
   });
+  wrap('tkResolve', (p) => { m.__tkp = p; m.__tkFoul = false; return { p, tk0: p.stats.tk }; }, (c) => { m.__tkp = null; const p = c.p, ti = T(p);
+    if (p.stats.tk > c.tk0) S.def.tklWon[ti]++; else if (m.__tkFoul) S.def.tklFoul[ti]++; else S.def.tklFail[ti]++; });
   function closeTackle(p) { const a = tk.get(p); if (!a) return; tk.delete(p); if (a.res === 'foul') S.def.slideFoul[a.ti]++; else if (p.stats.tk > a.tk0 || (p.slideDone && m.ball.last === p)) S.def.slideWon[a.ti]++; else S.def.slideMiss[a.ti]++; }
 
   function endLoose() { if (!loose) return; const d = now() - loose.t; if (d >= .25) { S.ball.looseN++; S.ball.looseSec += d; if (S.ball.looseDur.length < 2000) S.ball.looseDur.push(r2(d)); if (d > 12) anom('long_loose_ball', r2(d) + 's without an owner'); } loose = null; }

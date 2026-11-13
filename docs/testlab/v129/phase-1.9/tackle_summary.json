@@ -1,0 +1,194 @@
+{
+ "base": {
+  "contactTimeModel": false,
+  "attempts": 1764,
+  "outcomes": {
+   "won_loose": 607,
+   "failed": 1095,
+   "foul": 27,
+   "won_keep": 35
+  },
+  "successful": 642,
+  "successPctOfAttempts": 36.4,
+  "reachedCarrier": 1764,
+  "successPctWhenReached": 36.4,
+  "decideDistMedian": 1.18,
+  "decideDistMean": 1.1,
+  "contactDistMedian": 1.18,
+  "contactDistMean": 1.1,
+  "contactOver1_05": 1399,
+  "byAngleAtContact": {
+   "front": {
+    "n": 812,
+    "won": 438,
+    "pct": 53.9
+   },
+   "side": {
+    "n": 733,
+    "won": 200,
+    "pct": 27.3
+   },
+   "behind": {
+    "n": 219,
+    "won": 4,
+    "pct": 1.8
+   }
+  },
+  "byBallToFoot": {
+   "<0.5 m": {
+    "n": 341,
+    "won": 0,
+    "pct": 0.0
+   },
+   "0.5-0.7 m": {
+    "n": 521,
+    "won": 63,
+    "pct": 12.1
+   },
+   "0.7-0.9 m": {
+    "n": 479,
+    "won": 270,
+    "pct": 56.4
+   },
+   ">0.9 m": {
+    "n": 423,
+    "won": 309,
+    "pct": 73.0
+   }
+  },
+  "byAttackerSpeed": {
+   "<3 m/s": {
+    "n": 987,
+    "won": 216,
+    "pct": 21.9
+   },
+   "3-6 m/s": {
+    "n": 544,
+    "won": 282,
+    "pct": 51.8
+   },
+   ">6 m/s": {
+    "n": 233,
+    "won": 144,
+    "pct": 61.8
+   }
+  },
+  "byDefenderStamina": {
+   "<50": {
+    "n": 0,
+    "won": 0,
+    "pct": null
+   },
+   "50-75": {
+    "n": 186,
+    "won": 65,
+    "pct": 34.9
+   },
+   "75-100": {
+    "n": 1578,
+    "won": 577,
+    "pct": 36.6
+   }
+  },
+  "fouls": 27,
+  "allFoulsInMatches": 235
+ },
+ "after": {
+  "contactTimeModel": true,
+  "attempts": 1425,
+  "outcomes": {
+   "failed": 478,
+   "missed_out_of_reach": 407,
+   "ball_already_gone": 101,
+   "won_loose": 224,
+   "won_keep": 52,
+   "deflected_loose": 138,
+   "foul": 24,
+   "cancelled": 1
+  },
+  "successful": 276,
+  "successPctOfAttempts": 19.4,
+  "reachedCarrier": 1323,
+  "successPctWhenReached": 20.9,
+  "decideDistMedian": 1.14,
+  "decideDistMean": 1.14,
+  "contactDistMedian": 0.95,
+  "contactDistMean": 1.03,
+  "contactOver1_05": 586,
+  "byAngleAtContact": {
+   "front": {
+    "n": 358,
+    "won": 98,
+    "pct": 27.4
+   },
+   "side": {
+    "n": 613,
+    "won": 153,
+    "pct": 25.0
+   },
+   "behind": {
+    "n": 352,
+    "won": 25,
+    "pct": 7.1
+   }
+  },
+  "byBallToFoot": {
+   "<0.5 m": {
+    "n": 251,
+    "won": 4,
+    "pct": 1.6
+   },
+   "0.5-0.7 m": {
+    "n": 370,
+    "won": 48,
+    "pct": 13.0
+   },
+   "0.7-0.9 m": {
+    "n": 270,
+    "won": 94,
+    "pct": 34.8
+   },
+   ">0.9 m": {
+    "n": 432,
+    "won": 130,
+    "pct": 30.1
+   }
+  },
+  "byAttackerSpeed": {
+   "<3 m/s": {
+    "n": 692,
+    "won": 142,
+    "pct": 20.5
+   },
+   "3-6 m/s": {
+    "n": 390,
+    "won": 92,
+    "pct": 23.6
+   },
+   ">6 m/s": {
+    "n": 241,
+    "won": 42,
+    "pct": 17.4
+   }
+  },
+  "byDefenderStamina": {
+   "<50": {
+    "n": 0,
+    "won": 0,
+    "pct": null
+   },
+   "50-75": {
+    "n": 156,
+    "won": 32,
+    "pct": 20.5
+   },
+   "75-100": {
+    "n": 1167,
+    "won": 244,
+    "pct": 20.9
+   }
+  },
+  "fouls": 24,
+  "allFoulsInMatches": 226
+ }
+}

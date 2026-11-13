@@ -13,6 +13,7 @@ const RNG = { f: mulberry32(1) }, SMath = Object.create(Math); SMath.random = ()
 const ctx = { console: { log() {}, warn() {}, error() {} }, Math: SMath, JSON, Float32Array, Int16Array, Uint8Array, Uint16Array, Int8Array, Object, Array, Map, Set, atob: s => Buffer.from(s, 'base64').toString('binary'), setTimeout: () => 0, clearTimeout: () => {}, performance: { now: () => 0 }, navigator: {}, window: {}, addEventListener: () => {}, document: {} };
 ctx.globalThis = ctx; vm.createContext(ctx);
 vm.runInContext(['data.js', 'core.js'].map(f => fs.readFileSync(path.join(WWW, f), 'utf8')).join('\n;\n') + `;var App={match:null,settings:{halfLen:${HALF},diff:0}};globalThis.__G={Match,App,L,W,CY,TACTICS};`, ctx);
+const SRC = fs.readFileSync(path.join(WWW, 'core.js'), 'utf8'), SHIELD_RULE = /clean&&behind&&shield/.test(SRC), TKR_C = /const TKR=([\d.]+)/.exec(SRC), TK_R = TKR_C ? +TKR_C[1] : 1.25;
 const G = ctx.__G, { L, W, CY } = G, hyp = Math.hypot, r2 = v => Math.round(v * 100) / 100, clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const segDist = (px, py, ax, ay, bx, by) => { const dx = bx - ax, dy = by - ay, l = dx * dx + dy * dy; let u = l ? ((px - ax) * dx + (py - ay) * dy) / l : 0; u = clamp(u, 0, 1); return hyp(ax + dx * u - px, ay + dy * u - py); };
 
@@ -33,8 +34,8 @@ function run(id, seed) {
     const behind = ((p.x - c.x) * c.fx + (p.y - c.y) * c.fy) / dM < -.35, exposedD = hyp(b.x - c.x, b.y - c.y);
     const ux = (b.x - p.x) / (dB || 1), uy = (b.y - p.y) / (dB || 1), face = p.fx * ux + p.fy * uy, closing = p.vx * ux + p.vy * uy, shield = segDist(c.x, c.y, p.x, p.y, b.x, b.y) < .33;
     const og = m.ownG(p.team);
-    Object.assign(rec, { dB: r2(dB), dM: r2(dM), behind, exposedD: r2(exposedD), face: r2(face), closing: r2(closing), shield, cSpeed: r2(hyp(c.vx, c.vy)), defSt: p.st.def, dribSt: c.st.drib, inBox: Math.abs(c.x - og[0]) < 16.5 && Math.abs(c.y - CY) < 20.16, distOwnGoal: r2(hyp(c.x - og[0], c.y - og[1])) });
-    if (!slide && dB < 1.25) {
+    rec._dBraw = dB; Object.assign(rec, { dB: r2(dB), dM: r2(dM), behind, exposedD: r2(exposedD), face: r2(face), closing: r2(closing), shield, cSpeed: r2(hyp(c.vx, c.vy)), defSt: p.st.def, dribSt: c.st.drib, inBox: Math.abs(c.x - og[0]) < 16.5 && Math.abs(c.y - CY) < 20.16, distOwnGoal: r2(hyp(c.x - og[0], c.y - og[1])) });
+    if (!slide && dB < TK_R) {
       // deterministic part of the success score (the game adds R(-.1,.1))
       rec.scDet = r2((p.st.def - c.st.drib) / 140 + (p.team.aiK || 0) * .05 + clamp(exposedD - .58, -.3, .45) * .95 + (face - .4) * .45 - (shield ? .5 : 0) - (behind ? .35 : 0) - (closing > 6.5 ? .22 : 0) - (dB > 1.05 ? .15 : 0) - (c.st.phys - p.st.phys) / 320 - (clean ? .1 : 0));
       rec.terms = { attr: r2((p.st.def - c.st.drib) / 140), exposed: r2(clamp(exposedD - .58, -.3, .45) * .95), face: r2((face - .4) * .45), shield: shield ? -.5 : 0, behind: behind ? -.35 : 0, closing: closing > 6.5 ? -.22 : 0, far: dB > 1.05 ? -.15 : 0, phys: r2(-(c.st.phys - p.st.phys) / 320), clean: clean ? -.1 : 0 };
@@ -45,10 +46,12 @@ function run(id, seed) {
     path0 = null; if (c.skip) return; const r = c.rec, b = m.ball;
     if (r.slide) { r.startDist = r.dB; r.minDist = 99; r.minDistLowBall = 99; OUT.slides.push(r); slides.set(p, r); delete r._own; return; }
     r.out = p.stats.fl > r._fl0 ? 'foul' : p.stats.tk > r._tk0 ? (b.owner === p ? 'won_keep' : 'won_loose') : 'fail';
-    if (r.out === 'fail') r.why = r.clean && r.behind ? 'clean_from_behind_aborted' : r.dB >= 1.25 ? (r.clean ? 'clean_out_of_range' : 'out_of_range_no_foul') : r.scDet != null && r.scDet <= -.04 ? 'score_too_low' : 'score_borderline';
-    delete r._own; delete r._tk0; delete r._fl0; OUT.tackles.push(r);
+    r.stunAfter = r2(p.stun); r.tcoolAfter = r2(p.tcool);
+    if (r.out === 'fail') r.why = r._dBraw >= TK_R ? (r.clean ? 'clean_out_of_range' : 'out_of_range_no_foul') : r.clean && r.behind && (!SHIELD_RULE || r.shield) ? 'clean_from_behind_aborted' : r.scDet != null && r.scDet <= -.04 ? 'score_too_low' : 'score_borderline';
+    delete r._own; delete r._tk0; delete r._fl0; delete r._dBraw; OUT.tackles.push(r);
   });
   const slides = new Map();
+  wrap('tkBlocked', null, null); if (m.tkBlocked) { const o = m.tkBlocked.bind(m); m.tkBlocked = function (p, c) { const r = o(p, c); if (r) { OUT.tkSuppressedFrames = (OUT.tkSuppressedFrames || 0) + 1; const k = id + '|' + p.name + '|' + c.name + '|' + Math.floor(m.time); (OUT._sup = OUT._sup || new Set()).add(k); OUT.tkSuppressedEncounters = OUT._sup.size; } return r; }; }
   wrap('slideCheck', (p) => { path0 = 'slide'; return { fl: p.stats.fl, done: p.slideDone }; }, (c, p) => { path0 = null; const r = slides.get(p); if (r && !c.done && p.slideDone) { r.out = p.stats.fl > c.fl ? 'foul' : 'won'; slides.delete(p); } });
   wrap('collide', () => { path0 = 'body_collision'; }, () => { path0 = null; });
   wrap('gkAI', () => { path0 = 'gk_rush'; }, () => { path0 = null; });
@@ -114,5 +117,5 @@ function run(id, seed) {
 const t0 = Date.now();
 for (const i of (A.only ? A.only.split(',').map(Number) : Array.from({ length: N }, (_, k) => k + 1))) run(i, SEED0 + i);
 const out = A.out || path.join(process.cwd(), 'audit.json');
-fs.writeFileSync(out, JSON.stringify(OUT));
+delete OUT._sup; fs.writeFileSync(out, JSON.stringify(OUT));
 process.stderr.write(`audit ${N} matches in ${Math.round((Date.now() - t0) / 1000)}s → ${out}\n`);

@@ -4,6 +4,8 @@
 const L=105,W=68,GW=7.32,GH=2.44,CX=L/2,CY=W/2;
 // فيزيا الكورة: Magnus (الكورة بتلف حوالين نفسها → قوة جانبية/لتحت/لفوق)
 const KMAG=.0055,BR=.11;
+// مدى التدخل الواقف: نفس الرقم في قرار الكمبيوتر وفي تنفيذ التدخل (كان القرار 1.3 م والتنفيذ 1.25 م)
+const TKR=1.25;
 const R=(a,b)=>a+Math.random()*(b-a);
 const RI=(a,b)=>Math.floor(R(a,b+1));
 const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
@@ -184,7 +186,8 @@ class Match{
    // أي مدافع الكورة عدّت جنبه بيحاول يمد رجله ويقطعها (مش بس اللي بيضغط)
    if(b.owner&&b.owner.team!==t&&!b.inHands&&!this.restartKind&&this.phase==='play'&&b.z<.6){const dB=hyp(p.x-b.x,p.y-b.y);
     // لما حامل الكورة يعدّي جنب مدافع، المدافع بيحاول يقطعها فعلاً (مرة واحدة في كل مواجهة)
-    if(dB<1.3&&p.tcool<=0&&p.chalOn!==b.owner){p.chalOn=b.owner;p.chalT=this.time;const fr=((b.x-p.x)*p.fx+(b.y-p.y)*p.fy)/(dB||1)>.2;if(Math.random()<(.42+(t.aiK||0)*.05+p.st.def/300+((t.T||TACTICS.bal).press-.5)*.1-(b.owner.st.drib-60)/400)*(fr?1:.55)){p.tcool=.6;this.tackle(p,false,true);if(p.stun>0)continue;}}
+    // مايحاولش يقطع لو مش في المدى، أو لو هو ورا حامل الكورة والكورة مستخبية ورا جسمه (تدخل مستحيل من غير فاول)
+    if(dB<TKR&&p.tcool<=0&&p.chalOn!==b.owner&&!this.tkBlocked(p,b.owner)){p.chalOn=b.owner;p.chalT=this.time;const fr=((b.x-p.x)*p.fx+(b.y-p.y)*p.fy)/(dB||1)>.2;if(Math.random()<(.42+(t.aiK||0)*.05+p.st.def/300+((t.T||TACTICS.bal).press-.5)*.1-(b.owner.st.drib-60)/400)*(fr?1:.55)){p.tcool=.6;this.tackle(p,false,true);if(p.stun>0)continue;}}
     else if(p.chalOn===b.owner&&((dB>2.6&&this.time-(p.chalT||0)>.8)||this.time-(p.chalT||0)>1.4))p.chalOn=null;}
    if(b.owner===p){this.carrierAI(p,dt);continue;}
    if(b.target===p&&!b.owner){this.receive(p);continue;}
@@ -199,7 +202,7 @@ class Match{
      const goalSide=((p.x-c.x)*gx+(p.y-c.y)*gy)/gd>0;
      if(dC>3.5||!goalSide)this.go(p,[c.x+gx/gd*1.3+c.vx*.3,c.y+gy/gd*1.3+c.vy*.3],1);else this.go(p,[c.x+gx/gd*1.15,c.y+gy/gd*1.15],Math.min(1,(hyp(c.vx,c.vy)+1.2)/p.mse));
      if(p.tcool<=0){const og=this.ownG(t),inBox=Math.abs(c.x-og[0])<17&&Math.abs(c.y-CY)<20.5;const dB=hyp(p.x-b.x,p.y-b.y),exposed=hyp(b.x-c.x,b.y-c.y)>.62,front=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/(dC||1)>-.35;const skill=(.5+t.R/200)*(1+(t.str||0)*.25)*(h&&c===h.ctrl?.85:1);
-      if(dB<1.25&&front&&(exposed&&Math.random()<dt*2.8*skill||!exposed&&Math.random()<dt*1.3*skill))this.tackle(p,false,inBox&&Math.random()<.8);
+      if(dB<TKR&&front&&(exposed&&Math.random()<dt*2.8*skill||!exposed&&Math.random()<dt*1.3*skill))this.tackle(p,false,inBox&&Math.random()<.8);
       else if(!inBox&&!front&&dC>1.6&&dC<2.8&&hyp(c.vx,c.vy)>4&&Math.random()<dt*.25*skill)this.tackle(p,true);}}
     else if(!b.owner&&b.target&&b.target.team!==t&&this.time-b.passT<.35)this.go(p,this.shape(p,false),.9);else this.go(p,b.owner?[pbx,pby]:this.intercept(p),1);continue;}
    if(p===t.second&&b.owner&&b.owner.team!==t&&!this.restartKind){const g=this.ownG(t);const dx=g[0]-b.x,dy=g[1]-b.y,d=hyp(dx,dy)||1;const sd=clamp(7-(t.str||0)*3-((t.T||TACTICS.bal).press-.5)*4,3,10);this.go(p,[b.x+dx/d*sd,b.y+dy/d*sd],.92+Math.max(0,t.str||0)*.06);continue;}
@@ -368,15 +371,17 @@ class Match{
   this.kick(p,dx/d*sp,dy/d*sp,vz);}b.shot={by:p,t:this.time,pen:isPen,d,fin:!!fin};this.shotNew(p);p.stats.sh++;this.shotsT[t.idx]++;
   if(isPen){const side=Math.sign(ty-CY)||1;this.pen={live:true,dive:CY+(Math.random()<.42?side:pick([-1,0,1]))*2.9};}
   if(dG2(p,g)<30)SFX.ooh();vib(25);this.ev('shot',{p,far:d>22});}
+ // التدخل من ورا مستحيل لو الكورة مستخبية ورا جسم الحامل (الخط من المدافع للكورة بيعدي في جسمه) — نفس شروط التنفيذ في tackle()
+ tkBlocked(p,c){const b=this.ball,dM=hyp(c.x-p.x,c.y-p.y)||.01;const behind=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/dM<-.35;return behind&&segDist(c.x,c.y,p.x,p.y,b.x,b.y)<.33;}
  tackle(p,slide,clean){const b=this.ball,c=b.owner;p.tcool=slide?1.3:clean?.85:.8;if(c&&b.inHands)return;
   if(slide){const tx=b.x+b.vx*.3-p.x,ty=b.y+b.vy*.3-p.y,d=hyp(tx,ty)||1;const fx=d<7?tx/d:p.fx,fy=d<7?ty/d:p.fy;p.vx=fx*9;p.vy=fy*9;p.fx=fx;p.fy=fy;p.slide=.6;p.slideDone=false;return;}
   p.kickT=.28;p.kType='tackle';
   if(!c||c.team===p.team){if(!c&&hyp(b.x-p.x,b.y-p.y)<1.3&&b.z<.6)this.take(p);return;}
   const dB=hyp(b.x-p.x,b.y-p.y),dM=hyp(c.x-p.x,c.y-p.y)||.01;
   const behind=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/dM<-.35,exposedD=hyp(b.x-c.x,b.y-c.y);
-  if(dB<1.25){const ux=(b.x-p.x)/(dB||1),uy=(b.y-p.y)/(dB||1);const face=p.fx*ux+p.fy*uy;const closing=p.vx*ux+p.vy*uy;const shield=segDist(c.x,c.y,p.x,p.y,b.x,b.y)<.33;
+  if(dB<TKR){const ux=(b.x-p.x)/(dB||1),uy=(b.y-p.y)/(dB||1);const face=p.fx*ux+p.fy*uy;const closing=p.vx*ux+p.vy*uy;const shield=segDist(c.x,c.y,p.x,p.y,b.x,b.y)<.33;
    const sc=(p.st.def-c.st.drib)/140+(p.team.aiK||0)*.05+clamp(exposedD-.58,-.3,.45)*.95+(face-.4)*.45-(shield?.5:0)-(behind?.35:0)-(closing>6.5?.22:0)-(dB>1.05?.15:0)-(c.st.phys-p.st.phys)/320+R(-.1,.1)-(clean?.1:0);
-   if(clean&&behind){p.stun=.25;return;}
+   if(clean&&behind&&shield){p.stun=.25;return;}
    if(sc>.22){this.winBall(p,c,dB<.95&&!behind&&sc>.36);return;}
    if(sc>.06){this.winBall(p,c,false);return;}
    if(!clean&&dM<1.25&&(behind||closing>4.5||Math.random()<clamp(.14-sc*.5+(c.st.drib-p.st.def)/300,.04,.36))){this.foul(p,c,false,behind);return;}p.stun=clean?.3:.45;return;}
@@ -451,7 +456,7 @@ class Match{
   h.p2=null;if(!has&&I.hold.T&&oppBall){let best=null,bd=1e9;for(const q of c.team.pl){if(q===c||q.role==='GK')continue;const d=hyp(q.x-b.x,q.y-b.y);if(d<bd){bd=d;best=q;}}if(best){h.p2=best;best.des=null;this.go(best,[b.x+b.owner.vx*.3,b.y+b.owner.vy*.3],1);}}
   if(c.stun<=0&&c.slide<=0&&!(c.upT>0)&&!setPiece&&!penWait){
    if(!has&&I.hold.F&&oppBall&&!b.inHands){const o=b.owner,g=this.ownG(c.team),gx=g[0]-o.x,gy=g[1]-o.y,gd=hyp(gx,gy)||1;c.des=null;this.go(c,[o.x+gx/gd*2.2+o.vx*.3,o.y+gy/gd*2.2+o.vy*.3],I.sprint?1:.86);c.contain=.2;}
-   else if(!has&&I.hold.X&&(oppBall||!b.owner)){c.des=null;const o=b.owner;if(o){const g=this.ownG(c.team),gx=g[0]-o.x,gy=g[1]-o.y,gd=hyp(gx,gy)||1,dC=hyp(c.x-o.x,c.y-o.y);this.go(c,dC>2.4?[o.x+o.vx*.35+gx/gd*.8,o.y+o.vy*.35+gy/gd*.8]:[o.x+gx/gd*.95+o.vx*.15,o.y+gy/gd*.95+o.vy*.15],1);if(!b.inHands&&o.role!=='GK'&&c.tcool<=0&&hyp(b.x-c.x,b.y-c.y)<1.25){const front=((c.x-o.x)*o.fx+(c.y-o.y)*o.fy)/(dC||1)>-.3;if(front)this.tackle(c,false,true);}}else this.go(c,this.intercept(c),1);c.stam=Math.max(0,c.stam-dt*10/this.halfLen);}
+   else if(!has&&I.hold.X&&(oppBall||!b.owner)){c.des=null;const o=b.owner;if(o){const g=this.ownG(c.team),gx=g[0]-o.x,gy=g[1]-o.y,gd=hyp(gx,gy)||1,dC=hyp(c.x-o.x,c.y-o.y);this.go(c,dC>2.4?[o.x+o.vx*.35+gx/gd*.8,o.y+o.vy*.35+gy/gd*.8]:[o.x+gx/gd*.95+o.vx*.15,o.y+gy/gd*.95+o.vy*.15],1);if(!b.inHands&&o.role!=='GK'&&c.tcool<=0&&hyp(b.x-c.x,b.y-c.y)<TKR){const front=((c.x-o.x)*o.fx+(c.y-o.y)*o.fy)/(dC||1)>-.3;if(front)this.tackle(c,false,true);}}else this.go(c,this.intercept(c),1);c.stam=Math.max(0,c.stam-dt*10/this.halfLen);}
    else if(!has&&ownPass&&b.target===c){c.des=null;this.receive(c);}
    else if(mag>.15){const spr=(I.sprint||mag>.93)&&c.stam>4;const sp=c.mse*(spr?1.03:.16+.76*clamp((mag-.15)/.78,0,1))*(has?(spr?.95:.97):1);const n=mag>1?mag:1;c.des=[jx/n*sp,jy/n*sp];if(spr)c.stam=Math.max(0,c.stam-dt*16/this.halfLen);}
    else if(!has){c.des=null;this.assistAI(c);}

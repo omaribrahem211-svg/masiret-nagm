@@ -1,0 +1,196 @@
+{
+ "www": "www/js",
+ "TKR": 1.25,
+ "runsPerScenario": 60,
+ "scenarios": {
+  "1_front": {
+   "runs": 60,
+   "attempts": 50,
+   "cancelledBeforeAnimation": 0,
+   "reachedExecution": 50,
+   "successful": 14,
+   "successfulKeptBall": 0,
+   "failed": 35,
+   "fouls": 1,
+   "ballRecoveredByDefenceWithin1_5s": 13,
+   "successPct": 28,
+   "failWhy": {
+    "beaten": 35
+   },
+   "execDistMedian": 1.13,
+   "execDistMax": 1.25,
+   "recoveryAfterFailMedianSec": 0.3,
+   "maxAttemptsInOneRun": 2,
+   "runsWithBallInReachButNoAttempt": 12,
+   "framesChallengeSuppressedAsImpossible": 28
+  },
+  "2_side": {
+   "runs": 60,
+   "attempts": 23,
+   "cancelledBeforeAnimation": 0,
+   "reachedExecution": 23,
+   "successful": 2,
+   "successfulKeptBall": 0,
+   "failed": 21,
+   "fouls": 0,
+   "ballRecoveredByDefenceWithin1_5s": 2,
+   "successPct": 8.7,
+   "failWhy": {
+    "beaten": 21
+   },
+   "execDistMedian": 1.16,
+   "execDistMax": 1.25,
+   "recoveryAfterFailMedianSec": 0.3,
+   "maxAttemptsInOneRun": 2,
+   "runsWithBallInReachButNoAttempt": 38,
+   "framesChallengeSuppressedAsImpossible": 43
+  },
+  "3_behind": {
+   "runs": 60,
+   "attempts": 7,
+   "cancelledBeforeAnimation": 0,
+   "reachedExecution": 7,
+   "successful": 3,
+   "successfulKeptBall": 0,
+   "failed": 4,
+   "fouls": 0,
+   "ballRecoveredByDefenceWithin1_5s": 3,
+   "successPct": 42.86,
+   "failWhy": {
+    "beaten": 4
+   },
+   "execDistMedian": 1.21,
+   "execDistMax": 1.24,
+   "recoveryAfterFailMedianSec": 0.3,
+   "maxAttemptsInOneRun": 1,
+   "runsWithBallInReachButNoAttempt": 24,
+   "framesChallengeSuppressedAsImpossible": 6
+  },
+  "4_fast_attacker_slow_defender": {
+   "runs": 60,
+   "attempts": 1,
+   "cancelledBeforeAnimation": 0,
+   "reachedExecution": 1,
+   "successful": 0,
+   "successfulKeptBall": 0,
+   "failed": 1,
+   "fouls": 0,
+   "ballRecoveredByDefenceWithin1_5s": 0,
+   "successPct": 0,
+   "failWhy": {
+    "beaten": 1
+   },
+   "execDistMedian": 1.16,
+   "execDistMax": 1.16,
+   "recoveryAfterFailMedianSec": 0.3,
+   "maxAttemptsInOneRun": 1,
+   "runsWithBallInReachButNoAttempt": 53,
+   "framesChallengeSuppressedAsImpossible": 1
+  },
+  "5_slow_attacker_fast_defender": {
+   "runs": 60,
+   "attempts": 6,
+   "cancelledBeforeAnimation": 0,
+   "reachedExecution": 6,
+   "successful": 0,
+   "successfulKeptBall": 0,
+   "failed": 6,
+   "fouls": 0,
+   "ballRecoveredByDefenceWithin1_5s": 0,
+   "successPct": 0,
+   "failWhy": {
+    "beaten": 6
+   },
+   "execDistMedian": 1.17,
+   "execDistMax": 1.18,
+   "recoveryAfterFailMedianSec": 0.3,
+   "maxAttemptsInOneRun": 1,
+   "runsWithBallInReachButNoAttempt": 27,
+   "framesChallengeSuppressedAsImpossible": 5
+  },
+  "6_ball_close_to_feet": {
+   "runs": 60,
+   "attempts": 65,
+   "cancelledBeforeAnimation": 0,
+   "reachedExecution": 65,
+   "successful": 54,
+   "successfulKeptBall": 4,
+   "failed": 11,
+   "fouls": 0,
+   "ballRecoveredByDefenceWithin1_5s": 45,
+   "successPct": 83.08,
+   "failWhy": {
+    "beaten": 11
+   },
+   "execDistMedian": 1.11,
+   "execDistMax": 1.24,
+   "recoveryAfterFailMedianSec": 0.45,
+   "maxAttemptsInOneRun": 2,
+   "runsWithBallInReachButNoAttempt": 4,
+   "framesChallengeSuppressedAsImpossible": 14
+  },
+  "7_ball_separated_from_attacker": {
+   "runs": 60,
+   "attempts": 58,
+   "cancelledBeforeAnimation": 0,
+   "reachedExecution": 58,
+   "successful": 53,
+   "successfulKeptBall": 0,
+   "failed": 5,
+   "fouls": 0,
+   "ballRecoveredByDefenceWithin1_5s": 43,
+   "successPct": 91.38,
+   "failWhy": {
+    "beaten": 5
+   },
+   "execDistMedian": 1.25,
+   "execDistMax": 1.25,
+   "recoveryAfterFailMedianSec": 0.3,
+   "maxAttemptsInOneRun": 2,
+   "runsWithBallInReachButNoAttempt": 8,
+   "framesChallengeSuppressedAsImpossible": 12
+  },
+  "8_defender_off_balance": {
+   "runs": 60,
+   "attempts": 3,
+   "cancelledBeforeAnimation": 0,
+   "reachedExecution": 3,
+   "successful": 0,
+   "successfulKeptBall": 0,
+   "failed": 3,
+   "fouls": 0,
+   "ballRecoveredByDefenceWithin1_5s": 0,
+   "successPct": 0,
+   "failWhy": {
+    "beaten": 3
+   },
+   "execDistMedian": 1.18,
+   "execDistMax": 1.24,
+   "recoveryAfterFailMedianSec": 0.3,
+   "maxAttemptsInOneRun": 1,
+   "runsWithBallInReachButNoAttempt": 57,
+   "framesChallengeSuppressedAsImpossible": 0
+  },
+  "9_repeated_attempts_front": {
+   "runs": 60,
+   "attempts": 55,
+   "cancelledBeforeAnimation": 0,
+   "reachedExecution": 55,
+   "successful": 47,
+   "successfulKeptBall": 0,
+   "failed": 8,
+   "fouls": 0,
+   "ballRecoveredByDefenceWithin1_5s": 37,
+   "successPct": 85.45,
+   "failWhy": {
+    "beaten": 8
+   },
+   "execDistMedian": 0.98,
+   "execDistMax": 1.25,
+   "recoveryAfterFailMedianSec": 0.45,
+   "maxAttemptsInOneRun": 2,
+   "runsWithBallInReachButNoAttempt": 13,
+   "framesChallengeSuppressedAsImpossible": 9
+  }
+ }
+}

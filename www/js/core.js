@@ -151,7 +151,7 @@ class Match{
   if(!this.demo&&this.minute()>=55&&this.time-this.subT>this.halfLen*2/9){this.subT=this.time;for(const t of this.t)this.aiSub(t);}
   if(this.subQ&&this.subQ.length&&this.time-this.subQ[0].at>14)this.flushSubs();
   {const st=this.t[0].star;if(st&&!this.demo&&this.t[0].pl.includes(st)){st.tT=(st.tT||0)+dt;if((st.x-CX)*this.t[0].dir<0)st.ownT=(st.ownT||0)+dt;}}
-  this.think(dt);this.windTick(dt);this.move(dt);this.ballSim(dt);this.contacts();this.bounds();this.camUpd(dt);this.record(dt);
+  this.think(dt);this.windTick(dt);this.move(dt);this.fkKeep();this.ballSim(dt);this.contacts();this.bounds();this.camUpd(dt);this.record(dt);
  }
  record(dt){if(this.demo)return;this.recT+=dt;if(this.recT<1/30)return;this.recT=0;const a=this.all,n=a.length,f=new Float32Array(3+n*13),b=this.ball;f[0]=b.x;f[1]=b.y;f[2]=b.z;
   for(let j=0;j<n;j++){const p=a[j],o=3+j*13;f[o]=p.x;f[o+1]=p.y;f[o+2]=p.fx;f[o+3]=p.fy;f[o+4]=p.vx;f[o+5]=p.vy;f[o+6]=p.anim;f[o+7]=p.slide;f[o+8]=p.kickT||0;f[o+9]=p.windT||0;f[o+10]=(p.diveT||0)*(p.diveDir||1);f[o+11]=p.diveH==null?1:p.diveH;f[o+12]=(p.jumpT||0)+(p.catchT>0?10:0);}
@@ -194,7 +194,7 @@ class Match{
    if(b.owner&&poss===t.idx){const sp=t.sup&&t.sup.includes(p)&&p.supT;if(sp)this.goS(p,sp,.92);else this.goS(p,this.shape(p,true),.82);continue;}
    if(t.cut&&t.cut.p===p&&b.owner&&b.owner.team!==t&&!this.restartKind){this.go(p,t.cut.pt,.8);continue;}
    if(p===t.chaser){const c=b.owner;
-    if(c&&c.team!==t&&(b.inHands||this.restartKind)){const md=this.restartKind==='throw'?3:9.5;const dx=p.x-b.x,dy=p.y-b.y,d=hyp(dx,dy)||1;this.go(p,b.inHands?this.shape(p,false):[b.x+dx/d*md,b.y+dy/d*md],.75);continue;}
+    if(c&&c.team!==t&&(b.inHands||this.restartKind)){const md=this.restartKind==='throw'?3:10;const dx=p.x-b.x,dy=p.y-b.y,d=hyp(dx,dy)||1;this.go(p,b.inHands?this.shape(p,false):[b.x+dx/d*md,b.y+dy/d*md],.75);continue;}
     if(c&&c.team!==t){const g=this.ownG(t);const gx=g[0]-c.x,gy=g[1]-c.y,gd=hyp(gx,gy)||1;const dC=hyp(p.x-c.x,p.y-c.y);
      const goalSide=((p.x-c.x)*gx+(p.y-c.y)*gy)/gd>0;
      if(dC>3.5||!goalSide)this.go(p,[c.x+gx/gd*1.3+c.vx*.3,c.y+gy/gd*1.3+c.vy*.3],1);else this.go(p,[c.x+gx/gd*1.15,c.y+gy/gd*1.15],Math.min(1,(hyp(c.vx,c.vy)+1.2)/p.mse));
@@ -625,6 +625,8 @@ class Match{
  woodHit(b){if(b.z>GH+.4||(b.x>2&&b.x<L-2))return;const gx=b.x<CX?0:L,rr=.06+BR;for(const sy of [-1,1]){const py=CY+sy*GW/2,dx=b.x-gx,dy=b.y-py,d=hyp(dx,dy);if(d<rr&&b.z<GH+.06){const nx=dx/(d||1),ny=dy/(d||1),vn=b.vx*nx+b.vy*ny;if(vn<0){b.vx-=1.62*vn*nx;b.vy-=1.62*vn*ny;b.vx*=.92;b.vy*=.92;b.sw=(b.sw||0)*.3;b.x=gx+nx*rr;b.y=py+ny*rr;this.wood(b);}return;}}
   if(Math.abs(b.y-CY)<GW/2){const dx=b.x-gx,dz=b.z-GH,d=hyp(dx,dz);if(d<rr){const nx=dx/(d||1),nz=dz/(d||1),vn=b.vx*nx+b.vz*nz;if(vn<0){b.vx-=1.6*vn*nx;b.vz-=1.6*vn*nz;b.vx*=.92;b.tw=-(b.tw||0)*.3;b.x=gx+nx*rr;b.z=GH+nz*rr;this.wood(b);}}}}
  wood(b){SFX.kick(.8);vib(30);if(b.shot){SFX.ooh();this.later({t:'في الخشبة!',life:1.3,small:true},.5);this.ev('woodwork',{p:b.shot.by});b.shot=null;}this.shake=Math.max(this.shake,.25);}
+ // قانون ٩٫١٥ م: طول ما الكورة ماتلعبتش في الضربة الحرة، لاعيبة الخصم (غير الحائط) مايقربوش منها
+ fkKeep(){const b=this.ball,o=b.owner;if(this.restartKind!=='fk'||!o||b.inHands)return;for(const q of this.other(o.team).pl){if(q.off||q.wallP||q.role==='GK')continue;const dx=q.x-b.x,dy=q.y-b.y,d=hyp(dx,dy);if(d<9.15){const u=d||1;q.x=b.x+dx/u*9.15;q.y=b.y+dy/u*9.15;const vr=(q.vx*dx+q.vy*dy)/u;if(vr<0){q.vx-=vr*dx/u;q.vy-=vr*dy/u;}}}for(const q of o.team.pl){if(q===o||q.off||q.role==='GK')continue;const dx=q.x-b.x,dy=q.y-b.y,d=hyp(dx,dy);if(d<4){const u=d||1;q.x=b.x+dx/u*4;q.y=b.y+dy/u*4;const vr=(q.vx*dx+q.vy*dy)/u;if(vr<0){q.vx-=vr*dx/u;q.vy-=vr*dy/u;}}}}
  restart(kind,ti,x,y){if(this.walk)this.endWalk();const prev=this.snap();this.bq=null;const b=this.ball,t=this.t[ti],o=this.other(t),g=this.attG(t);let tk;for(const p of this.all){p.spT=null;p.wallP=0;p.windT=0;p.windFn=null;p.pend=null;}
   if(kind==='pen'){x=g[0]-t.dir*11;y=CY;}
   const st=t.star&&!t.star.off?t.star:null;
@@ -646,7 +648,9 @@ class Match{
   if(kind==='throw'){const into=y<1?1:-1;const mates=t.pl.filter(p=>p!==tk&&p.role!=='GK').sort((a,c)=>hyp(a.x-x,a.y-y)-hyp(c.x-x,c.y-y)).slice(0,2);
    if(mates[0])mates[0].spT=[clamp(x+t.dir*R(8,12),3,L-3),clamp(y+into*R(3,5),1,W-1)];if(mates[1])mates[1].spT=[clamp(x-t.dir*R(2,5),3,L-3),clamp(y+into*R(9,12),1,W-1)];
    for(const m of mates){const q=o.pl.filter(q=>q.role!=='GK').sort((a,c)=>hyp(a.x-m.spT[0],a.y-m.spT[1])-hyp(c.x-m.spT[0],c.y-m.spT[1]))[0];if(q&&!q.spT){const og=this.ownG(o);const dx=og[0]-m.spT[0],dy=og[1]-m.spT[1],d=hyp(dx,dy)||1;q.spT=[m.spT[0]+dx/d*1.6,m.spT[1]+dy/d*1.6];}}}
-  for(const q of o.pl){if(q.wall){q.wall=0;continue;}if(kind==='pen'||q.spT)continue;const d=hyp(q.x-x,q.y-y);const md=kind==='fk'?9.15:7;if(d<md){const f=(md-d)/(d||1);q.x+=(q.x-x)*f;q.y+=(q.y-y)*f;q.x=clamp(q.x,-2,L+2);q.y=clamp(q.y,-2,W+2);}}
+  // ضربة حرة: الزملاء (غير المنفذ) يبعدوا ٤ م عن الكورة، والخصم ٩٫١٥ م (الحائط بس مستثنى) — ويثبتوا مكانهم لحد ما الكورة تتلعب
+  if(kind==='fk'||kind==='corner'||kind==='throw'){const mn=kind==='throw'?2:4;for(const q of t.pl){if(q===tk||q.role==='GK'||q.off)continue;if(q.spT&&hyp(q.spT[0]-x,q.spT[1]-y)>=mn)continue;const d=hyp(q.x-x,q.y-y);if(d<mn){let ux=(q.x-x)/(d||1),uy=(q.y-y)/(d||1);if(d<.05){ux=-fy||0;uy=fx||1;}q.x=clamp(x+ux*mn,-1,L+1);q.y=clamp(y+uy*mn,-1,W+1);q.vx=q.vy=0;q.spT=[q.x,q.y];}}}
+  for(const q of o.pl){if(q.wall){q.wall=0;continue;}if(kind==='pen')continue;const md=kind==='fk'?9.5:kind==='throw'?2:7;if(q.spT&&hyp(q.spT[0]-x,q.spT[1]-y)<md-.05){const ds=hyp(q.spT[0]-x,q.spT[1]-y)||1;q.spT=[x+(q.spT[0]-x)/ds*md,y+(q.spT[1]-y)/ds*md];if(hyp(q.x-x,q.y-y)<md){q.x=q.spT[0];q.y=q.spT[1];q.vx=q.vy=0;}}if(q.spT)continue;const d=hyp(q.x-x,q.y-y);if(d<md){const f=(md-d)/(d||1);q.x+=(q.x-x)*f;q.y+=(q.y-y)*f;q.x=clamp(q.x,-2,L+2);q.y=clamp(q.y,-2,W+2);q.vx=q.vy=0;if(kind==='fk')q.spT=[q.x,q.y];}}
   this.phase='restart';this.pt=kind==='pen'?1.4:kind==='fk'?1:.7;if(kind!=='pen'&&this.flushSubs())this.pt=Math.max(this.pt,2.4);
   this.banner={t:{corner:'ركنية',gk:'ضربة مرمى',throw:'رمية تماس',fk:'ضربة حرة',pen:'ضربة جزاء!'}[kind],life:kind==='pen'?2:1.1,small:kind!=='pen'};
   const h=this.human;if(h&&!h.lock&&ti===h.team){h.ctrl=tk;tk.gkHoldT=0;}if(h&&h.ctrl===tk)tk.hold=0;

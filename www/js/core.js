@@ -6,6 +6,8 @@ const L=105,W=68,GW=7.32,GH=2.44,CX=L/2,CY=W/2;
 const KMAG=.0055,BR=.11;
 // مدى التدخل الواقف: نفس الرقم في قرار الكمبيوتر وفي تنفيذ التدخل (كان القرار 1.3 م والتنفيذ 1.25 م)
 const TKR=1.25;
+// التدخل الواقف بياخد وقت: الرجل بتوصل للكورة بعد TKL ثانية من بداية الحركة، والنتيجة بتتحسب ساعتها
+const TKL=.16;
 const R=(a,b)=>a+Math.random()*(b-a);
 const RI=(a,b)=>Math.floor(R(a,b+1));
 const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
@@ -153,7 +155,7 @@ class Match{
   if(!this.demo&&this.minute()>=55&&this.time-this.subT>this.halfLen*2/9){this.subT=this.time;for(const t of this.t)this.aiSub(t);}
   if(this.subQ&&this.subQ.length&&this.time-this.subQ[0].at>14)this.flushSubs();
   {const st=this.t[0].star;if(st&&!this.demo&&this.t[0].pl.includes(st)){st.tT=(st.tT||0)+dt;if((st.x-CX)*this.t[0].dir<0)st.ownT=(st.ownT||0)+dt;}}
-  this.airPick();this.think(dt);this.windTick(dt);this.move(dt);this.fkKeep();this.ballSim(dt);this.contacts();this.bounds();this.camUpd(dt);this.record(dt);
+  this.airPick();this.think(dt);this.windTick(dt);this.tkPre();this.move(dt);this.fkKeep();this.tkPost(dt);this.ballSim(dt);this.contacts();this.bounds();this.camUpd(dt);this.record(dt);
  }
  record(dt){if(this.demo)return;this.recT+=dt;if(this.recT<1/30)return;this.recT=0;const a=this.all,n=a.length,f=new Float32Array(3+n*13),b=this.ball;f[0]=b.x;f[1]=b.y;f[2]=b.z;
   for(let j=0;j<n;j++){const p=a[j],o=3+j*13;f[o]=p.x;f[o+1]=p.y;f[o+2]=p.fx;f[o+3]=p.fy;f[o+4]=p.vx;f[o+5]=p.vy;f[o+6]=p.anim;f[o+7]=p.slide;f[o+8]=p.kickT||0;f[o+9]=p.windT||0;f[o+10]=(p.diveT||0)*(p.diveDir||1);f[o+11]=p.diveH==null?1:p.diveH;f[o+12]=(p.jumpT||0)+(p.catchT>0?10:0);}
@@ -187,7 +189,7 @@ class Match{
    if(b.owner&&b.owner.team!==t&&!b.inHands&&!this.restartKind&&this.phase==='play'&&b.z<.6){const dB=hyp(p.x-b.x,p.y-b.y);
     // لما حامل الكورة يعدّي جنب مدافع، المدافع بيحاول يقطعها فعلاً (مرة واحدة في كل مواجهة)
     // مايحاولش يقطع لو مش في المدى، أو لو هو ورا حامل الكورة والكورة مستخبية ورا جسمه (تدخل مستحيل من غير فاول)
-    if(dB<TKR&&p.tcool<=0&&p.chalOn!==b.owner&&!this.tkBlocked(p,b.owner)){p.chalOn=b.owner;p.chalT=this.time;const fr=((b.x-p.x)*p.fx+(b.y-p.y)*p.fy)/(dB||1)>.2;if(Math.random()<(.42+(t.aiK||0)*.05+p.st.def/300+((t.T||TACTICS.bal).press-.5)*.1-(b.owner.st.drib-60)/400)*(fr?1:.55)){p.tcool=.6;this.tackle(p,false,true);if(p.stun>0)continue;}}
+    if(dB<3&&p.tcool<=0&&p.chalOn!==b.owner&&!this.tkBlocked(p,b.owner)&&this.tkTime(p)){p.chalOn=b.owner;p.chalT=this.time;const fr=((b.x-p.x)*p.fx+(b.y-p.y)*p.fy)/(dB||1)>.2;if(Math.random()<(.42+(t.aiK||0)*.05+p.st.def/300+((t.T||TACTICS.bal).press-.5)*.1-(b.owner.st.drib-60)/400)*(fr?1:.55)){p.tcool=.6;this.tackle(p,false,true);if(p.stun>0)continue;}}
     else if(p.chalOn===b.owner&&((dB>2.6&&this.time-(p.chalT||0)>.8)||this.time-(p.chalT||0)>1.4))p.chalOn=null;}
    if(b.owner===p){this.carrierAI(p,dt);continue;}
    if(b.target===p&&!b.owner){this.receive(p);continue;}
@@ -200,9 +202,11 @@ class Match{
     if(c&&c.team!==t&&(b.inHands||this.restartKind)){const md=this.restartKind==='throw'?3:10;const dx=p.x-b.x,dy=p.y-b.y,d=hyp(dx,dy)||1;this.go(p,b.inHands?this.shape(p,false):[b.x+dx/d*md,b.y+dy/d*md],.75);continue;}
     if(c&&c.team!==t){const g=this.ownG(t);const gx=g[0]-c.x,gy=g[1]-c.y,gd=hyp(gx,gy)||1;const dC=hyp(p.x-c.x,p.y-c.y);
      const goalSide=((p.x-c.x)*gx+(p.y-c.y)*gy)/gd>0;
-     if(dC>3.5||!goalSide)this.go(p,[c.x+gx/gd*1.3+c.vx*.3,c.y+gy/gd*1.3+c.vy*.3],1);else this.go(p,[c.x+gx/gd*1.15,c.y+gy/gd*1.15],Math.min(1,(hyp(c.vx,c.vy)+1.2)/p.mse));
+     // لو الحامل لمس الكورة لمسة طويلة (بعدت عن رجله أكتر من 0.9 م) وهو مش طاير، المدافع القريب يقرّب على الكورة نفسها بدل ما يفضل يراقب
+     const engage=goalSide&&dC<2.5&&p.tcool<=0&&p.stam>20&&!b.inHands&&hyp(b.x-c.x,b.y-c.y)>.9&&hyp(c.vx,c.vy)<5;
+     if(dC>3.5||!goalSide)this.go(p,[c.x+gx/gd*1.3+c.vx*.3,c.y+gy/gd*1.3+c.vy*.3],1);else if(engage)this.go(p,[b.x+b.vx*.2+gx/gd*.35,b.y+b.vy*.2+gy/gd*.35],1);else this.go(p,[c.x+gx/gd*1.15,c.y+gy/gd*1.15],Math.min(1,(hyp(c.vx,c.vy)+1.2)/p.mse));
      if(p.tcool<=0){const og=this.ownG(t),inBox=Math.abs(c.x-og[0])<17&&Math.abs(c.y-CY)<20.5;const dB=hyp(p.x-b.x,p.y-b.y),exposed=hyp(b.x-c.x,b.y-c.y)>.62,front=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/(dC||1)>-.35;const skill=(.5+t.R/200)*(1+(t.str||0)*.25)*(h&&c===h.ctrl?.85:1);
-      if(dB<TKR&&front&&(exposed&&Math.random()<dt*2.8*skill||!exposed&&Math.random()<dt*1.3*skill))this.tackle(p,false,inBox&&Math.random()<.8);
+      if(front&&dB<3&&this.time-(p.tkW||-9)>.6&&this.tkTime(p)){p.tkW=this.time;if(Math.random()<(exposed?.4:.18)*skill*(.6+.4*p.stam/100))this.tackle(p,false,inBox&&Math.random()<.8);}
       else if(!inBox&&!front&&dC>1.6&&dC<2.8&&hyp(c.vx,c.vy)>4&&Math.random()<dt*.25*skill)this.tackle(p,true);}}
     else if(!b.owner&&b.target&&b.target.team!==t&&this.time-b.passT<.35)this.go(p,this.shape(p,false),.9);else this.go(p,b.owner?[pbx,pby]:this.intercept(p),1);continue;}
    if(p===t.second&&b.owner&&b.owner.team!==t&&!this.restartKind){const g=this.ownG(t);const dx=g[0]-b.x,dy=g[1]-b.y,d=hyp(dx,dy)||1;const sd=clamp(7-(t.str||0)*3-((t.T||TACTICS.bal).press-.5)*4,3,10);this.go(p,[b.x+dx/d*sd,b.y+dy/d*sd],.92+Math.max(0,t.str||0)*.06);continue;}
@@ -375,19 +379,47 @@ class Match{
  tkBlocked(p,c){const b=this.ball,dM=hyp(c.x-p.x,c.y-p.y)||.01;const behind=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/dM<-.35;return behind&&segDist(c.x,c.y,p.x,p.y,b.x,b.y)<.33;}
  tackle(p,slide,clean){const b=this.ball,c=b.owner;p.tcool=slide?1.3:clean?.85:.8;if(c&&b.inHands)return;
   if(slide){const tx=b.x+b.vx*.3-p.x,ty=b.y+b.vy*.3-p.y,d=hyp(tx,ty)||1;const fx=d<7?tx/d:p.fx,fy=d<7?ty/d:p.fy;p.vx=fx*9;p.vy=fy*9;p.fx=fx;p.fy=fy;p.slide=.6;p.slideDone=false;return;}
-  p.kickT=.28;p.kType='tackle';
-  if(!c||c.team===p.team){if(!c&&hyp(b.x-p.x,b.y-p.y)<1.3&&b.z<.6)this.take(p);return;}
+  p.kType='tackle';
+  if(!c||c.team===p.team){p.kickT=.28;if(!c&&hyp(b.x-p.x,b.y-p.y)<1.3&&b.z<.6)this.take(p);return;}
+  // بداية التدخل: المدافع بيخطو ناحية المكان اللي الكورة هتكون فيه بعد TKL، والاتجاه بيتثبت (لو المهاجم غيّر اتجاهه، التدخل ممكن يفوت)
+  {const bx=b.x+b.vx*TKL,by=b.y+b.vy*TKL,dx=bx-p.x,dy=by-p.y,d=hyp(dx,dy)||1;const v0=(p.vx*dx+p.vy*dy)/d,sp=Math.min(clamp(v0+1.2,1.5,Math.min(5,p.mse||6)),d/TKL);
+   p.tkL={t:TKL,clean:!!clean,c,dx:dx/d,dy:dy/d,sp};p.fx=dx/d;p.fy=dy/d;p.windT=p.windD=TKL;p.kickT=0;return;}}
+ // هل التوقيت مناسب للتدخل؟ الكورة في متناول الرجل (مع خطوة صغيرة)، والمدافع متوازن وبصّته ناحيتها،
+ // ولو الكورة لسه جاية ناحيته يستنى لحد ما تبقى قريبة (≤1 م) أو توصل لأقرب نقطة هتعدّي منها — مايتدخلش من آخر المدى وهي لسه بتقرّب
+ tkStep(p,dx,dy){const d=hyp(dx,dy)||1,v0=(p.vx*dx+p.vy*dy)/d,sp=clamp(v0+1.2,1.5,Math.min(5,p.mse||6));return clamp(Math.max(0,v0)*TKL+6*TKL*TKL,0,sp*TKL);}
+ tkTime(p){const b=this.ball;if(b.z>.6||p.stun>0||p.spinT>0||p.slide>0)return false;
+  // الحامل في نص حركة تمرير/تسديد والكورة هتخرج قبل ما الرجل توصل: تدخل مستحيل
+  {const c=b.owner;if(c&&c.pend&&c.pend.go&&(c.windT||0)<TKL+.02)return false;}const dx=b.x-p.x,dy=b.y-p.y,dB=hyp(dx,dy);
+  {const cl=-(dx*(b.vx-p.vx)+dy*(b.vy-p.vy))/(dB||1),st=clamp(cl*TKL+6*TKL*TKL,0,Math.min(5,p.mse||6)*TKL);if(dB-st>TKR-.15)return false;}if((p.fx*dx+p.fy*dy)/(dB||1)<-.2)return false;if(dB<=1)return true;
+  const rvx=b.vx-p.vx,rvy=b.vy-p.vy,rv2=rvx*rvx+rvy*rvy;if(rv2<.01)return true;const tm=clamp(-(dx*rvx+dy*rvy)/rv2,0,.4),dmin=hyp(dx+rvx*tm,dy+rvy*tm);return dmin>dB-.15;}
+ // أثناء التدخل: المدافع ملتزم بالخطوة (مايقدرش يغير اتجاهه)
+ // أثناء التدخل: المدافع ملتزم بالخطوة، بس يقدر يعدّل اتجاه رجله شوية (≈3.5 راديان/ث) لو المهاجم غيّر اتجاهه
+ tkPre(){const b=this.ball,dt=this._dt||1/60;for(const p of this.all){const L0=p.tkL;if(!L0)continue;if(p.stun>0||p.slide>0||p.off||this.phase!=='play'||this.restartKind||b.inHands){p.tkL=null;p.windT=0;continue;}
+  {const tx=b.x+b.vx*Math.max(0,L0.t)-p.x,ty=b.y+b.vy*Math.max(0,L0.t)-p.y;if(hyp(tx,ty)>.05){const a0=Math.atan2(L0.dy,L0.dx),da=angDiff(Math.atan2(ty,tx),a0),mx=3.5*dt,a1=a0+clamp(da,-mx,mx);L0.dx=Math.cos(a1);L0.dy=Math.sin(a1);}}
+  p.des=[L0.dx*L0.sp,L0.dy*L0.sp];p.fx=L0.dx;p.fy=L0.dy;}}
+ // الرجل بتقابل الكورة في أقرب نقطة: لو الكورة بقت قريبة وبدأت تبعد قبل نهاية الخطوة، التلامس بيحصل دلوقتي
+ tkPost(dt){const b=this.ball;for(const p of this.all){const L0=p.tkL;if(!L0)continue;L0.t-=dt;p.windT=Math.max(0,L0.t);const d=hyp(b.x-p.x,b.y-p.y);const met=L0.pd!=null&&L0.pd<.9&&d>L0.pd+.02;
+  if(L0.t<=0||met){this.tkResolve(p);p.tkL=null;p.windT=0;p.kickT=.28;}else L0.pd=d;}}
+ // لحظة التلامس: النتيجة بتتحسب بمكان الرجل والكورة الحقيقيين دلوقتي
+ tkResolve(p){const b=this.ball,clean=p.tkL.clean,c=b.owner;
+  // الحامل لعب الكورة قبل ما الرجل توصل: مفيش استحواذ أوتوماتيك، الكورة بتمشي بقواعد الاعتراض العادية في contacts()
+  if(!c){p.stun=clean?.15:.25;return;}
+  if(c.team===p.team||b.inHands)return;
   const dB=hyp(b.x-p.x,b.y-p.y),dM=hyp(c.x-p.x,c.y-p.y)||.01;
+  // سرعة اصطدام المدافع بجسم المهاجم (نسبية): هي اللي بتحدد إذا كان فيه خبطة تستاهل فاول
+  const crash=((p.vx-c.vx)*(c.x-p.x)+(p.vy-c.vy)*(c.y-p.y))/dM;
   const behind=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/dM<-.35,exposedD=hyp(b.x-c.x,b.y-c.y);
   if(dB<TKR){const ux=(b.x-p.x)/(dB||1),uy=(b.y-p.y)/(dB||1);const face=p.fx*ux+p.fy*uy;const closing=p.vx*ux+p.vy*uy;const shield=segDist(c.x,c.y,p.x,p.y,b.x,b.y)<.33;
-   const sc=(p.st.def-c.st.drib)/140+(p.team.aiK||0)*.05+clamp(exposedD-.58,-.3,.45)*.95+(face-.4)*.45-(shield?.5:0)-(behind?.35:0)-(closing>6.5?.22:0)-(dB>1.05?.15:0)-(c.st.phys-p.st.phys)/320+R(-.1,.1)-(clean?.1:0);
+   const sc=(p.st.def-c.st.drib)/140+(p.team.aiK||0)*.05+clamp(exposedD-.58,-.3,.45)*.95+(face-.4)*.45-(shield?.5:0)-(behind?.35:0)-(closing>6.5?.22:0)-clamp((dB-.7)/.55,0,1)*.2-(c.st.phys-p.st.phys)/320+R(-.1,.1)-(clean?.1:0)-(1-p.stam/100)*.1;
    if(clean&&behind&&shield){p.stun=.25;return;}
    if(sc>.22){this.winBall(p,c,dB<.95&&!behind&&sc>.36);return;}
    if(sc>.06){this.winBall(p,c,false);return;}
-   if(!clean&&dM<1.25&&(behind||closing>4.5||Math.random()<clamp(.14-sc*.5+(c.st.drib-p.st.def)/300,.04,.36))){this.foul(p,c,false,behind);return;}p.stun=clean?.3:.45;return;}
-  if(clean){p.stun=.2;return;}
-  if(dM<1.15){this.foul(p,c,false,behind);return;}
-  p.stun=.35;}
+   // لمسة رجل خفيفة: الكورة بتفلت من الحامل (من غير ما المدافع ياخدها)
+   if(sc>-.06&&dB<1.05){b.owner=null;b.last=p;b.passFrom=null;const a=Math.atan2(c.vy||b.vy,c.vx||b.vx)+R(-1.2,1.2),s2=R(1.5,3);b.vx=Math.cos(a)*s2;b.vy=Math.sin(a)*s2;b.vz=0;c.cool=.25;p.cool=.2;p.stun=.15;return;}
+   if(!clean&&dM<1&&(behind||crash>4.5||Math.random()<clamp(.14-sc*.5+(c.st.drib-p.st.def)/300,.04,.36))){this.foul(p,c,false,behind);return;}p.stun=clean?.3:.45;return;}
+  // الكورة بعدت عن الرجل لحظة التلامس (المهاجم سبق أو غيّر اتجاهه): التدخل فاته. الفاول بس لو المدافع خبط المهاجم فعلاً
+  if(!clean&&dM<1&&(behind||crash>4.5)){this.foul(p,c,false,behind);return;}
+  p.stun=clean?.3:.45;}
  winBall(p,c,keep){const b=this.ball;c.stats.lost++;p.stats.tk++;c.stun=.5;c.cool=.55;SFX.kick(.3);
   if(keep)this.take(p);else{b.owner=null;b.last=p;b.passFrom=null;const a=Math.atan2(p.fy,p.fx)+R(-.8,.8),sp=R(2.5,5);b.vx=Math.cos(a)*sp;b.vy=Math.sin(a)*sp;b.vz=0;p.cool=.1;}
   if(this.human&&p.team.idx===this.human.team)this.ev('tackle',{p},8);}

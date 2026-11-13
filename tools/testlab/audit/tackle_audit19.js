@@ -16,7 +16,9 @@ const SRC = fs.readFileSync(path.join(WWW, 'core.js'), 'utf8'), TKR = +((/const 
 vm.runInContext([fs.readFileSync(path.join(WWW, 'data.js'), 'utf8'), SRC].join('\n;\n') + `;var App={match:null,settings:{halfLen:120,diff:0}};globalThis.__G={Match,App};`, ctx);
 const G = ctx.__G, hyp = Math.hypot, r2 = v => Math.round(v * 1000) / 1000;
 const geo = (p, c, b) => { const dM = hyp(c.x - p.x, c.y - p.y) || .01, cosA = ((p.x - c.x) * c.fx + (p.y - c.y) * c.fy) / dM, dB = hyp(b.x - p.x, b.y - p.y), ux = (b.x - p.x) / (dB || 1), uy = (b.y - p.y) / (dB || 1);
-  return { dB: r2(dB), dM: r2(dM), angle: cosA > .5 ? 'front' : cosA < -.35 ? 'behind' : 'side', cosA: r2(cosA), ballToFoot: r2(hyp(b.x - c.x, b.y - c.y)), carrierSpeed: r2(hyp(c.vx, c.vy)), defSpeed: r2(hyp(p.vx, p.vy)), face: r2(p.fx * ux + p.fy * uy), stam: r2(p.stam) }; };
+  return { dB: r2(dB), dM: r2(dM), angle: cosA > .5 ? 'front' : cosA < -.35 ? 'behind' : 'side', cosA: r2(cosA), ballToFoot: r2(hyp(b.x - c.x, b.y - c.y)), carrierSpeed: r2(hyp(c.vx, c.vy)), defSpeed: r2(hyp(p.vx, p.vy)), face: r2(p.fx * ux + p.fy * uy), stam: r2(p.stam), ctrl: r2(ctrlOf(c, b)) }; };
+// attacker's control of the ball (same definition as dribCtrl in Phase 2.0 core; computed here for every version)
+function ctrlOf(c, b) { const e = hyp(b.x - c.x, b.y - c.y), sp = hyp(c.vx, c.vy); let k = Math.max(0, Math.min(1, (.95 - e) / .5)); if (sp > 1.2) { const ua = (c.anim || 0) / (2 * Math.PI), u = ((ua % 1) + 1) % 1, two = sp < 3.2 && !c.dHi, uT = c.dHi ? .42 : .05; let ph = ((u - uT) % 1 + 1) % 1; if (two && ph >= .5) ph -= .5; const phi = ph / (two ? .5 : 1); if (phi < .18 || phi > .88) k = Math.min(1, k + .25); } return k; }
 const OUT = { meta: { www: WWW, n: N, TKR, contactTime: /tkResolve/.test(SRC) }, tackles: [], fouls: { total: 0, standing: 0 }, matches: [] };
 for (let id = 1; id <= N; id++) {
   RNG.f = mulberry32(42);
@@ -34,10 +36,12 @@ for (let id = 1; id <= N; id++) {
     else if (p.tkL) open.set(p, { rec, c, s, t0: m.time }); else { rec.out = 'not_started'; OUT.tackles.push(rec); }
     return r;
   };
-  if (m.tkResolve) { const R0 = m.tkResolve.bind(m); m.tkResolve = function (p) { const o = open.get(p); if (!o) return R0(p); open.delete(p);
-    const c = o.c; o.rec.contact = geo(p, c, b); o.rec.leadSec = r2(m.time - o.t0); o.rec.ownerAtContact = b.owner === c ? 'carrier' : b.owner ? (b.owner.team === p.team ? 'teammate' : 'other_opponent') : 'none';
-    const r = R0(p);
+  let lastProb = null; if (m.tkProb) { const P0 = m.tkProb.bind(m); m.tkProb = function (...a) { const r = P0(...a); lastProb = r; return r; }; }
+  if (m.tkResolve) { const R0 = m.tkResolve.bind(m); m.tkResolve = function (p) { const o = open.get(p); if (!o) return R0(p); open.delete(p); lastProb = null;
+    const c = o.c; o.rec.contact = geo(p, c, b); o.rec.leadSec = r2(m.time - o.t0); o.rec.ownerAtContact = b.owner === c ? 'carrier' : b.owner === p ? 'tackler' : b.owner ? (b.owner.team === p.team ? 'teammate' : 'other_opponent') : 'none';
+    const r = R0(p); if (lastProb) o.rec.prob = { win: r2(lastProb.win), keep: r2(lastProb.keep), poke: r2(lastProb.poke), ctrl: r2(lastProb.ctrl) };
     if (o.rec.ownerAtContact === 'none') o.rec.out = b.owner === p ? 'collected_loose_ball' : 'ball_already_gone';
+    else if (o.rec.ownerAtContact === 'tackler') o.rec.out = 'won_by_contact_during_step';
     else if (o.rec.ownerAtContact !== 'carrier') o.rec.out = 'ball_already_gone';
     else o.rec.out = o.rec.contact.dB >= TKR && p.stats.fl === o.s.fl ? 'missed_out_of_reach' : outcome(p, c, o.s);
     OUT.tackles.push(o.rec); return r; }; }

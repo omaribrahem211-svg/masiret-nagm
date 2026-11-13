@@ -1,0 +1,77 @@
+{
+ "www": "../../../tmp/et/v18www",
+ "contactTime": false,
+ "runsPerCase": 60,
+ "cases": {
+  "press_square_at_0.9m": {
+   "runs": 60,
+   "pressed": 13,
+   "standingTackles": 13,
+   "slides": 0,
+   "noTackle": 47,
+   "framesFromPressToTackleStart_median": 1,
+   "commitmentSec_median": 0,
+   "won": 13,
+   "pokedLoose": 0,
+   "missedOutOfReach": 0,
+   "beatenAttackerKeeps": 0,
+   "fouls": 0
+  },
+  "press_square_at_1.3m": {
+   "runs": 60,
+   "pressed": 36,
+   "standingTackles": 36,
+   "slides": 0,
+   "noTackle": 24,
+   "framesFromPressToTackleStart_median": 1,
+   "commitmentSec_median": 0,
+   "won": 8,
+   "pokedLoose": 0,
+   "missedOutOfReach": 0,
+   "beatenAttackerKeeps": 28,
+   "fouls": 0
+  },
+  "press_square_at_1.8m": {
+   "runs": 60,
+   "pressed": 60,
+   "standingTackles": 60,
+   "slides": 0,
+   "noTackle": 0,
+   "framesFromPressToTackleStart_median": 1,
+   "commitmentSec_median": 0,
+   "won": 0,
+   "pokedLoose": 0,
+   "missedOutOfReach": 0,
+   "beatenAttackerKeeps": 60,
+   "fouls": 0
+  },
+  "press_square_at_1.3m_stick_follows_attacker_during_tackle": {
+   "runs": 60,
+   "pressed": 36,
+   "standingTackles": 36,
+   "slides": 0,
+   "noTackle": 24,
+   "framesFromPressToTackleStart_median": 1,
+   "commitmentSec_median": 0,
+   "won": 8,
+   "pokedLoose": 0,
+   "missedOutOfReach": 0,
+   "beatenAttackerKeeps": 28,
+   "fouls": 0
+  },
+  "hold_X_auto_tackle": {
+   "runs": 60,
+   "pressed": 0,
+   "standingTackles": 24,
+   "slides": 0,
+   "noTackle": 36,
+   "framesFromPressToTackleStart_median": 1,
+   "commitmentSec_median": 0,
+   "won": 19,
+   "pokedLoose": 0,
+   "missedOutOfReach": 0,
+   "beatenAttackerKeeps": 5,
+   "fouls": 0
+  }
+ }
+}

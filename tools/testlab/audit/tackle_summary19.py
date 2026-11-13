@@ -10,7 +10,7 @@ def bins(T, key, edges, labels):
     return out
 def summ(p):
     d = json.load(open(p)); T = d['tackles']
-    reached = [t for t in T if t['out'] not in ('ball_already_gone', 'not_started', 'cancelled')]
+    reached = [t for t in T if t['out'] not in ('ball_already_gone', 'not_started', 'cancelled')]  # won_by_contact_during_step counts as reached and won
     oc = C.Counter(t['out'] for t in T); won = sum(v for k, v in oc.items() if k.startswith('won'))
     cdist = [t['contact']['dB'] for t in reached]
     return dict(contactTimeModel=d['meta']['contactTime'], attempts=len(T), outcomes=dict(oc), successful=won,
@@ -20,6 +20,7 @@ def summ(p):
         byAngleAtContact=bins(reached, lambda t: {'front': 0, 'side': 1, 'behind': 2}[t['contact']['angle']], [0, 1, 2, 3], ['front', 'side', 'behind']),
         byBallToFoot=bins(reached, lambda t: t['contact']['ballToFoot'], [0, .5, .7, .9, 9], ['<0.5 m', '0.5-0.7 m', '0.7-0.9 m', '>0.9 m']),
         byAttackerSpeed=bins(reached, lambda t: t['contact']['carrierSpeed'], [0, 3, 6, 99], ['<3 m/s', '3-6 m/s', '>6 m/s']),
+        byAttackerControl=bins(reached, lambda t: t['contact'].get('ctrl', -1), [0, .34, .67, 1.01], ['loose (ctrl<0.34)', 'medium', 'tight (ctrl>0.67)']),
         byDefenderStamina=bins(reached, lambda t: t['contact']['stam'], [0, 50, 75, 101], ['<50', '50-75', '75-100']),
         fouls=oc.get('foul', 0), allFoulsInMatches=d['fouls']['total'])
 r = {k: summ(v) for k, v in (a.split('=', 1) for a in sys.argv[1:])}

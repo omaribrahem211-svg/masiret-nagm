@@ -66,4 +66,7 @@ scenario('09_attacker_changes_direction_during_tackle', (S, a, d) => { d.x = a.x
   const ang = Math.atan2(c.vy, c.vx) + (Math.random() < .5 ? 1.22 : -1.22), sp = Math.max(4, hyp(c.vx, c.vy)); c.vx = Math.cos(ang) * sp; c.vy = Math.sin(ang) * sp; c.fx = Math.cos(ang); c.fy = Math.sin(ang); m.ball.vx = c.vx; m.ball.vy = c.vy; } });
 scenario('10_defender_off_balance', (S, a, d) => { d.x = a.x + S.sx * 1.6; d.y = a.y + .2; d.fx = -S.sx; d.stun = .5; });
 scenario('11_low_stamina_defender', (S, a, d) => { d.x = a.x + S.sx * 3; d.y = a.y + .3; d.fx = -S.sx; d.stam = 15; d.mse = d.ms * (.86 + .14 * .15); });
+// Phase 2.0 additions: stamina levels and long attacking touches
+for (const st of [100, 60, 30]) scenario(`12_front_defender_stamina_${st}`, (S, a, d) => { d.x = a.x + S.sx * 3; d.y = a.y + .3; d.fx = -S.sx; d.stam = st; d.mse = d.ms * (.86 + .14 * st / 100); });
+scenario('13_long_touch_ball_1_4m_ahead', (S, a, d) => { d.x = a.x + S.sx * 3.2; d.y = a.y + .4; d.fx = -S.sx; return { ballAhead: 1.4 }; });
 console.log(JSON.stringify({ www: path.relative(process.cwd(), WWW), contactTime: CONTACT, TKR, runsPerScenario: K, scenarios: results }, null, 1));

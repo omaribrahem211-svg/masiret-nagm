@@ -328,13 +328,13 @@ class R3D{
   const CM=+((typeof App!=='undefined'&&App.settings&&App.settings.cam)||0),hu=m.human,stp=m.t&&m.t[0].star&&!m.t[0].star.off&&m.t[0].pl.includes(m.t[0].star)?m.t[0].star:null;
   // في وضع "لاعبي بس" أو كاميرا اللاعب: الكاميرا بتجمع بين الكورة ولاعبك عشان يفضل باين دايماً
   const follow=stp&&!cel&&m.phase!=='intro'&&(CM===3||(hu&&hu.lock));const fw=CM===3?.75:.42;
-  const fx0=cel?cel.x:follow?stp.x*fw+(b.x+c3.lx)*(1-fw):b.x+c3.lx,fy0=cel?cel.y:follow?stp.y*fw+b.y*(1-fw):b.y;const tx=clamp(fx0,7,L-7),ty=clamp(fy0,cel?4:14,W-12);SD('x',tx,.42);SD('y',ty,.6);
+  const fx0=cel?cel.x:follow?stp.x*fw+(b.x+c3.lx)*(1-fw):b.x+c3.lx,fy0=cel?cel.y:follow?stp.y*fw+b.y*(1-fw):b.y;const tx=clamp(fx0+(cel||m.phase!=='play'?0:3.2),10,L-10),ty=clamp(fy0,cel?4:14,W-12);SD('x',tx,.42);SD('y',ty,.6);
   const aspect=w/h,zoomK=aspect<1.5?1.25:1;let eye,tgt,wf;
   if(m.phase==='intro'){const a=t/1000*.22+(c3.a0||(c3.a0=Math.random()*6));eye=[CX+Math.cos(a)*86,30+Math.sin(a*.6)*5,-CY+Math.sin(a)*52];tgt=[CX,2,-CY];wf=aspect<1.5?50:38;c3.f=wf;}
   else if(m.phase==='replay'){const d=m.rpDir||1;const wantE=[b.x-d*12,3.4,-b.y+11],wantT=[b.x+d*3,1,-b.y];if(!c3.re){c3.re=wantE.slice();c3.rt=wantT.slice();}for(let i=0;i<3;i++){c3.re[i]+=(wantE[i]-c3.re[i])*Math.min(1,dt*3);c3.rt[i]+=(wantT[i]-c3.rt[i])*Math.min(1,dt*4);}eye=c3.re.slice();tgt=c3.rt.slice();wf=aspect<1.5?44:34;c3.f=wf;}
   else if(CM===3&&follow){c3.re=null;const dir=m.t[0].dir;SD('pd',dir,1.2);const d=c3.pd;// كاميرا ورا لاعبك (زي وضع احترف)
    eye=[c3.x-d*12.5,7.6,-c3.y+1.2];tgt=[c3.x+d*5.5,-0.6,-c3.y];wf=aspect<1.5?62:50;c3.f=c3.f||wf;c3.f+=(wf-c3.f)*Math.min(1,dt*1.5);}
-  else{c3.re=null;const H=CM===1?9.6:CM===2?19:13.5,Dz=CM===1?14.5:CM===2?28:21,fk=CM===1?.88:CM===2?1.12:1;eye=[c3.x,H*zoomK,Dz*zoomK-(c3.y-34)*0.28];tgt=[c3.x,0.6,-(c3.y*0.88+3.5)];wf=(aspect<1.5?34:23)*fk*(cel?0.62:c3.zk);c3.f=c3.f||wf;c3.f+=(wf-c3.f)*Math.min(1,dt*1.5);}
+  else{c3.re=null;const H=CM===1?9.6:CM===2?19:16.5,Dz=CM===1?14.5:CM===2?28:21.5,fk=CM===1?.88:CM===2?1.12:1;eye=[c3.x,H*zoomK,Dz*zoomK-(c3.y-34)*0.28];tgt=[c3.x,0.6,-(c3.y*0.88+3.5)];wf=(aspect<1.5?34:21)*fk*(cel?0.62:c3.zk);c3.f=c3.f||wf;c3.f+=(wf-c3.f)*Math.min(1,dt*1.5);}
   if(this.debugCam){eye=this.debugCam.eye.slice();tgt=this.debugCam.tgt.slice();c3.f=this.debugCam.fov;}
   if(m.shake>0){const k=m.shake*.45;eye[0]+=R(-k,k);eye[1]+=R(-k,k)*.6;tgt[1]+=R(-k,k)*.3;}
   M4.look(this.V,eye,tgt,[0,1,0]);M4.persp(this.Pm,c3.f*Math.PI/180,aspect,1,600);M4.mul(this.VP,this.Pm,this.V);this.eye=eye;

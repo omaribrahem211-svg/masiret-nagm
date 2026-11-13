@@ -1,0 +1,4 @@
+623c623
+<   if(wasT&&!wasX&&!p.hdrShot&&pr>1.6){p.cool=.18;const bv=hyp(b.vx,b.vy)||1;b.vx=p.fx*1.6+b.vx/bv*.4;b.vy=p.fy*1.6+b.vy/bv*.4;b.vz=1.4;b.target=p;b.passT=this.time;p.cushT=.4;return;}
+---
+>   if(false&&wasT&&!wasX&&!p.hdrShot&&pr>1.6){p.cool=.18;const bv=hyp(b.vx,b.vy)||1;b.vx=p.fx*1.6+b.vx/bv*.4;b.vy=p.fy*1.6+b.vy/bv*.4;b.vz=1.4;b.target=p;b.passT=this.time;p.cushT=.4;return;}

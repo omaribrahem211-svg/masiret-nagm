@@ -1,0 +1,204 @@
+{
+ "penalty": [
+  {
+   "defendingTeam": 0,
+   "label": "deep inside",
+   "depth": 5,
+   "lat": 0,
+   "decision": "pen",
+   "expected": "pen",
+   "ok": true
+  },
+  {
+   "defendingTeam": 0,
+   "label": "just inside front line",
+   "depth": 16.4,
+   "lat": 0,
+   "decision": "pen",
+   "expected": "pen",
+   "ok": true
+  },
+  {
+   "defendingTeam": 0,
+   "label": "just outside front line",
+   "depth": 16.6,
+   "lat": 0,
+   "decision": "fk",
+   "expected": "fk",
+   "ok": true
+  },
+  {
+   "defendingTeam": 0,
+   "label": "just inside side line",
+   "depth": 10,
+   "lat": 20.1,
+   "decision": "pen",
+   "expected": "pen",
+   "ok": true
+  },
+  {
+   "defendingTeam": 0,
+   "label": "just outside side line",
+   "depth": 10,
+   "lat": 20.3,
+   "decision": "fk",
+   "expected": "fk",
+   "ok": true
+  },
+  {
+   "defendingTeam": 0,
+   "label": "clearly outside",
+   "depth": 25,
+   "lat": 5,
+   "decision": "fk",
+   "expected": "fk",
+   "ok": true
+  },
+  {
+   "defendingTeam": 1,
+   "label": "deep inside",
+   "depth": 5,
+   "lat": 0,
+   "decision": "pen",
+   "expected": "pen",
+   "ok": true
+  },
+  {
+   "defendingTeam": 1,
+   "label": "just inside front line",
+   "depth": 16.4,
+   "lat": 0,
+   "decision": "pen",
+   "expected": "pen",
+   "ok": true
+  },
+  {
+   "defendingTeam": 1,
+   "label": "just outside front line",
+   "depth": 16.6,
+   "lat": 0,
+   "decision": "fk",
+   "expected": "fk",
+   "ok": true
+  },
+  {
+   "defendingTeam": 1,
+   "label": "just inside side line",
+   "depth": 10,
+   "lat": 20.1,
+   "decision": "pen",
+   "expected": "pen",
+   "ok": true
+  },
+  {
+   "defendingTeam": 1,
+   "label": "just outside side line",
+   "depth": 10,
+   "lat": 20.3,
+   "decision": "fk",
+   "expected": "fk",
+   "ok": true
+  },
+  {
+   "defendingTeam": 1,
+   "label": "clearly outside",
+   "depth": 25,
+   "lat": 5,
+   "decision": "fk",
+   "expected": "fk",
+   "ok": true
+  }
+ ],
+ "cards": [
+  {
+   "label": "standing foul, midfield, first foul",
+   "got": "none",
+   "expected": "none",
+   "ok": true
+  },
+  {
+   "label": "standing foul from behind, midfield",
+   "got": "none",
+   "expected": "none",
+   "ok": true
+  },
+  {
+   "label": "slide from behind, midfield",
+   "got": "yellow",
+   "expected": "yellow",
+   "ok": true
+  },
+  {
+   "label": "slide at speed, midfield",
+   "got": "yellow",
+   "expected": "yellow",
+   "ok": true
+  },
+  {
+   "label": "third foul by the same player",
+   "got": "yellow",
+   "expected": "yellow",
+   "ok": true
+  },
+  {
+   "label": "last man, standing, 25 m out (DOGSO)",
+   "got": "yellow",
+   "expected": "yellow",
+   "ok": true
+  },
+  {
+   "label": "last man, slide from behind (DOGSO)",
+   "got": "red",
+   "expected": "red",
+   "ok": true
+  },
+  {
+   "label": "second yellow",
+   "got": "red",
+   "expected": "red",
+   "ok": true
+  }
+ ],
+ "offside": [
+  {
+   "label": "clearly offside (+3 m)",
+   "flaggedAtPass": true,
+   "called": true,
+   "receivedBy": null,
+   "expected": true,
+   "ok": true
+  },
+  {
+   "label": "offside (+1 m)",
+   "flaggedAtPass": true,
+   "called": true,
+   "receivedBy": null,
+   "expected": true,
+   "ok": true
+  },
+  {
+   "label": "level within 0.4 m tolerance",
+   "flaggedAtPass": false,
+   "called": false,
+   "receivedBy": "receiver",
+   "expected": false,
+   "ok": true
+  },
+  {
+   "label": "onside (-2 m)",
+   "flaggedAtPass": false,
+   "called": false,
+   "receivedBy": "receiver",
+   "expected": false,
+   "ok": true
+  },
+  {
+   "label": "beyond line but behind the ball",
+   "flaggedAtPass": false,
+   "called": false,
+   "receivedBy": "receiver",
+   "expected": false,
+   "ok": true
+  }
+ ]
+}

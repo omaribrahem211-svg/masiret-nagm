@@ -14,6 +14,7 @@ const N = +(A.n || 100), SEED0 = +(A.seed || 1000), HALF = +(A.half || 120), TEA
 const WWW = path.resolve(A.www || path.join(__dirname, '../../www/js'));
 const OUT = A.out ? path.resolve(A.out) : null, LABEL = A.label || 'run', ONLY = A.only ? A.only.split(',').map(Number) : null;
 const DT = 1 / 60;
+const VAR = { swap: !!A.swap, mirror: A.mirror != null ? +A.mirror : null, kick: A.kick != null ? +A.kick : null, order: !!A.order };
 
 // ---------- seeded RNG (mulberry32) ----------
 function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
@@ -52,6 +53,15 @@ function runMatch(id, seed) {
   RNG.f = mulberry32(TEAM_SEED); // identical squads, attributes and kick-off in every match
   const m = new G.Match({ home: { name: 'Lab Home', kit: 3, R: 75, nm: 'ar' }, away: { name: 'Lab Away', kit: 0, R: 75, nm: 'en' }, human: null, halfLen: HALF, intro: false, onEvent: (t, d) => onEv(t, d), onEnd: () => {} });
   G.App.match = m;
+  // controlled-test variants (lab only; applied before kick-off, never during play)
+  if (VAR.swap || VAR.mirror != null) {
+    const attrs = p => ({ st: JSON.parse(JSON.stringify(p.st)), ms: p.ms, mse: p.mse, lefty: p.lefty });
+    const A0 = [...m.t[0].pl, ...m.t[0].bench].map(attrs), A1 = [...m.t[1].pl, ...m.t[1].bench].map(attrs);
+    const put = (t, arr) => [...t.pl, ...t.bench].forEach((p, i) => Object.assign(p, JSON.parse(JSON.stringify(arr[i]))));
+    if (VAR.swap) { put(m.t[0], A1); put(m.t[1], A0); } else { const src = VAR.mirror === 0 ? A0 : A1; put(m.t[0], src); put(m.t[1], src); }
+  }
+  if (VAR.kick != null && m.firstKick !== VAR.kick) { m.firstKick = VAR.kick; m.kickoff(m.firstKick); }
+  if (VAR.order) { m.t.reverse(); m.t.forEach((t, i) => t.idx = i); m.all = [...m.t[0].pl, ...m.t[1].pl]; }
   RNG.f = mulberry32(seed); // everything that happens in the match comes from this seed
   const S = {
     id, seed, label: LABEL, core: coreHash, ok: false, error: null, endedNormally: false, frames: 0, playSec: 0, gameMin: 0,
@@ -325,7 +335,7 @@ for (const id of ids) {
   res.push(S);
   if (!A.quiet) process.stderr.write(`#${id} seed ${seed} ${S.ok ? 'ok' : 'FAIL'} ${S.score.join('-')} ${S.error || ''}\n`);
 }
-const meta = { label: LABEL, core: coreHash, www: path.relative(process.cwd(), WWW), halfLenSec: HALF, dt: DT, teamSeed: TEAM_SEED, seedBase: SEED0, matches: res.length, completed: res.filter(r => r.ok).length, wallSec: Math.round((Date.now() - t0) / 1000), poseMeasure: poseOK, node: process.version, at: new Date().toISOString() };
+const meta = { variant: VAR, label: LABEL, core: coreHash, www: path.relative(process.cwd(), WWW), halfLenSec: HALF, dt: DT, teamSeed: TEAM_SEED, seedBase: SEED0, matches: res.length, completed: res.filter(r => r.ok).length, wallSec: Math.round((Date.now() - t0) / 1000), poseMeasure: poseOK, node: process.version, at: new Date().toISOString() };
 if (OUT) { fs.mkdirSync(OUT, { recursive: true }); fs.writeFileSync(path.join(OUT, 'matches.json'), JSON.stringify({ meta, matches: res })); }
 else process.stdout.write(JSON.stringify({ meta, matches: res }));
 process.stderr.write(`done ${meta.completed}/${meta.matches} in ${meta.wallSec}s\n`);

@@ -1,0 +1,287 @@
+{
+ "www": "../../../tmp/et/i1www",
+ "hasShotRecord": false,
+ "runsPerScenario": 60,
+ "scenarios": {
+  "A_defender_in_lane_block": {
+   "runs": 60,
+   "outcomes": {},
+   "flags": {
+    "deflected": 0,
+    "deflectedOnTarget": 0,
+    "gkTouched": 0,
+    "wood": 0,
+    "fumble": 0
+   },
+   "problems": [
+    {
+     "run": 30,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    }
+   ],
+   "goals": 2,
+   "ownGoals": 0,
+   "secondShots": 0,
+   "deliberateShots": 88,
+   "gameShots": 89,
+   "duplicateShots": 1,
+   "goalsWithoutShot": 0,
+   "problemCount": 1
+  },
+  "B_clear_shot_on_target": {
+   "runs": 60,
+   "outcomes": {},
+   "flags": {
+    "deflected": 0,
+    "deflectedOnTarget": 0,
+    "gkTouched": 0,
+    "wood": 0,
+    "fumble": 0
+   },
+   "problems": [
+    {
+     "run": 9,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 25,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 27,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 32,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 40,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 42,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    }
+   ],
+   "goals": 26,
+   "ownGoals": 0,
+   "secondShots": 0,
+   "deliberateShots": 87,
+   "gameShots": 94,
+   "duplicateShots": 7,
+   "goalsWithoutShot": 0,
+   "problemCount": 7
+  },
+  "C_defender_off_lane_deflection": {
+   "runs": 60,
+   "outcomes": {},
+   "flags": {
+    "deflected": 0,
+    "deflectedOnTarget": 0,
+    "gkTouched": 0,
+    "wood": 0,
+    "fumble": 0
+   },
+   "problems": [
+    {
+     "run": 30,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 44,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    }
+   ],
+   "goals": 9,
+   "ownGoals": 0,
+   "secondShots": 0,
+   "deliberateShots": 71,
+   "gameShots": 74,
+   "duplicateShots": 2,
+   "goalsWithoutShot": 1,
+   "problemCount": 2
+  },
+  "D_ball_passes_near_defender_no_contact": {
+   "runs": 60,
+   "outcomes": {},
+   "flags": {
+    "deflected": 0,
+    "deflectedOnTarget": 0,
+    "gkTouched": 0,
+    "wood": 0,
+    "fumble": 0
+   },
+   "problems": [
+    {
+     "run": 2,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 37,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 40,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 44,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    }
+   ],
+   "goals": 5,
+   "ownGoals": 0,
+   "secondShots": 0,
+   "deliberateShots": 67,
+   "gameShots": 71,
+   "duplicateShots": 4,
+   "goalsWithoutShot": 0,
+   "problemCount": 4
+  },
+  "E_wide_shot_defender_at_post": {
+   "runs": 60,
+   "outcomes": {},
+   "flags": {
+    "deflected": 0,
+    "deflectedOnTarget": 0,
+    "gkTouched": 0,
+    "wood": 0,
+    "fumble": 0
+   },
+   "problems": [
+    {
+     "run": 9,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    }
+   ],
+   "goals": 7,
+   "ownGoals": 5,
+   "secondShots": 0,
+   "deliberateShots": 70,
+   "gameShots": 71,
+   "duplicateShots": 1,
+   "goalsWithoutShot": 0,
+   "problemCount": 1
+  },
+  "F_rebound_no_reshoot": {
+   "runs": 60,
+   "outcomes": {},
+   "flags": {
+    "deflected": 0,
+    "deflectedOnTarget": 0,
+    "gkTouched": 0,
+    "wood": 0,
+    "fumble": 0
+   },
+   "problems": [
+    {
+     "run": 9,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 25,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 27,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 32,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 40,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 45,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    }
+   ],
+   "goals": 31,
+   "ownGoals": 0,
+   "secondShots": 0,
+   "deliberateShots": 85,
+   "gameShots": 91,
+   "duplicateShots": 6,
+   "goalsWithoutShot": 0,
+   "problemCount": 6
+  },
+  "G_rebound_then_deliberate_reshoot": {
+   "runs": 60,
+   "outcomes": {},
+   "flags": {
+    "deflected": 0,
+    "deflectedOnTarget": 0,
+    "gkTouched": 0,
+    "wood": 0,
+    "fumble": 0
+   },
+   "problems": [
+    {
+     "run": 9,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 16,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 25,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 27,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 32,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 40,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    }
+   ],
+   "goals": 34,
+   "ownGoals": 0,
+   "secondShots": 22,
+   "deliberateShots": 89,
+   "gameShots": 96,
+   "duplicateShots": 7,
+   "goalsWithoutShot": 0,
+   "problemCount": 7
+  },
+  "H_aim_at_post": {
+   "runs": 60,
+   "outcomes": {},
+   "flags": {
+    "deflected": 0,
+    "deflectedOnTarget": 0,
+    "gkTouched": 0,
+    "wood": 0,
+    "fumble": 0
+   },
+   "problems": [
+    {
+     "run": 9,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    },
+    {
+     "run": 42,
+     "issue": "goal added 1 extra shot(s) for a shot already counted"
+    }
+   ],
+   "goals": 17,
+   "ownGoals": 0,
+   "secondShots": 0,
+   "deliberateShots": 75,
+   "gameShots": 77,
+   "duplicateShots": 2,
+   "goalsWithoutShot": 0,
+   "problemCount": 2
+  }
+ }
+}

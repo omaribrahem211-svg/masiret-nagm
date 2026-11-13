@@ -227,7 +227,7 @@ function runMatch(id, seed) {
     if (c.prev && m.phase === 'restart') anom('restart_overridden', c.prev + ' -> ' + k);
   });
   wrap('kickoff', null, () => { S.rules.kickoff++; if (pend && !pend.res) finishPass('other'); if (shot && !shot.res) resolveShot('other'); if (loose) endLoose(); });
-  wrap('offsideCall', (p) => ({ p }), (c) => { S.offsideBy[lastPassType] = (S.offsideBy[lastPassType] || 0) + 1; S.rules.offside[T(c.p)]++; evt('offside', { team: T(c.p), by: c.p.name }); });
+  wrap('offsideCall', (p) => ({ p }), (c) => { S.offsideBy[lastPassType] = (S.offsideBy[lastPassType] || 0) + 1; S.rules.offside[T(c.p)]++; evt('offside', { team: T(c.p), by: c.p.name, passType: lastPassType }); });
   wrap('foul', (p, c, slide) => ({ p, c, slide, yc: p.stats.yc, rc: p.stats.rc, adv: m.ball.owner === c, pens: S.rules.pen }), (o) => {
     const ti = T(o.p); S.rules.fouls[ti]++; if (o.p.stats.yc > o.yc) S.rules.yellow[ti]++; if (o.p.stats.rc > o.rc) S.rules.red[ti]++;
     if (S.rules.pen > o.pens) S.rules.pens[1 - ti]++;

@@ -1,0 +1,101 @@
+{
+ "www": "../../../tmp/et/i1www",
+ "passed": 12,
+ "total": 12,
+ "tests": [
+  {
+   "test": "1 header pass to an offside teammate who becomes involved (+3 m)",
+   "expectedOffside": true,
+   "offsideCalled": true,
+   "ok": true,
+   "headerPassTo": "Q",
+   "qInOffsidePositionWhenHeaded": true,
+   "receivedBy": null
+  },
+  {
+   "test": "2 header pass to an onside teammate (−2 m)",
+   "expectedOffside": false,
+   "offsideCalled": false,
+   "ok": true,
+   "headerPassTo": "Q",
+   "qInOffsidePositionWhenHeaded": false,
+   "receivedBy": "Q"
+  },
+  {
+   "test": "3 header pass to a teammate level with the second-last opponent (+0.2 m, within 0.4 m tolerance)",
+   "expectedOffside": false,
+   "offsideCalled": false,
+   "ok": true,
+   "headerPassTo": "Q",
+   "qInOffsidePositionWhenHeaded": false,
+   "receivedBy": "Q"
+  },
+  {
+   "test": "3b header pass to a teammate in his own half (halfway-line rule)",
+   "expectedOffside": false,
+   "offsideCalled": false,
+   "ok": true,
+   "headerPassTo": "none",
+   "qInOffsidePositionWhenHeaded": false,
+   "receivedBy": "DF"
+  },
+  {
+   "test": "4 defensive header: defender deliberately heads a pass meant for an offside forward, forward then collects",
+   "expectedOffside": false,
+   "offsideCalled": false,
+   "ok": true,
+   "flaggedAfterPass": true,
+   "flaggedAfterDefenderHeader": false
+  },
+  {
+   "test": "5 header pass to an offside teammate deflects off a defender, teammate collects",
+   "expectedOffside": true,
+   "offsideCalled": true,
+   "ok": true,
+   "flaggedAfterHeader": true
+  },
+  {
+   "test": "6 offside-position teammate who does not interfere (pass goes to an onside teammate)",
+   "expectedOffside": false,
+   "offsideCalled": false,
+   "ok": true,
+   "headerPassTo": "onside Q2",
+   "receivedBy": "Q2"
+  },
+  {
+   "test": "7 ground pass to an offside teammate (+3 m)",
+   "expectedOffside": true,
+   "offsideCalled": true,
+   "ok": true,
+   "receivedBy": null
+  },
+  {
+   "test": "8 ground pass to an onside teammate (−2 m)",
+   "expectedOffside": false,
+   "offsideCalled": false,
+   "ok": true,
+   "receivedBy": "Q"
+  },
+  {
+   "test": "9 lofted pass to an offside teammate (+3 m)",
+   "expectedOffside": true,
+   "offsideCalled": true,
+   "ok": true,
+   "receivedBy": null
+  },
+  {
+   "test": "10 lofted pass to an onside teammate (−2 m)",
+   "expectedOffside": false,
+   "offsideCalled": false,
+   "ok": true,
+   "receivedBy": "Q"
+  },
+  {
+   "test": "11 offside receiver of a lofted pass plays it with his head",
+   "expectedOffside": true,
+   "offsideCalled": true,
+   "ok": true,
+   "flaggedAtPass": true
+  }
+ ]
+}

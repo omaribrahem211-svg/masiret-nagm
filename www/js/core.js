@@ -615,7 +615,11 @@ class Match{
   if(b.target!==best&&sp>7&&b.last&&b.last.team!==best.team&&!this.restartKind){const dd=fast&&b.z<1.25?segDist(best.x,best.y,b.px,b.py,b.x,b.y):hyp(best.x-b.x,best.y-b.y);const facing=((b.x-best.x)*best.fx+(b.y-best.y)*best.fy)/(dd||1);
    const pI=clamp(1.08-(sp-7)/24-dd*.42+(best.st.def-60)/180+(facing>0?.08:-.1),.18,.96);if(Math.random()>pI){best.cool=.45;if(Math.random()<.55){const a=Math.atan2(b.vy,b.vx)+R(-.9,.9),s2=sp*R(.35,.6);b.vx=Math.cos(a)*s2;b.vy=Math.sin(a)*s2;b.vz=R(0,1.2);b.last=best;b.target=null;b.passFrom=null;SFX.kick(.3);}return;}}
   this.take(best);}
- header(p){const b=this.ball,t=p.team,g=this.attG(t),og=this.ownG(t);const wasT=b.target===p,ownBall=b.last&&b.last.team===t,wasX=!!b.cross;p.hdrHi=b.z>1.85;p.jumpT=.45;p.cool=.35;b.last=p;b.target=null;b.passFrom=null;SFX.kick(.4);
+ header(p){const b=this.ball;
+  // التسلل: لو اللاعب المتسلل هو اللي لعب الكورة (براسه) يبقى اشترك في اللعب → تسلل. أي لعبة راس مقصودة من حد تاني بتلغي الحالة القديمة
+  // (الخصم لعبها بقصد، أو زميل لعبها لعبة جديدة بتتقيّم من الأول). اللمسات العرضية (ارتداد) مش بتعدي من هنا فالحالة بتفضل
+  if(b.offside){if(b.offside===p){this.offsideCall(p);return;}b.offside=null;}
+  const t=p.team,g=this.attG(t),og=this.ownG(t);const wasT=b.target===p,ownBall=b.last&&b.last.team===t,wasX=!!b.cross;p.hdrHi=b.z>1.85;p.jumpT=.45;p.cool=.35;b.last=p;b.target=null;b.passFrom=null;SFX.kick(.4);
   const dG=hyp(g[0]-p.x,g[1]-p.y),h=this.human;const wants=p.hdrShot||(h&&p===h.ctrl?Input.hold.S||Input.hold.O||dG<14:true);
   if((dG<17||p.hdrShot&&dG<24)&&wants){const ty=CY+R(-3,3)*(1.15-p.st.shot/100)+(Math.random()<.5?-2:2);const dx=g[0]-p.x,dy=ty-p.y,d=hyp(dx,dy)||1;const s2=12+p.st.phys/100*5;b.vx=dx/d*s2;b.vy=dy/d*s2;b.vz=R(-1,1.5);b.shot={by:p,t:this.time,hdr:true,d:dG};p.stats.sh++;this.shotsT[t.idx]++;this.ev('shot',{p});return;}
   let pr=99;for(const q of this.other(t).pl)pr=Math.min(pr,hyp(q.x-p.x,q.y-p.y));
@@ -626,7 +630,7 @@ class Match{
   if(hyp(og[0]-p.x,og[1]-p.y)<30&&!(ownBall&&hyp(og[0]-p.x,og[1]-p.y)>22)){const dx=p.x-og[0],dy=p.y-og[1],d=hyp(dx,dy)||1;b.vx=dx/d*14;b.vy=dy/d*14;b.vz=4.5;return;}
   // تمريرة بالراس لأقرب زميل مناسب قدامه بدل ما يخبطها في أي اتجاه
   let bq=null,bs=-1e9;for(const q of t.pl){if(q===p||q.role==='GK'||q.off)continue;const dx=q.x-p.x,dy=q.y-p.y,d=hyp(dx,dy);if(d<5||d>24)continue;let opp=99;for(const o of this.other(t).pl)opp=Math.min(opp,hyp(o.x-q.x,o.y-q.y));const fw=(dx*t.dir)/d;const sc=fw*6-Math.abs(d-12)*.25+Math.min(opp,6)*1.2+((dx*p.fx+dy*p.fy)/d)*3;if(sc>bs){bs=sc;bq=q;}}
-  if(bq){const dx=bq.x-p.x,dy=bq.y-p.y,d=hyp(dx,dy);const s2=clamp(6+d*.45,8,15),T=d/s2;b.vx=dx/d*s2;b.vy=dy/d*s2;b.vz=Math.max(1.5,4.9*T-b.z/T);b.target=bq;b.passer=p;b.passT=this.time;b.passFrom=p;return;}
+  if(bq){const offs=this.isOffside(bq,p);const dx=bq.x-p.x,dy=bq.y-p.y,d=hyp(dx,dy);const s2=clamp(6+d*.45,8,15),T=d/s2;b.vx=dx/d*s2;b.vy=dy/d*s2;b.vz=Math.max(1.5,4.9*T-b.z/T);b.target=bq;b.passer=p;b.passT=this.time;b.passFrom=p;b.offside=offs?bq:null;return;}
   b.vx=p.fx*10;b.vy=p.fy*10;b.vz=2.5;}
  bounds(){const b=this.ball;if(this.walk||b.owner&&this.restartKind)return;
   if(b.x<0||b.x>L){const side=b.x<0?0:1;const defT=this.t.find(t=>(t.dir===1)===(side===0));const def=defT.idx;

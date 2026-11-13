@@ -111,8 +111,8 @@ the "full reception" definition, not first contact.
 **Code paths.**
 * `foul()` core.js:392–410 decides penalty or free kick from the **fouled player's** position (box 16.5 × 40.32 m,
   core.js:407).
-* Advantage (core.js:404) is never applied inside the box, so every box foul becomes a penalty, while 36% of
-  outside fouls are played on.
+* Advantage (core.js:404) is never applied inside the box, so every box foul becomes a penalty, while 43% of
+  outside fouls (51 of 118) are played on.
 * Foul sources:
   * `collide()` body contact, core.js:563: a foul with probability 0.33 if the challenger arrives from behind,
     else 0.14 if the closing speed is above 4.2 m/s;

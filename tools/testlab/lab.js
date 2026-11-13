@@ -71,6 +71,8 @@ function runMatch(id, seed) {
       gkThrow: [0, 0], restartPass: [0, 0], recvTurnover: [0, 0], recvKept: [0, 0], flight: [] },
     shot: { n: [0, 0], goal: [0, 0], saved: [0, 0], gkTouch: [0, 0], off: [0, 0], wood: [0, 0], blocked: [0, 0], other: [0, 0], inBox: [0, 0], outBox: [0, 0], goalsInBox: [0, 0], goalsOutBox: [0, 0], header: [0, 0], pen: [0, 0], penGoal: [0, 0], goalAfterTouch: [0, 0], firstTime: [0, 0], dist: [], goalKinds: {} },
     gk: { saves: [0, 0], smother: [0, 0], conceded: [0, 0], dives: [0, 0], parries: [0, 0], catches: [0, 0], reboundsToAtt: [0, 0], reboundShots: [0, 0], reachD: [], bodyD: [], suspicious: [] },
+    hdr: { total: 0, shot: 0, cushion: 0, pass: 0, clear: 0, chains3: 0, maxChain: 0, maxSame: 0, loops: 0, loopSec: 0, worst: null },
+    stam: { at45: null, at90: null, end: null },
     ball: { looseN: 0, looseSec: 0, looseDur: [], highEpisodes: 0, ownedFrames: [0, 0] },
     pos: { samples: 0, mateDist: [0, 0], crowd5: 0, crowd6plus: 0, far40: [0, 0], support: [0, 0], supportN: [0, 0], overlapPairs: 0, overlapSamples: 0, overlapLong: 0, strandedDF: [0, 0], recov: [], turnovers: 0, caughtOut: 0 },
     def: { tackles: [0, 0], tklWon: [0, 0], tklFoul: [0, 0], tklFail: [0, 0], slides: [0, 0], slideWon: [0, 0], slideFoul: [0, 0], slideMiss: [0, 0], steals: [0, 0], interceptions: [0, 0], blocks: [0, 0], recoveries: [0, 0] },
@@ -174,7 +176,21 @@ function runMatch(id, seed) {
     if (c.off) { if (pend) finishPass('offside'); return; }
     if (pend && !pend.res && p !== pend.p) finishPass(T(p) === pend.ti ? (p === pend.q ? 'intended' : 'teammate') : 'intercepted', p);
   });
-  wrap('header', (p) => ({ shot0: m.ball.shot }), (c, p) => {
+  // ---- header loop detector: consecutive headers with no possession and no ground contact in between ----
+  let hc = null; // current header chain
+  const closeChain = () => { if (!hc) return; const H = S.hdr; if (hc.n >= 3) H.chains3++; if (hc.n > H.maxChain) H.maxChain = hc.n;
+    const prog = hyp(hc.lx - hc.x0, hc.ly - hc.y0), span = hc.lt - hc.t0;
+    // aerial loop: the same player heads it 3+ times in a row, or 4+ headers that move the ball less than 5 m
+    if (hc.maxSame >= 3 || (hc.n >= 4 && prog < 5)) { H.loops++; H.loopSec += span; }
+    if (!H.worst || hc.maxSame > H.worst.maxSame || (hc.maxSame === H.worst.maxSame && hc.n > H.worst.n)) H.worst = { min: hc.min, t: r2(hc.t0), n: hc.n, maxSame: hc.maxSame, player: hc.maxP, progression: r2(prog), seconds: r2(span) };
+    hc = null; };
+  wrap('header', (p) => ({ shot0: m.ball.shot, b0: { x: m.ball.x, y: m.ball.y } }), (c, p) => {
+    { const b = m.ball, H = S.hdr; H.total++;
+      const kind = b.shot && b.shot !== c.shot0 ? 'shot' : b.target === p ? 'cushion' : (b.target && b.target.team === p.team) ? 'pass' : 'clear'; H[kind]++;
+      if (hc && (now() - hc.lt > 1.5)) closeChain();
+      if (!hc) hc = { t0: now(), min: mn(), x0: c.b0.x, y0: c.b0.y, n: 0, lastP: null, same: 0, maxSame: 0, maxP: null };
+      hc.n++; hc.same = hc.lastP === p ? hc.same + 1 : 1; hc.lastP = p; if (hc.same > hc.maxSame) { hc.maxSame = hc.same; hc.maxP = p.name; }
+      hc.lt = now(); hc.lx = c.b0.x; hc.ly = c.b0.y; if (hc.maxSame > H.maxSame) H.maxSame = hc.maxSame; }
     if (pend && !pend.res && p !== pend.p) finishPass(T(p) === pend.ti ? (p === pend.q ? 'intended' : 'teammate') : 'intercepted', p);
     if (shot && !shot.res && c.shot0 === shot.obj && T(p) !== shot.ti) resolveShot('blocked');
     if (m.ball.shot && m.ball.shot !== lastShotObj) { lastShotObj = m.ball.shot; newShot(m.ball.shot); }
@@ -257,6 +273,8 @@ function runMatch(id, seed) {
       }
       if (rcv && now() - rcv.t > 3) { S.pass.recvKept[rcv.ti]++; rcv = null; }
       if (ot >= 0) lastOwnerTeam = ot;
+      if (hc && (b.owner || b.z < .03 || now() - hc.lt > 1.5)) closeChain();
+      if (S.frames % 60 === 0) { const mnn = mn(), av = () => r2(m.all.filter(p => p.role !== 'GK').reduce((a, p) => a + p.stam, 0) / m.all.filter(p => p.role !== 'GK').length); if (mnn >= 45 && S.stam.at45 == null) S.stam.at45 = av(); if (mnn >= 90 && S.stam.at90 == null) S.stam.at90 = av(); }
       // pass timeout -> loose
       if (pend && !pend.res && now() - pend.t0 > 6) finishPass('loose');
       // deflection of a pass by someone who is not the passer
@@ -305,6 +323,7 @@ function runMatch(id, seed) {
   }
 
   // ---- final totals and consistency checks ----
+  closeChain(); S.hdr.loopSec = r2(S.hdr.loopSec); S.realSec = r2(S.frames / 60); S.stam.end = r2(m.all.filter(p => p.role !== 'GK').reduce((a, p) => a + p.stam, 0) / m.all.filter(p => p.role !== 'GK').length);
   S.score = m.score.slice();
   const tp = m.possF[0] + m.possF[1] || 1; S.poss = [Math.round(m.possF[0] / tp * 1000) / 10, Math.round(m.possF[1] / tp * 1000) / 10];
   S.gameMin = r2(90 + (m.added || [0, 0]).reduce((a, v) => a + v, 0)); S.rules.added = (m.added || []).slice();

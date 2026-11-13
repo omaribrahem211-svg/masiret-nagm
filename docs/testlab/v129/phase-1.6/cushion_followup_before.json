@@ -1,0 +1,15 @@
+{
+ "www": "../../../tmp/et/v129www",
+ "matches": 30,
+ "cushions": 7617,
+ "nextTouch": {
+  "same_player_heads_again": 7514,
+  "stoppage": 89,
+  "opponent_wins": 4,
+  "teammate_header": 9,
+  "opponent_header": 1
+ },
+ "sameHeadsAgain": 7514,
+ "controlHeight": null,
+ "secondsToControl": null
+}

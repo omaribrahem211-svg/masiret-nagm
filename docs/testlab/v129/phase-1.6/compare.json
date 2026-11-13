@@ -1,0 +1,554 @@
+{
+ "before_v129": {
+  "matches": 100,
+  "completed": 100,
+  "errors": [],
+  "anomalies": 0,
+  "headersPerMatch": {
+   "mean": 281.5,
+   "min": 75,
+   "p50": 286,
+   "p90": 409,
+   "max": 616
+  },
+  "cushionPerMatch": {
+   "mean": 265.18,
+   "min": 57,
+   "p50": 269,
+   "p90": 394,
+   "max": 605
+  },
+  "headerKinds": {
+   "shot": 297,
+   "cushion": 26518,
+   "pass": 919,
+   "clear": 416
+  },
+  "loopEventsPerMatch": {
+   "mean": 5.94,
+   "min": 2,
+   "p50": 6,
+   "p90": 9,
+   "max": 14
+  },
+  "matchesWithLoop": 100,
+  "loopSecondsPerMatch": {
+   "mean": 79.73,
+   "min": 15.95,
+   "p50": 81.25,
+   "p90": 120.5,
+   "max": 182.67
+  },
+  "maxConsecutiveSamePlayer": {
+   "mean": 98.56,
+   "min": 39,
+   "p50": 94,
+   "p90": 138,
+   "max": 205
+  },
+  "maxChain": {
+   "mean": 100.79,
+   "min": 39,
+   "p50": 97,
+   "p90": 145,
+   "max": 208
+  },
+  "worstCases": [
+   {
+    "match": 33,
+    "min": 48,
+    "t": 133.8,
+    "n": 208,
+    "maxSame": 205,
+    "player": "كريم الزهراني",
+    "progression": 74.79,
+    "seconds": 63.42
+   },
+   {
+    "match": 18,
+    "min": 51,
+    "t": 142.92,
+    "n": 160,
+    "maxSame": 160,
+    "player": "ج. باركر",
+    "progression": 93.21,
+    "seconds": 47.57
+   },
+   {
+    "match": 55,
+    "min": 31,
+    "t": 80.22,
+    "n": 157,
+    "maxSame": 157,
+    "player": "ج. باركر",
+    "progression": 64.82,
+    "seconds": 46.58
+   },
+   {
+    "match": 93,
+    "min": 49,
+    "t": 136.42,
+    "n": 155,
+    "maxSame": 155,
+    "player": "عمر ربيع",
+    "progression": 90.29,
+    "seconds": 46.15
+   },
+   {
+    "match": 35,
+    "min": 3,
+    "t": 7.75,
+    "n": 151,
+    "maxSame": 151,
+    "player": "ج. باركر",
+    "progression": 88.18,
+    "seconds": 45.08
+   },
+   {
+    "match": 17,
+    "min": 19,
+    "t": 49.78,
+    "n": 150,
+    "maxSame": 150,
+    "player": "أ. لويس",
+    "progression": 87.63,
+    "seconds": 44.73
+   },
+   {
+    "match": 96,
+    "min": 25,
+    "t": 66.55,
+    "n": 146,
+    "maxSame": 146,
+    "player": "أ. لويس",
+    "progression": 77.41,
+    "seconds": 43.53
+   },
+   {
+    "match": 19,
+    "min": 55,
+    "t": 154.63,
+    "n": 145,
+    "maxSame": 144,
+    "player": "أ. لويس",
+    "progression": 85.3,
+    "seconds": 43.38
+   }
+  ],
+  "realSecondsPerMatch": {
+   "mean": 311.72,
+   "min": 273.18,
+   "p50": 308.57,
+   "p90": 340.28,
+   "max": 388.08
+  },
+  "staminaAt45": {
+   "mean": 86.53,
+   "min": 79.78,
+   "p50": 86.55,
+   "p90": 90.14,
+   "max": 98.32
+  },
+  "staminaAt90": {
+   "mean": 86.18,
+   "min": 79.05,
+   "p50": 86.2,
+   "p90": 91.11,
+   "max": 94.08
+  },
+  "staminaUsedBy90": {
+   "mean": 13.82,
+   "min": 5.92,
+   "p50": 13.82,
+   "p90": 18.57,
+   "max": 20.95
+  },
+  "livePlaySeconds": {
+   "mean": 256.03,
+   "min": 256.03,
+   "p50": 256.03,
+   "p90": 256.03,
+   "max": 256.03
+  },
+  "passesPerMatch": {
+   "mean": 68.44,
+   "min": 27,
+   "p50": 68,
+   "p90": 86,
+   "max": 100
+  },
+  "passCompletionPct": 77.9,
+  "aerialPassesPerMatch": {
+   "mean": 34.81,
+   "min": 17,
+   "p50": 35,
+   "p90": 42,
+   "max": 47
+  },
+  "aerialPassSuccessPct": 66.1,
+  "looseBallsPerMatch": {
+   "mean": 9.28,
+   "min": 2,
+   "p50": 9,
+   "p90": 14,
+   "max": 17
+  },
+  "homePossessionPct": {
+   "mean": 50.09,
+   "min": 37.2,
+   "p50": 50.3,
+   "p90": 56.8,
+   "max": 61.1
+  },
+  "subsPerMatch": {
+   "mean": 1.72,
+   "min": 0,
+   "p50": 2,
+   "p90": 3,
+   "max": 4
+  },
+  "goalsPerMatch": {
+   "mean": 1.42,
+   "min": 0,
+   "p50": 1,
+   "p90": 3,
+   "max": 5
+  },
+  "shotsPerMatch": {
+   "mean": 8.54,
+   "min": 1,
+   "p50": 9,
+   "p90": 12,
+   "max": 14
+  },
+  "headerShotPct": 34.8,
+  "tacklesPerMatch": {
+   "mean": 13.5,
+   "min": 4,
+   "p50": 13,
+   "p90": 19,
+   "max": 29
+  },
+  "foulsTotal": 140,
+  "homeWDL": [
+   41,
+   38,
+   21
+  ]
+ },
+ "after_fix": {
+  "matches": 100,
+  "completed": 100,
+  "errors": [],
+  "anomalies": 0,
+  "headersPerMatch": {
+   "mean": 27.55,
+   "min": 15,
+   "p50": 27,
+   "p90": 35,
+   "max": 39
+  },
+  "cushionPerMatch": {
+   "mean": 8.18,
+   "min": 3,
+   "p50": 8,
+   "p90": 12,
+   "max": 17
+  },
+  "headerKinds": {
+   "shot": 334,
+   "cushion": 818,
+   "pass": 1109,
+   "clear": 494
+  },
+  "loopEventsPerMatch": {
+   "mean": 0.06,
+   "min": 0,
+   "p50": 0,
+   "p90": 0,
+   "max": 1
+  },
+  "matchesWithLoop": 6,
+  "loopSecondsPerMatch": {
+   "mean": 0.12,
+   "min": 0,
+   "p50": 0,
+   "p90": 0,
+   "max": 3.02
+  },
+  "maxConsecutiveSamePlayer": {
+   "mean": 1.01,
+   "min": 1,
+   "p50": 1,
+   "p90": 1,
+   "max": 2
+  },
+  "maxChain": {
+   "mean": 2.85,
+   "min": 1,
+   "p50": 3,
+   "p90": 4,
+   "max": 6
+  },
+  "worstCases": [
+   {
+    "match": 66,
+    "min": 19,
+    "t": 50.57,
+    "n": 2,
+    "maxSame": 2,
+    "player": "ت. رايت",
+    "progression": 5.93,
+    "seconds": 0.95
+   },
+   {
+    "match": 65,
+    "min": 78,
+    "t": 215.8,
+    "n": 6,
+    "maxSame": 1,
+    "player": "يوسف الشمري",
+    "progression": 14.66,
+    "seconds": 5.18
+   },
+   {
+    "match": 92,
+    "min": 59,
+    "t": 162.73,
+    "n": 6,
+    "maxSame": 1,
+    "player": "ت. باركر",
+    "progression": 3.83,
+    "seconds": 3
+   },
+   {
+    "match": 68,
+    "min": 34,
+    "t": 88.93,
+    "n": 5,
+    "maxSame": 1,
+    "player": "عمر ربيع",
+    "progression": 10.97,
+    "seconds": 1.5
+   },
+   {
+    "match": 9,
+    "min": 10,
+    "t": 24.62,
+    "n": 4,
+    "maxSame": 1,
+    "player": "أ. لويس",
+    "progression": 11.52,
+    "seconds": 1.38
+   },
+   {
+    "match": 21,
+    "min": 12,
+    "t": 29.4,
+    "n": 4,
+    "maxSame": 1,
+    "player": "ج. فليتشر",
+    "progression": 11.09,
+    "seconds": 2.75
+   },
+   {
+    "match": 34,
+    "min": 84,
+    "t": 230.25,
+    "n": 4,
+    "maxSame": 1,
+    "player": "كريم الزهراني",
+    "progression": 3.32,
+    "seconds": 0.55
+   },
+   {
+    "match": 41,
+    "min": 10,
+    "t": 24.27,
+    "n": 4,
+    "maxSame": 1,
+    "player": "ج. باركر",
+    "progression": 15.08,
+    "seconds": 1.42
+   }
+  ],
+  "realSecondsPerMatch": {
+   "mean": 321.18,
+   "min": 268.37,
+   "p50": 316.93,
+   "p90": 364.65,
+   "max": 404.17
+  },
+  "staminaAt45": {
+   "mean": 80.77,
+   "min": 78.07,
+   "p50": 80.92,
+   "p90": 82.11,
+   "max": 82.99
+  },
+  "staminaAt90": {
+   "mean": 78.74,
+   "min": 74.16,
+   "p50": 78.97,
+   "p90": 81,
+   "max": 83.15
+  },
+  "staminaUsedBy90": {
+   "mean": 21.26,
+   "min": 16.85,
+   "p50": 21.09,
+   "p90": 24.05,
+   "max": 25.84
+  },
+  "livePlaySeconds": {
+   "mean": 256.03,
+   "min": 256.03,
+   "p50": 256.03,
+   "p90": 256.03,
+   "max": 256.03
+  },
+  "passesPerMatch": {
+   "mean": 98.43,
+   "min": 86,
+   "p50": 98,
+   "p90": 105,
+   "max": 112
+  },
+  "passCompletionPct": 77.6,
+  "aerialPassesPerMatch": {
+   "mean": 49.87,
+   "min": 32,
+   "p50": 50,
+   "p90": 57,
+   "max": 67
+  },
+  "aerialPassSuccessPct": 65.3,
+  "looseBallsPerMatch": {
+   "mean": 13.56,
+   "min": 7,
+   "p50": 13,
+   "p90": 17,
+   "max": 23
+  },
+  "homePossessionPct": {
+   "mean": 50.03,
+   "min": 41.7,
+   "p50": 50.1,
+   "p90": 54.2,
+   "max": 57.5
+  },
+  "subsPerMatch": {
+   "mean": 3.74,
+   "min": 2,
+   "p50": 4,
+   "p90": 4,
+   "max": 4
+  },
+  "goalsPerMatch": {
+   "mean": 2.09,
+   "min": 0,
+   "p50": 2,
+   "p90": 4,
+   "max": 6
+  },
+  "shotsPerMatch": {
+   "mean": 12.98,
+   "min": 6,
+   "p50": 14,
+   "p90": 17,
+   "max": 21
+  },
+  "headerShotPct": 25.7,
+  "tacklesPerMatch": {
+   "mean": 20.38,
+   "min": 11,
+   "p50": 20,
+   "p90": 25,
+   "max": 34
+  },
+  "foulsTotal": 225,
+  "homeWDL": [
+   27,
+   39,
+   34
+  ]
+ },
+ "v128": {
+  "matches": 100,
+  "completed": 100,
+  "errors": [],
+  "anomalies": 0,
+  "livePlaySeconds": {
+   "mean": 256.03,
+   "min": 256.03,
+   "p50": 256.03,
+   "p90": 256.03,
+   "max": 256.03
+  },
+  "passesPerMatch": {
+   "mean": 98.52,
+   "min": 85,
+   "p50": 99,
+   "p90": 105,
+   "max": 110
+  },
+  "passCompletionPct": 73.4,
+  "aerialPassesPerMatch": {
+   "mean": 50.91,
+   "min": 41,
+   "p50": 51,
+   "p90": 57,
+   "max": 62
+  },
+  "aerialPassSuccessPct": 58.3,
+  "looseBallsPerMatch": {
+   "mean": 23.43,
+   "min": 15,
+   "p50": 24,
+   "p90": 28,
+   "max": 37
+  },
+  "homePossessionPct": {
+   "mean": 49.91,
+   "min": 38.1,
+   "p50": 49.8,
+   "p90": 56.7,
+   "max": 62.2
+  },
+  "subsPerMatch": {
+   "mean": 3.82,
+   "min": 3,
+   "p50": 4,
+   "p90": 4,
+   "max": 5
+  },
+  "goalsPerMatch": {
+   "mean": 1.05,
+   "min": 0,
+   "p50": 1,
+   "p90": 2,
+   "max": 4
+  },
+  "shotsPerMatch": {
+   "mean": 8.04,
+   "min": 2,
+   "p50": 8,
+   "p90": 11,
+   "max": 14
+  },
+  "headerShotPct": 22.9,
+  "tacklesPerMatch": {
+   "mean": 21.19,
+   "min": 10,
+   "p50": 22,
+   "p90": 28,
+   "max": 35
+  },
+  "foulsTotal": 179,
+  "homeWDL": [
+   27,
+   44,
+   29
+  ]
+ }
+}

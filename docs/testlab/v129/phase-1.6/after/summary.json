@@ -1,0 +1,3568 @@
+{
+ "meta": {
+  "variant": {
+   "swap": false,
+   "mirror": null,
+   "kick": null,
+   "order": false
+  },
+  "label": "v129-fix1.6",
+  "core": "671a9bc60f",
+  "www": "www/js",
+  "halfLenSec": 120,
+  "dt": 0.016666666666666666,
+  "teamSeed": 42,
+  "seedBase": 1000,
+  "matches": 100,
+  "completed": 100,
+  "wallSec": 375,
+  "poseMeasure": true,
+  "node": "v22.23.4",
+  "at": "2026-11-13T14:27:02.605Z"
+ },
+ "pooled": {
+  "matches": 100,
+  "completed": 100,
+  "errors": [],
+  "goals": 209,
+  "goalsPerMatch": 2.09,
+  "homeWins": 27,
+  "draws": 39,
+  "awayWins": 34,
+  "goalKinds": {
+   "in_box": 96,
+   "header": 66,
+   "penalty": 26,
+   "long_range": 15,
+   "outside_box_<22m": 6
+  },
+  "passes": {
+   "att": 9843,
+   "comp": 7637,
+   "compPct": 77.58813369907548,
+   "intended": 7468,
+   "teammate": 169,
+   "intercepted": 2092,
+   "out": 3,
+   "loose": 48,
+   "offside": 0,
+   "foulWon": 0,
+   "other": 63,
+   "zones": {
+    "short": {
+     "att": 2323,
+     "ok": 2104
+    },
+    "medium": {
+     "att": 3980,
+     "ok": 3317
+    },
+    "long": {
+     "att": 3540,
+     "ok": 2216
+    }
+   },
+   "ground": {
+    "att": 4856,
+    "ok": 4381
+   },
+   "aerial": {
+    "att": 4987,
+    "ok": 3256
+   },
+   "cross": {
+    "att": 503,
+    "ok": 335
+   },
+   "gkThrow": 18,
+   "restartPass": 926,
+   "recvTurnover": 696,
+   "recvKept": 6453,
+   "flightMed": 1.13
+  },
+  "shots": {
+   "n": 1298,
+   "goals": 209,
+   "onTarget": 813,
+   "saved": 524,
+   "gkTouch": 80,
+   "off": 122,
+   "wood": 31,
+   "blocked": 188,
+   "other": 144,
+   "otherWhy": {
+    "cleared; last touch shooter, owner att": 110,
+    "cleared; last touch teammate FW, owner att": 18,
+    "?": 9,
+    "another shot started": 6,
+    "cleared; last touch teammate MF, owner att": 1
+   },
+   "inBox": 947,
+   "outBox": 351,
+   "goalsInBox": 192,
+   "goalsOutBox": 17,
+   "header": 334,
+   "pen": 30,
+   "penGoal": 26,
+   "goalAfterTouch": 41,
+   "firstTime": 0,
+   "conv": 16.10169491525424,
+   "acc": 62.63482280431433,
+   "accExclBlocked": 73.24324324324324,
+   "dist": {
+    "p25": 13.82,
+    "p50": 17.605,
+    "p75": 22.3275
+   }
+  },
+  "gk": {
+   "saves": 524,
+   "smother": 50,
+   "conceded": 209,
+   "savePct": 74.29274292742927,
+   "dives": 467,
+   "parries": 330,
+   "catches": 194,
+   "reboundsToAtt": 197,
+   "reboundShots": 70,
+   "reach": {
+    "n": 640,
+    "p50": 0.37,
+    "p90": 0.63,
+    "max": 0.68
+   },
+   "body": {
+    "n": 640,
+    "p50": 0.29,
+    "p75": 0.46,
+    "p90": 0.64,
+    "over05": 127,
+    "max": 1.4
+   },
+   "suspicious": [
+    {
+     "match": 4,
+     "seed": 1004,
+     "min": 61,
+     "t": 170,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 27.69,
+     "z": 1.57,
+     "diving": true,
+     "why": "nearest hand/body 0.82m from ball"
+    },
+    {
+     "match": 5,
+     "seed": 1005,
+     "min": 38,
+     "t": 99.25,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 25.7,
+     "z": 2.48,
+     "diving": true,
+     "why": "nearest hand/body 1.09m from ball"
+    },
+    {
+     "match": 6,
+     "seed": 1006,
+     "min": 45,
+     "t": 118.83,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 9.16,
+     "z": 0.37,
+     "diving": false,
+     "why": "nearest hand/body 0.62m from ball"
+    },
+    {
+     "match": 9,
+     "seed": 1009,
+     "min": 13,
+     "t": 32.97,
+     "gk": "سيف الحربي",
+     "shooter": "أ. لويس",
+     "shotDist": 25.32,
+     "z": 1.78,
+     "diving": false,
+     "why": "nearest hand/body 0.61m from ball"
+    },
+    {
+     "match": 10,
+     "seed": 1010,
+     "min": 12,
+     "t": 31.02,
+     "gk": "سيف الحربي",
+     "shooter": "ج. باركر",
+     "shotDist": 23.47,
+     "z": 1.66,
+     "diving": true,
+     "why": "nearest hand/body 0.91m from ball"
+    },
+    {
+     "match": 10,
+     "seed": 1010,
+     "min": 42,
+     "t": 109.52,
+     "gk": "م. رايت",
+     "shooter": "فارس عزت",
+     "shotDist": 22.33,
+     "z": 1.49,
+     "diving": true,
+     "why": "nearest hand/body 1.14m from ball"
+    },
+    {
+     "match": 11,
+     "seed": 1011,
+     "min": 56,
+     "t": 155.67,
+     "gk": "سيف الحربي",
+     "shooter": "ج. باركر",
+     "shotDist": 20.54,
+     "z": 1.6,
+     "diving": true,
+     "why": "nearest hand/body 0.99m from ball"
+    },
+    {
+     "match": 14,
+     "seed": 1014,
+     "min": 4,
+     "t": 8.97,
+     "gk": "سيف الحربي",
+     "shooter": "ج. باركر",
+     "shotDist": 28.03,
+     "z": 1.37,
+     "diving": true,
+     "why": "nearest hand/body 0.81m from ball"
+    },
+    {
+     "match": 14,
+     "seed": 1014,
+     "min": 91,
+     "t": 248.35,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 26.1,
+     "z": 2.12,
+     "diving": false,
+     "why": "nearest hand/body 0.99m from ball"
+    },
+    {
+     "match": 16,
+     "seed": 1016,
+     "min": 13,
+     "t": 33.35,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 26.19,
+     "z": 1.64,
+     "diving": false,
+     "why": "nearest hand/body 0.65m from ball"
+    },
+    {
+     "match": 16,
+     "seed": 1016,
+     "min": 63,
+     "t": 175.95,
+     "gk": "م. رايت",
+     "shooter": "فارس عزت",
+     "shotDist": 33.13,
+     "z": 2.37,
+     "diving": false,
+     "why": "nearest hand/body 0.92m from ball"
+    },
+    {
+     "match": 18,
+     "seed": 1018,
+     "min": 67,
+     "t": 186.47,
+     "gk": "سيف الحربي",
+     "shooter": "ج. باركر",
+     "shotDist": 19.92,
+     "z": 0.58,
+     "diving": true,
+     "why": "nearest hand/body 0.68m from ball"
+    },
+    {
+     "match": 19,
+     "seed": 1019,
+     "min": 24,
+     "t": 61.35,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 24.6,
+     "z": 1.74,
+     "diving": false,
+     "why": "nearest hand/body 0.61m from ball"
+    },
+    {
+     "match": 19,
+     "seed": 1019,
+     "min": 59,
+     "t": 164.05,
+     "gk": "سيف الحربي",
+     "shooter": "أ. لويس",
+     "shotDist": 30.2,
+     "z": 1.87,
+     "diving": true,
+     "why": "nearest hand/body 0.76m from ball"
+    },
+    {
+     "match": 21,
+     "seed": 1021,
+     "min": 17,
+     "t": 43.97,
+     "gk": "سيف الحربي",
+     "shooter": "ج. باركر",
+     "shotDist": 28.41,
+     "z": 2.3,
+     "diving": true,
+     "why": "nearest hand/body 0.82m from ball"
+    },
+    {
+     "match": 24,
+     "seed": 1024,
+     "min": 16,
+     "t": 42.27,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 24.26,
+     "z": 2.11,
+     "diving": false,
+     "why": "nearest hand/body 0.88m from ball"
+    },
+    {
+     "match": 24,
+     "seed": 1024,
+     "min": 25,
+     "t": 65.32,
+     "gk": "م. رايت",
+     "shooter": "رامي صبري",
+     "shotDist": 27.89,
+     "z": 1.23,
+     "diving": true,
+     "why": "nearest hand/body 1.02m from ball"
+    },
+    {
+     "match": 27,
+     "seed": 1027,
+     "min": 63,
+     "t": 173.9,
+     "gk": "سيف الحربي",
+     "shooter": "ج. باركر",
+     "shotDist": 22.57,
+     "z": 1.78,
+     "diving": true,
+     "why": "nearest hand/body 0.70m from ball"
+    },
+    {
+     "match": 31,
+     "seed": 1031,
+     "min": 46,
+     "t": 121.73,
+     "gk": "سيف الحربي",
+     "shooter": "ج. باركر",
+     "shotDist": 27.96,
+     "z": 2.33,
+     "diving": false,
+     "why": "nearest hand/body 1.13m from ball"
+    },
+    {
+     "match": 32,
+     "seed": 1032,
+     "min": 51,
+     "t": 143.02,
+     "gk": "م. رايت",
+     "shooter": "عمر ربيع",
+     "shotDist": 28.8,
+     "z": 1.21,
+     "diving": true,
+     "why": "nearest hand/body 0.90m from ball"
+    },
+    {
+     "match": 33,
+     "seed": 1033,
+     "min": 16,
+     "t": 40.63,
+     "gk": "م. رايت",
+     "shooter": "عمر ربيع",
+     "shotDist": 20.77,
+     "z": 1.8,
+     "diving": false,
+     "why": "nearest hand/body 0.61m from ball"
+    },
+    {
+     "match": 34,
+     "seed": 1034,
+     "min": 40,
+     "t": 105.97,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 15.99,
+     "z": 0.45,
+     "diving": false,
+     "why": "nearest hand/body 0.60m from ball"
+    },
+    {
+     "match": 35,
+     "seed": 1035,
+     "min": 52,
+     "t": 144.1,
+     "gk": "م. رايت",
+     "shooter": "عمر ربيع",
+     "shotDist": 25.94,
+     "z": 2,
+     "diving": false,
+     "why": "nearest hand/body 0.81m from ball"
+    },
+    {
+     "match": 36,
+     "seed": 1036,
+     "min": 29,
+     "t": 77.12,
+     "gk": "م. رايت",
+     "shooter": "فارس عزت",
+     "shotDist": 26.48,
+     "z": 1.47,
+     "diving": true,
+     "why": "nearest hand/body 1.19m from ball"
+    },
+    {
+     "match": 36,
+     "seed": 1036,
+     "min": 60,
+     "t": 166.08,
+     "gk": "م. رايت",
+     "shooter": "عمر ربيع",
+     "shotDist": 21.93,
+     "z": 0.62,
+     "diving": true,
+     "why": "nearest hand/body 0.64m from ball"
+    },
+    {
+     "match": 37,
+     "seed": 1037,
+     "min": 4,
+     "t": 9.42,
+     "gk": "سيف الحربي",
+     "shooter": "أ. لويس",
+     "shotDist": 28.06,
+     "z": 2.37,
+     "diving": false,
+     "why": "nearest hand/body 1.24m from ball"
+    },
+    {
+     "match": 37,
+     "seed": 1037,
+     "min": 41,
+     "t": 107.92,
+     "gk": "سيف الحربي",
+     "shooter": "ج. باركر",
+     "shotDist": 26.97,
+     "z": 1.97,
+     "diving": true,
+     "why": "nearest hand/body 0.76m from ball"
+    },
+    {
+     "match": 39,
+     "seed": 1039,
+     "min": 52,
+     "t": 146.47,
+     "gk": "م. رايت",
+     "shooter": "عمر ربيع",
+     "shotDist": 29.52,
+     "z": 2.11,
+     "diving": false,
+     "why": "nearest hand/body 0.82m from ball"
+    },
+    {
+     "match": 40,
+     "seed": 1040,
+     "min": 63,
+     "t": 174.82,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 23.93,
+     "z": 1.12,
+     "diving": true,
+     "why": "nearest hand/body 0.87m from ball"
+    },
+    {
+     "match": 41,
+     "seed": 1041,
+     "min": 47,
+     "t": 122.97,
+     "gk": "م. رايت",
+     "shooter": "فارس عزت",
+     "shotDist": 11.86,
+     "z": 2.4,
+     "diving": false,
+     "why": "nearest hand/body 1.40m from ball"
+    },
+    {
+     "match": 41,
+     "seed": 1041,
+     "min": 65,
+     "t": 179.55,
+     "gk": "سيف الحربي",
+     "shooter": "أ. لويس",
+     "shotDist": 22.62,
+     "z": 1.34,
+     "diving": true,
+     "why": "nearest hand/body 0.87m from ball"
+    },
+    {
+     "match": 42,
+     "seed": 1042,
+     "min": 71,
+     "t": 195.98,
+     "gk": "م. رايت",
+     "shooter": "فارس عزت",
+     "shotDist": 20.12,
+     "z": 1.54,
+     "diving": true,
+     "why": "nearest hand/body 0.63m from ball"
+    },
+    {
+     "match": 44,
+     "seed": 1044,
+     "min": 24,
+     "t": 61.68,
+     "gk": "م. رايت",
+     "shooter": "فارس عزت",
+     "shotDist": 23.65,
+     "z": 2.07,
+     "diving": false,
+     "why": "nearest hand/body 0.99m from ball"
+    },
+    {
+     "match": 45,
+     "seed": 1045,
+     "min": 14,
+     "t": 36.88,
+     "gk": "م. رايت",
+     "shooter": "فارس عزت",
+     "shotDist": 14.05,
+     "z": 0.44,
+     "diving": false,
+     "why": "nearest hand/body 0.61m from ball"
+    },
+    {
+     "match": 46,
+     "seed": 1046,
+     "min": 27,
+     "t": 70.02,
+     "gk": "م. رايت",
+     "shooter": "كريم الزهراني",
+     "shotDist": 23.87,
+     "z": 2,
+     "diving": false,
+     "why": "nearest hand/body 0.93m from ball"
+    },
+    {
+     "match": 46,
+     "seed": 1046,
+     "min": 46,
+     "t": 122.53,
+     "gk": "سيف الحربي",
+     "shooter": "أ. لويس",
+     "shotDist": 34.11,
+     "z": 1.5,
+     "diving": true,
+     "why": "nearest hand/body 1.24m from ball"
+    },
+    {
+     "match": 48,
+     "seed": 1048,
+     "min": 35,
+     "t": 90.85,
+     "gk": "م. رايت",
+     "shooter": "فارس عزت",
+     "shotDist": 16.27,
+     "z": 1.01,
+     "diving": true,
+     "why": "nearest hand/body 0.65m from ball"
+    },
+    {
+     "match": 48,
+     "seed": 1048,
+     "min": 42,
+     "t": 110.22,
+     "gk": "م. رايت",
+     "shooter": "فارس عزت",
+     "shotDist": 26.01,
+     "z": 1.77,
+     "diving": true,
+     "why": "nearest hand/body 0.78m from ball"
+    },
+    {
+     "match": 49,
+     "seed": 1049,
+     "min": 31,
+     "t": 80.67,
+     "gk": "م. رايت",
+     "shooter": "فارس عزت",
+     "shotDist": 30.85,
+     "z": 1.53,
+     "diving": true,
+     "why": "nearest hand/body 1.11m from ball"
+    },
+    {
+     "match": 53,
+     "seed": 1053,
+     "min": 79,
+     "t": 218.27,
+     "gk": "م. رايت",
+     "shooter": "كريم الزهراني",
+     "shotDist": 17.18,
+     "z": 1.36,
+     "diving": true,
+     "why": "nearest hand/body 0.88m from ball"
+    },
+    {
+     "match": 56,
+     "seed": 1056,
+     "min": 45,
+     "t": 117.35,
+     "gk": "م. رايت",
+     "shooter": "كريم الزهراني",
+     "shotDist": 27.93,
+     "z": 1.35,
+     "diving": true,
+     "why": "nearest hand/body 1.01m from ball"
+    },
+    {
+     "match": 57,
+     "seed": 1057,
+     "min": 39,
+     "t": 101.82,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 12.74,
+     "z": 0.98,
+     "diving": true,
+     "why": "nearest hand/body 0.69m from ball"
+    },
+    {
+     "match": 58,
+     "seed": 1058,
+     "min": 20,
+     "t": 51.45,
+     "gk": "سيف الحربي",
+     "shooter": "ج. باركر",
+     "shotDist": 23.51,
+     "z": 1.53,
+     "diving": true,
+     "why": "nearest hand/body 1.10m from ball"
+    },
+    {
+     "match": 58,
+     "seed": 1058,
+     "min": 32,
+     "t": 82.83,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 23.62,
+     "z": 2.36,
+     "diving": true,
+     "why": "nearest hand/body 1.26m from ball"
+    },
+    {
+     "match": 59,
+     "seed": 1059,
+     "min": 74,
+     "t": 204.92,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 23.81,
+     "z": 2.13,
+     "diving": false,
+     "why": "nearest hand/body 0.82m from ball"
+    },
+    {
+     "match": 62,
+     "seed": 1062,
+     "min": 35,
+     "t": 92.58,
+     "gk": "م. رايت",
+     "shooter": "فارس عزت",
+     "shotDist": 16.93,
+     "z": 0.4,
+     "diving": false,
+     "why": "nearest hand/body 0.65m from ball"
+    },
+    {
+     "match": 66,
+     "seed": 1066,
+     "min": 52,
+     "t": 145.47,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 12.08,
+     "z": 2.21,
+     "diving": false,
+     "why": "nearest hand/body 1.05m from ball"
+    },
+    {
+     "match": 66,
+     "seed": 1066,
+     "min": 63,
+     "t": 173.37,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 9.69,
+     "z": 2.1,
+     "diving": false,
+     "why": "nearest hand/body 1.15m from ball"
+    },
+    {
+     "match": 66,
+     "seed": 1066,
+     "min": 76,
+     "t": 209,
+     "gk": "م. رايت",
+     "shooter": "كريم الزهراني",
+     "shotDist": 27.59,
+     "z": 2.01,
+     "diving": false,
+     "why": "nearest hand/body 0.68m from ball"
+    },
+    {
+     "match": 67,
+     "seed": 1067,
+     "min": 34,
+     "t": 89.07,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 33.02,
+     "z": 2.45,
+     "diving": false,
+     "why": "nearest hand/body 0.94m from ball"
+    },
+    {
+     "match": 69,
+     "seed": 1069,
+     "min": 18,
+     "t": 47.05,
+     "gk": "م. رايت",
+     "shooter": "فارس عزت",
+     "shotDist": 20.41,
+     "z": 2.23,
+     "diving": false,
+     "why": "nearest hand/body 1.09m from ball"
+    },
+    {
+     "match": 69,
+     "seed": 1069,
+     "min": 91,
+     "t": 248.2,
+     "gk": "سيف الحربي",
+     "shooter": "ج. باركر",
+     "shotDist": 28.79,
+     "z": 1.71,
+     "diving": true,
+     "why": "nearest hand/body 0.80m from ball"
+    },
+    {
+     "match": 75,
+     "seed": 1075,
+     "min": 15,
+     "t": 38.68,
+     "gk": "سيف الحربي",
+     "shooter": "ج. باركر",
+     "shotDist": 33.23,
+     "z": 2.36,
+     "diving": true,
+     "why": "nearest hand/body 1.30m from ball"
+    },
+    {
+     "match": 75,
+     "seed": 1075,
+     "min": 40,
+     "t": 104.32,
+     "gk": "سيف الحربي",
+     "shooter": "أ. لويس",
+     "shotDist": 25.42,
+     "z": 1.52,
+     "diving": true,
+     "why": "nearest hand/body 0.84m from ball"
+    },
+    {
+     "match": 77,
+     "seed": 1077,
+     "min": 57,
+     "t": 158.65,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 31.7,
+     "z": 2.44,
+     "diving": false,
+     "why": "nearest hand/body 1.23m from ball"
+    },
+    {
+     "match": 78,
+     "seed": 1078,
+     "min": 86,
+     "t": 237.22,
+     "gk": "م. رايت",
+     "shooter": "عمر ربيع",
+     "shotDist": 27.06,
+     "z": 1.32,
+     "diving": true,
+     "why": "nearest hand/body 0.85m from ball"
+    },
+    {
+     "match": 79,
+     "seed": 1079,
+     "min": 93,
+     "t": 255.82,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 25.27,
+     "z": 1.3,
+     "diving": true,
+     "why": "nearest hand/body 0.61m from ball"
+    },
+    {
+     "match": 80,
+     "seed": 1080,
+     "min": 73,
+     "t": 201.55,
+     "gk": "سيف الحربي",
+     "shooter": "ج. باركر",
+     "shotDist": 24.33,
+     "z": 1.39,
+     "diving": true,
+     "why": "nearest hand/body 0.71m from ball"
+    },
+    {
+     "match": 82,
+     "seed": 1082,
+     "min": 8,
+     "t": 19.67,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 10.08,
+     "z": 2.45,
+     "diving": false,
+     "why": "nearest hand/body 1.37m from ball"
+    },
+    {
+     "match": 86,
+     "seed": 1086,
+     "min": 64,
+     "t": 178.02,
+     "gk": "م. رايت",
+     "shooter": "فارس عزت",
+     "shotDist": 20.01,
+     "z": 1.1,
+     "diving": true,
+     "why": "nearest hand/body 0.73m from ball"
+    },
+    {
+     "match": 86,
+     "seed": 1086,
+     "min": 73,
+     "t": 201.68,
+     "gk": "م. رايت",
+     "shooter": "عمر ربيع",
+     "shotDist": 25.9,
+     "z": 1.9,
+     "diving": true,
+     "why": "nearest hand/body 0.61m from ball"
+    },
+    {
+     "match": 87,
+     "seed": 1087,
+     "min": 15,
+     "t": 37.63,
+     "gk": "م. رايت",
+     "shooter": "فارس عزت",
+     "shotDist": 27.5,
+     "z": 1.24,
+     "diving": true,
+     "why": "nearest hand/body 0.99m from ball"
+    },
+    {
+     "match": 87,
+     "seed": 1087,
+     "min": 21,
+     "t": 54.2,
+     "gk": "م. رايت",
+     "shooter": "عمر ربيع",
+     "shotDist": 19.76,
+     "z": 1.34,
+     "diving": true,
+     "why": "nearest hand/body 0.81m from ball"
+    },
+    {
+     "match": 87,
+     "seed": 1087,
+     "min": 52,
+     "t": 146.52,
+     "gk": "م. رايت",
+     "shooter": "فارس عزت",
+     "shotDist": 9.58,
+     "z": 2.44,
+     "diving": false,
+     "why": "nearest hand/body 1.36m from ball"
+    },
+    {
+     "match": 89,
+     "seed": 1089,
+     "min": 71,
+     "t": 195.12,
+     "gk": "سيف الحربي",
+     "shooter": "ج. باركر",
+     "shotDist": 23.24,
+     "z": 1.39,
+     "diving": true,
+     "why": "nearest hand/body 0.83m from ball"
+    },
+    {
+     "match": 92,
+     "seed": 1092,
+     "min": 60,
+     "t": 166,
+     "gk": "م. رايت",
+     "shooter": "فارس عزت",
+     "shotDist": 8.29,
+     "z": 1.51,
+     "diving": false,
+     "why": "nearest hand/body 0.69m from ball"
+    },
+    {
+     "match": 94,
+     "seed": 1094,
+     "min": 5,
+     "t": 11.95,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 11.5,
+     "z": 1.98,
+     "diving": false,
+     "why": "nearest hand/body 0.84m from ball"
+    },
+    {
+     "match": 94,
+     "seed": 1094,
+     "min": 83,
+     "t": 228.05,
+     "gk": "سيف الحربي",
+     "shooter": "ج. بيل",
+     "shotDist": 26.16,
+     "z": 1.1,
+     "diving": true,
+     "why": "nearest hand/body 0.84m from ball"
+    },
+    {
+     "match": 96,
+     "seed": 1096,
+     "min": 36,
+     "t": 95.88,
+     "gk": "سيف الحربي",
+     "shooter": "ج. باركر",
+     "shotDist": 28.46,
+     "z": 1.57,
+     "diving": true,
+     "why": "nearest hand/body 0.75m from ball"
+    },
+    {
+     "match": 97,
+     "seed": 1097,
+     "min": 22,
+     "t": 58.28,
+     "gk": "سيف الحربي",
+     "shooter": "أ. لويس",
+     "shotDist": 27.7,
+     "z": 2.13,
+     "diving": true,
+     "why": "nearest hand/body 0.91m from ball"
+    },
+    {
+     "match": 97,
+     "seed": 1097,
+     "min": 46,
+     "t": 120.13,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 22.88,
+     "z": 1.23,
+     "diving": true,
+     "why": "nearest hand/body 1.02m from ball"
+    },
+    {
+     "match": 98,
+     "seed": 1098,
+     "min": 51,
+     "t": 141.6,
+     "gk": "سيف الحربي",
+     "shooter": "ت. رايت",
+     "shotDist": 10.2,
+     "z": 2.06,
+     "diving": false,
+     "why": "nearest hand/body 0.64m from ball"
+    },
+    {
+     "match": 98,
+     "seed": 1098,
+     "min": 61,
+     "t": 168.07,
+     "gk": "م. رايت",
+     "shooter": "كريم الزهراني",
+     "shotDist": 21.52,
+     "z": 1.36,
+     "diving": true,
+     "why": "nearest hand/body 0.64m from ball"
+    },
+    {
+     "match": 100,
+     "seed": 1100,
+     "min": 74,
+     "t": 202.73,
+     "gk": "سيف الحربي",
+     "shooter": "أ. لويس",
+     "shotDist": 25.95,
+     "z": 1.19,
+     "diving": true,
+     "why": "nearest hand/body 0.73m from ball"
+    }
+   ]
+  },
+  "loose": {
+   "n": 1356,
+   "sec": 1624.7166666672924,
+   "durP50": 0.93,
+   "durP90": 2.17,
+   "over5s": 0,
+   "high": 4501
+  },
+  "recovery": {
+   "turnovers": 2578,
+   "caughtOut": 333,
+   "n": 206,
+   "p50": 1.66,
+   "p75": 3.9699999999999998,
+   "p90": 8.989999999999998,
+   "capped15": 2
+  },
+  "def": {
+   "tackles": 2038,
+   "tklWon": 437,
+   "tklFoul": 30,
+   "tklFail": 1571,
+   "slides": 85,
+   "slideWon": 10,
+   "slideFoul": 0,
+   "slideMiss": 75,
+   "steals": 1600,
+   "interceptions": 2092,
+   "blocks": 188,
+   "recoveries": 978
+  },
+  "rules": {
+   "fouls": 225,
+   "yellow": 1,
+   "red": 0,
+   "pens": 30,
+   "advantage": 79,
+   "offside": 1,
+   "throw": 148,
+   "corner": 153,
+   "goalKick": 109,
+   "fk": 117,
+   "kickoff": 309,
+   "subs": 374,
+   "injuries": 0,
+   "addedMin": 600
+  },
+  "anomalies": {}
+ },
+ "perMatch": {
+  "ok": {
+   "n": 100,
+   "mean": 1,
+   "min": 1,
+   "p10": 1,
+   "p50": 1,
+   "p90": 1,
+   "max": 1
+  },
+  "home": {
+   "n": 100,
+   "mean": 1.02,
+   "min": 0,
+   "p10": 0,
+   "p50": 1,
+   "p90": 2,
+   "max": 4
+  },
+  "away": {
+   "n": 100,
+   "mean": 1.07,
+   "min": 0,
+   "p10": 0,
+   "p50": 1,
+   "p90": 2,
+   "max": 4
+  },
+  "goals": {
+   "n": 100,
+   "mean": 2.09,
+   "min": 0,
+   "p10": 0,
+   "p50": 2,
+   "p90": 4,
+   "max": 6
+  },
+  "possHome": {
+   "n": 100,
+   "mean": 50.035,
+   "min": 41.7,
+   "p10": 45.3,
+   "p50": 50.05,
+   "p90": 54.21,
+   "max": 57.5
+  },
+  "passAtt": {
+   "n": 100,
+   "mean": 98.43,
+   "min": 86,
+   "p10": 92,
+   "p50": 98,
+   "p90": 105,
+   "max": 112
+  },
+  "passComp": {
+   "n": 100,
+   "mean": 76.37,
+   "min": 62,
+   "p10": 70,
+   "p50": 76,
+   "p90": 83,
+   "max": 90
+  },
+  "passCompPct": {
+   "n": 100,
+   "mean": 77.61421917195923,
+   "min": 66.36363636363636,
+   "p10": 72.61331901181525,
+   "p50": 77.55527743012098,
+   "p90": 82.52680412371134,
+   "max": 87.5
+  },
+  "passIntendedPct": {
+   "n": 100,
+   "mean": 75.89344341200507,
+   "min": 65.45454545454545,
+   "p10": 70.99594071556689,
+   "p50": 75.87878787878788,
+   "p90": 81.025,
+   "max": 86.36363636363636
+  },
+  "passIntercepted": {
+   "n": 100,
+   "mean": 20.92,
+   "min": 10,
+   "p10": 16,
+   "p50": 20.5,
+   "p90": 26.10000000000001,
+   "max": 37
+  },
+  "passOut": {
+   "n": 100,
+   "mean": 0.03,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 0,
+   "max": 1
+  },
+  "passLoose": {
+   "n": 100,
+   "mean": 0.48,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 1,
+   "max": 3
+  },
+  "passOffside": {
+   "n": 100,
+   "mean": 0,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 0,
+   "max": 0
+  },
+  "passFoulWon": {
+   "n": 100,
+   "mean": 0,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 0,
+   "max": 0
+  },
+  "passOther": {
+   "n": 100,
+   "mean": 0.63,
+   "min": 0,
+   "p10": 0,
+   "p50": 1,
+   "p90": 2,
+   "max": 2
+  },
+  "shortPct": {
+   "n": 100,
+   "mean": 90.7025948214613,
+   "min": 75,
+   "p10": 81.81818181818181,
+   "p50": 91.66666666666667,
+   "p90": 100,
+   "max": 100
+  },
+  "mediumPct": {
+   "n": 100,
+   "mean": 83.43403693753659,
+   "min": 65.85365853658537,
+   "p10": 76.89034369885434,
+   "p50": 83.71212121212122,
+   "p90": 90.267131242741,
+   "max": 97.43589743589743
+  },
+  "longPct": {
+   "n": 100,
+   "mean": 62.54286615680406,
+   "min": 39.285714285714285,
+   "p10": 52.17391304347826,
+   "p50": 63.1578947368421,
+   "p90": 70.1794871794872,
+   "max": 78.78787878787878
+  },
+  "shortAtt": {
+   "n": 100,
+   "mean": 23.23,
+   "min": 6,
+   "p10": 17,
+   "p50": 23,
+   "p90": 30,
+   "max": 38
+  },
+  "mediumAtt": {
+   "n": 100,
+   "mean": 39.8,
+   "min": 27,
+   "p10": 34,
+   "p50": 40,
+   "p90": 46.10000000000001,
+   "max": 54
+  },
+  "longAtt": {
+   "n": 100,
+   "mean": 35.4,
+   "min": 22,
+   "p10": 29,
+   "p50": 36,
+   "p90": 42,
+   "max": 46
+  },
+  "groundAtt": {
+   "n": 100,
+   "mean": 48.56,
+   "min": 36,
+   "p10": 39.9,
+   "p50": 48,
+   "p90": 57.10000000000001,
+   "max": 67
+  },
+  "groundPct": {
+   "n": 100,
+   "mean": 90.16984225386301,
+   "min": 78.72340425531915,
+   "p10": 85.33990659055526,
+   "p50": 89.66346153846153,
+   "p90": 95.57446808510639,
+   "max": 98.07692307692308
+  },
+  "aerialAtt": {
+   "n": 100,
+   "mean": 49.87,
+   "min": 32,
+   "p10": 43,
+   "p50": 50,
+   "p90": 57,
+   "max": 67
+  },
+  "aerialPct": {
+   "n": 100,
+   "mean": 65.18486447404031,
+   "min": 43.24324324324324,
+   "p10": 54.86631016042781,
+   "p50": 66.07142857142857,
+   "p90": 72.9326923076923,
+   "max": 76.08695652173913
+  },
+  "crossAtt": {
+   "n": 100,
+   "mean": 5.03,
+   "min": 1,
+   "p10": 3,
+   "p50": 5,
+   "p90": 8,
+   "max": 12
+  },
+  "crossPct": {
+   "n": 100,
+   "mean": 64.45793650793652,
+   "min": 0,
+   "p10": 33.333333333333336,
+   "p50": 66.66666666666667,
+   "p90": 100,
+   "max": 100
+  },
+  "recvTurnoverPct": {
+   "n": 100,
+   "mean": 9.693084522608904,
+   "min": 4.3478260869565215,
+   "p10": 6.051560379918589,
+   "p50": 9.524250277674934,
+   "p90": 13.89240506329114,
+   "max": 18.055555555555557
+  },
+  "shots": {
+   "n": 100,
+   "mean": 12.98,
+   "min": 6,
+   "p10": 9,
+   "p50": 13.5,
+   "p90": 17,
+   "max": 21
+  },
+  "sot": {
+   "n": 100,
+   "mean": 8.13,
+   "min": 2,
+   "p10": 5,
+   "p50": 8,
+   "p90": 11,
+   "max": 16
+  },
+  "sotPct": {
+   "n": 100,
+   "mean": 63.3759184185268,
+   "min": 26.31578947368421,
+   "p10": 45.91346153846154,
+   "p50": 64.28571428571429,
+   "p90": 80,
+   "max": 92.85714285714286
+  },
+  "offT": {
+   "n": 100,
+   "mean": 1.53,
+   "min": 0,
+   "p10": 0,
+   "p50": 1,
+   "p90": 3,
+   "max": 6
+  },
+  "wood": {
+   "n": 100,
+   "mean": 0.31,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 1,
+   "max": 2
+  },
+  "blocked": {
+   "n": 100,
+   "mean": 1.88,
+   "min": 0,
+   "p10": 0,
+   "p50": 2,
+   "p90": 4,
+   "max": 6
+  },
+  "saved": {
+   "n": 100,
+   "mean": 6.04,
+   "min": 1,
+   "p10": 3,
+   "p50": 6,
+   "p90": 9,
+   "max": 10
+  },
+  "shotOther": {
+   "n": 100,
+   "mean": 1.44,
+   "min": 0,
+   "p10": 0,
+   "p50": 1,
+   "p90": 3,
+   "max": 7
+  },
+  "conv": {
+   "n": 100,
+   "mean": 16.279494830075322,
+   "min": 0,
+   "p10": 0,
+   "p50": 14.285714285714286,
+   "p90": 30.12500000000001,
+   "max": 50
+  },
+  "shotsInBox": {
+   "n": 100,
+   "mean": 9.47,
+   "min": 3,
+   "p10": 6,
+   "p50": 9,
+   "p90": 13,
+   "max": 17
+  },
+  "shotsOutBox": {
+   "n": 100,
+   "mean": 3.51,
+   "min": 0,
+   "p10": 1.9000000000000004,
+   "p50": 3,
+   "p90": 6,
+   "max": 9
+  },
+  "goalsInBox": {
+   "n": 100,
+   "mean": 1.92,
+   "min": 0,
+   "p10": 0,
+   "p50": 2,
+   "p90": 4,
+   "max": 6
+  },
+  "goalsOutBox": {
+   "n": 100,
+   "mean": 0.17,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 1,
+   "max": 2
+  },
+  "headers": {
+   "n": 100,
+   "mean": 3.34,
+   "min": 0,
+   "p10": 1,
+   "p50": 3,
+   "p90": 6,
+   "max": 8
+  },
+  "firstTime": {
+   "n": 100,
+   "mean": 0,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 0,
+   "max": 0
+  },
+  "shotDistMed": {
+   "n": 100,
+   "mean": 17.876800000000003,
+   "min": 12.73,
+   "p10": 15.252500000000001,
+   "p50": 17.645000000000003,
+   "p90": 21.2265,
+   "max": 22.79
+  },
+  "gkSaves": {
+   "n": 100,
+   "mean": 5.24,
+   "min": 1,
+   "p10": 2,
+   "p50": 5,
+   "p90": 8,
+   "max": 10
+  },
+  "gkSmother": {
+   "n": 100,
+   "mean": 0.5,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 2,
+   "max": 3
+  },
+  "savePct": {
+   "n": 100,
+   "mean": 74.42348484848485,
+   "min": 20,
+   "p10": 49.28571428571429,
+   "p50": 77.77777777777777,
+   "p90": 100,
+   "max": 100
+  },
+  "gkDives": {
+   "n": 100,
+   "mean": 4.67,
+   "min": 0,
+   "p10": 2,
+   "p50": 4,
+   "p90": 7,
+   "max": 9
+  },
+  "gkParries": {
+   "n": 100,
+   "mean": 3.3,
+   "min": 0,
+   "p10": 1,
+   "p50": 3,
+   "p90": 6,
+   "max": 9
+  },
+  "gkCatches": {
+   "n": 100,
+   "mean": 1.94,
+   "min": 0,
+   "p10": 0,
+   "p50": 2,
+   "p90": 4,
+   "max": 8
+  },
+  "reboundsToAtt": {
+   "n": 100,
+   "mean": 1.97,
+   "min": 0,
+   "p10": 0,
+   "p50": 2,
+   "p90": 4,
+   "max": 7
+  },
+  "reboundShots": {
+   "n": 100,
+   "mean": 0.7,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 2,
+   "max": 3
+  },
+  "gkReachMed": {
+   "n": 100,
+   "mean": 0.3834000000000002,
+   "min": 0.2,
+   "p10": 0.3,
+   "p50": 0.38,
+   "p90": 0.4910000000000001,
+   "max": 0.62
+  },
+  "gkBodyMed": {
+   "n": 100,
+   "mean": 0.31325,
+   "min": 0,
+   "p10": 0.19,
+   "p50": 0.29,
+   "p90": 0.4610000000000001,
+   "max": 0.84
+  },
+  "gkSuspicious": {
+   "n": 100,
+   "mean": 0.74,
+   "min": 0,
+   "p10": 0,
+   "p50": 1,
+   "p90": 2,
+   "max": 3
+  },
+  "loosePer90": {
+   "n": 100,
+   "mean": 12.7125,
+   "min": 6.5625,
+   "p10": 9.375,
+   "p50": 12.1875,
+   "p90": 16.031250000000007,
+   "max": 21.5625
+  },
+  "looseDurMean": {
+   "n": 100,
+   "mean": 1.1965639867103102,
+   "min": 0.6820512820515192,
+   "p10": 0.9059358974363173,
+   "p50": 1.1660256410260725,
+   "p90": 1.5451762820522594,
+   "max": 1.9384615384620996
+  },
+  "highEpisodes": {
+   "n": 100,
+   "mean": 45.01,
+   "min": 30,
+   "p10": 39,
+   "p50": 45,
+   "p90": 50.10000000000001,
+   "max": 55
+  },
+  "mateDist": {
+   "n": 100,
+   "mean": 30.21767364712585,
+   "min": 29.82300442750301,
+   "p10": 30.045997113638112,
+   "p50": 30.22929852731631,
+   "p90": 30.390540882756977,
+   "max": 30.532643798121327
+  },
+  "nearBall5": {
+   "n": 100,
+   "mean": 1.2726242772703678,
+   "min": 1.1742195367573012,
+   "p10": 1.212775225692239,
+   "p50": 1.2698501610418709,
+   "p90": 1.3374222264378648,
+   "max": 1.4284263959390864
+  },
+  "crowd6Pct": {
+   "n": 100,
+   "mean": 0.05353275547939612,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 0.19908449759196029,
+   "max": 0.5107252298263534
+  },
+  "far40": {
+   "n": 100,
+   "mean": 1.997238017659984,
+   "min": 1.712136409227683,
+   "p10": 1.8630641301889264,
+   "p50": 1.997699638086807,
+   "p90": 2.121642090304062,
+   "max": 2.270283975659229
+  },
+  "support": {
+   "n": 100,
+   "mean": 1.9374292057789677,
+   "min": 1.7154696132596685,
+   "p10": 1.8073104861240454,
+   "p50": 1.9257899474157942,
+   "p90": 2.0717267324355153,
+   "max": 2.1641791044776117
+  },
+  "overlapPct": {
+   "n": 100,
+   "mean": 0,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 0,
+   "max": 0
+  },
+  "strandedDFsec": {
+   "n": 100,
+   "mean": 0.5725,
+   "min": 0,
+   "p10": 0,
+   "p50": 0.25,
+   "p90": 1.5250000000000021,
+   "max": 3.25
+  },
+  "recovMed": {
+   "n": 87,
+   "mean": 2.916034482758621,
+   "min": 0.12,
+   "p10": 0.578,
+   "p50": 1.79,
+   "p90": 6.323,
+   "max": 13.5
+  },
+  "recovP90": {
+   "n": 87,
+   "mean": 4.707471264367817,
+   "min": 0.17,
+   "p10": 1.1452,
+   "p50": 3.2720000000000002,
+   "p90": 10.264800000000001,
+   "max": 13.5
+  },
+  "recovCapped": {
+   "n": 100,
+   "mean": 0.02,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 0,
+   "max": 1
+  },
+  "caughtOutPct": {
+   "n": 100,
+   "mean": 12.844540085283834,
+   "min": 0,
+   "p10": 4.761904761904762,
+   "p50": 12,
+   "p90": 20.855263157894736,
+   "max": 30
+  },
+  "tackles": {
+   "n": 100,
+   "mean": 20.38,
+   "min": 11,
+   "p10": 15,
+   "p50": 20,
+   "p90": 25,
+   "max": 34
+  },
+  "tklWonPct": {
+   "n": 100,
+   "mean": 21.187914913398636,
+   "min": 0,
+   "p10": 12.5,
+   "p50": 20,
+   "p90": 31.25,
+   "max": 39.285714285714285
+  },
+  "tklFoul": {
+   "n": 100,
+   "mean": 0.3,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 1,
+   "max": 3
+  },
+  "slides": {
+   "n": 100,
+   "mean": 0.85,
+   "min": 0,
+   "p10": 0,
+   "p50": 1,
+   "p90": 2,
+   "max": 4
+  },
+  "slideWonPct": {
+   "n": 54,
+   "mean": 9.41358024691358,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 33.333333333333336,
+   "max": 100
+  },
+  "slideFoul": {
+   "n": 100,
+   "mean": 0,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 0,
+   "max": 0
+  },
+  "steals": {
+   "n": 100,
+   "mean": 16,
+   "min": 7,
+   "p10": 11,
+   "p50": 16,
+   "p90": 21,
+   "max": 26
+  },
+  "interceptions": {
+   "n": 100,
+   "mean": 20.92,
+   "min": 10,
+   "p10": 16,
+   "p50": 20.5,
+   "p90": 26.10000000000001,
+   "max": 37
+  },
+  "recoveries": {
+   "n": 100,
+   "mean": 9.78,
+   "min": 3,
+   "p10": 6,
+   "p50": 10,
+   "p90": 14,
+   "max": 17
+  },
+  "fouls": {
+   "n": 100,
+   "mean": 2.25,
+   "min": 0,
+   "p10": 1,
+   "p50": 2,
+   "p90": 4.1000000000000085,
+   "max": 6
+  },
+  "yellow": {
+   "n": 100,
+   "mean": 0.01,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 0,
+   "max": 1
+  },
+  "red": {
+   "n": 100,
+   "mean": 0,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 0,
+   "max": 0
+  },
+  "pens": {
+   "n": 100,
+   "mean": 0.3,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 1,
+   "max": 2
+  },
+  "offside": {
+   "n": 100,
+   "mean": 0.01,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 0,
+   "max": 1
+  },
+  "throw": {
+   "n": 100,
+   "mean": 1.48,
+   "min": 0,
+   "p10": 0,
+   "p50": 1,
+   "p90": 3,
+   "max": 5
+  },
+  "corner": {
+   "n": 100,
+   "mean": 1.53,
+   "min": 0,
+   "p10": 0,
+   "p50": 1,
+   "p90": 3,
+   "max": 6
+  },
+  "goalKick": {
+   "n": 100,
+   "mean": 1.09,
+   "min": 0,
+   "p10": 0,
+   "p50": 1,
+   "p90": 3,
+   "max": 4
+  },
+  "fk": {
+   "n": 100,
+   "mean": 1.17,
+   "min": 0,
+   "p10": 0,
+   "p50": 1,
+   "p90": 2,
+   "max": 5
+  },
+  "subs": {
+   "n": 100,
+   "mean": 3.74,
+   "min": 2,
+   "p10": 3,
+   "p50": 4,
+   "p90": 4,
+   "max": 4
+  },
+  "added": {
+   "n": 100,
+   "mean": 6,
+   "min": 6,
+   "p10": 6,
+   "p50": 6,
+   "p90": 6,
+   "max": 6
+  },
+  "advantage": {
+   "n": 100,
+   "mean": 0.79,
+   "min": 0,
+   "p10": 0,
+   "p50": 1,
+   "p90": 2,
+   "max": 3
+  },
+  "anomalies": {
+   "n": 100,
+   "mean": 0,
+   "min": 0,
+   "p10": 0,
+   "p50": 0,
+   "p90": 0,
+   "max": 0
+  },
+  "playSec": {
+   "n": 100,
+   "mean": 256.0299999999997,
+   "min": 256.03,
+   "p10": 256.03,
+   "p50": 256.03,
+   "p90": 256.03,
+   "max": 256.03
+  },
+  "gameMin": {
+   "n": 100,
+   "mean": 96,
+   "min": 96,
+   "p10": 96,
+   "p50": 96,
+   "p90": 96,
+   "max": 96
+  },
+  "frames": {
+   "n": 100,
+   "mean": 19270.61,
+   "min": 16102,
+   "p10": 16700.4,
+   "p50": 18996,
+   "p90": 21889.600000000002,
+   "max": 24250
+  }
+ },
+ "baseline": {
+  "meta": {
+   "variant": {
+    "swap": false,
+    "mirror": null,
+    "kick": null,
+    "order": false
+   },
+   "label": "v129",
+   "core": "d75a308c04",
+   "www": "../../../tmp/et/v129www",
+   "halfLenSec": 120,
+   "dt": 0.016666666666666666,
+   "teamSeed": 42,
+   "seedBase": 1000,
+   "matches": 100,
+   "completed": 100,
+   "wallSec": 389,
+   "poseMeasure": true,
+   "node": "v22.23.4",
+   "at": "2026-11-13T14:27:16.942Z"
+  },
+  "pooled": {
+   "matches": 100,
+   "completed": 100,
+   "errors": [],
+   "goals": 142,
+   "goalsPerMatch": 1.42,
+   "homeWins": 41,
+   "draws": 38,
+   "awayWins": 21,
+   "goalKinds": {
+    "in_box": 59,
+    "header": 48,
+    "penalty": 19,
+    "long_range": 10,
+    "outside_box_<22m": 6
+   },
+   "passes": {
+    "att": 6844,
+    "comp": 5331,
+    "compPct": 77.89304500292226,
+    "intended": 5215,
+    "teammate": 116,
+    "intercepted": 1418,
+    "out": 2,
+    "loose": 33,
+    "offside": 0,
+    "foulWon": 0,
+    "other": 60,
+    "zones": {
+     "short": {
+      "att": 1703,
+      "ok": 1529
+     },
+     "medium": {
+      "att": 2742,
+      "ok": 2284
+     },
+     "long": {
+      "att": 2399,
+      "ok": 1518
+     }
+    },
+    "ground": {
+     "att": 3363,
+     "ok": 3031
+    },
+    "aerial": {
+     "att": 3481,
+     "ok": 2300
+    },
+    "cross": {
+     "att": 362,
+     "ok": 198
+    },
+    "gkThrow": 14,
+    "restartPass": 994,
+    "recvTurnover": 455,
+    "recvKept": 4578,
+    "flightMed": 1.12
+   },
+   "shots": {
+    "n": 854,
+    "goals": 142,
+    "onTarget": 537,
+    "saved": 343,
+    "gkTouch": 52,
+    "off": 78,
+    "wood": 9,
+    "blocked": 145,
+    "other": 85,
+    "otherWhy": {
+     "cleared; last touch shooter, owner att": 51,
+     "cleared; last touch teammate FW, owner att": 19,
+     "another shot started": 12,
+     "?": 3
+    },
+    "inBox": 619,
+    "outBox": 235,
+    "goalsInBox": 130,
+    "goalsOutBox": 12,
+    "header": 297,
+    "pen": 22,
+    "penGoal": 19,
+    "goalAfterTouch": 25,
+    "firstTime": 0,
+    "conv": 16.627634660421545,
+    "acc": 62.88056206088993,
+    "accExclBlocked": 75.74047954866009,
+    "dist": {
+     "p25": 13.7575,
+     "p50": 16.91,
+     "p75": 21.982499999999998
+    }
+   },
+   "gk": {
+    "saves": 343,
+    "smother": 29,
+    "conceded": 142,
+    "savePct": 73.55679702048417,
+    "dives": 281,
+    "parries": 203,
+    "catches": 140,
+    "reboundsToAtt": 134,
+    "reboundShots": 47,
+    "reach": {
+     "n": 418,
+     "p50": 0.4,
+     "p90": 0.65,
+     "max": 0.68
+    },
+    "body": {
+     "n": 418,
+     "p50": 0.32,
+     "p75": 0.49,
+     "p90": 0.63,
+     "over05": 93,
+     "max": 1.48
+    },
+    "suspicious": [
+     {
+      "match": 1,
+      "seed": 1001,
+      "min": 51,
+      "t": 141.98,
+      "gk": "م. رايت",
+      "shooter": "كريم الزهراني",
+      "shotDist": 23.32,
+      "z": 2.01,
+      "diving": true,
+      "why": "nearest hand/body 0.66m from ball"
+     },
+     {
+      "match": 11,
+      "seed": 1011,
+      "min": 20,
+      "t": 52.73,
+      "gk": "سيف الحربي",
+      "shooter": "ت. رايت",
+      "shotDist": 23.34,
+      "z": 1.5,
+      "diving": true,
+      "why": "nearest hand/body 0.64m from ball"
+     },
+     {
+      "match": 11,
+      "seed": 1011,
+      "min": 44,
+      "t": 115.42,
+      "gk": "م. رايت",
+      "shooter": "فارس عزت",
+      "shotDist": 23.41,
+      "z": 1.9,
+      "diving": true,
+      "why": "nearest hand/body 0.71m from ball"
+     },
+     {
+      "match": 12,
+      "seed": 1012,
+      "min": 54,
+      "t": 151.27,
+      "gk": "م. رايت",
+      "shooter": "فارس عزت",
+      "shotDist": 16.95,
+      "z": 0.44,
+      "diving": false,
+      "why": "nearest hand/body 0.62m from ball"
+     },
+     {
+      "match": 13,
+      "seed": 1013,
+      "min": 87,
+      "t": 238.03,
+      "gk": "سيف الحربي",
+      "shooter": "ت. رايت",
+      "shotDist": 23.08,
+      "z": 1.62,
+      "diving": true,
+      "why": "nearest hand/body 0.72m from ball"
+     },
+     {
+      "match": 14,
+      "seed": 1014,
+      "min": 4,
+      "t": 8.97,
+      "gk": "سيف الحربي",
+      "shooter": "ج. باركر",
+      "shotDist": 28.03,
+      "z": 1.37,
+      "diving": true,
+      "why": "nearest hand/body 0.81m from ball"
+     },
+     {
+      "match": 19,
+      "seed": 1019,
+      "min": 49,
+      "t": 138.43,
+      "gk": "م. رايت",
+      "shooter": "كريم الزهراني",
+      "shotDist": 27.04,
+      "z": 2.03,
+      "diving": true,
+      "why": "nearest hand/body 0.95m from ball"
+     },
+     {
+      "match": 19,
+      "seed": 1019,
+      "min": 87,
+      "t": 238.4,
+      "gk": "سيف الحربي",
+      "shooter": "ت. رايت",
+      "shotDist": 22.24,
+      "z": 1.72,
+      "diving": true,
+      "why": "nearest hand/body 0.83m from ball"
+     },
+     {
+      "match": 20,
+      "seed": 1020,
+      "min": 37,
+      "t": 97.75,
+      "gk": "سيف الحربي",
+      "shooter": "ت. رايت",
+      "shotDist": 20.49,
+      "z": 1.41,
+      "diving": true,
+      "why": "nearest hand/body 0.91m from ball"
+     },
+     {
+      "match": 25,
+      "seed": 1025,
+      "min": 25,
+      "t": 65.77,
+      "gk": "سيف الحربي",
+      "shooter": "ت. رايت",
+      "shotDist": 19.76,
+      "z": 1.23,
+      "diving": true,
+      "why": "nearest hand/body 0.67m from ball"
+     },
+     {
+      "match": 25,
+      "seed": 1025,
+      "min": 30,
+      "t": 78.93,
+      "gk": "م. رايت",
+      "shooter": "فارس عزت",
+      "shotDist": 21.39,
+      "z": 1.17,
+      "diving": true,
+      "why": "nearest hand/body 0.72m from ball"
+     },
+     {
+      "match": 31,
+      "seed": 1031,
+      "min": 51,
+      "t": 143.68,
+      "gk": "م. رايت",
+      "shooter": "فارس عزت",
+      "shotDist": 19.95,
+      "z": 1.96,
+      "diving": false,
+      "why": "nearest hand/body 0.88m from ball"
+     },
+     {
+      "match": 32,
+      "seed": 1032,
+      "min": 81,
+      "t": 221.65,
+      "gk": "سيف الحربي",
+      "shooter": "ج. باركر",
+      "shotDist": 16.76,
+      "z": 0.47,
+      "diving": true,
+      "why": "nearest hand/body 0.62m from ball"
+     },
+     {
+      "match": 33,
+      "seed": 1033,
+      "min": 23,
+      "t": 59.67,
+      "gk": "سيف الحربي",
+      "shooter": "ت. رايت",
+      "shotDist": 12.9,
+      "z": 2.43,
+      "diving": false,
+      "why": "nearest hand/body 1.48m from ball"
+     },
+     {
+      "match": 35,
+      "seed": 1035,
+      "min": 64,
+      "t": 177.13,
+      "gk": "سيف الحربي",
+      "shooter": "ت. رايت",
+      "shotDist": 22.45,
+      "z": 1.43,
+      "diving": true,
+      "why": "nearest hand/body 0.85m from ball"
+     },
+     {
+      "match": 36,
+      "seed": 1036,
+      "min": 29,
+      "t": 77.12,
+      "gk": "م. رايت",
+      "shooter": "فارس عزت",
+      "shotDist": 26.48,
+      "z": 1.47,
+      "diving": true,
+      "why": "nearest hand/body 1.19m from ball"
+     },
+     {
+      "match": 36,
+      "seed": 1036,
+      "min": 79,
+      "t": 218.4,
+      "gk": "سيف الحربي",
+      "shooter": "أ. لويس",
+      "shotDist": 16.83,
+      "z": 0.36,
+      "diving": false,
+      "why": "nearest hand/body 0.63m from ball"
+     },
+     {
+      "match": 37,
+      "seed": 1037,
+      "min": 4,
+      "t": 9.42,
+      "gk": "سيف الحربي",
+      "shooter": "أ. لويس",
+      "shotDist": 28.06,
+      "z": 2.37,
+      "diving": false,
+      "why": "nearest hand/body 1.24m from ball"
+     },
+     {
+      "match": 37,
+      "seed": 1037,
+      "min": 34,
+      "t": 89.48,
+      "gk": "م. رايت",
+      "shooter": "فارس عزت",
+      "shotDist": 22.35,
+      "z": 2.06,
+      "diving": false,
+      "why": "nearest hand/body 0.81m from ball"
+     },
+     {
+      "match": 39,
+      "seed": 1039,
+      "min": 66,
+      "t": 183.95,
+      "gk": "م. رايت",
+      "shooter": "عمر ربيع",
+      "shotDist": 26.92,
+      "z": 2.03,
+      "diving": true,
+      "why": "nearest hand/body 1.00m from ball"
+     },
+     {
+      "match": 39,
+      "seed": 1039,
+      "min": 80,
+      "t": 219.93,
+      "gk": "م. رايت",
+      "shooter": "عمر ربيع",
+      "shotDist": 27.92,
+      "z": 1.31,
+      "diving": true,
+      "why": "nearest hand/body 1.02m from ball"
+     },
+     {
+      "match": 39,
+      "seed": 1039,
+      "min": 85,
+      "t": 233.43,
+      "gk": "سيف الحربي",
+      "shooter": "ت. رايت",
+      "shotDist": 19.56,
+      "z": 1.72,
+      "diving": true,
+      "why": "nearest hand/body 0.64m from ball"
+     },
+     {
+      "match": 44,
+      "seed": 1044,
+      "min": 16,
+      "t": 40.73,
+      "gk": "سيف الحربي",
+      "shooter": "ت. رايت",
+      "shotDist": 9.83,
+      "z": 2.33,
+      "diving": false,
+      "why": "nearest hand/body 1.18m from ball"
+     },
+     {
+      "match": 47,
+      "seed": 1047,
+      "min": 79,
+      "t": 216.52,
+      "gk": "سيف الحربي",
+      "shooter": "ج. باركر",
+      "shotDist": 23.6,
+      "z": 1.35,
+      "diving": true,
+      "why": "nearest hand/body 0.62m from ball"
+     },
+     {
+      "match": 51,
+      "seed": 1051,
+      "min": 36,
+      "t": 94.33,
+      "gk": "م. رايت",
+      "shooter": "كريم الزهراني",
+      "shotDist": 23.12,
+      "z": 1.02,
+      "diving": true,
+      "why": "nearest hand/body 0.75m from ball"
+     },
+     {
+      "match": 54,
+      "seed": 1054,
+      "min": 19,
+      "t": 48.58,
+      "gk": "سيف الحربي",
+      "shooter": "أ. لويس",
+      "shotDist": 28.16,
+      "z": 1.25,
+      "diving": true,
+      "why": "nearest hand/body 0.84m from ball"
+     },
+     {
+      "match": 56,
+      "seed": 1056,
+      "min": 37,
+      "t": 96.6,
+      "gk": "سيف الحربي",
+      "shooter": "ج. باركر",
+      "shotDist": 27.34,
+      "z": 1.92,
+      "diving": true,
+      "why": "nearest hand/body 0.98m from ball"
+     },
+     {
+      "match": 59,
+      "seed": 1059,
+      "min": 92,
+      "t": 251.53,
+      "gk": "م. رايت",
+      "shooter": "عمر ربيع",
+      "shotDist": 16.59,
+      "z": 0.42,
+      "diving": false,
+      "why": "nearest hand/body 0.61m from ball"
+     },
+     {
+      "match": 62,
+      "seed": 1062,
+      "min": 72,
+      "t": 197.97,
+      "gk": "م. رايت",
+      "shooter": "فارس عزت",
+      "shotDist": 14.72,
+      "z": 1.18,
+      "diving": true,
+      "why": "nearest hand/body 0.72m from ball"
+     },
+     {
+      "match": 66,
+      "seed": 1066,
+      "min": 50,
+      "t": 139.52,
+      "gk": "سيف الحربي",
+      "shooter": "ج. باركر",
+      "shotDist": 25.81,
+      "z": 1.46,
+      "diving": true,
+      "why": "nearest hand/body 1.16m from ball"
+     },
+     {
+      "match": 67,
+      "seed": 1067,
+      "min": 36,
+      "t": 94.23,
+      "gk": "م. رايت",
+      "shooter": "عمر ربيع",
+      "shotDist": 31.28,
+      "z": 1.44,
+      "diving": true,
+      "why": "nearest hand/body 1.21m from ball"
+     },
+     {
+      "match": 69,
+      "seed": 1069,
+      "min": 18,
+      "t": 47.05,
+      "gk": "م. رايت",
+      "shooter": "فارس عزت",
+      "shotDist": 20.41,
+      "z": 2.23,
+      "diving": false,
+      "why": "nearest hand/body 1.09m from ball"
+     },
+     {
+      "match": 69,
+      "seed": 1069,
+      "min": 87,
+      "t": 239.57,
+      "gk": "سيف الحربي",
+      "shooter": "أ. لويس",
+      "shotDist": 26.54,
+      "z": 1.06,
+      "diving": true,
+      "why": "nearest hand/body 0.74m from ball"
+     },
+     {
+      "match": 72,
+      "seed": 1072,
+      "min": 47,
+      "t": 124.82,
+      "gk": "سيف الحربي",
+      "shooter": "أ. لويس",
+      "shotDist": 24.81,
+      "z": 2.01,
+      "diving": false,
+      "why": "nearest hand/body 0.67m from ball"
+     },
+     {
+      "match": 76,
+      "seed": 1076,
+      "min": 33,
+      "t": 86.77,
+      "gk": "سيف الحربي",
+      "shooter": "ت. رايت",
+      "shotDist": 21.22,
+      "z": 1.66,
+      "diving": true,
+      "why": "nearest hand/body 0.88m from ball"
+     },
+     {
+      "match": 80,
+      "seed": 1080,
+      "min": 20,
+      "t": 52.32,
+      "gk": "سيف الحربي",
+      "shooter": "أ. لويس",
+      "shotDist": 22.13,
+      "z": 1.42,
+      "diving": true,
+      "why": "nearest hand/body 0.64m from ball"
+     },
+     {
+      "match": 80,
+      "seed": 1080,
+      "min": 43,
+      "t": 114.42,
+      "gk": "سيف الحربي",
+      "shooter": "ت. رايت",
+      "shotDist": 10.58,
+      "z": 2.23,
+      "diving": false,
+      "why": "nearest hand/body 1.11m from ball"
+     },
+     {
+      "match": 80,
+      "seed": 1080,
+      "min": 85,
+      "t": 232.22,
+      "gk": "م. رايت",
+      "shooter": "فارس عزت",
+      "shotDist": 22.24,
+      "z": 1.44,
+      "diving": true,
+      "why": "nearest hand/body 0.98m from ball"
+     },
+     {
+      "match": 81,
+      "seed": 1081,
+      "min": 39,
+      "t": 104,
+      "gk": "م. رايت",
+      "shooter": "فارس عزت",
+      "shotDist": 9.47,
+      "z": 2.05,
+      "diving": false,
+      "why": "nearest hand/body 0.89m from ball"
+     },
+     {
+      "match": 82,
+      "seed": 1082,
+      "min": 8,
+      "t": 19.67,
+      "gk": "سيف الحربي",
+      "shooter": "ت. رايت",
+      "shotDist": 10.08,
+      "z": 2.45,
+      "diving": false,
+      "why": "nearest hand/body 1.37m from ball"
+     },
+     {
+      "match": 88,
+      "seed": 1088,
+      "min": 26,
+      "t": 68.67,
+      "gk": "سيف الحربي",
+      "shooter": "أ. لويس",
+      "shotDist": 22.07,
+      "z": 1.35,
+      "diving": true,
+      "why": "nearest hand/body 0.68m from ball"
+     },
+     {
+      "match": 92,
+      "seed": 1092,
+      "min": 24,
+      "t": 63.08,
+      "gk": "م. رايت",
+      "shooter": "عمر ربيع",
+      "shotDist": 28.38,
+      "z": 1.68,
+      "diving": true,
+      "why": "nearest hand/body 0.63m from ball"
+     },
+     {
+      "match": 93,
+      "seed": 1093,
+      "min": 24,
+      "t": 62.83,
+      "gk": "سيف الحربي",
+      "shooter": "ت. رايت",
+      "shotDist": 11.16,
+      "z": 2.44,
+      "diving": false,
+      "why": "nearest hand/body 0.81m from ball"
+     },
+     {
+      "match": 94,
+      "seed": 1094,
+      "min": 5,
+      "t": 11.95,
+      "gk": "سيف الحربي",
+      "shooter": "ت. رايت",
+      "shotDist": 11.5,
+      "z": 1.98,
+      "diving": false,
+      "why": "nearest hand/body 0.84m from ball"
+     },
+     {
+      "match": 98,
+      "seed": 1098,
+      "min": 86,
+      "t": 234.9,
+      "gk": "سيف الحربي",
+      "shooter": "ج. باركر",
+      "shotDist": 25.75,
+      "z": 1.19,
+      "diving": true,
+      "why": "nearest hand/body 0.93m from ball"
+     },
+     {
+      "match": 99,
+      "seed": 1099,
+      "min": 27,
+      "t": 70.6,
+      "gk": "سيف الحربي",
+      "shooter": "ت. رايت",
+      "shotDist": 23.69,
+      "z": 2.01,
+      "diving": true,
+      "why": "nearest hand/body 0.65m from ball"
+     },
+     {
+      "match": 100,
+      "seed": 1100,
+      "min": 46,
+      "t": 120.82,
+      "gk": "سيف الحربي",
+      "shooter": "ت. رايت",
+      "shotDist": 20.03,
+      "z": 1.58,
+      "diving": true,
+      "why": "nearest hand/body 0.67m from ball"
+     }
+    ]
+   },
+   "loose": {
+    "n": 928,
+    "sec": 1139.2500000004213,
+    "durP50": 0.97,
+    "durP90": 2.27,
+    "over5s": 0,
+    "high": 2950
+   },
+   "recovery": {
+    "turnovers": 1659,
+    "caughtOut": 261,
+    "n": 139,
+    "p50": 1.82,
+    "p75": 8.39,
+    "p90": 11.202,
+    "capped15": 2
+   },
+   "def": {
+    "tackles": 1350,
+    "tklWon": 295,
+    "tklFoul": 19,
+    "tklFail": 1036,
+    "slides": 50,
+    "slideWon": 3,
+    "slideFoul": 0,
+    "slideMiss": 47,
+    "steals": 950,
+    "interceptions": 1418,
+    "blocks": 145,
+    "recoveries": 709
+   },
+   "rules": {
+    "fouls": 140,
+    "yellow": 0,
+    "red": 0,
+    "pens": 22,
+    "advantage": 51,
+    "offside": 1,
+    "throw": 342,
+    "corner": 156,
+    "goalKick": 97,
+    "fk": 68,
+    "kickoff": 242,
+    "subs": 172,
+    "injuries": 0,
+    "addedMin": 600
+   },
+   "anomalies": {}
+  },
+  "perMatch": {
+   "ok": {
+    "n": 100,
+    "mean": 1,
+    "min": 1,
+    "p10": 1,
+    "p50": 1,
+    "p90": 1,
+    "max": 1
+   },
+   "home": {
+    "n": 100,
+    "mean": 0.9,
+    "min": 0,
+    "p10": 0,
+    "p50": 1,
+    "p90": 2,
+    "max": 4
+   },
+   "away": {
+    "n": 100,
+    "mean": 0.52,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 1,
+    "max": 2
+   },
+   "goals": {
+    "n": 100,
+    "mean": 1.42,
+    "min": 0,
+    "p10": 0,
+    "p50": 1,
+    "p90": 3,
+    "max": 5
+   },
+   "possHome": {
+    "n": 100,
+    "mean": 50.09199999999998,
+    "min": 37.2,
+    "p10": 43.68,
+    "p50": 50.25,
+    "p90": 56.809999999999995,
+    "max": 61.1
+   },
+   "passAtt": {
+    "n": 100,
+    "mean": 68.44,
+    "min": 27,
+    "p10": 53,
+    "p50": 68,
+    "p90": 86,
+    "max": 100
+   },
+   "passComp": {
+    "n": 100,
+    "mean": 53.31,
+    "min": 22,
+    "p10": 41.9,
+    "p50": 52,
+    "p90": 67,
+    "max": 75
+   },
+   "passCompPct": {
+    "n": 100,
+    "mean": 77.99611124386816,
+    "min": 65.07936507936508,
+    "p10": 71.42857142857143,
+    "p50": 78.22916666666666,
+    "p90": 83.7374949979992,
+    "max": 89.02439024390245
+   },
+   "passIntendedPct": {
+    "n": 100,
+    "mean": 76.28963776063199,
+    "min": 61.904761904761905,
+    "p10": 69.26274509803922,
+    "p50": 76.86733556298773,
+    "p90": 81.99833990454452,
+    "max": 87.8048780487805
+   },
+   "passIntercepted": {
+    "n": 100,
+    "mean": 14.18,
+    "min": 5,
+    "p10": 8.9,
+    "p50": 14,
+    "p90": 20,
+    "max": 25
+   },
+   "passOut": {
+    "n": 100,
+    "mean": 0.02,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 0,
+    "max": 1
+   },
+   "passLoose": {
+    "n": 100,
+    "mean": 0.33,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 1,
+    "max": 3
+   },
+   "passOffside": {
+    "n": 100,
+    "mean": 0,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 0,
+    "max": 0
+   },
+   "passFoulWon": {
+    "n": 100,
+    "mean": 0,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 0,
+    "max": 0
+   },
+   "passOther": {
+    "n": 100,
+    "mean": 0.6,
+    "min": 0,
+    "p10": 0,
+    "p50": 0.5,
+    "p90": 1.1000000000000085,
+    "max": 2
+   },
+   "shortPct": {
+    "n": 100,
+    "mean": 90.11329055924315,
+    "min": 66.66666666666667,
+    "p10": 79.89473684210526,
+    "p50": 90.9090909090909,
+    "p90": 100,
+    "max": 100
+   },
+   "mediumPct": {
+    "n": 100,
+    "mean": 83.54884308796976,
+    "min": 65.38461538461539,
+    "p10": 72.41379310344827,
+    "p50": 84.21052631578948,
+    "p90": 93.84868421052633,
+    "max": 100
+   },
+   "longPct": {
+    "n": 100,
+    "mean": 63.12655525941368,
+    "min": 29.41176470588235,
+    "p10": 50,
+    "p50": 64.61100569259962,
+    "p90": 75.08620689655173,
+    "max": 90.9090909090909
+   },
+   "shortAtt": {
+    "n": 100,
+    "mean": 17.03,
+    "min": 6,
+    "p10": 11,
+    "p50": 17,
+    "p90": 25.10000000000001,
+    "max": 31
+   },
+   "mediumAtt": {
+    "n": 100,
+    "mean": 27.42,
+    "min": 8,
+    "p10": 21,
+    "p50": 27,
+    "p90": 36,
+    "max": 49
+   },
+   "longAtt": {
+    "n": 100,
+    "mean": 23.99,
+    "min": 13,
+    "p10": 18,
+    "p50": 23,
+    "p90": 30,
+    "max": 37
+   },
+   "groundAtt": {
+    "n": 100,
+    "mean": 33.63,
+    "min": 10,
+    "p10": 24,
+    "p50": 32,
+    "p90": 46.10000000000001,
+    "max": 56
+   },
+   "groundPct": {
+    "n": 100,
+    "mean": 90.42694417091963,
+    "min": 76.92307692307692,
+    "p10": 84.76588628762542,
+    "p50": 90.5048076923077,
+    "p90": 96.58405172413794,
+    "max": 100
+   },
+   "aerialAtt": {
+    "n": 100,
+    "mean": 34.81,
+    "min": 17,
+    "p10": 28,
+    "p50": 35,
+    "p90": 42.10000000000001,
+    "max": 47
+   },
+   "aerialPct": {
+    "n": 100,
+    "mean": 66.13729716877756,
+    "min": 41.935483870967744,
+    "p10": 56.213235294117645,
+    "p50": 66.66666666666667,
+    "p90": 75.0609756097561,
+    "max": 87.09677419354838
+   },
+   "crossAtt": {
+    "n": 100,
+    "mean": 3.62,
+    "min": 0,
+    "p10": 1,
+    "p50": 3,
+    "p90": 7,
+    "max": 9
+   },
+   "crossPct": {
+    "n": 93,
+    "mean": 53.657194060419876,
+    "min": 0,
+    "p10": 21.000000000000007,
+    "p50": 50,
+    "p90": 100,
+    "max": 100
+   },
+   "recvTurnoverPct": {
+    "n": 100,
+    "mean": 9.041080468283079,
+    "min": 2.6315789473684212,
+    "p10": 5.249662618083671,
+    "p50": 8.641284061216872,
+    "p90": 13.953488372093023,
+    "max": 17.5
+   },
+   "shots": {
+    "n": 100,
+    "mean": 8.54,
+    "min": 1,
+    "p10": 5,
+    "p50": 8.5,
+    "p90": 12,
+    "max": 14
+   },
+   "sot": {
+    "n": 100,
+    "mean": 5.37,
+    "min": 1,
+    "p10": 3,
+    "p50": 5,
+    "p90": 8,
+    "max": 9
+   },
+   "sotPct": {
+    "n": 100,
+    "mean": 64.31433011433012,
+    "min": 28.571428571428573,
+    "p10": 44.285714285714285,
+    "p50": 63.63636363636363,
+    "p90": 81.96969696969698,
+    "max": 100
+   },
+   "offT": {
+    "n": 100,
+    "mean": 0.87,
+    "min": 0,
+    "p10": 0,
+    "p50": 1,
+    "p90": 2,
+    "max": 5
+   },
+   "wood": {
+    "n": 100,
+    "mean": 0.09,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 0,
+    "max": 1
+   },
+   "blocked": {
+    "n": 100,
+    "mean": 1.45,
+    "min": 0,
+    "p10": 0,
+    "p50": 1,
+    "p90": 3,
+    "max": 4
+   },
+   "saved": {
+    "n": 100,
+    "mean": 3.95,
+    "min": 0,
+    "p10": 2,
+    "p50": 4,
+    "p90": 6,
+    "max": 8
+   },
+   "shotOther": {
+    "n": 100,
+    "mean": 0.85,
+    "min": 0,
+    "p10": 0,
+    "p50": 1,
+    "p90": 2,
+    "max": 4
+   },
+   "conv": {
+    "n": 100,
+    "mean": 17.03004495504495,
+    "min": 0,
+    "p10": 0,
+    "p50": 13.392857142857142,
+    "p90": 36.47727272727274,
+    "max": 100
+   },
+   "shotsInBox": {
+    "n": 100,
+    "mean": 6.19,
+    "min": 0,
+    "p10": 3,
+    "p50": 6,
+    "p90": 9,
+    "max": 11
+   },
+   "shotsOutBox": {
+    "n": 100,
+    "mean": 2.35,
+    "min": 0,
+    "p10": 1,
+    "p50": 2,
+    "p90": 4,
+    "max": 7
+   },
+   "goalsInBox": {
+    "n": 100,
+    "mean": 1.3,
+    "min": 0,
+    "p10": 0,
+    "p50": 1,
+    "p90": 3,
+    "max": 5
+   },
+   "goalsOutBox": {
+    "n": 100,
+    "mean": 0.12,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 1,
+    "max": 2
+   },
+   "headers": {
+    "n": 100,
+    "mean": 2.97,
+    "min": 0,
+    "p10": 1,
+    "p50": 3,
+    "p90": 5,
+    "max": 8
+   },
+   "firstTime": {
+    "n": 100,
+    "mean": 0,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 0,
+    "max": 0
+   },
+   "shotDistMed": {
+    "n": 100,
+    "mean": 17.812700000000007,
+    "min": 12.695,
+    "p10": 15.125,
+    "p50": 17.045,
+    "p90": 20.983,
+    "max": 25.08
+   },
+   "gkSaves": {
+    "n": 100,
+    "mean": 3.43,
+    "min": 0,
+    "p10": 2,
+    "p50": 3,
+    "p90": 6,
+    "max": 8
+   },
+   "gkSmother": {
+    "n": 100,
+    "mean": 0.29,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 1,
+    "max": 2
+   },
+   "savePct": {
+    "n": 100,
+    "mean": 73.46626984126983,
+    "min": 0,
+    "p10": 50,
+    "p50": 78.88888888888889,
+    "p90": 100,
+    "max": 100
+   },
+   "gkDives": {
+    "n": 100,
+    "mean": 2.81,
+    "min": 0,
+    "p10": 1,
+    "p50": 3,
+    "p90": 5,
+    "max": 7
+   },
+   "gkParries": {
+    "n": 100,
+    "mean": 2.03,
+    "min": 0,
+    "p10": 0,
+    "p50": 2,
+    "p90": 4,
+    "max": 6
+   },
+   "gkCatches": {
+    "n": 100,
+    "mean": 1.4,
+    "min": 0,
+    "p10": 0,
+    "p50": 1,
+    "p90": 3,
+    "max": 5
+   },
+   "reboundsToAtt": {
+    "n": 100,
+    "mean": 1.34,
+    "min": 0,
+    "p10": 0,
+    "p50": 1,
+    "p90": 3,
+    "max": 4
+   },
+   "reboundShots": {
+    "n": 100,
+    "mean": 0.47,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 1,
+    "max": 4
+   },
+   "gkReachMed": {
+    "n": 100,
+    "mean": 0.4106,
+    "min": 0.12,
+    "p10": 0.309,
+    "p50": 0.4025,
+    "p90": 0.5210000000000001,
+    "max": 0.68
+   },
+   "gkBodyMed": {
+    "n": 100,
+    "mean": 0.34175000000000005,
+    "min": 0.05,
+    "p10": 0.1745,
+    "p50": 0.31,
+    "p90": 0.49050000000000005,
+    "max": 1.48
+   },
+   "gkSuspicious": {
+    "n": 100,
+    "mean": 0.47,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 1,
+    "max": 3
+   },
+   "loosePer90": {
+    "n": 100,
+    "mean": 8.7,
+    "min": 1.875,
+    "p10": 4.6875,
+    "p50": 8.4375,
+    "p90": 13.125,
+    "max": 15.9375
+   },
+   "looseDurMean": {
+    "n": 100,
+    "mean": 1.239325069783625,
+    "min": 0.6555555555556332,
+    "p10": 0.8832142857144476,
+    "p50": 1.1708333333337955,
+    "p90": 1.618703703704324,
+    "max": 2.4444444444457454
+   },
+   "highEpisodes": {
+    "n": 100,
+    "mean": 29.5,
+    "min": 12,
+    "p10": 22.9,
+    "p50": 29,
+    "p90": 36.20000000000002,
+    "max": 44
+   },
+   "mateDist": {
+    "n": 100,
+    "mean": 30.097145229081484,
+    "min": 29.474853041428638,
+    "p10": 29.799151736881996,
+    "p50": 30.086249619983995,
+    "p90": 30.433980110618435,
+    "max": 30.766944040824704
+   },
+   "nearBall5": {
+    "n": 100,
+    "mean": 1.2851361179751999,
+    "min": 1.1411411411411412,
+    "p10": 1.221931690646391,
+    "p50": 1.282258064516129,
+    "p90": 1.3463215657581855,
+    "max": 1.4317492416582407
+   },
+   "crowd6Pct": {
+    "n": 100,
+    "mean": 0.04246966062486078,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 0.10217644300808788,
+    "max": 0.40526849037487334
+   },
+   "far40": {
+    "n": 100,
+    "mean": 2.2145835151058133,
+    "min": 1.8815261044176708,
+    "p10": 2.0006456127540466,
+    "p50": 2.210789255248376,
+    "p90": 2.4257980803702375,
+    "max": 2.7093023255813953
+   },
+   "support": {
+    "n": 100,
+    "mean": 1.9781961626659352,
+    "min": 1.6046511627906976,
+    "p10": 1.8226793607616456,
+    "p50": 1.9914545454545456,
+    "p90": 2.1167519093913256,
+    "max": 2.2711111111111113
+   },
+   "overlapPct": {
+    "n": 100,
+    "mean": 0,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 0,
+    "max": 0
+   },
+   "strandedDFsec": {
+    "n": 100,
+    "mean": 0.395,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 1.0250000000000021,
+    "max": 3
+   },
+   "recovMed": {
+    "n": 78,
+    "mean": 4.505512820512825,
+    "min": 0.05,
+    "p10": 0.7084999999999999,
+    "p50": 2.7699999999999996,
+    "p90": 10.832999999999997,
+    "max": 15.38
+   },
+   "recovP90": {
+    "n": 78,
+    "mean": 5.848756410256413,
+    "min": 0.05,
+    "p10": 0.9465000000000001,
+    "p50": 5.5455000000000005,
+    "p90": 11.669499999999998,
+    "max": 15.38
+   },
+   "recovCapped": {
+    "n": 100,
+    "mean": 0.02,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 0,
+    "max": 1
+   },
+   "caughtOutPct": {
+    "n": 100,
+    "mean": 15.545065753995654,
+    "min": 0,
+    "p10": 6.666666666666667,
+    "p50": 15.192307692307693,
+    "p90": 25.166666666666682,
+    "max": 37.5
+   },
+   "tackles": {
+    "n": 100,
+    "mean": 13.5,
+    "min": 4,
+    "p10": 7.9,
+    "p50": 13,
+    "p90": 19,
+    "max": 29
+   },
+   "tklWonPct": {
+    "n": 100,
+    "mean": 22.442733814637137,
+    "min": 0,
+    "p10": 8.951048951048952,
+    "p50": 20.714285714285715,
+    "p90": 35.89285714285716,
+    "max": 75
+   },
+   "tklFoul": {
+    "n": 100,
+    "mean": 0.19,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 1,
+    "max": 2
+   },
+   "slides": {
+    "n": 100,
+    "mean": 0.5,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 1,
+    "max": 2
+   },
+   "slideWonPct": {
+    "n": 42,
+    "mean": 3.5714285714285716,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 0,
+    "max": 50
+   },
+   "slideFoul": {
+    "n": 100,
+    "mean": 0,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 0,
+    "max": 0
+   },
+   "steals": {
+    "n": 100,
+    "mean": 9.5,
+    "min": 3,
+    "p10": 6,
+    "p50": 9,
+    "p90": 14,
+    "max": 18
+   },
+   "interceptions": {
+    "n": 100,
+    "mean": 14.18,
+    "min": 5,
+    "p10": 8.9,
+    "p50": 14,
+    "p90": 20,
+    "max": 25
+   },
+   "recoveries": {
+    "n": 100,
+    "mean": 7.09,
+    "min": 0,
+    "p10": 3.9000000000000004,
+    "p50": 7,
+    "p90": 10,
+    "max": 14
+   },
+   "fouls": {
+    "n": 100,
+    "mean": 1.4,
+    "min": 0,
+    "p10": 0,
+    "p50": 1,
+    "p90": 3,
+    "max": 5
+   },
+   "yellow": {
+    "n": 100,
+    "mean": 0,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 0,
+    "max": 0
+   },
+   "red": {
+    "n": 100,
+    "mean": 0,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 0,
+    "max": 0
+   },
+   "pens": {
+    "n": 100,
+    "mean": 0.22,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 1,
+    "max": 3
+   },
+   "offside": {
+    "n": 100,
+    "mean": 0.01,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 0,
+    "max": 1
+   },
+   "throw": {
+    "n": 100,
+    "mean": 3.42,
+    "min": 0,
+    "p10": 1,
+    "p50": 3,
+    "p90": 6,
+    "max": 8
+   },
+   "corner": {
+    "n": 100,
+    "mean": 1.56,
+    "min": 0,
+    "p10": 0,
+    "p50": 1,
+    "p90": 3,
+    "max": 5
+   },
+   "goalKick": {
+    "n": 100,
+    "mean": 0.97,
+    "min": 0,
+    "p10": 0,
+    "p50": 1,
+    "p90": 2,
+    "max": 4
+   },
+   "fk": {
+    "n": 100,
+    "mean": 0.68,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 2,
+    "max": 4
+   },
+   "subs": {
+    "n": 100,
+    "mean": 1.72,
+    "min": 0,
+    "p10": 0,
+    "p50": 2,
+    "p90": 3,
+    "max": 4
+   },
+   "added": {
+    "n": 100,
+    "mean": 6,
+    "min": 6,
+    "p10": 6,
+    "p50": 6,
+    "p90": 6,
+    "max": 6
+   },
+   "advantage": {
+    "n": 100,
+    "mean": 0.51,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 1,
+    "max": 3
+   },
+   "anomalies": {
+    "n": 100,
+    "mean": 0,
+    "min": 0,
+    "p10": 0,
+    "p50": 0,
+    "p90": 0,
+    "max": 0
+   },
+   "playSec": {
+    "n": 100,
+    "mean": 256.0299999999997,
+    "min": 256.03,
+    "p10": 256.03,
+    "p50": 256.03,
+    "p90": 256.03,
+    "max": 256.03
+   },
+   "gameMin": {
+    "n": 100,
+    "mean": 96,
+    "min": 96,
+    "p10": 96,
+    "p50": 96,
+    "p90": 96,
+    "max": 96
+   },
+   "frames": {
+    "n": 100,
+    "mean": 18703.33,
+    "min": 16391,
+    "p10": 17034.6,
+    "p50": 18496.5,
+    "p90": 20430.800000000003,
+    "max": 23285
+   }
+  }
+ },
+ "reproducibility": null,
+ "suspicious": [],
+ "longLoose": [
+  {
+   "match": 25,
+   "seed": 1025,
+   "d": 4.38
+  },
+  {
+   "match": 40,
+   "seed": 1040,
+   "d": 4.35
+  },
+  {
+   "match": 43,
+   "seed": 1043,
+   "d": 4.35
+  },
+  {
+   "match": 44,
+   "seed": 1044,
+   "d": 4.35
+  },
+  {
+   "match": 83,
+   "seed": 1083,
+   "d": 4.35
+  }
+ ],
+ "scoreless": 18,
+ "blowouts": [
+  22
+ ]
+}

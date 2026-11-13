@@ -1,0 +1,21 @@
+{
+ "www": "www/js",
+ "matches": 30,
+ "cushions": 243,
+ "nextTouch": {
+  "same_player_controls": 240,
+  "opponent_header": 2,
+  "stoppage": 1
+ },
+ "sameHeadsAgain": 0,
+ "controlHeight": {
+  "p10": 0.96,
+  "p50": 1.23,
+  "p90": 1.31
+ },
+ "secondsToControl": {
+  "p10": 0.42,
+  "p50": 0.42,
+  "p90": 0.42
+ }
+}

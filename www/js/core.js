@@ -619,8 +619,10 @@ class Match{
   const dG=hyp(g[0]-p.x,g[1]-p.y),h=this.human;const wants=p.hdrShot||(h&&p===h.ctrl?Input.hold.S||Input.hold.O||dG<14:true);
   if((dG<17||p.hdrShot&&dG<24)&&wants){const ty=CY+R(-3,3)*(1.15-p.st.shot/100)+(Math.random()<.5?-2:2);const dx=g[0]-p.x,dy=ty-p.y,d=hyp(dx,dy)||1;const s2=12+p.st.phys/100*5;b.vx=dx/d*s2;b.vy=dy/d*s2;b.vz=R(-1,1.5);b.shot={by:p,t:this.time,hdr:true,d:dG};p.stats.sh++;this.shotsT[t.idx]++;this.ev('shot',{p});return;}
   let pr=99;for(const q of this.other(t).pl)pr=Math.min(pr,hyp(q.x-p.x,q.y-p.y));
-  // المستلم المقصود ومفيش ضغط: يهدّي الكورة براسه قدام رجله ويكمل استلام
-  if(wasT&&!wasX&&!p.hdrShot&&pr>1.6){p.cool=.18;const bv=hyp(b.vx,b.vy)||1;b.vx=p.fx*1.6+b.vx/bv*.4;b.vy=p.fy*1.6+b.vy/bv*.4;b.vz=1.4;b.target=p;b.passT=this.time;p.cushT=.4;return;}
+  // المستلم المقصود ومفيش ضغط: يهدّي الكورة براسه لتحت قدام رجله (الراس بتمتص سرعة الكورة) ويكمل استلام برجله
+  // الكورة بتنزل (سرعة رأسية سالبة) فمستحيل ترجع لارتفاع الراس تاني، ومش مسموح يهدّيها براسه تاني قبل ثانية
+  if(wasT&&!wasX&&!p.hdrShot&&pr>1.6&&!(this.time-(p.cushAt||-9)<1.2)){const vz0=-.8,z0=Math.max(.3,b.z),tf=(vz0+Math.sqrt(vz0*vz0+19.6*z0))/9.8;const bv=hyp(b.vx,b.vy)||1,ix=b.vx/bv,iy=b.vy/bv;
+   let ax=p.fx*.8+ix*.2,ay=p.fy*.8+iy*.2;const an=hyp(ax,ay)||1;ax/=an;ay/=an;const hs=.85/tf;b.vx=ax*hs;b.vy=ay*hs;b.vz=vz0;b.sw=0;b.tw=0;b.target=p;b.passT=this.time;p.cool=.4;p.cushAt=this.time;p.cushT=.4;return;}
   if(hyp(og[0]-p.x,og[1]-p.y)<30&&!(ownBall&&hyp(og[0]-p.x,og[1]-p.y)>22)){const dx=p.x-og[0],dy=p.y-og[1],d=hyp(dx,dy)||1;b.vx=dx/d*14;b.vy=dy/d*14;b.vz=4.5;return;}
   // تمريرة بالراس لأقرب زميل مناسب قدامه بدل ما يخبطها في أي اتجاه
   let bq=null,bs=-1e9;for(const q of t.pl){if(q===p||q.role==='GK'||q.off)continue;const dx=q.x-p.x,dy=q.y-p.y,d=hyp(dx,dy);if(d<5||d>24)continue;let opp=99;for(const o of this.other(t).pl)opp=Math.min(opp,hyp(o.x-q.x,o.y-q.y));const fw=(dx*t.dir)/d;const sc=fw*6-Math.abs(d-12)*.25+Math.min(opp,6)*1.2+((dx*p.fx+dy*p.fy)/d)*3;if(sc>bs){bs=sc;bq=q;}}

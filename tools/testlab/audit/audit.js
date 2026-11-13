@@ -112,7 +112,7 @@ function run(id, seed) {
   OUT.matches.push({ id, seed, score: m.score.slice(), firstKick: m.firstKick, subs: m.t.map(t => t.subs) });
 }
 const t0 = Date.now();
-for (let i = 1; i <= N; i++) run(i, SEED0 + i);
+for (const i of (A.only ? A.only.split(',').map(Number) : Array.from({ length: N }, (_, k) => k + 1))) run(i, SEED0 + i);
 const out = A.out || path.join(process.cwd(), 'audit.json');
 fs.writeFileSync(out, JSON.stringify(OUT));
 process.stderr.write(`audit ${N} matches in ${Math.round((Date.now() - t0) / 1000)}s → ${out}\n`);

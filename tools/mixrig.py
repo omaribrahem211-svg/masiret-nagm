@@ -48,6 +48,22 @@ for nm,rg in REG.items():
                 VR.append(r)
             tri.append(key[k])
         IDX.append(tri)
+# ---- تسريحات شعر/دقن إضافية (Quaternius Universal Base Characters, CC0): متركّبة على عضمة الراس، والشيدر بيظهر واحدة بس لكل لاعب
+sys.path.insert(0,'/tmp/gen2');from gltfm import load as gload
+_UB="/tmp/ubc/Universal Base Characters[Standard]/"
+_bd,_bj,_=gload(_UB+"Base Characters/Godot - UE/Superhero_Male_FullBody.gltf");_bh=_bj.index('Head')
+_pr=[q for q in _bd if len(q['P'])>2000][0];_dom=_pr['J'][np.arange(len(_pr['P'])),np.argmax(_pr['W'],1)];_hb=_pr['P'][_dom==_bh];bmin,bmax=_hb.min(0),_hb.max(0)
+_hi=JN.index('Head');_ch=np.array([VP[i] for i in range(len(VP)) if VJ[i][0]==_hi]);cmin,cmax=_ch.min(0),_ch.max(0)
+_hs=(cmax-cmin)/(bmax-bmin);_hs[:]=np.array([_hs[0],(_hs[0]+_hs[2])/2,_hs[2]])
+print('head fit scale',np.round(_hs,3),file=sys.stderr)
+_hairUV=[VUV[i] for i in range(len(VR)) if VR[i]==5][0]
+_hh=np.array([VP[i] for i in range(len(VR)) if VJ[i][0]==_hi]);_cnose=_hh[np.argmax(_hh[:,2])];_bnose=_hb[np.argmax(_hb[:,2])]
+for si,hn in enumerate(['Hair_SimpleParted','Hair_Beard']):
+    hr,_,_=gload(_UB+"Hairstyles/Rigged to Head Bone/glTF (Godot -Unreal)/"+hn+".gltf");P=hr[0]['P'];N=hr[0]['N'];I=hr[0]['I'].reshape(-1,3)
+    sc_=np.array([1.03,0.975,1.0]);hc=_bnose+np.array([0,0.04,-0.11]);P2=((P-hc)*1.035+hc-_bnose)*sc_+_cnose;N2=N/sc_;N2/=np.linalg.norm(N2,axis=1,keepdims=True)
+    o=len(VP)
+    for k in range(len(P2)):VP.append(P2[k]);VN.append(N2[k]);VUV.append(_hairUV);VJ.append(np.array([_hi,0,0,0]));VW.append(np.array([1.,0,0,0]));VR.append(8+si)
+    for t in I:IDX.append([o+t[0],o+t[1],o+t[2]])
 VP=np.array(VP,np.float32);VN=np.array(VN,np.float32);VUV=np.array(VUV,np.float32);VJ=np.array(VJ,np.uint8);VW=np.round(np.array(VW)*255).astype(np.uint8);VR=np.array(VR,np.uint8);IDX=np.array(IDX,np.uint16)
 # fix weight rounding to sum 255
 d=255-VW.astype(int).sum(1);VW[:,0]=(VW[:,0].astype(int)+d).astype(np.uint8)
@@ -56,7 +72,7 @@ print('mesh verts',len(VP),'tris',len(IDX),'regions',np.bincount(VR),file=sys.st
 lin=lambda c:np.power(c,2.2)
 rn=[]
 for r in range(8):
-    sel=np.where(VR==r)[0]
+    sel=np.where(VR==r)[0] if r!=5 else np.where(VR==5)[0]
     if r==7 or len(sel)==0:rn.append([1,1,1]);continue
     cs=np.array([lin(samp(VUV[i])) for i in sel]);rn.append(list(np.round(np.maximum(cs.mean(0),0.02),4)))
 print('norms',rn,file=sys.stderr)

@@ -446,6 +446,10 @@ class Match{
   }else c.des=(has||penWait)?[0,0]:null;
   if(has&&setPiece){const ax=I.jx,ay=-I.jy;if(hyp(ax,ay)>.3){const n=hyp(ax,ay);c.fx+=(ax/n-c.fx)*.2;c.fy+=(ay/n-c.fy)*.2;const m=hyp(c.fx,c.fy)||1;c.fx/=m;c.fy/=m;}}
   const pen=this.restartKind==='pen'&&has;
+  // تسديدة وهمية: وانت بتشحن الشوطة دوس تمرير → اللاعب يعمل إنه هيشوط ويلغيها، والمدافع القريب ممكن يصدّق
+  if(has&&!pen&&h.charge>=0&&I.q.Xd){I.take('Xd');I.take('Su');I.take('Fu');h.charge=-1;this.fakeShot(c);}
+  // لمسة طويلة: ضغطة سريعة على R2 وانت ماشي بالكورة → تزق الكورة قدّام وتجري وراها
+  if(I.take('Rtap')&&has&&!pen&&!this.restartKind&&h.charge<0&&!c.pend)this.bigTouch(c);
   if(I.take('Xd')){if(has&&!pen)this.humanPass(c,false,false);else if(h.lock&&b.owner&&b.owner.team===c.team){h.call=1.6;c.callT=1;this.banner={t:'طلبت الكورة!',life:.9,small:true};}}
   if(I.take('Od')){if(has&&!pen)this.humanPass(c,false,true);else if(!has){if(!b.owner&&hyp(b.x-c.x,b.y-c.y)<1.6&&b.z<1.2){const g=this.ownG(c.team);const dx=b.x-g[0],dy=b.y-g[1],d=hyp(dx,dy)||1;this.kick(c,dx/d*24,dy/d*24,7);}else{const o=b.owner,dB=hyp(b.x-c.x,b.y-c.y);if(o&&o.team!==c.team&&dB>1.25&&dB<2.6&&c.tcool<=0){const ux=(b.x-c.x)/dB,uy=(b.y-c.y)/dB;c.vx=ux*8.5;c.vy=uy*8.5;c.fx=ux;c.fy=uy;c.lungeT=.28;c.tcool=.15;}else this.tackle(c,false);}}}
   if(c.lungeT>0){c.lungeT-=dt;const o=b.owner;if(o&&o.team!==c.team&&hyp(b.x-c.x,b.y-c.y)<1.25){c.lungeT=0;c.tcool=0;this.tackle(c,false);}else if(c.lungeT<=0){c.tcool=.5;c.stun=.2;}}
@@ -477,6 +481,12 @@ class Match{
  gkClear(c){const t=c.team;let dx=Input.jx,dy=-Input.jy;if(hyp(dx,dy)<.3||dx*t.dir<.15){dx=t.dir;dy=(c.y>CY?-1:1)*R(.1,.45);}const n=hyp(dx,dy)||1;dx/=n;dy/=n;
   this.windup(c,.16,dx,dy,()=>{c.windNow=1;this.kick(c,dx*R(24,28),dy*R(24,28),R(10,12));c.windNow=0;this.ev('clear',{p:c});});}
  autoAim(c,fin){const gk=this.gkOf(this.other(c.team));if(fin)return (c.y>CY?-1:1)*.85;return (gk&&Math.abs(gk.y-CY)>.4?(gk.y>CY?-1:1):(c.y>CY?-1:1))*.72;}
+ fakeShot(c){c.kType='shot';c.kickT=.22;c.feintT=.5;SFX.kick&&SFX.kick(.02);const ot=this.other(c.team);let fooled=0;
+  for(const q of ot.pl){if(q.role==='GK'&&hyp(q.x-c.x,q.y-c.y)>14)continue;const dx=q.x-c.x,dy=q.y-c.y,d=hyp(dx,dy);if(d>(q.role==='GK'?14:4.5))continue;const front=(dx*c.fx+dy*c.fy)/(d||1)>-.2;if(!front)continue;
+   const ch=clamp(.55+(c.st.drib-q.st.def)/120+(q.role==='GK'?-.1:0),.2,.85);q.tcool=Math.max(q.tcool,.7);if(Math.random()<ch){fooled++;if(q.role==='GK'){q.diveT=.5;q.diveDir=Math.random()<.5?1:-1;q.diveN=1.5;}else{q.stun=Math.max(q.stun,.45);q.chalOn=c;q.vx=(c.fx*-.5+(Math.random()-.5))*3;q.vy=(c.fy*-.5+(Math.random()-.5))*3;}}}
+  if(fooled)this.banner={t:'تسديدة وهمية!',life:.9,small:true};this.ev('skill',{p:c,k:'fake',n:fooled},2);}
+ bigTouch(c){const b=this.ball,sp=hyp(c.vx,c.vy),dx=sp>1?c.vx/sp:c.fx,dy=sp>1?c.vy/sp:c.fy;const v=Math.max(sp,4)+5.5+c.st.drib/100*1.5;
+  this.kick(c,dx*v,dy*v,.6);c.kType='pass';c.kickT=.2;c.cool=.22;b.target=c;b.last=c;b.passT=this.time;c.bigT=1.2;this.ev('skill',{p:c,k:'big'},2);}
  humanPass(c,thru,lob){let dx=Input.jx,dy=-Input.jy;if(hyp(dx,dy)<.3){dx=c.fx;dy=c.fy;}
   if(lob){const g=this.attG(c.team);if(hyp(g[0]-c.x,g[1]-c.y)<38){const tg=this.bestPass(c,true,true);if(tg){this.pass(c,tg.p,false,true);return;}}}
   const a0=Math.atan2(dy,dx);let best=null,bs=1e9;
@@ -485,7 +495,7 @@ class Match{
  switchCtl(){this.autoSwitch(true);}
  switchCtlOld(){const h=this.human;if(!h)return;const b=this.ball;let best=null,bd=1e9;for(const q of this.t[h.team].pl){if(q===h.ctrl||q.role==='GK')continue;const d=hyp(q.x-b.x,q.y-b.y);if(d<bd){bd=d;best=q;}}if(best){h.ctrl=best;h.charge=-1;}}
  /* ---------- PHYSICS ---------- */
- move(dt){const H2=2*this.halfLen;const bo=this.ball.owner;for(const p of this.all){p.cool=Math.max(0,p.cool-dt);
+ move(dt){const H2=2*this.halfLen;const bo=this.ball.owner;for(const p of this.all){p.cool=Math.max(0,p.cool-dt);if(p.bigT>0)p.bigT-=dt;if(p.feintT>0)p.feintT-=dt;
   // لفّة بالكورة: لما حامل الكورة يغيّر اتجاهه فجأة لورا
   if(p.spinT>0)p.spinT-=dt;p.spinCd=Math.max(0,(p.spinCd||0)-dt);if(bo===p&&p.spinCd<=0&&this.phase==='play'&&!this.restartKind&&p.des){const dl=hyp(p.des[0],p.des[1]);if(dl>2.5&&(p.des[0]*p.fx+p.des[1]*p.fy)/dl<-.35){p.spinT=.55;p.spinCd=2.2;}}p.tcool=Math.max(0,p.tcool-dt);p.stun=Math.max(0,p.stun-dt);p.slide=Math.max(0,p.slide-dt);
    if(p.slide>0){p.vx*=Math.exp(-2.2*dt);p.vy*=Math.exp(-2.2*dt);if(this.phase==='play')this.slideCheck(p);}

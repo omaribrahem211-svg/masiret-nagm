@@ -478,6 +478,14 @@ function matchEvent(type,d,m){const nm=d&&d.p?lastName(d.p.name):'';
   case 'advantage':Comm.say('advantage',{},1);break;
   case 'clear':Comm.say('clear');break;
   case 'star_red':toast('اتطردت! الماتش هيكمل من غيرك');break;}}
+// دراع تحكم (Xbox/PlayStation بلوتوث): الاستيك الشمال للحركة، A تمرير، B عرضية، Y بينية، X تسديد، LB لفّة، RT/RB جري (ضغطة سريعة = لمسة طويلة)، Start إيقاف
+const PAD={prev:{},on:false,rT:0};
+function padPoll(){if(!navigator.getGamepads)return;let g=null;try{for(const x of navigator.getGamepads())if(x&&x.connected){g=x;break;}}catch(e){return;}if(!g){if(PAD.on){PAD.on=false;Input.jx=Input.jy=0;}return;}
+ const ax=g.axes[0]||0,ay=g.axes[1]||0,mg=Math.hypot(ax,ay);if(mg>.18){Input.jx=ax;Input.jy=ay;PAD.on=true;PAD.stick=true;}else if(PAD.stick){Input.jx=Input.jy=0;PAD.stick=false;}
+ const B=i=>{const b=g.buttons[i];return !!b&&(b.pressed||b.value>.5);};const map={0:'X',1:'O',3:'T',2:'S',4:'F'};
+ for(const k in map){const v=B(+k);if(v&&!PAD.prev[k]){Input.down(map[k]);PAD.on=true;}else if(!v&&PAD.prev[k])Input.up(map[k]);PAD.prev[k]=v;}
+ const spr=B(7)||B(5);if(spr&&!PAD.prev.s){Input.sprint=true;PAD.rT=performance.now();}else if(!spr&&PAD.prev.s){Input.sprint=false;if(performance.now()-PAD.rT<200)Input.push('Rtap');}PAD.prev.s=spr;
+ const st=B(9);if(st&&!PAD.prev.st&&App.match&&typeof togglePause==='function')togglePause();PAD.prev.st=st;}
 function beginMatch(m,info,home,away){App.demo=null;App.match=m;Input.clear();SFX.init();Voice.preload();SFX.on=!!App.settings.sound;Comm.tts=!!App.settings.voice;SFX.crowd(.07,.5);SFX.rain(m.rain);Stadium.start();
  $('compTag').textContent=m.comp||'';$('inComp').textContent=m.comp||'';
  const tA=m.t[0],tB=m.t[1];$('inA').innerHTML=crestHTML({name:tA.name,short:tA.short,kitArr:tA.kit})+esc(tA.name);$('inB').innerHTML=crestHTML({name:tB.name,short:tB.short,kitArr:tB.kit})+esc(tB.name);$('inW').textContent=(m.rain?'مطر · ':'')+'الإستاد مليان عن آخره';
@@ -504,7 +512,7 @@ $('skipBtn').onclick=()=>{if(App.match)App.match.skip();};
  z.addEventListener('pointermove',e=>{const j=Input.joy;if(!j||j.id!==e.pointerId)return;let dx=e.clientX-j.cx,dy=e.clientY-j.cy;const d=hyp(dx,dy);if(d>R0){dx*=R0/d;dy*=R0/d;}knob.style.transform=`translate(${dx}px,${dy}px)`;Input.jx=dx/R0;Input.jy=dy/R0;});
  const end=e=>{const j=Input.joy;if(!j||j.id!==e.pointerId)return;Input.joy=null;Input.jx=Input.jy=0;knob.style.transform='';};z.addEventListener('pointerup',end);z.addEventListener('pointercancel',end);
  const bind=(id,down,up)=>{const b=$(id);b.addEventListener('pointerdown',e=>{e.preventDefault();SFX.init();b.classList.add('act');down();try{b.setPointerCapture(e.pointerId);}catch(_){}});const u=()=>{b.classList.remove('act');up&&up();};b.addEventListener('pointerup',u);b.addEventListener('pointercancel',u);b.addEventListener('contextmenu',e=>e.preventDefault());};
- ['X','O','T','S','F'].forEach(k=>bind('b'+k,()=>Input.down(k),()=>Input.up(k)));bind('bR',()=>{Input.sprint=true;},()=>{Input.sprint=false;});})();
+ ['X','O','T','S','F'].forEach(k=>bind('b'+k,()=>Input.down(k),()=>Input.up(k)));bind('bR',()=>{Input.sprint=true;Input._rT=performance.now();},()=>{Input.sprint=false;if(performance.now()-(Input._rT||0)<200)Input.push('Rtap');});})();
 let lastMode='';function updButtons(force){const m=App.match;if(!m)return;const kn=$('joyKnob');kn.classList.toggle('spr',hyp(Input.jx,Input.jy)>.9||Input.sprint);if(!m.human)return;const h=m.human,b=m.ball;const has=b.owner===h.ctrl;const teamPoss=b.owner&&b.owner.team.idx===h.team;const rk=m.restartKind;
  const mode=has?(h.ctrl.role==='GK'?(rk==='gk'?'gkick':'gk'):rk==='pen'?'pen':rk==='throw'?'throw':rk==='corner'?'corner':'att'):teamPoss?(h.lock?'call':'sup'):'def';if(mode===lastMode&&!force)return;lastMode=mode;
  // [✕, ○, △, □]
@@ -515,7 +523,7 @@ function renderSubs(){const m=App.match,P=$('subsP');if(!m||!m.human){P.innerHTM
  P.innerHTML=`<div class="row" style="justify-content:space-between"><b>التبديلات (${t.subs}/5)</b><span class="sub">${sel?'اختار البديل':'اختار اللاعب اللي هيطلع'}</span></div>`+(sel?t.bench.map((p,k)=>row(p,'b'+k)).join('')||'<div class="sub">مافيش بدلاء</div>':t.pl.filter(p=>p.role!=='GK').map((p,k)=>row(p,'f'+t.pl.indexOf(p))).join(''));
  P.querySelectorAll('[data-k]').forEach(el=>el.onclick=()=>{const k=el.dataset.k;if(k[0]==='f'){renderSubs.sel=t.pl[+k.slice(1)];}else if(renderSubs.sel&&t.subs<5){m.manualSubs=true;m.sub(t,renderSubs.sel,t.bench[+k.slice(1)]);renderSubs.sel=null;}renderSubs();});}
 $('paSubs').onclick=()=>{$('helpP').classList.add('hidden');$('subsP').classList.toggle('hidden');renderSubs.sel=null;renderSubs();};
-$('paHelp').onclick=()=>{$('subsP').classList.add('hidden');const H=$('helpP');H.classList.toggle('hidden');const sv=id=>$(id).querySelector('svg').outerHTML;H.innerHTML=`<div class="help"><b></b><b>في الهجوم</b><b>في الدفاع</b>${sv('bX')}<span>تمرير أرضي</span><span>ضغط على حامل الكورة (اضغط مطوّل)</span>${sv('bO')}<span>عرضية / تمريرة طويلة</span><span>افتكاك واقف</span>${sv('bT')}<span>تمريرة بينية</span><span>زميل يضغط معاك (اضغط مطوّل)</span>${sv('bS')}<span>تسديد (اضغط مطوّل للقوة)</span><span>زحلقة</span><b style="color:#F5C542">L1</b><span>تسديدة لفّة مقوّسة للقائم البعيد</span><span>تغطية: تقف قدّام المهاجم من غير ما تندفع (مطوّل)</span><b style="color:#F5C542">R2</b><span>جري سريع (بيستهلك اللياقة)</span><span>جري سريع</span></div><div class="sub" style="margin-top:8px">وانت بتسدّد هتشوف دايرة على المرمى بتوريك الكورة رايحة فين: زق الجويستيك فوق/تحت عشان تغيّر الركن. لو سبته، التسديدة بتروح أوتوماتيك بعيد عن الحارس. التبديل للاعب الأقرب للكورة أوتوماتيك.</div>`;};
+$('paHelp').onclick=()=>{$('subsP').classList.add('hidden');const H=$('helpP');H.classList.toggle('hidden');const sv=id=>$(id).querySelector('svg').outerHTML;H.innerHTML=`<div class="help"><b></b><b>في الهجوم</b><b>في الدفاع</b>${sv('bX')}<span>تمرير أرضي</span><span>ضغط على حامل الكورة (اضغط مطوّل)</span>${sv('bO')}<span>عرضية / تمريرة طويلة</span><span>افتكاك واقف</span>${sv('bT')}<span>تمريرة بينية</span><span>زميل يضغط معاك (اضغط مطوّل)</span>${sv('bS')}<span>تسديد (اضغط مطوّل للقوة)</span><span>زحلقة</span><b style="color:#F5C542">L1</b><span>تسديدة لفّة مقوّسة للقائم البعيد</span><span>تغطية: تقف قدّام المهاجم من غير ما تندفع (مطوّل)</span><b style="color:#F5C542">R2</b><span>جري سريع (ضغطة سريعة وانت معاك الكورة = لمسة طويلة قدّام)</span><span>جري سريع</span></div><div class="sub" style="margin-top:8px"><b>تسديدة وهمية:</b> وانت بتشحن التسديد دوس <b>تمرير</b> قبل ما تسيب، اللاعب هيعمل إنه هيشوط والمدافع القريب ممكن يصدّق ويقع. <b>دراع تحكم بلوتوث</b> مدعوم: A تمرير، X تسديد، B عرضية، Y بينية، LB لفّة، RT جري، Start إيقاف.</div><div class="sub" style="margin-top:8px">وانت بتسدّد هتشوف دايرة على المرمى بتوريك الكورة رايحة فين: زق الجويستيك فوق/تحت عشان تغيّر الركن. لو سبته، التسديدة بتروح أوتوماتيك بعيد عن الحارس. التبديل للاعب الأقرب للكورة أوتوماتيك.</div>`;};
 
 /* ---------- HUD ---------- */
 let hudCache='';function hud(m){const ph=m.phase;const H=$('hud');H.classList.toggle('cine',ph==='intro'||ph==='replay');
@@ -537,6 +545,7 @@ function frame(ts){const dt=Math.min(.033,Math.max(0,(ts-last)/1000));last=ts;FX
  if(m&&gfxReady){try{
   if(App.match&&(m.phase==='intro'||m.phase==='replay')){if(Input.take('Xd')|Input.take('Od')|Input.take('Td')|Input.take('Sd'))m.skip();Input.take('Su');Input.take('Xu');}
   if(App.match&&m.phase==='replay'&&!App.settings.replay)m.skip();if(App.match){coachTick(App.match);commTick(App.match,dt);Stadium.tick(App.match,dt);App._iT=(App._iT||0)+dt;if(App._iT>.5){App._iT=0;instLive(App.match);}}
+  padPoll();
   m.update(dt);
   if(R3){R3.quality=App.settings.gfx;const d0=window.devicePixelRatio||1;R3.render(m,CW,CH,App.settings.gfx>=2?Math.min(2,d0):Math.min(1.25,d0),ts);drawOverlay(octx,m,CW,CH,(x,y,z)=>R3.project(x,y,z,CW,CH));}
   else if(ctx){m.render(ctx,CW,CH);octx.clearRect(0,0,CW,CH);FX.draw(octx,CW,CH,m);}

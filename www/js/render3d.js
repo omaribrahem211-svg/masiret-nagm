@@ -81,7 +81,7 @@ out vec3 vN,vW;out vec4 vC;out vec2 vT;out vec4 vL;flat out int vR;
 mat4 bone(int r,int j){int x=j*4;return mat4(texelFetch(uBones,ivec2(x,r),0),texelFetch(uBones,ivec2(x+1,r),0),texelFetch(uBones,ivec2(x+2,r),0),texelFetch(uBones,ivec2(x+3,r),0));}
 void main(){int r=gl_InstanceID;vec4 w4=aW/max(aW.x+aW.y+aW.z+aW.w,1e-4);
  mat4 S=bone(r,int(aJ.x))*w4.x+bone(r,int(aJ.y))*w4.y+bone(r,int(aJ.z))*w4.z+bone(r,int(aJ.w))*w4.w;
- vec4 w=S*vec4(aP,1.0);vW=w.xyz;vN=mat3(S)*aN;vR=int(aR+0.5);vC=texelFetch(uBones,ivec2(uNJ*4+vR,r),0);vT=vec2(aU.x,1.0-aU.y);vL=uLVP*w;gl_Position=uVP*w;}`;
+ vec4 w=S*vec4(aP,1.0);vW=w.xyz;vN=mat3(S)*aN;int rr=int(aR+0.5),hs=0;if(rr>=8){hs=rr-7;rr=5;}vR=rr;vC=texelFetch(uBones,ivec2(uNJ*4+vR,r),0);int ps=int(vC.a+0.5)-10;vC.a=1.0;vT=vec2(aU.x,1.0-aU.y);vL=uLVP*w;gl_Position=uVP*w;if(hs>0&&hs!=ps){gl_Position=vec4(0.0,0.0,-2.0,1.0);vL=vec4(0.0,0.0,-2.0,1.0);}}`;
 const SDVS=`#version 300 es
 layout(location=0) in vec3 aP;layout(location=2) in uvec4 aJ;layout(location=3) in vec4 aW;
 uniform mat4 uLVP;uniform highp sampler2D uBones;
@@ -128,7 +128,7 @@ class R3D{
    const sv=[p.kickT,p.windT,p.slide,p.diveT,p.jumpT,p.catchT,p.throwT,p.lungeT];p.kickT=p.windT=p.slide=p.diveT=p.jumpT=p.catchT=p.throwT=p.lungeT=0;p.anim=0;p.ampS=0;Skel.pose(p,m,t,sk.mat,0,sk.W);}}
   const o=row*sk.texW*4;sk.data.set(sk.mat,o);
   const cols=[p._sk,gk?tc.gk:tc.shirt,gk?tc.gks:tc.shorts,gk?tc.gk:tc.socks,p.star?lin('#F5C542'):[0.012,0.012,0.014,1],p._hr,gk?lin('#F5F5F5'):p._sk];
-  cols.push([1,1,1,1]);for(let k=0;k<8;k++){const c=cols[k],q=o+(sk.nJ*4+k)*4;sk.data[q]=c[0];sk.data[q+1]=c[1];sk.data[q+2]=c[2];sk.data[q+3]=1;}
+  cols.push([1,1,1,1]);for(let k=0;k<8;k++){const c=cols[k],q=o+(sk.nJ*4+k)*4;sk.data[q]=c[0];sk.data[q+1]=c[1];sk.data[q+2]=c[2];sk.data[q+3]=k===5?10+(p._hst==null?(p._hst=Skel.hairStyle(p)):p._hst):1;}
   // number on the back of the shirt, following spine.003
   const J=Skel.J,W=sk.W,P=Skel.jointPoint(J['spine.003'],W,Skel.rig.uv?[0,1.29,-0.128]:[0,1.36,-0.165],[0,0,0]),up=Skel.jointDir(J['spine.003'],W,[0,1,0],[0,0,0]),rt=Skel.jointDir(J['spine.003'],W,[1,0,0],[0,0,0]),bk=Skel.jointDir(J['spine.003'],W,[0,0,-1],[0,0,0]);
   const n=p.num%100,mo=this.tm,sx=Skel.rig.uv?-.2:.21,sy=.21;mo[0]=rt[0]*sx;mo[1]=rt[1]*sx;mo[2]=rt[2]*sx;mo[3]=0;mo[4]=up[0]*sy;mo[5]=up[1]*sy;mo[6]=up[2]*sy;mo[7]=0;mo[8]=bk[0];mo[9]=bk[1];mo[10]=bk[2];mo[11]=0;mo[12]=P[0];mo[13]=P[1];mo[14]=P[2];mo[15]=1;

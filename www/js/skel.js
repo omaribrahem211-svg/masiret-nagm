@@ -140,4 +140,6 @@ const Skel=(()=>{
  // position/orientation of a bind-pose point after skinning by joint j (used for the shirt number)
  function jointPoint(j,W,pt,o){const q=GR[j],t=GT[j];const v=[pt[0]-gT[j][0],pt[1]-gT[j][1],pt[2]-gT[j][2]];const ir=qinv(gR[j],[0,0,0,1]);qrot(ir,v,v);qrot(q,v,v);const x=v[0]+t[0],y=v[1]+t[1],z=v[2]+t[2];o[0]=W[0]*x+W[4]*y+W[8]*z+W[12];o[1]=W[1]*x+W[5]*y+W[9]*z+W[13];o[2]=W[2]*x+W[6]*y+W[10]*z+W[14];return o;}
  function jointDir(j,W,d,o){const ir=qinv(gR[j],[0,0,0,1]);const v=qrot(ir,d,[0,0,0]);qrot(GR[j],v,v);o[0]=W[0]*v[0]+W[4]*v[1]+W[8]*v[2];o[1]=W[1]*v[0]+W[5]*v[1]+W[9]*v[2];o[2]=W[2]*v[0]+W[6]*v[1]+W[10]*v[2];return o;}
- return{nJ,J,pose,jointPoint,jointDir,gT,rig:RIG,d64};})();
+ // تسريحة/دقن لكل لاعب من اسمه (0 = الشعر الأصلي، 1 شعر مفروق، 2 دقن)
+ function hairStyle(p){if(p.hairSt!=null)return p.hairSt;const n=String(p.name||'')+(p.num||0);let h=7;for(let i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))>>>0;const r=h%20;return r<9?0:r<15?1:2;}
+ return{nJ,J,pose,jointPoint,jointDir,gT,rig:RIG,d64,hairStyle};})();

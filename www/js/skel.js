@@ -79,7 +79,7 @@ const Skel=(()=>{
   const smother=dive>0&&p.smT>0;
   if(slide&&has('slide')){const S=p.slideMax||(p.slideMax=Math.max(p.slide,.5));const q=1-p.slide/S;act=(p.i||0)%2&&has('slide2')?'slide2':'slide';au=.22+q*.5;aw=1;}
   else if(smother&&has('gkBlock')){act='gkBlock';p._smo=true;au=.25+(1-dive)*.35;aw=1;}
-  else if(dive>0&&has('gkDiveL')){const yw=Math.atan2(p.fx,-p.fy),left=Math.sin(yw)*(p.diveDir||1)>0;p._dvL=left;p._smo=false;if((p.diveN||9)<2.4&&has('gkLunge')){act=left?'gkLow':'gkLunge';au=.15+(1-dive)*.65;}else{act=left?'gkDiveL':'gkDiveR';au=.2+(1-dive)*.28;}aw=1;}
+  else if(dive>0&&has('gkDiveL')&&!((p.diveH||0)>1.35)){const yw=Math.atan2(p.fx,-p.fy),left=Math.sin(yw)*(p.diveDir||1)>0;p._dvL=left;p._smo=false;if((p.diveN||9)<2.4&&has('gkLunge')){act=left?'gkLow':'gkLunge';au=.15+(1-dive)*.65;}else{act=left?'gkDiveL':'gkDiveR';au=.2+(1-dive)*.28;}aw=1;}
   else if(p.stun>.4&&p.fallK==='knock'&&has('knock')){act='knock';p._fallen=true;p._kS=Math.max(p._kS||0,p.stun);au=Math.min(.97,.05+(1-p.stun/Math.max(1.35,p._kS))*2.2);aw=1;}
   else if(p.stun>.4&&has('trip')){act='trip';p._fallen=p.stun>.7||p._fallen;au=.15+(1-Math.min(1,p.stun/1.2))*.5;aw=1;}
   else if(p.jumpT>0&&has('head')){if(p.hdrHi&&has('headJ')){act='headJ';au=.28+(1-p.jumpT/.45)*.3;}else{act=((p.i||0)+(p.kc||0))%2&&has('head2')?'head2':'head';au=.3+(1-p.jumpT/.45)*.3;}aw=1;}
@@ -131,6 +131,7 @@ const Skel=(()=>{
   if(slide&&!act){pitch=-1.15;piv=.35;lift=-.28;}
   if(dive>0&&!act){const dH=p.diveH==null?1:p.diveH;const k=Math.sin(Math.min(1,(1-dive)*1.6)*Math.PI*.5);const sideW=-(p.diveDir||1);const fs=Math.sign(-Math.sin(yaw)*0+Math.cos(yaw)*sideW)||1;roll=fs*(dH<.6?1.45:1.3)*k;lift=(.12+.32*Math.min(dH,2))*Math.sin((1-dive)*Math.PI)-.2*k;}
   if(gk&&p.gkHi>0&&!dive&&!act)lift+=.5*Math.sin(Math.PI*(1-p.gkHi/.5));
+  if(gk&&dive>0&&act&&(p.diveH||0)>1.25)lift+=Math.min(.75,(p.diveH-1.1)*.6)*Math.sin((1-dive)*Math.PI);
   if(p.jumpT>0&&!slide&&!dive)lift+=(act==='head'?.6:1)*.42*Math.sin(Math.PI*(1-p.jumpT/.45));
   const sc=p._hs||(p._hs=.95+((p.i*7919)%17)/170);
   const cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),spp=Math.sin(pitch),cr=Math.cos(roll),sr=Math.sin(roll);

@@ -254,6 +254,14 @@ for key,fn,t0,t1,hit,mir in (('penA','10_Penalty_Kick_01',5.85,7.25,6.50,0),('pe
     m={}
     if hit is not None:m['hit']=round((hit-t0)/(t1-t0),3)
     add(key,fr,du,**m)
+# لفّة 180 وانت بتجري (من غير كورة): بنشيل لفّة الحوض من الحركة، واللعبة نفسها هي اللي بتلف اتجاه اللاعب
+def deyaw(frames):
+    import math
+    out=[]
+    for T,Q in frames:
+        f=qrot(Q[0],np.array([0,0,1.]));yw=math.atan2(f[0],f[2]);Q=list(Q);Q[0]=qn(qmul(qax(np.array([0,1.,0]),-yw),Q[0]));out.append((T,Q))
+    return out
+fr,du=mixamo_clip('/tmp/mixz/src3/Running_To_Turn.fbx',t0=0.55,t1=1.65);add('turn180',deyaw(fr),du)
 fr,du=mixamo_clip('kick soccerball');add('kickM',mirror(fr),du,hit=round(foot_peak(mirror(fr),'Right'),3))
 b64=lambda a:base64.b64encode(np.ascontiguousarray(a).tobytes()).decode()
 rest=[list(np.round(restT[i],6))+list(np.round(restQ[i],6))+[1,1,1] for i in range(nJ)]

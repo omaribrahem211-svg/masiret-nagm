@@ -328,7 +328,7 @@ class R3D{
   const CM=+((typeof App!=='undefined'&&App.settings&&App.settings.cam)||0),hu=m.human,stp=m.t&&m.t[0].star&&!m.t[0].star.off&&m.t[0].pl.includes(m.t[0].star)?m.t[0].star:null;
   // في وضع "لاعبي بس" أو كاميرا اللاعب: الكاميرا بتجمع بين الكورة ولاعبك عشان يفضل باين دايماً
   const follow=stp&&!cel&&m.phase!=='intro'&&(CM===3||(hu&&hu.lock));const fw=CM===3?.75:.42;
-  const fx0=cel?cel.x:follow?stp.x*fw+(b.x+c3.lx)*(1-fw):b.x+c3.lx,fy0=cel?cel.y:follow?stp.y*fw+b.y*(1-fw):b.y;const tx=clamp(fx0+(cel||m.phase!=='play'?0:3.2),10,L-10),ty=clamp(fy0,cel?4:14,W-12);SD('x',tx,.42);SD('y',ty,.6);
+  const fx0=cel?cel.x:follow?stp.x*fw+(b.x+c3.lx)*(1-fw):b.x+c3.lx,fy0=cel?cel.y:follow?stp.y*fw+b.y*(1-fw):b.y;const tx=clamp(fx0+(cel||m.phase!=='play'?0:3.2),10,L-10),ty=clamp(fy0,cel?4:m.restartKind==='throw'||m.restartKind==='corner'?7:14,W-12);SD('x',tx,.42);SD('y',ty,.6);
   const aspect=w/h,zoomK=aspect<1.5?1.25:1;let eye,tgt,wf;
   if(m.phase==='intro'){const a=t/1000*.22+(c3.a0||(c3.a0=Math.random()*6));eye=[CX+Math.cos(a)*86,30+Math.sin(a*.6)*5,-CY+Math.sin(a)*52];tgt=[CX,2,-CY];wf=aspect<1.5?50:38;c3.f=wf;}
   else if(m.phase==='replay'){const d=m.rpDir||1;const wantE=[b.x-d*12,3.4,-b.y+11],wantT=[b.x+d*3,1,-b.y];if(!c3.re){c3.re=wantE.slice();c3.rt=wantT.slice();}for(let i=0;i<3;i++){c3.re[i]+=(wantE[i]-c3.re[i])*Math.min(1,dt*3);c3.rt[i]+=(wantT[i]-c3.rt[i])*Math.min(1,dt*4);}eye=c3.re.slice();tgt=c3.rt.slice();wf=aspect<1.5?44:34;c3.f=wf;}

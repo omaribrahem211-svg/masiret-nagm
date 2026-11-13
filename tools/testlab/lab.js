@@ -71,6 +71,7 @@ function runMatch(id, seed) {
       gkThrow: [0, 0], restartPass: [0, 0], recvTurnover: [0, 0], recvKept: [0, 0], flight: [] },
     shot: { n: [0, 0], goal: [0, 0], saved: [0, 0], gkTouch: [0, 0], off: [0, 0], wood: [0, 0], blocked: [0, 0], other: [0, 0], inBox: [0, 0], outBox: [0, 0], goalsInBox: [0, 0], goalsOutBox: [0, 0], header: [0, 0], pen: [0, 0], penGoal: [0, 0], goalAfterTouch: [0, 0], firstTime: [0, 0], dist: [], goalKinds: {} },
     gk: { saves: [0, 0], smother: [0, 0], conceded: [0, 0], dives: [0, 0], parries: [0, 0], catches: [0, 0], reboundsToAtt: [0, 0], reboundShots: [0, 0], reachD: [], bodyD: [], suspicious: [] },
+    offsideBy: { ground: 0, aerial: 0, header: 0, other: 0 }, hdrPassOffsidePos: 0,
     hdr: { total: 0, shot: 0, cushion: 0, pass: 0, clear: 0, chains3: 0, maxChain: 0, maxSame: 0, loops: 0, loopSec: 0, worst: null },
     stam: { at45: null, at90: null, end: null },
     ball: { looseN: 0, looseSec: 0, looseDur: [], highEpisodes: 0, ownedFrames: [0, 0] },
@@ -88,7 +89,7 @@ function runMatch(id, seed) {
   let pend = null;       // pass in flight
   let rcv = null;        // receiver of a completed pass (turnover watch)
   let shot = null;       // shot being tracked
-  let lastShotObj = null, prevShot = null;
+  let lastShotObj = null, prevShot = null, lastPassType = 'other';
   let loose = null;      // loose-ball episode
   let parry = null, lastParry = null; // GK parry watch
   const tk = new Map();  // open tackle attempts
@@ -119,6 +120,7 @@ function runMatch(id, seed) {
     const ti = T(p), b = m.ball; if (!q) return; if (pend && pend.p === p && pend.t0 === now()) return;
     if (pend && !pend.res) finishPass('other');
     const d = hyp(q.x - p.x, q.y - p.y);
+    lastPassType = (lob || b.vz > 3) ? 'aerial' : 'ground';
     pend = { p, q, ti, d, lob: !!lob, cross: !!b.cross, thru: !!thru, kind: kind || null, t0: now(), x: p.x, y: p.y, vz: b.vz };
     S.pass.att[ti]++; S.pass.byZone[zone(d)][ti]++;
     if (pend.lob || b.vz > 3) { pend.air = true; S.pass.aerial[ti]++; } else S.pass.ground[ti]++;
@@ -187,6 +189,7 @@ function runMatch(id, seed) {
   wrap('header', (p) => ({ shot0: m.ball.shot, b0: { x: m.ball.x, y: m.ball.y } }), (c, p) => {
     { const b = m.ball, H = S.hdr; H.total++;
       const kind = b.shot && b.shot !== c.shot0 ? 'shot' : b.target === p ? 'cushion' : (b.target && b.target.team === p.team) ? 'pass' : 'clear'; H[kind]++;
+      if (kind === 'pass') { lastPassType = 'header'; if (m.isOffside(b.target, p)) S.hdrPassOffsidePos++; }
       if (hc && (now() - hc.lt > 1.5)) closeChain();
       if (!hc) hc = { t0: now(), min: mn(), x0: c.b0.x, y0: c.b0.y, n: 0, lastP: null, same: 0, maxSame: 0, maxP: null };
       hc.n++; hc.same = hc.lastP === p ? hc.same + 1 : 1; hc.lastP = p; if (hc.same > hc.maxSame) { hc.maxSame = hc.same; hc.maxP = p.name; }
@@ -224,7 +227,7 @@ function runMatch(id, seed) {
     if (c.prev && m.phase === 'restart') anom('restart_overridden', c.prev + ' -> ' + k);
   });
   wrap('kickoff', null, () => { S.rules.kickoff++; if (pend && !pend.res) finishPass('other'); if (shot && !shot.res) resolveShot('other'); if (loose) endLoose(); });
-  wrap('offsideCall', (p) => ({ p }), (c) => { S.rules.offside[T(c.p)]++; evt('offside', { team: T(c.p), by: c.p.name }); });
+  wrap('offsideCall', (p) => ({ p }), (c) => { S.offsideBy[lastPassType] = (S.offsideBy[lastPassType] || 0) + 1; S.rules.offside[T(c.p)]++; evt('offside', { team: T(c.p), by: c.p.name }); });
   wrap('foul', (p, c, slide) => ({ p, c, slide, yc: p.stats.yc, rc: p.stats.rc, adv: m.ball.owner === c, pens: S.rules.pen }), (o) => {
     const ti = T(o.p); S.rules.fouls[ti]++; if (o.p.stats.yc > o.yc) S.rules.yellow[ti]++; if (o.p.stats.rc > o.rc) S.rules.red[ti]++;
     if (S.rules.pen > o.pens) S.rules.pens[1 - ti]++;
@@ -324,6 +327,9 @@ function runMatch(id, seed) {
 
   // ---- final totals and consistency checks ----
   closeChain(); S.hdr.loopSec = r2(S.hdr.loopSec); S.realSec = r2(S.frames / 60); S.stam.end = r2(m.all.filter(p => p.role !== 'GK').reduce((a, p) => a + p.stam, 0) / m.all.filter(p => p.role !== 'GK').length);
+  if (m.shotLog) { const R = { records: m.shotLog.length, implicit: 0, out: {}, deflected: 0, deflectedOnTarget: 0, gkTouched: 0, wood: 0, fumble: 0, sot: 0, live: 0 };
+    for (const r of m.shotLog) { if (r.implicit) R.implicit++; R.out[r.out || 'live'] = (R.out[r.out || 'live'] || 0) + 1; if (!r.out) R.live++; if (r.deflected) { R.deflected++; if (r.out === 'saved' || r.out === 'goal') R.deflectedOnTarget++; } if (r.gkTouched) R.gkTouched++; if (r.wood) R.wood++; if (r.fumble) R.fumble++; if (r.sot) R.sot++; }
+    S.shotRec = R; }
   S.score = m.score.slice();
   const tp = m.possF[0] + m.possF[1] || 1; S.poss = [Math.round(m.possF[0] / tp * 1000) / 10, Math.round(m.possF[1] / tp * 1000) / 10];
   S.gameMin = r2(90 + (m.added || [0, 0]).reduce((a, v) => a + v, 0)); S.rules.added = (m.added || []).slice();

@@ -209,6 +209,35 @@ for key,fn in (('victory','Victory'),('cheer','Cheering'),('fistp','Fist_Pump'),
     fr,du=mixamo_clip('/tmp/mixz/src4/'+fn+'.fbx');add(key,fr,du)
 for key,nm,o in (('knock','Hit_Knockback',{}),('layUp','LayToIdle',{}),('protest','Idle_No_Loop',{}),('fold','Idle_FoldArms_Loop',{})):
     fr,du=ual2_clip(nm,**o);add(key,fr,du)
+# Anderson Rohr Free mocap pack 05: Soccer (UE5 Manny skeleton) retarget
+sys.path.insert(0,'/tmp/gen2');from ue5 import UEClip
+EMAP={'Hips':'pelvis','Spine':'spine_01','Spine1':'spine_03','Spine2':'spine_05','Neck':'neck_01','Head':'head'}
+for s_,l in (('Left','l'),('Right','r')):
+    EMAP.update({s_+'Shoulder':'clavicle_'+l,s_+'Arm':'upperarm_'+l,s_+'ForeArm':'lowerarm_'+l,s_+'Hand':'hand_'+l,s_+'UpLeg':'thigh_'+l,s_+'Leg':'calf_'+l,s_+'Foot':'foot_'+l,s_+'ToeBase':'ball_'+l})
+_UE={}
+def ue_clip(fn,t0,t1,keepXZ=0.0):
+    u=_UE.get(fn) or UEClip('/tmp/ar5/mocap/UE5/'+fn+'_ue5.fbx');_UE[fn]=u
+    rq,rp=u.restC();AL={}
+    for n in JN:
+        AL[n]=rot_between(gP0[CHILD[n]]-gP0[n],rp[EMAP[CHILD[n]]]-rp[EMAP[n]]) if n in CHILD else np.array([0,0,0,1.])
+    hr=gP0['Hips'][1]/rp['pelvis'][1];N=max(2,int(round((t1-t0)*FPS))+1);frames=[];p0=None
+    for f in range(N):
+        t=t0+(t1-t0)*f/(N-1);gq,gp=u.frame(t);mq={};mp={}
+        for n in JN:mq[n]=qn(qmul(qmul(qmul(gq[EMAP[n]],qinv(rq[EMAP[n]])),AL[n]),gQ0[n]))
+        d=(gp['pelvis']-rp['pelvis'])*hr
+        if p0 is None:p0=d.copy()
+        mp['Hips']=gP0['Hips']+np.array([(d[0]-p0[0])*keepXZ,d[1],(d[2]-p0[2])*keepXZ])
+        frames.append(locals_from_globals(mq,mp))
+    return frames,t1-t0
+for key,fn,t0,t1,hit,mir in (('penA','10_Penalty_Kick_01',5.85,7.25,6.50,0),('penB','11_Penalty_Kick_02',4.27,5.67,4.92,0),
+        ('shotP','09_Power_Kick',1.75,3.25,2.58,1),('passS','08_Side_Foot_Kick',0.85,2.05,1.38,0),('tackleS','18_Defending_01',4.3,5.4,4.75,0),
+        ('gkHiJ','15_Goalkeeper_Save_01',4.6,5.9,5.2,0),('gkLunge','16_Goalkeeper_Save_02',2.7,4.0,3.28,0),('gkLow','17_Goalkeeper_Save_03',6.0,7.6,6.85,0),
+        ('celKnee','12_Goal_Celebration_01',0.3,3.4,None,0),('celArms','13_Goal_Celebration_02',0.3,3.45,None,0),('celJump','14_Goal_Celebration_03',0.3,3.15,None,0)):
+    fr,du=ue_clip(fn,t0,t1)
+    if mir:fr=mirror(fr)
+    m={}
+    if hit is not None:m['hit']=round((hit-t0)/(t1-t0),3)
+    add(key,fr,du,**m)
 fr,du=mixamo_clip('kick soccerball');add('kickM',mirror(fr),du,hit=round(foot_peak(mirror(fr),'Right'),3))
 b64=lambda a:base64.b64encode(np.ascontiguousarray(a).tobytes()).decode()
 rest=[list(np.round(restT[i],6))+list(np.round(restQ[i],6))+[1,1,1] for i in range(nJ)]

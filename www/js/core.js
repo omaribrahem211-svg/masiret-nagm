@@ -274,7 +274,7 @@ class Match{
   if(r&&this.time<r.until&&!(r.p.stun>0)&&r.p!==c){if(r.carrier===c)r.pt=this.runPt(t,c,r.kind);return r;}/* الانطلاقة بتكمّل لحد آخر وقتها حتى لو الكورة اتنقلت لزميل تاني */
   t.run=null;if(c.role!=='FW'||Math.abs(c.by-34)<=13||(h&&c.team.idx===h.team&&h.lockRuns))return null;
   const bxT=t.dir===1?c.x:L-c.x;if(bxT<55||bxT>94||Math.abs(c.y-CY)<17)return null;
-  if(c.runChk!==c.ownT){c.runChk=c.ownT;c.runRoll=Math.random();}/* قرعة واحدة لكل استلام للجناح، والظروف بتتراجع كل 0.3 ث طول ما هو معاه الكورة */
+  if(c.runChk!==c.takeAt){c.runChk=c.takeAt;c.runRoll=Math.random();}/* قرعة واحدة لكل استلام للجناح، والظروف بتتراجع كل 0.3 ث طول ما هو معاه الكورة */
   const side=Math.sign(c.y-CY),gs=q=>(t.dir===1?q.x:L-q.x)<bxT-5,fb=t.pl.find(p=>p.role==='DF'&&Math.abs(p.by-34)>13&&Math.sign(p.y-CY)===side);
   const cov=t.pl.filter(q=>q.role==='DF'&&q!==fb&&gs(q)).length>=3&&t.pl.some(q=>q.role==='MF'&&gs(q));
   const okP=q=>q&&!(q.stun>0)&&q.stam>45&&!(h&&(q===h.ctrl||q===h.p2));
@@ -424,7 +424,7 @@ class Match{
   let nd=1e9,no=null;for(const q of o.pl){const d=hyp(q.x-p.x,q.y-p.y);if(d<nd){nd=d;no=q;}}
   const dG=hyp(g[0]-p.x,g[1]-p.y);
   // (v131 E2) B استلم وفيه راجل تالت جاري: يديهاله في طريقه لو الممر لسه فاضي وC مش متسلل (أول لمستين/أول 1.2 ث، ومش كل مرة: 75%)
-  {const tm=t.third;if(tm&&tm.b===p&&b.owner===p&&!p.pend&&this.time-(p.ownT||0)<1.2&&tm.p.team===t){const q=tm.p,qx=t.dir===1?q.x:L-q.x,lead=[q.x+q.vx*.5,q.y+q.vy*.5];
+  {const tm=t.third;if(tm&&tm.b===p&&b.owner===p&&!p.pend&&this.time-(p.takeAt||0)<1.2&&tm.p.team===t){const q=tm.p,qx=t.dir===1?q.x:L-q.x,lead=[q.x+q.vx*.5,q.y+q.vy*.5];
     if(tm.roll==null)tm.roll=Math.random();if(tm.roll<.75&&qx<t.offLine&&t.dir*(q.x-p.x)>4&&o.pl.every(z=>segDist(z.x,z.y,p.x,p.y,lead[0],lead[1])>2.2&&hyp(z.x-lead[0],z.y-lead[1])>3.5)){tm.passed=true;this.pass(p,q,true,false);return;}}}
   // (v131 E2) (كل فريم) الجناح وفيه ظهير/لاعب وسط بيعمل overlap/underlap: لو الجاري بقى قدامه وممر التمريرة فاضي يمررها في طريقه،
    // ولو لسه ماوصلش ومفيش ضغط عليه (أقرب خصم > 3.4 م) يمشي بالكورة على مهله لحد 3 ث (لجوه شوية لو overlap عشان يفتح الممر برّه، ولبرّه لو underlap) يستناه بدل ما يعرّض أو يرجّع
@@ -669,7 +669,7 @@ class Match{
   if(b.offside){const q=b.offside;b.offside=null;if(q===p){this.offsideCall(p);return;}}
   if(b.passFrom){if(b.passFrom.team===p.team&&b.passFrom!==p)b.passFrom.stats.pc++;else if(b.passFrom.team!==p.team)b.passFrom.stats.pf++;b.passFrom=null;}
   {const r=this.shotLive();if(r)this.shotEnd(p.team.idx===r.team?'retained':r.gkTouched?'saved':r.wood?'off_target':'blocked',p);}
-  const wasT=b.target===p;b.inHands=false;b.cx=b.cy=0;b.sw=0;b.tw=0;if(this.restartKind!=='ko'&&!this.restartKind)for(const q of this.all){if(q.spT){q.spT=null;q.wallP=0;}}b.owner=p;b.last=p;b.target=null;b.cross=false;b.shot=null;p.ctrlT=0;p.touchT=.2;p.rcvT=.3;p.bdx=null;p.takeAt=this.time;p.ownT=this.time;this.firstTouch(p,wasT);if(this.human)this.human.recv=null;
+  const wasT=b.target===p;b.inHands=false;b.cx=b.cy=0;b.sw=0;b.tw=0;if(this.restartKind!=='ko'&&!this.restartKind)for(const q of this.all){if(q.spT){q.spT=null;q.wallP=0;}}b.owner=p;b.last=p;b.target=null;b.cross=false;b.shot=null;p.ctrlT=0;p.touchT=.2;p.rcvT=.3;p.bdx=null;p.takeAt=this.time;this.firstTouch(p,wasT);if(this.human)this.human.recv=null;
   if(p.star&&p.team.idx===0)this.ev('star_ball',{p},7);
   const h=this.human;if(h&&!h.lock){if(p.team.idx===h.team){h.ctrl=p;if(p.role==='GK')p.gkHoldT=0;}else if(prev&&prev===this.t[h.team]&&p.team.idx!==h.team){h.swAt=0;this.autoSwitch(false);}}}
  firstTouch(p,wasT){const b=this.ball;if(b.inHands||this.restartKind)return;if(wasT)p.rcvA=.45;const v=hyp(b.vx,b.vy);const q=.45+p.st.drib/180+(wasT?.08:0);const h=this.human;let dx=p.fx,dy=p.fy;

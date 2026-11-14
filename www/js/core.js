@@ -833,7 +833,12 @@ class Match{
   {const k=b.z<.05?(this.rain?.62:.85):.1;const f=Math.exp(-k*dt);b.vx*=f;b.vy*=f;if(b.z<.05){const v=hyp(b.vx,b.vy);if(v>0){const nv=Math.max(0,v-.22*dt);b.vx*=nv/v;b.vy*=nv/v;}}b.spin+=hyp(b.vx,b.vy)*dt*3;}
   this.woodHit(b);
   if(this.phase==='goal'){if(b.x<-1.8){b.x=-1.8;b.vx=0;}if(b.x>L+1.8){b.x=L+1.8;b.vx=0;}if(b.z>GH-.1){b.z=GH-.1;b.vz=0;}if(Math.abs(b.y-CY)>GW/2-.2&&(b.x<0||b.x>L)){b.y=CY+Math.sign(b.y-CY)*(GW/2-.2);b.vy=0;}}}
- gkReach(p){const b=this.ball;if(p.diveT>0){const e=.75-p.diveT;const ext=Math.min(1,e/.4)*.62;const hx=p.x,hy=p.y+p.diveDir*ext;return{d:segDist(b.x,b.y,p.x,p.y,hx,hy),r:.44,z:clamp((p.diveH==null?1.2:p.diveH)+.65,1.3,2.5)};}return{d:hyp(p.x-b.x,p.y-b.y),r:.68,z:2.45};}
+ gkReach(p){const b=this.ball;if(p.diveT>0){const e=.75-p.diveT;
+  // (v131 D1) مدى الارتماء على قد إيد الحارس في الأنيميشن فعلاً (اتقاس من الهيكل في كل الارتماءات): الإيد بتبعد 0.4–0.8 م عن الجسم
+  // وبتوصل أقصاها بعد ~0.15 ث وبعد 0.45 ث بتنزل مع الوقعة. قبل كده النموذج كان بيدّي 1.06 م بالعرض وارتفاع ثابت لحد ما الارتماءة تخلص،
+  // فـ13% من لمسات الحارس كانت والإيد المرسومة أبعد من 0.6 م عن الكورة
+  const fall=e>.45?Math.max(.4,1-(e-.45)/.3):1,ext=Math.min(1,e/.15)*.45*fall;const hx=p.x,hy=p.y+p.diveDir*ext;
+  return{d:segDist(b.x,b.y,p.x,p.y,hx,hy),r:.32,z:clamp((p.diveH==null?1.2:p.diveH)+.45-(e>.45?(e-.45)*2:0),.6,2.4)};}/* (v131 D1) واقف: كورة عالية (>1.6 م) والحارس مش رافع إيده (gkHi) مداها 0.45 م بس وأقصى ارتفاع 2.1 م */const up=p.gkHi>0||p.catchT>0;return{d:hyp(p.x-b.x,p.y-b.y),r:b.z>1.6&&!up?.45:.68,z:up?2.45:2.1};}
  contacts(){if(this.walk)return;const b=this.ball;if(b.owner||b.z<.4)b.hdrN=0;if(b.owner){const o=b.owner;if(b.inHands||this.restartKind||this.phase!=='play')return;const od=hyp(b.x-o.x,b.y-o.y);if(od<1||b.z>.8)return;let st=null,sd=.45;for(const p of this.other(o.team).pl){if(p.cool>0||p.stun>0||p.role==='GK'&&b.inHands)continue;const d=hyp(p.x-b.x,p.y-b.y);if(d<sd&&d<od-.15){sd=d;st=p;}}if(st){o.stats.lost++;st.stats.tk++;o.cool=.35;this.take(st);if(this.human&&st.team.idx===this.human.team)this.ev('tackle',{p:st},8);}return;}
   let best=null,bd=1e9;const fast=hyp(b.vx,b.vy)>14&&b.px!==undefined;
   for(const p of this.all){if(p.cool>0||(p.stun>0&&p.role!=='GK'))continue;if(p.role==='GK'){const g=this.ownG(p.team);if(Math.abs(b.x-g[0])>17.5&&!(b.z<1.3&&hyp(p.x-b.x,p.y-b.y)<.95))continue;const R0=this.gkReach(p);if(b.z<=R0.z&&R0.d<R0.r&&R0.d-.3<bd){bd=R0.d-.3;best=p;}continue;}

@@ -1,0 +1,31 @@
+{
+ "www": "/home/claude/masiret-nagm/www/js",
+ "dt": 0.016666666666666666,
+ "runsPerCase": 40,
+ "cases": {
+  "stick idle": {
+   "runs": 40,
+   "received": 40,
+   "stickMovedPlayerAlongStickDuringFlight_m": null,
+   "speedAtTakeMedian": 1.43,
+   "passPressedAtTake_delaySecMedian": 0.17,
+   "passesExecuted": 40
+  },
+  "stick toward goal": {
+   "runs": 40,
+   "received": 40,
+   "stickMovedPlayerAlongStickDuringFlight_m": 4.23,
+   "speedAtTakeMedian": 3.01,
+   "passPressedAtTake_delaySecMedian": 0.17,
+   "passesExecuted": 40
+  },
+  "stick sideways": {
+   "runs": 40,
+   "received": 40,
+   "stickMovedPlayerAlongStickDuringFlight_m": 1.72,
+   "speedAtTakeMedian": 3.01,
+   "passPressedAtTake_delaySecMedian": 0.17,
+   "passesExecuted": 40
+  }
+ }
+}

@@ -42,6 +42,7 @@ for (const [name, o] of Object.entries(cases)) {
     if (!o.stick && (b.owner !== c || h.ctrl !== c || m.phase !== 'play' || m.restartKind)) { const why = b.owner !== c ? 'lost the ball before the press (not counted)' : h.ctrl !== c ? 'control switched (not counted)' : 'stoppage (not counted)'; r[why] = (r[why] || 0) + 1; Input.clear(); continue; }
     if (o.stick) { Input.jx = o.stick[0]; Input.jy = o.stick[1]; step(m, 1); Input.jx = Input.jy = 0; res = (y0 - c.y) * 1 > 2 || (c.y - y0) > 2 ? 'moved' : 'did not move'; }
     else { Input.down(o.btn); step(m, o.hold); Input.up(o.btn); for (let i = 0; i < 180 && res === 'nothing'; i++) { m.update(1 / 60); if (c.stats.sh > s0) res = 'shot'; else if (c.stats.p > p0) res = 'pass' + (b.cross ? ' (cross)' : b.vz > 2 ? ' (lofted)' : ''); } }
+    if (res === 'nothing' && b.owner && b.owner.team !== c.team) res = 'opponent took the ball before the kick (not a control failure)';
     r[res] = (r[res] || 0) + 1; Input.clear();
   }
   out[name] = r;

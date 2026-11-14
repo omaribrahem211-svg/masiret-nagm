@@ -1,0 +1,36 @@
+{
+ "www": "/home/claude/masiret-nagm/www/js",
+ "runs": 40,
+ "results": {
+  "X pass": {
+   "pass": 19,
+   "pass (lofted)": 20,
+   "opponent took the ball before the kick (not a control failure)": 1
+  },
+  "O lob/cross": {
+   "pass (lofted)": 39,
+   "opponent took the ball before the kick (not a control failure)": 1
+  },
+  "T through ball": {
+   "pass": 19,
+   "pass (lofted)": 20,
+   "opponent took the ball before the kick (not a control failure)": 1
+  },
+  "S shoot (tap) from 20 m": {
+   "shot": 40
+  },
+  "S held 0.6 s (power shot)": {
+   "shot": 39,
+   "opponent took the ball before the kick (not a control failure)": 1
+  },
+  "X pass while running (stick held forward)": {
+   "lost the ball before the press (not counted)": 4,
+   "pass": 31,
+   "pass (lofted)": 5
+  },
+  "stick only (move up)": {
+   "moved": 38,
+   "did not move": 2
+  }
+ }
+}

@@ -1,0 +1,16 @@
+{
+ "meta": {
+  "www": "/tmp/et/p3d/v1",
+  "n": 60
+ },
+ "catches": 0,
+ "parries": 247,
+ "parryOutcome": {
+  "defence": 91,
+  "corner": 89,
+  "gkRecovers": 47,
+  "attackOpenPlay": 10,
+  "attackShot": 1
+ },
+ "attackRegainShare": 0.046
+}

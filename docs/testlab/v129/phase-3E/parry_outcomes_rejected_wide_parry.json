@@ -1,0 +1,17 @@
+{
+ "meta": {
+  "www": "/tmp/et/p3e/v1",
+  "n": 60
+ },
+ "catches": 0,
+ "parries": 241,
+ "parryOutcome": {
+  "corner": 106,
+  "attackOpenPlay": 5,
+  "defence": 74,
+  "gkRecovers": 50,
+  "goal": 1,
+  "attackShot": 2
+ },
+ "attackRegainShare": 0.034
+}

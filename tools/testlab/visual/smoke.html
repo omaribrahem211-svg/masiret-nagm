@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>app smoke test</title></head>
+<body style="margin:0"><iframe id="f" src="../../../www/index.html" style="width:640px;height:360px;border:0"></iframe><pre id="out"></pre>
+<script>
+// Final phase smoke test (tools only, never shipped): loads the real app (www/index.html — the same files Capacitor packs
+// into the APK) in headless Chrome, presses "quick match", then drives the human player with the keyboard mapping the game
+// uses (arrows = joystick, J/Space = X pass/tackle, K = shoot, L = O lob/cross, I = triangle through ball) and records
+// whether the game reacts: match started, human-controlled player moved with the arrows, passes/shots by the human team,
+// switching of the controlled player, errors thrown by the page. Results are written into <pre id=out> (read with --dump-dom).
+const R={errors:[],steps:[]};const f=document.getElementById('f');const log=s=>R.steps.push(s);
+function done(){document.getElementById('out').textContent=JSON.stringify(R);}
+f.onload=()=>{const w=f.contentWindow;w.addEventListener('error',e=>R.errors.push(String(e.message)));w.addEventListener('unhandledrejection',e=>R.errors.push('promise: '+String(e.reason)));
+ const App=()=>w.eval('App');const key=(code,down)=>w.dispatchEvent(new w.KeyboardEvent(down?'keydown':'keyup',{code,key:code,bubbles:true}));
+ const wait=ms=>new Promise(r=>setTimeout(r,ms));
+ (async()=>{try{
+  await wait(1500);log('title screen: '+!!w.document.getElementById('mQuick'));
+  try{App().settings.intro=false;App().settings.halfLen=Math.min(App().settings.halfLen||120,120);}catch(e){}
+  w.document.getElementById('mQuick').click();await wait(2500);
+  const m=App().match;R.matchStarted=!!m;if(!m){done();return;}
+  if(m.walk&&m.endWalk)m.endWalk();
+  for(let i=0;i<40&&m.phase!=='play';i++)await wait(250);
+  R.phaseAfterStart=m.phase;const h=m.human;R.humanTeam=h?h.team:null;
+  // 1) joystick: hold → for 1.5 s and check the controlled player moved that way
+  for(let i=0;i<600&&m.restartKind;i++)m.update(1/60);R.restartPendingAtTest=m.restartKind||null;m.human.lock=true;
+  const p0=h.ctrl,x0=p0.x,y0=p0.y;const st=sec=>{for(let i=0;i<Math.round(sec*60);i++)m.update(1/60);};key('ArrowRight',true);st(1.5);key('ArrowRight',false);
+  R.arrowRight={player:p0.name,stillControlled:m.human.ctrl===p0,dx:+(p0.x-x0).toFixed(2),dy:+(p0.y-y0).toFixed(2)};
+  key('ArrowUp',true);st(1);key('ArrowUp',false);R.arrowUp={dy:+(p0.y-y0).toFixed(2)};
+  m.human.lock=false;
+  // 2) each button with the ball at the controlled player's feet: tap, wait, check what the engine did
+  R.buttons={};const wt=sec=>{for(let i=0;i<Math.round(sec*60);i++)m.update(1/60);return wait(1);};
+  for(const [k,name,hold] of [['KeyJ','X pass',.12],['KeyK','square shoot',.35],['KeyL','O lob/cross',.15],['KeyI','triangle through ball',.12]]){
+   if(App().match!==m||m.phase!=='play')break;const c=m.human.ctrl;m.restartKind=null;Object.assign(m.ball,{x:c.x+c.fx*.45,y:c.y+c.fy*.45,z:0,vx:0,vy:0,vz:0,inHands:false});m.take(c);c.cool=0;const p0=c.stats.p,s0=c.stats.sh;await wt(.3);
+   key(k,true);await wt(hold);key(k,false);let r='nothing';for(let i=0;i<30;i++){await wt(.1);if(c.stats.sh>s0){r='shot';break;}if(c.stats.p>p0){r='pass'+(m.ball.cross?' (cross)':m.ball.vz>2?' (lofted)':'');break;}}
+   R.buttons[name]=r;await wt(1);}
+  // 3) defending: give the ball to the nearest opponent, hold X (auto press/tackle) for 2 s
+  {const c=m.human.ctrl,o=m.other(m.t[h.team]).pl.filter(q=>q.role!=='GK').sort((a,b)=>Math.hypot(a.x-c.x,a.y-c.y)-Math.hypot(b.x-c.x,b.y-c.y))[0];m.take(o);const tk0=m.t[h.team].pl.reduce((s,p)=>s+(p.stats.tk||0),0);
+   key('KeyJ',true);await wt(2.5);key('KeyJ',false);R.defendHoldX={ownerTeamNow:m.ball.owner?m.ball.owner.team.idx:null,tacklesByHumanTeam:m.t[h.team].pl.reduce((s,p)=>s+(p.stats.tk||0),0)-tk0,controlled:m.human.ctrl.name};}
+  R.score=m.score.slice();R.minute=m.minute();R.phaseEnd=m.phase;
+  }catch(e){R.errors.push('harness: '+String(e&&e.stack||e));}done();})();};
+</script></body></html>

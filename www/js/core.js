@@ -211,7 +211,7 @@ class Match{
    if(p.spT&&!this.restartKind&&!b.owner&&b.target&&b.target.team!==t&&b.z>.4&&!p.wallP){const bt=b.target;if(hyp(p.x-bt.x,p.y-bt.y)<3.5){const og=this.ownG(t),q=[bt.x,bt.y],dx=og[0]-q[0],dy=og[1]-q[1],dd=hyp(dx,dy)||1;this.go(p,[q[0]+dx/dd*.55,q[1]+dy/dd*.55],1);continue;}}
    if(p.spT){if(this.restartKind||(!b.owner&&this.time-(this.spKick||-9)<2.2)){this.go(p,p.spT,this.restartKind?.75:.9);continue;}p.spT=null;p.wallP=0;}
    if(!b.owner&&b.target&&b.target.team===t&&!b.target.off&&this.time-b.passT<3.2){this.goS(p,this.shape(p,true),.8);continue;}
-   if(b.owner&&poss===t.idx){const sp=t.sup&&t.sup.includes(p)&&p.supT;if(sp)this.goS(p,sp,.92);else this.goS(p,this.shape(p,true),.82);continue;}
+   if(b.owner&&poss===t.idx){const sp=t.sup&&t.sup.includes(p)&&p.supT;if(sp)this.goS(p,sp,.97);else this.goS(p,this.shape(p,true),.82);continue;}
    // (3B) عرضية الخصم في الهوا: المدافع اللي يقدر يوصل للكورة في متناول راسه الأول (مش بالضرورة الأقرب لمكانها دلوقتي) هو اللي يهاجمها،
    // والباقيين يفضلوا على رجالتهم. قبل كده اللي بيطلع للكورة كان بس "الضاغط" (الأقرب لمكان الكورة بعد 0.4 ث) — والمهاجم كان بيلمس 51% من العرضيات الأول
    if(!b.owner&&b.cross&&b.last&&b.last.team!==t&&!this.restartKind&&b.z>.3){if(t.airP!==b.passT){t.airP=b.passT;let bq=null,bt=9;for(const q of t.pl){if(q.role==='GK'||q.stun>0||(h&&(q===h.ctrl||q===h.p2)))continue;const rt=this.reachT(q,2.35,.95);if(rt<bt){bt=rt;bq=q;}}t.air=bq;}
@@ -261,10 +261,10 @@ class Match{
   let mn=105;for(const q of o.pl){if(q.role==='GK')continue;const qx=t.dir===1?q.x:L-q.x;if(qx<mn)mn=qx;}
   const TT=t.T||TACTICS.bal;let dl=clamp(16+(bx-52.5)*.5+(bx>70?4:0)+(t.str||0)*5+TT.line,bx<20?6.5:bx<30?10.5:12.5,50);dl=Math.max(8,Math.min(dl,mn-.4));t.dl=t.dl==null?dl:t.dl+(dl-t.dl)*.12;
   if(this.time<(t.tacAt||0))return;t.tacAt=this.time+.3;t.sup=null;t.cut=null;if(this.restartKind||!c)return;const h=this.human;
-  if(c.team===t){const cand=t.pl.filter(p=>p!==c&&p.role!=='GK'&&p.stun<=0&&!(h&&(p===h.ctrl||p===h.p2))).sort((a,q)=>hyp(a.x-c.x,a.y-c.y)-hyp(q.x-c.x,q.y-c.y)).slice(0,2);t.sup=cand;const used=[];
-   cand.forEach((p,k)=>{let best=null,bs=-1e9;const rr=k?14:9;for(let a=0;a<14;a++){const an=a/14*6.2832,px=c.x+Math.cos(an)*rr,py=c.y+Math.sin(an)*rr;if(px<2||px>L-2||py<2.5||py>W-2.5)continue;const fwd=(px-c.x)*t.dir;if(fwd<-7)continue;const tx=t.dir===1?px:L-px;if(tx>t.offLine-.5)continue;
+  if(c.team===t){const cand=t.pl.filter(p=>p!==c&&p.role!=='GK'&&p.stun<=0&&!(h&&(p===h.ctrl||p===h.p2))).sort((a,q)=>hyp(a.x-c.x,a.y-c.y)-hyp(q.x-c.x,q.y-c.y)).slice(0,3);t.sup=cand;const used=[];/* (v131 E1) 3 مساندين بدل 2 (كان متوسط الزملاء في 15 م من حامل الكورة 1، و22% من الوقت مافيش ولا واحد → الكورة الطويلة كانت الحل الوحيد) */
+   cand.forEach((p,k)=>{let best=null,bs=-1e9;const rr=[9,12,15][k];for(let a=0;a<14;a++){const an=a/14*6.2832,px=c.x+Math.cos(an)*rr,py=c.y+Math.sin(an)*rr;if(px<2||px>L-2||py<2.5||py>W-2.5)continue;const fwd=(px-c.x)*t.dir;if(fwd<-7)continue;const tx=t.dir===1?px:L-px;if(tx>t.offLine-.5)continue;
      let open=9;for(const q of o.pl){open=Math.min(open,segDist(q.x,q.y,c.x,c.y,px,py)*1.5,hyp(q.x-px,q.y-py));}
-     let sc=Math.min(open,6)+fwd*(k?.22:.07)-hyp(px-p.x,py-p.y)*.12;for(const u of used)if(hyp(u[0]-px,u[1]-py)<7)sc-=4;if(sc>bs){bs=sc;best=[px,py];}}
+     let sc=Math.min(open,6)+fwd*(k?.22:.07)-hyp(px-p.x,py-p.y)*.12-(k===2&&fwd>4?2:0);for(const u of used)if(hyp(u[0]-px,u[1]-py)<7)sc-=4;if(sc>bs){bs=sc;best=[px,py];}}
     p.supT=best;if(best)used.push(best);});}
   else if(bx<50){const rc=o.pl.filter(q=>q!==c&&q.role!=='GK').sort((a,q)=>hyp(a.x-c.x,a.y-c.y)-hyp(q.x-c.x,q.y-c.y)).slice(0,2);let tgt=null;for(const q of rc){if(!tgt||(q.x-tgt.x)*o.dir>0)tgt=q;}
    if(tgt){const og=this.ownG(t);if(hyp(tgt.x-og[0],tgt.y-og[1])>hyp(c.x-og[0],c.y-og[1])+2)tgt=null;}if(tgt){const pt=[c.x+(tgt.x-c.x)*.5,c.y+(tgt.y-c.y)*.5];let bp=null,bd=8;for(const p of t.pl){if(p.role==='GK'||p===t.chaser||p===t.second||p.stun>0||(h&&(p===h.ctrl||p===h.p2)))continue;const d=hyp(p.x-pt[0],p.y-pt[1]);if(d<bd){bd=d;bp=p;}}if(bp)t.cut={p:bp,pt};}}
@@ -318,7 +318,10 @@ class Match{
   // (3C) في الهجمة الفريق بيطلع ورا الكورة أكتر لما تعدّي نص الملعب (0.75 من حركة الكورة بدل 0.55 + 2 م): قبل كده والكورة على بعد 25 م من المرمى
   // لاعيبة الوسط كانوا على بعد ~50 م. (0.9 اتجربت: تسديدات أكتر بس قطع كورة ومرتدات أكتر بكتير — اترفضت)
   const TT=t.T||TACTICS.bal;let x=p.bx+(bx-52.5)*(att&&bx>52.5?.75:.55)+(att?(bx>52.5?10:8)+(t.str||0)*4+TT.line*.3:-3+(t.str||0)*3+TT.line*.4),y=p.by+(by-34)*.3;
-  if(att&&p.role!=='DF'&&Math.abs(p.by-34)>13)y=34+(p.by-34)*1.12*TT.width+(by-34)*.15;else if(att)y=34+(p.by-34)*(.6+.4*TT.width)+(by-34)*.3;
+  // (v131 E1) في الهجمة الفريق بيقرّب ناحية الكورة بالعرض: الجناح اللي في ناحية الكورة يفضل واسع، لكن الجناح البعيد بيدخل لجوه
+  // ولاعيبة النص بيتحركوا مع الكورة أكتر (0.45 بدل 0.3) عشان حامل الكورة يلاقي حد قريب يمرر له على الأرض
+  {const far=(p.by-34)*(by-34)<0;if(att&&p.role!=='DF'&&Math.abs(p.by-34)>13)y=far?34+(p.by-34)*.8*TT.width+(by-34)*.4:34+(p.by-34)*1.12*TT.width+(by-34)*.15;else if(att)y=34+(p.by-34)*(.6+.4*TT.width)+(by-34)*(p.role==='DF'?.35:.45);}
+  if(att&&p.role==='DF'&&bx>40)x+=4;/* (v131 E1) خط الدفاع بيطلع ورا الوسط في الهجمة: المسافة بين الخطين كانت 17 م */
   if(p.role==='DF')x=clamp(x,9,64);else if(p.role==='MF')x=clamp(x,16,84);else x=clamp(x,30,97);
   if(att&&p.role==='FW'&&bx>50)x=Math.max(x,Math.min(98,bx+9+(p.i%2)*4));if(att&&p.role!=='DF')x=Math.min(x,t.offLine-.6-(p.role==='MF'?7:0));
   // انطلاقات المهاجمين ورا المدافعين (أكتر في خطة المرتدات)

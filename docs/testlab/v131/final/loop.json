@@ -1,0 +1,297 @@
+{
+ "www": "/tmp/v131/fin/js",
+ "frames": 4404,
+ "seeds": 10,
+ "newIdenticalToLab": 10,
+ "gamePerReal": {
+  "lab": 0.813,
+  "old": 0.646,
+  "new": 0.812
+ },
+ "gameTimeKeptVsLab": {
+  "old": 0.795,
+  "new": 0.999
+ },
+ "runs": [
+  {
+   "seed": 1001,
+   "lab": {
+    "score": "3-1",
+    "steps": 21989,
+    "events": 9,
+    "gamePerReal": 0.699,
+    "takes": 116,
+    "takeJumpOver02": 0.155
+   },
+   "new": {
+    "score": "3-1",
+    "steps": 21990,
+    "events": 9,
+    "gamePerReal": 0.698,
+    "takes": 116,
+    "takeJumpOver02": 0.25
+   },
+   "old": {
+    "score": "1-1",
+    "steps": 11259,
+    "events": 6,
+    "gamePerReal": 0.655,
+    "takes": 132,
+    "takeJumpOver02": 0.242
+   },
+   "newIdenticalToLab": true
+  },
+  {
+   "seed": 1002,
+   "lab": {
+    "score": "1-0",
+    "steps": 18704,
+    "events": 4,
+    "gamePerReal": 0.821,
+    "takes": 121,
+    "takeJumpOver02": 0.215
+   },
+   "new": {
+    "score": "1-0",
+    "steps": 18704,
+    "events": 4,
+    "gamePerReal": 0.821,
+    "takes": 121,
+    "takeJumpOver02": 0.306
+   },
+   "old": {
+    "score": "2-2",
+    "steps": 12723,
+    "events": 8,
+    "gamePerReal": 0.577,
+    "takes": 135,
+    "takeJumpOver02": 0.252
+   },
+   "newIdenticalToLab": true
+  },
+  {
+   "seed": 1003,
+   "lab": {
+    "score": "1-2",
+    "steps": 20822,
+    "events": 8,
+    "gamePerReal": 0.738,
+    "takes": 137,
+    "takeJumpOver02": 0.161
+   },
+   "new": {
+    "score": "1-2",
+    "steps": 20823,
+    "events": 8,
+    "gamePerReal": 0.738,
+    "takes": 137,
+    "takeJumpOver02": 0.248
+   },
+   "old": {
+    "score": "2-2",
+    "steps": 12956,
+    "events": 9,
+    "gamePerReal": 0.566,
+    "takes": 138,
+    "takeJumpOver02": 0.261
+   },
+   "newIdenticalToLab": true
+  },
+  {
+   "seed": 1004,
+   "lab": {
+    "score": "4-1",
+    "steps": 22943,
+    "events": 12,
+    "gamePerReal": 0.67,
+    "takes": 132,
+    "takeJumpOver02": 0.167
+   },
+   "new": {
+    "score": "4-1",
+    "steps": 22943,
+    "events": 12,
+    "gamePerReal": 0.669,
+    "takes": 131,
+    "takeJumpOver02": 0.252
+   },
+   "old": {
+    "score": "2-1",
+    "steps": 11986,
+    "events": 8,
+    "gamePerReal": 0.614,
+    "takes": 132,
+    "takeJumpOver02": 0.28
+   },
+   "newIdenticalToLab": true
+  },
+  {
+   "seed": 1005,
+   "lab": {
+    "score": "0-0",
+    "steps": 17322,
+    "events": 6,
+    "gamePerReal": 0.887,
+    "takes": 134,
+    "takeJumpOver02": 0.194
+   },
+   "new": {
+    "score": "0-0",
+    "steps": 17323,
+    "events": 6,
+    "gamePerReal": 0.887,
+    "takes": 134,
+    "takeJumpOver02": 0.291
+   },
+   "old": {
+    "score": "0-2",
+    "steps": 11696,
+    "events": 6,
+    "gamePerReal": 0.628,
+    "takes": 122,
+    "takeJumpOver02": 0.246
+   },
+   "newIdenticalToLab": true
+  },
+  {
+   "seed": 1006,
+   "lab": {
+    "score": "0-1",
+    "steps": 18298,
+    "events": 4,
+    "gamePerReal": 0.84,
+    "takes": 126,
+    "takeJumpOver02": 0.127
+   },
+   "new": {
+    "score": "0-1",
+    "steps": 18298,
+    "events": 4,
+    "gamePerReal": 0.839,
+    "takes": 125,
+    "takeJumpOver02": 0.24
+   },
+   "old": {
+    "score": "0-1",
+    "steps": 10314,
+    "events": 5,
+    "gamePerReal": 0.715,
+    "takes": 142,
+    "takeJumpOver02": 0.169
+   },
+   "newIdenticalToLab": true
+  },
+  {
+   "seed": 1007,
+   "lab": {
+    "score": "1-1",
+    "steps": 18949,
+    "events": 4,
+    "gamePerReal": 0.811,
+    "takes": 127,
+    "takeJumpOver02": 0.173
+   },
+   "new": {
+    "score": "1-1",
+    "steps": 18951,
+    "events": 4,
+    "gamePerReal": 0.81,
+    "takes": 127,
+    "takeJumpOver02": 0.323
+   },
+   "old": {
+    "score": "0-1",
+    "steps": 10754,
+    "events": 4,
+    "gamePerReal": 0.685,
+    "takes": 122,
+    "takeJumpOver02": 0.279
+   },
+   "newIdenticalToLab": true
+  },
+  {
+   "seed": 1008,
+   "lab": {
+    "score": "1-0",
+    "steps": 17620,
+    "events": 6,
+    "gamePerReal": 0.872,
+    "takes": 138,
+    "takeJumpOver02": 0.167
+   },
+   "new": {
+    "score": "1-0",
+    "steps": 17620,
+    "events": 6,
+    "gamePerReal": 0.872,
+    "takes": 138,
+    "takeJumpOver02": 0.225
+   },
+   "old": {
+    "score": "0-1",
+    "steps": 10473,
+    "events": 5,
+    "gamePerReal": 0.704,
+    "takes": 128,
+    "takeJumpOver02": 0.266
+   },
+   "newIdenticalToLab": true
+  },
+  {
+   "seed": 1009,
+   "lab": {
+    "score": "0-0",
+    "steps": 17015,
+    "events": 5,
+    "gamePerReal": 0.903,
+    "takes": 121,
+    "takeJumpOver02": 0.157
+   },
+   "new": {
+    "score": "0-0",
+    "steps": 17016,
+    "events": 5,
+    "gamePerReal": 0.903,
+    "takes": 120,
+    "takeJumpOver02": 0.225
+   },
+   "old": {
+    "score": "2-0",
+    "steps": 11606,
+    "events": 7,
+    "gamePerReal": 0.633,
+    "takes": 125,
+    "takeJumpOver02": 0.328
+   },
+   "newIdenticalToLab": true
+  },
+  {
+   "seed": 1010,
+   "lab": {
+    "score": "0-0",
+    "steps": 17356,
+    "events": 5,
+    "gamePerReal": 0.885,
+    "takes": 125,
+    "takeJumpOver02": 0.2
+   },
+   "new": {
+    "score": "0-0",
+    "steps": 17356,
+    "events": 5,
+    "gamePerReal": 0.885,
+    "takes": 125,
+    "takeJumpOver02": 0.312
+   },
+   "old": {
+    "score": "0-0",
+    "steps": 10858,
+    "events": 3,
+    "gamePerReal": 0.678,
+    "takes": 123,
+    "takeJumpOver02": 0.268
+   },
+   "newIdenticalToLab": true
+  }
+ ]
+}

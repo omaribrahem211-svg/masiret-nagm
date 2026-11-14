@@ -1,0 +1,29 @@
+{
+ "meta": {
+  "www": "/tmp/v131/fin/js",
+  "n": 20,
+  "dt": 0.016666666666666666
+ },
+ "receptions": 1342,
+ "perMatch": 67.1,
+ "speedMedian": {
+  "before05": 4.68,
+  "before025": 4.1,
+  "before01": 4.95,
+  "previousFrame": 4.67,
+  "atTake": 4.42,
+  "after025": 3.84,
+  "after05": 4.45
+ },
+ "receiverStillAtTake": 0.05,
+ "stopStart": 0.04,
+ "waitedStillOver05s": 0.1,
+ "waitedStillMedian": 0,
+ "dipWhileRunning": 0.18,
+ "ballSnapOver02m": 0.01,
+ "snapMedian": 0.06,
+ "recvClipWhileMoving": 0.6,
+ "recvClipFramesMedian": 17,
+ "nextActionMedian": 0.82,
+ "passBallSpeedMedian": 6.5
+}

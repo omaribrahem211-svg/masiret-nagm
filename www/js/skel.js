@@ -94,7 +94,7 @@ const Skel=(()=>{
   else if(gk&&p.catchT>0&&!(p.gkHi>0)&&has('gkCatch')){act='gkCatch';au=.25+(1-p.catchT/.45)*.4;aw=1;}
   else if(gk&&b.owner===p&&b.inHands&&has('gkCatch')){act='gkCatch';au=.72;aw=1;}
   if(!(p.stun>.4))p._kS=0;
-  if(!act&&p.rcvA>0&&b.owner===p&&sp<3.5&&has('recv')&&!gk){act='recv';au=.3+(1-p.rcvA/.45)*.45;}
+  if(!act&&p.rcvA>0&&b.owner===p&&sp<1&&has('recv')&&!gk){act='recv';au=.3+(1-p.rcvA/.45)*.45;}
   if(!act&&p.turnT>0&&has('turn180')&&!gk&&b.owner!==p&&!slide&&!dive&&!(p.stun>.4)){act='turn180';au=.04+(1-p.turnT/.5)*.9;}
   // احتفال/حزن بعد الجول ونهاية الماتش (Mixamo: Victory, Cheering, Fist Pump, Defeated)
   if(!act&&!slide&&!dive&&sp<1.6&&(m.phase==='goal'||m.phase==='end')&&has('cheer')){let wt=null;if(m.phase==='goal')wt=m.celebrator&&m.celebrator.team;else{const sc=m.score;if(sc[0]!==sc[1])wt=m.t[sc[0]>sc[1]?0:1];}
@@ -106,7 +106,13 @@ const Skel=(()=>{
   if(!act&&p.upT>0&&p.upClip&&has(p.upClip)){act=p.upClip;au=p.upA+(p.upB-p.upA)*(1-p.upT/p.upD);}
   if(!act&&p.spinT>0&&has('spin')&&b.owner===p){act='spin';au=.2+(1-p.spinT/.55)*.55;}
   if(!act&&p.stopT>0&&has('stop')&&!gk&&b.owner!==p){const q=1-p.stopT/.6,fd=Math.min(1,p.stopT/.15)*Math.min(1,q/.1+.3);accClip('stop',.05+q*.85,fd*3*Math.max(.2,1-sp/3),false);}
-  if(act){accClear();accClip(act,au,1,false);}
+  // (v131 A3) دمج ناعم للحركات الكاملة (ركلة، استلام، تدخل، ارتماء…): قبل كده الحركة كانت بتستبدل الجري فجأة وترجع له فجأة (الوضع بيقفز).
+  // دلوقتي الدخول 0.08 ث والخروج 0.15 ث: وزن الحركة بيتمزج مع حركة الرجلين، وبعد ما تخلص بتفضل آخر وضعية ليها تختفي بالتدريج
+  {const tn=t/1000,fdt=p._pt==null?0:Math.min(.1,Math.max(0,tn-p._pt));p._pt=tn;
+   if(act){if(p._an!==act){p._an=act;if(!(p._aw>0))p._aw=0;}p._aw=Math.min(1,(p._aw||0)+fdt/.08);p._au=au;}
+   else if(p._aw>0){p._aw=Math.max(0,p._aw-fdt/.15);if(!p._an||!has(p._an))p._aw=0;}
+   const an=act||(p._aw>0?p._an:null);
+   if(an){const f=act?p._aw:p._aw;if(f>=.999||accW<=0){accClear();accClip(an,act?au:p._au,1,false);}else if(f>0)accClip(an,act?au:p._au,accW*f/(1-f),false);}}
   p._act=act;
   accApply();
   // kicking leg (right) — wind-up, strike, follow-through

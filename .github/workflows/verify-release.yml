@@ -4,22 +4,12 @@ name: Verify an existing APK build and publish it as a prerelease
 # run (package id, version, signature, update compatibility with the previous test APK on the "builds" branch, zip
 # alignment, every web file present and identical to the build commit, JavaScript syntax), and only if every check
 # passes creates a GitHub prerelease with that APK attached.
+# Runs on a push of THIS file to final-gameplay (workflow_dispatch needs the file on the default branch, and main must not be
+# touched). The run to verify is set in env below.
 on:
-  workflow_dispatch:
-    inputs:
-      run_id:
-        description: 'Run id of the "Build Android" run whose APK is released'
-        required: true
-      artifact:
-        description: 'Artifact name in that run'
-        required: true
-      tag:
-        description: 'Prerelease tag'
-        required: true
-      publish:
-        description: 'Create the prerelease if all checks pass (true/false)'
-        required: true
-        default: 'true'
+  push:
+    branches: [final-gameplay]
+    paths: ['.github/workflows/verify-release.yml']
 
 permissions:
   contents: write
@@ -30,6 +20,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      RUN_ID: '43581916610'
+      ARTIFACT: masiret-android-30
+      TAG: v130-rc1
+      PUBLISH: 'true'
     steps:
       - name: Checkout (full history, to compare with the build commit)
         uses: actions/checkout@v4
@@ -39,8 +33,8 @@ jobs:
       - name: Download the artifact of the build run
         uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.artifact }}
-          run-id: ${{ inputs.run_id }}
+          name: ${{ env.ARTIFACT }}
+          run-id: ${{ env.RUN_ID }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: art
 
@@ -52,9 +46,9 @@ jobs:
           say(){ echo "$*" | tee -a $R; }
           fail(){ say "FAIL: $*"; echo FAILED > failed.flag; }
           APK=$(ls art/*-test.apk); say "APK: $(basename $APK)"
-          RUN=$(gh api repos/${{ github.repository }}/actions/runs/${{ inputs.run_id }})
+          RUN=$(gh api repos/${{ github.repository }}/actions/runs/${{ env.RUN_ID }})
           SHA=$(echo "$RUN" | jq -r .head_sha); BR=$(echo "$RUN" | jq -r .head_branch); CON=$(echo "$RUN" | jq -r .conclusion); T=$(echo "$RUN" | jq -r .updated_at)
-          say "Build run: ${{ inputs.run_id }}  branch=$BR  commit=$SHA  conclusion=$CON  finished=$T"
+          say "Build run: ${{ env.RUN_ID }}  branch=$BR  commit=$SHA  conclusion=$CON  finished=$T"
           [ "$CON" = success ] || fail "build run did not succeed"
           echo "sha=$SHA" >> $GITHUB_OUTPUT
           say "Size: $(stat -c %s $APK) bytes"
@@ -103,16 +97,16 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: verify-report-${{ inputs.tag }}
+          name: verify-report-${{ env.TAG }}
           path: |
             report.txt
             badging.txt
             signer.txt
 
       - name: Publish the prerelease (only reached when every check passed)
-        if: inputs.publish == 'true'
+        if: env.PUBLISH == 'true'
         run: |
           set -euo pipefail
           APK=$(ls art/*-test.apk); SUM=$(sha256sum $APK | cut -d' ' -f1)
-          { echo "Release candidate for real-device testing. Built by run ${{ inputs.run_id }} from commit ${{ steps.v.outputs.sha }} (branch final-gameplay). Not merged into main."; echo; echo "SHA-256 of the APK: \`$SUM\`"; echo; echo '```'; cat report.txt; echo '```'; } > notes.md
-          gh release create "${{ inputs.tag }}" "$APK" report.txt --prerelease --target "${{ steps.v.outputs.sha }}" --title "${{ inputs.tag }}" --notes-file notes.md
+          { echo "Release candidate for real-device testing. Built by run ${{ env.RUN_ID }} from commit ${{ steps.v.outputs.sha }} (branch final-gameplay). Not merged into main."; echo; echo "SHA-256 of the APK: \`$SUM\`"; echo; echo '```'; cat report.txt; echo '```'; } > notes.md
+          gh release create "${{ env.TAG }}" "$APK" report.txt --prerelease --target "${{ steps.v.outputs.sha }}" --title "${{ env.TAG }}" --notes-file notes.md

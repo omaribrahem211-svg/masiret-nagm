@@ -459,10 +459,10 @@ class Match{
   // بدل اللفّة اللحظية، والرجل نفسها رايحة للكورة من الأول. نتيجة التلامس بتاخد بصّة الجسم الحقيقية ساعتها
   if(L0.hu){p.fx=L0.dx;p.fy=L0.dy;}else{const a0=Math.atan2(p.fy,p.fx),da=angDiff(Math.atan2(L0.dy,L0.dx),a0),a1=a0+clamp(da,-12*dt,12*dt);p.fx=Math.cos(a1);p.fy=Math.sin(a1);}}}
  // الرجل بتقابل الكورة في أقرب نقطة: لو الكورة بقت قريبة وبدأت تبعد قبل نهاية الخطوة، التلامس بيحصل دلوقتي
- tkPost(dt){const b=this.ball;for(const p of this.all){const L0=p.tkL;if(!L0)continue;L0.t-=dt;p.windT=Math.max(0,L0.t);const d=hyp(b.x-p.x,b.y-p.y);const met=L0.pd!=null&&L0.pd<(L0.hu?.9:TKR)&&d>L0.pd+.02;
-  // الـ AI: التلامس بيحصل في أقرب نقطة وصلتها الكورة للرجل خلال الخطوة (لو كانت جوه المدى)، مش في آخر فريم بعد ما عدّت. قبل كده كان لازم تقرب أقل من 0.9 م عشان يتحسب تلامس. اللاعب البشري زي 2.1
+ tkPost(dt){const b=this.ball;for(const p of this.all){const L0=p.tkL;if(!L0)continue;L0.t-=dt;p.windT=Math.max(0,L0.t);const d=hyp(b.x-p.x,b.y-p.y);const met=L0.pd!=null&&L0.pd<TKR&&d>L0.pd+.02;
+  // التلامس (AI واللاعب البشري، من 2.3): بيحصل في أقرب نقطة وصلتها الكورة للرجل خلال الخطوة (لو كانت جوه المدى)، مش في آخر فريم بعد ما عدّت
   if(L0.bd==null||d<L0.bd){L0.bd=d;L0.brb=[b.x-p.x,b.y-p.y];}
-  if(L0.t<=0||met){this.tkResolve(p,met?L0.rb:(!L0.hu&&L0.bd<TKR?L0.brb:null));p.tkL=null;p.windT=0;p.kickT=(b.owner===p||(!b.owner&&b.last===p))?.28:.16;}else{L0.pd=d;L0.rb=[b.x-p.x,b.y-p.y];}}}
+  if(L0.t<=0||met){this.tkResolve(p,met?L0.rb:(L0.bd<TKR?L0.brb:null));p.tkL=null;p.windT=0;p.kickT=(b.owner===p||(!b.owner&&b.last===p))?.28:.16;}else{L0.pd=d;L0.rb=[b.x-p.x,b.y-p.y];}}}
  // لحظة التلامس: النتيجة بتتحسب بمكان الرجل والكورة الحقيقيين دلوقتي
  // سيطرة المهاجم على الكورة لحظة التلامس (0 = الكورة سايبة/لمسة طويلة، 1 = لازقة في رجله):
  // من بُعد الكورة عن رجله + هل هو على وشك يلمسها (نفس مرحلة الخطوة اللي بتستخدمها المراوغة في dribble)

@@ -1,0 +1,10 @@
+{
+ "frames": 4405,
+ "seconds": 153.76,
+ "fps": 28.65,
+ "median_ms": 33.2,
+ "p95_ms": 50.6,
+ "p99_ms": 65.9,
+ "frames_over_50ms": 599,
+ "game_time_kept_if_dt_capped_33ms": 0.808
+}

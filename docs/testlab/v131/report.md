@@ -75,3 +75,17 @@ Other final checks:
   model for aerial duels; near-post / far-post keeper positioning.
 * **Not verified on a device:** everything. A0 is the change most likely to be felt on the phone, and it can only be
   confirmed there.
+
+## APK
+
+* Prerelease **v131-rc1**: https://github.com/omaribrahem211-svg/masiret-nagm/releases/tag/v131-rc1
+* Direct: https://github.com/omaribrahem211-svg/masiret-nagm/releases/download/v131-rc1/masiret-v131-test.apk
+* 16,836,266 bytes, SHA-256 `7c5ede7f70fb4db9813f8a97b7f85c393ced5b2c17d67cc25ee7fcc223d99759`.
+* versionCode 131, versionName 1.1.31, package `com.asomygames.masiretnagm`, minSdk 24.
+* Built by run 43600771726 from commit acfb064 (game code identical to b3912da).
+* Verified on a GitHub runner (verify-release run 43601144277), all checks passed:
+  * signature v2 with the project key, the same certificate as v129/v130, so it installs as an update;
+  * zipalign OK;
+  * 22/22 web files byte-identical to the build commit;
+  * 0 JavaScript syntax errors.
+* Not installed on a device.

@@ -1,0 +1,44 @@
+{
+ "meta": {
+  "www": "/home/claude/masiret-nagm/www/js",
+  "n": 40,
+  "seed0": 1000
+ },
+ "shots": {
+  "n": 323,
+  "perMatch": 8.07,
+  "nearestDefMedian": 3.06,
+  "shooterFreeOver3m": 0.5,
+  "shotsWithDefenderInLane": 0.4,
+  "insideBox": 0.59,
+  "heldUnder1s": 0.63,
+  "nearestDefMedian_heldOver1s": 3.22,
+  "nearestDefMedian_heldUnder1s": 2.9,
+  "distMedian": 21.34
+ },
+ "crosses": {
+  "n": 212,
+  "perMatch": 5.3,
+  "attackersInBoxAtCross": 2.15,
+  "unmarkedInBoxAtCross": 0.8,
+  "unmarkedInBox08s": 0.37,
+  "result": {
+   "defence": 60,
+   "none": 91,
+   "attack": 60,
+   "null": 1
+  },
+  "firstTouch": {
+   "attack": 74,
+   "defence": 138
+  }
+ },
+ "box": {
+  "unmarkedShare": 0.63,
+  "attackersPerSample": 0.11
+ },
+ "overcommitShare": 0,
+ "dfLineStdMedian": 0.51,
+ "recoveryMedian": 0.13,
+ "recoveryCapped8s": 0.02
+}

@@ -1,0 +1,43 @@
+{
+ "meta": {
+  "www": "/tmp/et/p3b/v4_js",
+  "n": 40,
+  "seed0": 1000
+ },
+ "shots": {
+  "n": 343,
+  "perMatch": 8.57,
+  "nearestDefMedian": 2.82,
+  "shooterFreeOver3m": 0.47,
+  "shotsWithDefenderInLane": 0.38,
+  "insideBox": 0.62,
+  "heldUnder1s": 0.66,
+  "nearestDefMedian_heldOver1s": 3.01,
+  "nearestDefMedian_heldUnder1s": 2.65,
+  "distMedian": 21.21
+ },
+ "crosses": {
+  "n": 241,
+  "perMatch": 6.03,
+  "attackersInBoxAtCross": 2.45,
+  "unmarkedInBoxAtCross": 0.79,
+  "unmarkedInBox08s": 0.41,
+  "result": {
+   "defence": 68,
+   "none": 129,
+   "attack": 44
+  },
+  "firstTouch": {
+   "attack": 122,
+   "defence": 119
+  }
+ },
+ "box": {
+  "unmarkedShare": 0.62,
+  "attackersPerSample": 0.11
+ },
+ "overcommitShare": 0,
+ "dfLineStdMedian": 0.51,
+ "recoveryMedian": 0.13,
+ "recoveryCapped8s": 0.02
+}

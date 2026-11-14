@@ -1,0 +1,9 @@
+{
+ "www": "/tmp/v131/preA3",
+ "matches": 3,
+ "posedFrames": 1013892,
+ "popsPerMatch": 12235,
+ "popsAtActionStartOrEndPerMatch": 960.3,
+ "recvClipWhileMovingFrames": 3114,
+ "actionFrames": 47717
+}

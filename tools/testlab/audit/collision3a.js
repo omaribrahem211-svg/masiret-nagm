@@ -23,7 +23,7 @@ vm.runInContext([fs.readFileSync(path.join(WWW, 'data.js'), 'utf8'), fs.readFile
 const G = ctx.__G, P = G.Match.prototype, hyp = Math.hypot, r2 = v => Math.round(v * 100) / 100;
 const E = [];          // collide()/shoulder events
 const C = { collideSteal: 0, shoulderWon: 0, shoulderTry: 0, collideFoul: 0, pokeTake: 0, tackleWonOrPoked: 0, contactFrames: 0, contactEpisodes: 0, fouls: 0, foulsByKind: {} };
-let inCollide = false, cur = null;
+let inCollide = false, cur = null; const t_mk = (m, p) => !!(p.team.mk && p.team.mk.has(p));
 function geom(m, own, ch) {
   const b = m.ball, dx = ch.x - own.x, dy = ch.y - own.y, d = hyp(dx, dy) || 1, cs = (dx * own.fx + dy * own.fy) / d;
   const rv = ((ch.vx - own.vx) * -dx + (ch.vy - own.vy) * -dy) / d;   // closing speed (>0 = approaching)
@@ -47,6 +47,7 @@ P.collide = function (dt) {
 };
 P.foul = function (by, vic, ...rest) {
   C.fouls++; const k = inCollide ? 'collide' : by && by.tkL ? 'tackle' : by && by.slide > 0 ? 'slide' : 'other'; C.foulsByKind[k] = (C.foulsByKind[k] || 0) + 1;
+  { const g0 = this.ownG(by.team), box = Math.abs(vic.x - g0[0]) < 16.5 && Math.abs(vic.y - 34) < 20.16; if (box) { C.foulsInBoxByKind = C.foulsInBoxByKind || {}; const gk = k + ':' + geom(this, vic, by).pos + (by.tkL ? '' : ':cv' + Math.round(-(((by.vx - vic.vx) * (vic.x - by.x) + (by.vy - vic.vy) * (vic.y - by.y)) / (hyp(vic.x - by.x, vic.y - by.y) || 1)))) + (t_mk(this, by) ? ':marker' : '') + (by.team.chaser === by ? ':chaser' : ''); C.foulsInBoxByKind[gk] = (C.foulsInBoxByKind[gk] || 0) + 1; } }
   if (inCollide) { C.collideFoul++; cur = 'foul'; E.push(Object.assign({ kind: 'collideFoul', hc: !!(this.human && this.human.ctrl === by) }, geom(this, vic, by))); }
   return oFoul.call(this, by, vic, ...rest);
 };
@@ -81,4 +82,4 @@ const out = { meta: { www: WWW, n: N, seed0: S0 }, perMatch: Object.fromEntries(
   collideFoul: { byPos: by('collideFoul', e => e.pos), closeMedian: med(E.filter(e => e.kind === 'collideFoul').map(e => e.close)) },
   shoulder: { byRes: by('shoulder', e => e.res), byPos: by('shoulder', e => e.pos + ':' + e.res), ballSameSide: by('shoulder', e => e.ballSameSide + ':' + e.res) },
   sample: E.slice(0, 40) };
-fs.writeFileSync(A.out, JSON.stringify(out, null, 1)); console.log(JSON.stringify({ perMatch: out.perMatch, foulsByKind: C.foulsByKind, collideSteal: out.collideSteal, collideFoul: out.collideFoul, shoulder: out.shoulder }, null, 1));
+fs.writeFileSync(A.out, JSON.stringify(out, null, 1)); console.log(JSON.stringify({ perMatch: out.perMatch, foulsByKind: C.foulsByKind, foulsInBoxByKind: C.foulsInBoxByKind, collideSteal: out.collideSteal, collideFoul: out.collideFoul, shoulder: out.shoulder }, null, 1));

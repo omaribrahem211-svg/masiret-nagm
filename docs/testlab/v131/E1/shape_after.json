@@ -1,0 +1,62 @@
+{
+ "meta": {
+  "www": "/home/claude/masiret-nagm/www/js",
+  "n": 20
+ },
+ "loftedPasses": {
+  "n": 835,
+  "perMatch": 41.75,
+  "firstTouch": {
+   "opponent": 178,
+   "teammate": 51,
+   "intended": 486,
+   "nobody (bounced)": 76,
+   "null": 44
+  },
+  "how": {
+   "opponent:header": 128,
+   "teammate:chest": 16,
+   "intended:chest": 354,
+   "opponent:foot": 50,
+   "nobody (bounced):-": 76,
+   "null:null": 44,
+   "intended:header": 51,
+   "teammate:header": 22,
+   "intended:foot": 81,
+   "teammate:foot": 13
+  },
+  "twoTeammatesForOneBall": 0.03,
+  "receiverStoodUnderBallOpponentWon": 0,
+  "flightSecMedian": 1.41
+ },
+ "crosses": {
+  "n": 205,
+  "firstTouch": {
+   "opponent": 81,
+   "intended": 71,
+   "teammate": 14,
+   "null": 28,
+   "nobody (bounced)": 11
+  },
+  "how": {
+   "opponent:header": 69,
+   "intended:header": 67,
+   "teammate:header": 13,
+   "null:null": 28,
+   "intended:foot": 4,
+   "opponent:foot": 12,
+   "nobody (bounced):-": 11,
+   "teammate:foot": 1
+  }
+ },
+ "shape": {
+  "teamLengthMedian": 33.88,
+  "teamWidthMedian": 46.55,
+  "gapDFtoMF": 14.49,
+  "gapMFtoFW": 14.62,
+  "nearBallMedian": 2,
+  "crowdShare": 0.02,
+  "supportWithin15mMedian": 2,
+  "supportZeroShare": 0.07
+ }
+}

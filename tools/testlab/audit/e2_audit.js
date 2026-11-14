@@ -14,6 +14,8 @@
 //                      centre on that side) — useful / unnecessary as above
 //   thirdMan           pass A→B then B→C (C ≠ A) within 3 s, C ran >4 m/s at the moment of A's pass and C ends ahead of B
 //   switch             completed pass that moves the ball >28 m across the pitch to the other half of the width
+//   runs (engine state t.run, read only): overlap/underlap runs assigned, passes to the runner, runner received, runs that ended with the
+//                      ball lost while the runner was still ahead of the ball (unnecessary/costly runs)
 //   fbRecovery         after the team loses the ball with a fullback in the opponent half: seconds until he is back in his own half
 //                      (cap 10 s)
 // Usage: node tools/testlab/audit/e2_audit.js --n 20 [--tac bal] [--www dir] --out f.json
@@ -29,7 +31,7 @@ vm.runInContext([fs.readFileSync(path.join(WWW, 'data.js'), 'utf8'), fs.readFile
 const G = ctx.__G, { L, CY } = G, P = G.Match.prototype, hyp = Math.hypot, r2 = v => Math.round(v * 100) / 100;
 const segD = (px, py, ax, ay, bx, by) => { const dx = bx - ax, dy = by - ay, l = dx * dx + dy * dy || 1, t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / l)); return hyp(px - ax - t * dx, py - ay - t * dy); };
 const S = { inP: { gDM: [], gMF: [], len: [], wid: [] }, outP: { gDM: [], gMF: [], len: [], wid: [] }, options: [], crowd: 0, crowdS: 0, abandon: 0, abandonS: 0,
-  overlap: { n: 0, useful: 0, unnecessary: 0 }, underlap: { n: 0, useful: 0, unnecessary: 0 }, third: { n: 0, done: 0 }, sw: { att: 0, ok: 0 }, fbRec: [] };
+  overlap: { n: 0, useful: 0, unnecessary: 0 }, underlap: { n: 0, useful: 0, unnecessary: 0 }, third: { n: 0, done: 0 }, sw: { att: 0, ok: 0 }, fbRec: [], runA: { overlap: 0, underlap: 0 }, runPass: 0, runRecv: 0, runLostAhead: 0 };
 let M = null; const pend = [], passes = [], runs = [];
 const X = (t, x) => t.dir === 1 ? x : L - x;
 const oPass = P.pass;
@@ -50,6 +52,9 @@ for (let id = 1; id <= N; id++) {
   while (m.phase !== 'end' && f < 40000) {
     m.update(1 / 60); f++;
     const own = b.owner, live = m.phase === 'play' && !m.restartKind && !b.inHands;
+    for (const tm of m.t) { const rr = tm.run; if (rr && rr !== tm.__lastRun) { tm.__lastRun = rr; S.runA[rr.kind]++; rr.__team = tm; } }
+    if (b.passT === m.time && b.passer && b.passer.team.run && b.target === b.passer.team.run.p) { S.runPass++; b.passer.team.run.__passed = true; }
+    for (const tm of m.t) { const rr = tm.__lastRun; if (rr && rr.__passed && !rr.__recv && own === rr.p) { rr.__recv = true; S.runRecv++; } if (rr && !rr.__cl && own && own.team !== tm) { rr.__cl = true; if (m.time - rr.t0 < 6 && X(tm, rr.p.x) > X(tm, b.x) && !rr.__recv) S.runLostAhead++; } }
     if (own && own !== lastOwner) {
       // pass outcomes
       for (let i = pend.length - 1; i >= 0; i--) { const e = pend[i]; if (e.kind === 'sw') { if (own === e.q) S.sw.ok++; pend.splice(i, 1); } }
@@ -77,8 +82,8 @@ for (let id = 1; id <= N; id++) {
       const side = Math.sign(own.y - CY);
       for (const q of t.pl) { if (q === own || runs.some(rr => rr.p === q && !rr.done && rr.carrier === own)) continue;
         const ahead = X(t, q.x) >= X(t, own.x) - 1, wider = (q.y - CY) * side > (own.y - CY) * side + .5, inside = (q.y - CY) * side > 6 && (q.y - CY) * side < 16;
-        if (isFB(q) && Math.sign(q.by - 34) === side && ahead && wider) { S.overlap.n++; runs.push({ p: q, kind: 'overlap', t: m.time, team: t, carrier: own }); }
-        else if ((isFB(q) && Math.sign(q.by - 34) === side || q.role === 'MF') && ahead && inside && X(t, q.x) > X(t, own.x) + 2) { S.underlap.n++; runs.push({ p: q, kind: 'underlap', t: m.time, team: t, carrier: own }); } }
+        if (isFB(q) && Math.sign(q.y - CY) === side && ahead && wider) { S.overlap.n++; runs.push({ p: q, kind: 'overlap', t: m.time, team: t, carrier: own }); }
+        else if ((isFB(q) && Math.sign(q.y - CY) === side || q.role === 'MF') && ahead && inside && X(t, q.x) > X(t, own.x) + 2) { S.underlap.n++; runs.push({ p: q, kind: 'underlap', t: m.time, team: t, carrier: own }); } }
     }
   }
   for (const z of passes) { const n = passes.find(w => w.a === z.b && w.t > z.t && w.t - z.t < 3); if (n && n.b !== z.a && z.spd.get(n.b) > 4) S.third.n++; }
@@ -90,5 +95,6 @@ const out = { meta: { www: WWW, n: N, tactic: TAC }, inPossession: sh('inP'), ou
   crowdShare: r2(S.crowd / (S.crowdS || 1)), abandonedShare: r2(S.abandon / (S.abandonS || 1)),
   perMatch: { overlaps: r2(S.overlap.n / N), overlapUseful: r2(S.overlap.useful / N), overlapUnnecessary: r2(S.overlap.unnecessary / N), underlaps: r2(S.underlap.n / N), underlapUseful: r2(S.underlap.useful / N), underlapUnnecessary: r2(S.underlap.unnecessary / N),
     thirdManAttempts: r2(S.third.n / N), thirdManCompleted: r2(S.third.done / N), switchPasses: r2(S.sw.att / N), switchCompleted: r2(S.sw.ok / N) },
+  runsAssignedPerMatch: { overlap: r2(S.runA.overlap / N), underlap: r2(S.runA.underlap / N) }, passesToRunnerPerMatch: r2(S.runPass / N), runnerReceivedPerMatch: r2(S.runRecv / N), runsEndedWithBallLostAndRunnerAheadOfBallPerMatch: r2(S.runLostAhead / N),
   fullbackRecoveryMedianSec: med(S.fbRec), fullbackRecoveryOver6s: r2(S.fbRec.filter(v => v >= 6).length / (S.fbRec.length || 1)) };
 fs.writeFileSync(A.out, JSON.stringify(out, null, 1)); console.log(JSON.stringify(out, null, 1));

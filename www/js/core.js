@@ -211,8 +211,8 @@ class Match{
       // لمسة طويلة والمهاجم سريع: يدخل على الكورة لو هيوصلها قبل ما المهاجم يلحقها (مش يفضل يراقب المهاجم والكورة بتعدّي جنبه)
       dC<3.5&&(hyp(b.x-p.x,b.y-p.y)-.6)/(p.mse*.8)+.1<Math.min(this.nextTouch(p),(bAt-.5)/Math.max(.5,hyp(c.vx,c.vy)-hyp(b.vx,b.vy)*.5)));
      const fr=engage?null:this.fastBlock(p,c,g,dt);
-     if(fr){}else if(!goalSide&&dC<3.2&&hyp(c.vx,c.vy)>1.5){// (3A) جاي من ورا: يلف على جنب المهاجم بدل ما يخبط في ضهره (كان بيدي فاولات كتير)، ولما يبقى جنبه يميل عليه بالكتف
-      const cs2=hyp(c.vx,c.vy),ux=c.vx/cs2,uy=c.vy/cs2,lx=-uy,ly=ux,rl=(p.x-c.x)*lx+(p.y-c.y)*ly,ra=(p.x-c.x)*ux+(p.y-c.y)*uy,sg=Math.sign(rl)||1,lean=ra>-.7&&Math.abs(rl)<1.6&&p.stam>20&&p.tcool<=0;
+     if(fr){}else if(!goalSide&&dC<(hyp(g[0]-c.x,g[1]-c.y)<26?8:3.2)&&(hyp(c.vx,c.vy)>1.5||hyp(g[0]-c.x,g[1]-c.y)<26)){/* (3C) قريب من مرماه بيلف من الجنب من مسافة أبعد (8 م) وحتى لو المهاجم ماشي ببطء: الجري المباشر في ضهر المهاجم جوه الصندوق كان مصدر كل ضربات الجزاء تقريباً */// (3A) جاي من ورا: يلف على جنب المهاجم بدل ما يخبط في ضهره (كان بيدي فاولات كتير)، ولما يبقى جنبه يميل عليه بالكتف
+      const cs2=hyp(c.vx,c.vy),sl=cs2<1.5,ux=sl?c.fx:c.vx/cs2,uy=sl?c.fy:c.vy/cs2,lx=-uy,ly=ux,rl=(p.x-c.x)*lx+(p.y-c.y)*ly,ra=(p.x-c.x)*ux+(p.y-c.y)*uy,sg=Math.sign(rl)||1,lean=ra>-.7&&Math.abs(rl)<1.6&&p.stam>20&&p.tcool<=0;
       this.go(p,[c.x+c.vx*.25+lx*sg*(lean?.45:1)+ux*(lean?.15:.3),c.y+c.vy*.25+ly*sg*(lean?.45:1)+uy*(lean?.15:.3)],1);}
      else if(dC>3.5||!goalSide)this.go(p,[c.x+gx/gd*1.3+c.vx*.3,c.y+gy/gd*1.3+c.vy*.3],1);else if(engage)this.go(p,[b.x+b.vx*.2+gx/gd*.35,b.y+b.vy*.2+gy/gd*.35],1);
      else{// مراقبة (jockey): يقف بين المهاجم والمرمى على مسافة مناسبة لسرعته، بيتوقع مكانه بعد 0.3 ث، ومايل ناحية نص الملعب عشان يوجّهه للخط الجانبي.

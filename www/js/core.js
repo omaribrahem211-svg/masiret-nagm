@@ -545,12 +545,17 @@ class Match{
  slideCheck(p){if(p.slideDone)return;const b=this.ball,c=b.owner;const dB=hyp(b.x-p.x,b.y-p.y);
   if(dB<1.05&&b.z<.5&&(!c||c.team!==p.team)){p.slideDone=true;if(c){c.stats.lost++;c.stun=.55;c.cool=.6;p.stats.tk++;}b.owner=null;b.last=p;b.passFrom=null;b.vx=p.vx*1.15+R(-1.5,1.5);b.vy=p.vy*1.15+R(-1.5,1.5);b.vz=.3;p.cool=.4;SFX.kick(.5);if(this.human&&p.team.idx===this.human.team)this.ev('tackle',{p},8);return;}
   if(c&&c.team!==p.team&&hyp(c.x-p.x,c.y-p.y)<.95){p.slideDone=true;const dM=hyp(c.x-p.x,c.y-p.y)||.01;const behind=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/dM<-.3;this.foul(p,c,true,behind);}}
- foul(p,c,slide,behind){p.stats.fl++;let card=null;
+ foul(p,c,slide,behind,force){p.stats.fl++;let card=null;
   const g0=this.ownG(p.team),cG=hyp(c.x-g0[0],c.y-g0[1]);const lastMan=cG<30&&Math.abs(c.y-CY)<20&&p.role!=='GK'&&!p.team.pl.some(q=>q!==p&&q.role!=='GK'&&hyp(q.x-g0[0],q.y-g0[1])<cG+1);const inBox0=Math.abs(c.x-g0[0])<16.5&&Math.abs(c.y-CY)<20.16;
   const fast=hyp(p.vx,p.vy)>7.5;
   if(lastMan&&(slide||behind))card=inBox0&&!behind?'yellow':'red';
   else if(slide&&(behind||fast))card='yellow';
   else if(lastMan||p.stats.fl>=3&&!p.yc)card='yellow';
+  // (3H) كارت أصفر كمان لـ: (1) تدخل متهوّر — دفعة جسم بسرعة اقتراب >5.5 م/ث أو تدخل واقف والمدافع جاي بأكتر من 6.5 م/ث،
+  // (2) إيقاف هجمة واعدة — المهاجم في نص ملعبنا، رايح ناحية المرمى (≤35 م)، وقدامه مدافع واحد بالكتير غير اللي عمل الفاول.
+  // قبل كده الكارت كان بييجي بس من الزحلقة من ورا/آخر رجل/3 فاولات: 2 كارت في 100 ماتش
+  else{const reck=(force||0)>5.5||(!slide&&p.tkL&&hyp(p.vx,p.vy)>6.5);const cv=hyp(c.vx,c.vy),toG=cv>2&&((g0[0]-c.x)*c.vx+(g0[1]-c.y)*c.vy)/(cv*(cG||1))>.5;
+   const spa=!inBox0&&cG<35&&toG&&p.team.pl.filter(q=>q!==p&&q.role!=='GK'&&hyp(q.x-g0[0],q.y-g0[1])<cG-.5).length<=1;if(reck||spa)card='yellow';}
   if(card==='yellow'&&p.yc>=1)card='red';
   let inj=false;if(c.star&&!c.inj&&slide&&(behind||fast)&&Math.random()<.25+(1-c.stam/100)*.3){c.inj=true;this.starInj=true;inj=true;}
   const g=this.ownG(p.team),inBox=Math.abs(c.x-g[0])<16.5&&Math.abs(c.y-CY)<20.16;
@@ -744,10 +749,10 @@ class Match{
  shoulder(ch,own,cv){const b=this.ball,dx=ch.x-own.x,dy=ch.y-own.y,d=hyp(dx,dy)||1,nx=dx/d,ny=dy/d,cs=nx*own.fx+ny*own.fy,hc=!!(this.human&&this.human.ctrl===ch);
   const oS=hyp(own.vx,own.vy),cS=hyp(ch.vx,ch.vy),bx=b.x-own.x,by=b.y-own.y,bD=hyp(bx,by),same=(own.fx*ny-own.fy*nx)*(own.fx*by-own.fy*bx)>0;
   if(cs<-.3){if(cv<1.6)return'none';own.shT=this.time+.6;
-   if(Math.random()<(hc?(cv>4?.1:0):clamp((cv-2)*.16,0,.45))){this.foul(ch,own,false,true);return'foul';}
+   if(Math.random()<(hc?(cv>4?.1:0):clamp((cv-2)*.16,0,.45))){this.foul(ch,own,false,true,cv);return'foul';}
    this.shVis(ch,own,.45);ch.vx*=.7;ch.vy*=.7;return'none';}
   if(cs>.5){if(cv<1.6)return'none';own.shT=this.time+.6;
-   if(cv>4.2&&Math.random()<(hc?0:.14)){this.foul(ch,own,false,false);return'foul';}
+   if(cv>4.2&&Math.random()<(hc?0:.14)){this.foul(ch,own,false,false,cv);return'foul';}
    const pr=clamp(.12+(ch.st.phys-own.st.phys)/130+(cv-1.6)*.07+(bD>.7?.12:0),.03,.55);
    if(Math.random()<pr){own.stats.lost++;ch.stats.tk++;b.owner=null;b.last=ch;b.passFrom=null;b.vx=own.vx*.5-nx*R(1,3)+R(-1.5,1.5);b.vy=own.vy*.5-ny*R(1,3)+R(-1.5,1.5);own.stun=.3;ch.tcool=.5;SFX.kick(.25);this.shVis(ch,own,.7);if(this.human&&ch.team.idx===this.human.team)this.ev('tackle',{p:ch},8);return'won';}
    return'none';}
@@ -755,7 +760,7 @@ class Match{
   if(cv<.8){if(ch.shP===own&&this.time-ch.shL<.06)ch.shD=(ch.shD||0)+this.time-ch.shL;else ch.shD=0;ch.shP=own;ch.shL=this.time;if(ch.shD<.18)return'none';ch.shD=0;cv=.9;}
   if(bD>1.4){own.shT=this.time+.4;this.shVis(ch,own,.4);return'none';}
   own.shT=this.time+.6;
-  if(cv>3.6&&Math.random()<(hc?.08:.22)){this.foul(ch,own,false,false);return'foul';}
+  if(cv>3.6&&Math.random()<(hc?.08:.22)){this.foul(ch,own,false,false,cv);return'foul';}
   const par=oS>.5&&cS>.5?(own.vx*ch.vx+own.vy*ch.vy)/(oS*cS):0;
   const s=(ch.st.str-own.st.str)/100*.9+clamp(cS-oS,-2,2)*.05+Math.min(cv,3)*.05+(ch.stam-own.stam)/500-(own.st.bal-60)/400+(same?.08:-.12)+(par>.5?.04:0);
   const pw=clamp(.3+s,.06,.7);this.shVis(ch,own,Math.min(1,.5+cv*.2));

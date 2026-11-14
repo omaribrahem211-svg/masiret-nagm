@@ -1,0 +1,19 @@
+{
+ "meta": {
+  "www": "/home/claude/masiret-nagm/www/js",
+  "n": 40
+ },
+ "episodes": 1066,
+ "p50": 0.07,
+ "p90": 0.2,
+ "p99": 0.47,
+ "max": 1.5,
+ "episodesAtLeast05s": 6,
+ "episodesAtLeast1s": 1,
+ "longEpisodeEnds": {
+  "carrier_kept": 2,
+  "defence_ball": 1,
+  "other": 2,
+  "tackle": 1
+ }
+}

@@ -1,0 +1,586 @@
+{
+ "www": "../../../tmp/et/v23h/js",
+ "tackleRadius": 1.25,
+ "runsPerScenario": 40,
+ "scenarios": {
+  "H1_alongside_6ms": {
+   "runs": 40,
+   "outcomes": {
+    "steal": 26,
+    "tackleWon": 9,
+    "none": 2,
+    "escape": 2,
+    "foul": 1
+   },
+   "defenceWonBall": 35,
+   "attackerEscaped": 2,
+   "passCompleted": 0,
+   "shots": 0,
+   "fouls": 1,
+   "standingTackles": 29,
+   "tacklesWon": 4,
+   "tacklesMissedOutOfReach": 0,
+   "tacklesBeaten": 15,
+   "tacklesPokedLoose": 4,
+   "tackleFouls": 0,
+   "slides": 0,
+   "passAttempts": 0,
+   "passesIntercepted": 0,
+   "positioningErrors": {
+    "turnedBackWithin3m": 2,
+    "outOfPathWhenBypassed": 0,
+    "lateralOffsetWhenPassed_median": 1
+   },
+   "inPathShareWithin5m_median": 0.42,
+   "timeToSetInPathWithin6m_median": 1.02,
+   "runsNeverSetInPath": 12,
+   "timeToFirstDefensiveAction_median": 1.35,
+   "tacklesByAngle": {
+    "front": 6,
+    "side": 22,
+    "behind": 1
+   },
+   "hesitationMaxSec_median": 0.38,
+   "hesitationMaxSec_p90": 0.52,
+   "runsHesitating05s": 4,
+   "framesBallInReachNotBehindNotShielded": 1103,
+   "ofWhichTimingCheckSaidYes": 543,
+   "framesBallNearerDefenderThanAttacker": 585,
+   "estWinWhenTimingOK_p50_p75_p90": [
+    0.75,
+    0.84,
+    0.84
+   ]
+  },
+  "H1b_alongside_6ms_slightly_behind": {
+   "runs": 40,
+   "outcomes": {
+    "tackleWon": 15,
+    "steal": 23,
+    "foul": 2
+   },
+   "defenceWonBall": 38,
+   "attackerEscaped": 0,
+   "passCompleted": 0,
+   "shots": 0,
+   "fouls": 2,
+   "standingTackles": 31,
+   "tacklesWon": 10,
+   "tacklesMissedOutOfReach": 0,
+   "tacklesBeaten": 15,
+   "tacklesPokedLoose": 1,
+   "tackleFouls": 0,
+   "slides": 0,
+   "passAttempts": 0,
+   "passesIntercepted": 0,
+   "positioningErrors": {
+    "turnedBackWithin3m": 4,
+    "outOfPathWhenBypassed": 0,
+    "lateralOffsetWhenPassed_median": 0.89
+   },
+   "inPathShareWithin5m_median": 0.29,
+   "timeToSetInPathWithin6m_median": 1.43,
+   "runsNeverSetInPath": 9,
+   "timeToFirstDefensiveAction_median": 1.3,
+   "tacklesByAngle": {
+    "front": 13,
+    "side": 18,
+    "behind": 0
+   },
+   "hesitationMaxSec_median": 0.37,
+   "hesitationMaxSec_p90": 0.77,
+   "runsHesitating05s": 8,
+   "framesBallInReachNotBehindNotShielded": 1109,
+   "ofWhichTimingCheckSaidYes": 528,
+   "framesBallNearerDefenderThanAttacker": 518,
+   "estWinWhenTimingOK_p50_p75_p90": [
+    0.7,
+    0.84,
+    0.84
+   ]
+  },
+  "H2_front_approach_6ms_from_6m": {
+   "runs": 40,
+   "outcomes": {
+    "escape": 4,
+    "tackleWon": 28,
+    "steal": 7,
+    "none": 1
+   },
+   "defenceWonBall": 35,
+   "attackerEscaped": 4,
+   "passCompleted": 0,
+   "shots": 0,
+   "fouls": 0,
+   "standingTackles": 39,
+   "tacklesWon": 20,
+   "tacklesMissedOutOfReach": 0,
+   "tacklesBeaten": 15,
+   "tacklesPokedLoose": 4,
+   "tackleFouls": 0,
+   "slides": 2,
+   "passAttempts": 0,
+   "passesIntercepted": 0,
+   "positioningErrors": {
+    "turnedBackWithin3m": 5,
+    "outOfPathWhenBypassed": 0,
+    "lateralOffsetWhenPassed_median": 0.83
+   },
+   "inPathShareWithin5m_median": 0.26,
+   "timeToSetInPathWithin6m_median": 0.03,
+   "runsNeverSetInPath": 0,
+   "timeToFirstDefensiveAction_median": 1.02,
+   "tacklesByAngle": {
+    "front": 34,
+    "side": 5,
+    "behind": 0
+   },
+   "hesitationMaxSec_median": 0.25,
+   "hesitationMaxSec_p90": 0.75,
+   "runsHesitating05s": 13,
+   "framesBallInReachNotBehindNotShielded": 1179,
+   "ofWhichTimingCheckSaidYes": 444,
+   "framesBallNearerDefenderThanAttacker": 619,
+   "estWinWhenTimingOK_p50_p75_p90": [
+    0.84,
+    0.84,
+    0.84
+   ]
+  },
+  "H3_side_approach_from_4m_sideways": {
+   "runs": 40,
+   "outcomes": {
+    "steal": 27,
+    "escape": 6,
+    "none": 5,
+    "foul": 1,
+    "tackleWon": 1
+   },
+   "defenceWonBall": 28,
+   "attackerEscaped": 6,
+   "passCompleted": 0,
+   "shots": 0,
+   "fouls": 1,
+   "standingTackles": 13,
+   "tacklesWon": 1,
+   "tacklesMissedOutOfReach": 0,
+   "tacklesBeaten": 3,
+   "tacklesPokedLoose": 3,
+   "tackleFouls": 1,
+   "slides": 6,
+   "passAttempts": 0,
+   "passesIntercepted": 0,
+   "positioningErrors": {
+    "turnedBackWithin3m": 6,
+    "outOfPathWhenBypassed": 11,
+    "lateralOffsetWhenPassed_median": 3.85
+   },
+   "inPathShareWithin5m_median": 0.12,
+   "timeToSetInPathWithin6m_median": 2.92,
+   "runsNeverSetInPath": 12,
+   "timeToFirstDefensiveAction_median": 3.18,
+   "tacklesByAngle": {
+    "front": 6,
+    "side": 7,
+    "behind": 0
+   },
+   "hesitationMaxSec_median": 0.4,
+   "hesitationMaxSec_p90": 0.87,
+   "runsHesitating05s": 13,
+   "framesBallInReachNotBehindNotShielded": 1385,
+   "ofWhichTimingCheckSaidYes": 767,
+   "framesBallNearerDefenderThanAttacker": 762,
+   "estWinWhenTimingOK_p50_p75_p90": [
+    0.73,
+    0.84,
+    0.84
+   ]
+  },
+  "H4_attacker_changes_direction_45deg_at_2.5m": {
+   "runs": 40,
+   "outcomes": {
+    "tackleWon": 28,
+    "steal": 6,
+    "none": 4,
+    "foul": 1,
+    "escape": 1
+   },
+   "defenceWonBall": 34,
+   "attackerEscaped": 1,
+   "passCompleted": 0,
+   "shots": 0,
+   "fouls": 1,
+   "standingTackles": 40,
+   "tacklesWon": 28,
+   "tacklesMissedOutOfReach": 0,
+   "tacklesBeaten": 8,
+   "tacklesPokedLoose": 4,
+   "tackleFouls": 0,
+   "slides": 1,
+   "passAttempts": 0,
+   "passesIntercepted": 0,
+   "positioningErrors": {
+    "turnedBackWithin3m": 0,
+    "outOfPathWhenBypassed": 0,
+    "lateralOffsetWhenPassed_median": 0.78
+   },
+   "inPathShareWithin5m_median": 0.79,
+   "timeToSetInPathWithin6m_median": 0.48,
+   "runsNeverSetInPath": 0,
+   "timeToFirstDefensiveAction_median": 1.55,
+   "tacklesByAngle": {
+    "front": 38,
+    "side": 2,
+    "behind": 0
+   },
+   "hesitationMaxSec_median": 0.17,
+   "hesitationMaxSec_p90": 0.5,
+   "runsHesitating05s": 3,
+   "framesBallInReachNotBehindNotShielded": 750,
+   "ofWhichTimingCheckSaidYes": 315,
+   "framesBallNearerDefenderThanAttacker": 422,
+   "estWinWhenTimingOK_p50_p75_p90": [
+    0.84,
+    0.84,
+    0.84
+   ]
+  },
+  "H5_fast_attacker_7.5_vs_slower_defender_alongside": {
+   "runs": 40,
+   "outcomes": {
+    "steal": 11,
+    "none": 6,
+    "tackleWon": 17,
+    "escape": 6
+   },
+   "defenceWonBall": 28,
+   "attackerEscaped": 6,
+   "passCompleted": 0,
+   "shots": 0,
+   "fouls": 0,
+   "standingTackles": 49,
+   "tacklesWon": 17,
+   "tacklesMissedOutOfReach": 0,
+   "tacklesBeaten": 23,
+   "tacklesPokedLoose": 6,
+   "tackleFouls": 0,
+   "slides": 4,
+   "passAttempts": 0,
+   "passesIntercepted": 0,
+   "positioningErrors": {
+    "turnedBackWithin3m": 4,
+    "outOfPathWhenBypassed": 0,
+    "lateralOffsetWhenPassed_median": 1
+   },
+   "inPathShareWithin5m_median": 0.16,
+   "timeToSetInPathWithin6m_median": 1.4,
+   "runsNeverSetInPath": 12,
+   "timeToFirstDefensiveAction_median": 1.32,
+   "tacklesByAngle": {
+    "front": 26,
+    "side": 23,
+    "behind": 0
+   },
+   "hesitationMaxSec_median": 0.35,
+   "hesitationMaxSec_p90": 0.8,
+   "runsHesitating05s": 5,
+   "framesBallInReachNotBehindNotShielded": 1175,
+   "ofWhichTimingCheckSaidYes": 535,
+   "framesBallNearerDefenderThanAttacker": 334,
+   "estWinWhenTimingOK_p50_p75_p90": [
+    0.56,
+    0.83,
+    0.84
+   ]
+  },
+  "H6_tired_defender_stam30_alongside": {
+   "runs": 40,
+   "outcomes": {
+    "steal": 7,
+    "none": 12,
+    "tackleWon": 14,
+    "escape": 7
+   },
+   "defenceWonBall": 21,
+   "attackerEscaped": 7,
+   "passCompleted": 0,
+   "shots": 0,
+   "fouls": 0,
+   "standingTackles": 44,
+   "tacklesWon": 11,
+   "tacklesMissedOutOfReach": 0,
+   "tacklesBeaten": 27,
+   "tacklesPokedLoose": 5,
+   "tackleFouls": 0,
+   "slides": 6,
+   "passAttempts": 0,
+   "passesIntercepted": 0,
+   "positioningErrors": {
+    "turnedBackWithin3m": 15,
+    "outOfPathWhenBypassed": 0,
+    "lateralOffsetWhenPassed_median": 1
+   },
+   "inPathShareWithin5m_median": 0.19,
+   "timeToSetInPathWithin6m_median": 1.43,
+   "runsNeverSetInPath": 9,
+   "timeToFirstDefensiveAction_median": 1.38,
+   "tacklesByAngle": {
+    "front": 24,
+    "side": 20,
+    "behind": 0
+   },
+   "hesitationMaxSec_median": 0.42,
+   "hesitationMaxSec_p90": 1.25,
+   "runsHesitating05s": 10,
+   "framesBallInReachNotBehindNotShielded": 1557,
+   "ofWhichTimingCheckSaidYes": 798,
+   "framesBallNearerDefenderThanAttacker": 680,
+   "estWinWhenTimingOK_p50_p75_p90": [
+    0.6,
+    0.69,
+    0.69
+   ]
+  },
+  "H7_ball_moving_away_long_touch_alongside": {
+   "runs": 40,
+   "outcomes": {
+    "steal": 32,
+    "none": 6,
+    "tackleWon": 2
+   },
+   "defenceWonBall": 34,
+   "attackerEscaped": 0,
+   "passCompleted": 0,
+   "shots": 0,
+   "fouls": 0,
+   "standingTackles": 16,
+   "tacklesWon": 2,
+   "tacklesMissedOutOfReach": 0,
+   "tacklesBeaten": 12,
+   "tacklesPokedLoose": 2,
+   "tackleFouls": 0,
+   "slides": 0,
+   "passAttempts": 2360,
+   "passesIntercepted": 0,
+   "positioningErrors": {
+    "turnedBackWithin3m": 26,
+    "outOfPathWhenBypassed": 0,
+    "lateralOffsetWhenPassed_median": 0.6
+   },
+   "inPathShareWithin5m_median": 0.26,
+   "timeToSetInPathWithin6m_median": 2.23,
+   "runsNeverSetInPath": 14,
+   "timeToFirstDefensiveAction_median": 2.53,
+   "tacklesByAngle": {
+    "front": 0,
+    "side": 16,
+    "behind": 0
+   },
+   "hesitationMaxSec_median": 0.37,
+   "hesitationMaxSec_p90": 0.42,
+   "runsHesitating05s": 0,
+   "framesBallInReachNotBehindNotShielded": 1007,
+   "ofWhichTimingCheckSaidYes": 406,
+   "framesBallNearerDefenderThanAttacker": 473,
+   "estWinWhenTimingOK_p50_p75_p90": [
+    0.77,
+    0.84,
+    0.84
+   ]
+  },
+  "H8_behind_chasing_attacker": {
+   "runs": 40,
+   "outcomes": {
+    "foul": 17,
+    "steal": 12,
+    "none": 2,
+    "tackleWon": 7,
+    "escape": 2
+   },
+   "defenceWonBall": 19,
+   "attackerEscaped": 2,
+   "passCompleted": 0,
+   "shots": 0,
+   "fouls": 17,
+   "standingTackles": 21,
+   "tacklesWon": 7,
+   "tacklesMissedOutOfReach": 0,
+   "tacklesBeaten": 9,
+   "tacklesPokedLoose": 3,
+   "tackleFouls": 0,
+   "slides": 2,
+   "passAttempts": 0,
+   "passesIntercepted": 0,
+   "positioningErrors": {
+    "turnedBackWithin3m": 5,
+    "outOfPathWhenBypassed": 0,
+    "lateralOffsetWhenPassed_median": 0.3
+   },
+   "inPathShareWithin5m_median": 0.24,
+   "timeToSetInPathWithin6m_median": 1.92,
+   "runsNeverSetInPath": 23,
+   "timeToFirstDefensiveAction_median": 2.28,
+   "tacklesByAngle": {
+    "front": 7,
+    "side": 12,
+    "behind": 2
+   },
+   "hesitationMaxSec_median": 0.13,
+   "hesitationMaxSec_p90": 1.32,
+   "runsHesitating05s": 12,
+   "framesBallInReachNotBehindNotShielded": 1100,
+   "ofWhichTimingCheckSaidYes": 557,
+   "framesBallNearerDefenderThanAttacker": 584,
+   "estWinWhenTimingOK_p50_p75_p90": [
+    0.74,
+    0.84,
+    0.84
+   ]
+  },
+  "H10_fast_attacker_7.5_from_12m_front": {
+   "runs": 40,
+   "outcomes": {
+    "none": 9,
+    "tackleWon": 18,
+    "steal": 9,
+    "foul": 4
+   },
+   "defenceWonBall": 27,
+   "attackerEscaped": 0,
+   "passCompleted": 0,
+   "shots": 0,
+   "fouls": 4,
+   "standingTackles": 36,
+   "tacklesWon": 18,
+   "tacklesMissedOutOfReach": 0,
+   "tacklesBeaten": 13,
+   "tacklesPokedLoose": 3,
+   "tackleFouls": 1,
+   "slides": 0,
+   "passAttempts": 0,
+   "passesIntercepted": 0,
+   "positioningErrors": {
+    "turnedBackWithin3m": 2,
+    "outOfPathWhenBypassed": 0,
+    "lateralOffsetWhenPassed_median": 0.78
+   },
+   "inPathShareWithin5m_median": 0.19,
+   "timeToSetInPathWithin6m_median": 1.08,
+   "runsNeverSetInPath": 0,
+   "timeToFirstDefensiveAction_median": 2.05,
+   "tacklesByAngle": {
+    "front": 33,
+    "side": 3,
+    "behind": 0
+   },
+   "hesitationMaxSec_median": 0.05,
+   "hesitationMaxSec_p90": 0.6,
+   "runsHesitating05s": 4,
+   "framesBallInReachNotBehindNotShielded": 446,
+   "ofWhichTimingCheckSaidYes": 233,
+   "framesBallNearerDefenderThanAttacker": 150,
+   "estWinWhenTimingOK_p50_p75_p90": [
+    0.78,
+    0.84,
+    0.84
+   ]
+  },
+  "H11_attacker_6ms_from_12m_front": {
+   "runs": 40,
+   "outcomes": {
+    "tackleWon": 24,
+    "steal": 9,
+    "none": 4,
+    "foul": 3
+   },
+   "defenceWonBall": 33,
+   "attackerEscaped": 0,
+   "passCompleted": 0,
+   "shots": 0,
+   "fouls": 3,
+   "standingTackles": 34,
+   "tacklesWon": 24,
+   "tacklesMissedOutOfReach": 0,
+   "tacklesBeaten": 7,
+   "tacklesPokedLoose": 2,
+   "tackleFouls": 1,
+   "slides": 0,
+   "passAttempts": 0,
+   "passesIntercepted": 0,
+   "positioningErrors": {
+    "turnedBackWithin3m": 0,
+    "outOfPathWhenBypassed": 0,
+    "lateralOffsetWhenPassed_median": 0.78
+   },
+   "inPathShareWithin5m_median": 0.19,
+   "timeToSetInPathWithin6m_median": 1.13,
+   "runsNeverSetInPath": 0,
+   "timeToFirstDefensiveAction_median": 2.15,
+   "tacklesByAngle": {
+    "front": 33,
+    "side": 1,
+    "behind": 0
+   },
+   "hesitationMaxSec_median": 0.05,
+   "hesitationMaxSec_p90": 0.55,
+   "runsHesitating05s": 6,
+   "framesBallInReachNotBehindNotShielded": 355,
+   "ofWhichTimingCheckSaidYes": 229,
+   "framesBallNearerDefenderThanAttacker": 159,
+   "estWinWhenTimingOK_p50_p75_p90": [
+    0.84,
+    0.84,
+    0.84
+   ]
+  },
+  "H9_slow_attacker_3ms_alongside": {
+   "runs": 40,
+   "outcomes": {
+    "steal": 17,
+    "none": 2,
+    "tackleWon": 10,
+    "escape": 8,
+    "foul": 3
+   },
+   "defenceWonBall": 27,
+   "attackerEscaped": 8,
+   "passCompleted": 0,
+   "shots": 0,
+   "fouls": 3,
+   "standingTackles": 27,
+   "tacklesWon": 10,
+   "tacklesMissedOutOfReach": 0,
+   "tacklesBeaten": 14,
+   "tacklesPokedLoose": 1,
+   "tackleFouls": 1,
+   "slides": 1,
+   "passAttempts": 0,
+   "passesIntercepted": 0,
+   "positioningErrors": {
+    "turnedBackWithin3m": 23,
+    "outOfPathWhenBypassed": 0,
+    "lateralOffsetWhenPassed_median": 1
+   },
+   "inPathShareWithin5m_median": 0.32,
+   "timeToSetInPathWithin6m_median": 1.1,
+   "runsNeverSetInPath": 15,
+   "timeToFirstDefensiveAction_median": 1.43,
+   "tacklesByAngle": {
+    "front": 8,
+    "side": 19,
+    "behind": 0
+   },
+   "hesitationMaxSec_median": 0.67,
+   "hesitationMaxSec_p90": 1.45,
+   "runsHesitating05s": 23,
+   "framesBallInReachNotBehindNotShielded": 1484,
+   "ofWhichTimingCheckSaidYes": 566,
+   "framesBallNearerDefenderThanAttacker": 762,
+   "estWinWhenTimingOK_p50_p75_p90": [
+    0.75,
+    0.84,
+    0.84
+   ]
+  }
+ }
+}

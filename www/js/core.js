@@ -197,6 +197,10 @@ class Match{
    if(p.spT){if(this.restartKind||(!b.owner&&this.time-(this.spKick||-9)<2.2)){this.go(p,p.spT,this.restartKind?.75:.9);continue;}p.spT=null;p.wallP=0;}
    if(!b.owner&&b.target&&b.target.team===t&&!b.target.off&&this.time-b.passT<3.2){this.goS(p,this.shape(p,true),.8);continue;}
    if(b.owner&&poss===t.idx){const sp=t.sup&&t.sup.includes(p)&&p.supT;if(sp)this.goS(p,sp,.92);else this.goS(p,this.shape(p,true),.82);continue;}
+   // (3B) عرضية الخصم في الهوا: المدافع اللي يقدر يوصل للكورة في متناول راسه الأول (مش بالضرورة الأقرب لمكانها دلوقتي) هو اللي يهاجمها،
+   // والباقيين يفضلوا على رجالتهم. قبل كده اللي بيطلع للكورة كان بس "الضاغط" (الأقرب لمكان الكورة بعد 0.4 ث) — والمهاجم كان بيلمس 51% من العرضيات الأول
+   if(!b.owner&&b.cross&&b.last&&b.last.team!==t&&!this.restartKind&&b.z>.3){if(t.airP!==b.passT){t.airP=b.passT;let bq=null,bt=9;for(const q of t.pl){if(q.role==='GK'||q.stun>0||(h&&(q===h.ctrl||q===h.p2)))continue;const rt=this.reachT(q,2.35,.95);if(rt<bt){bt=rt;bq=q;}}t.air=bq;}
+    if(p===t.air){const pt=this.airPt(p,2.35);if(pt){this.go(p,pt,1);continue;}}}
    if(t.cut&&t.cut.p===p&&b.owner&&b.owner.team!==t&&!this.restartKind){this.go(p,t.cut.pt,.8);continue;}
    if(p===t.chaser){const c=b.owner;
     if(c&&c.team!==t&&(b.inHands||this.restartKind)){const md=this.restartKind==='throw'?3:10;const dx=p.x-b.x,dy=p.y-b.y,d=hyp(dx,dy)||1;this.go(p,b.inHands?this.shape(p,false):[b.x+dx/d*md,b.y+dy/d*md],.75);continue;}
@@ -214,7 +218,8 @@ class Match{
      else{// مراقبة (jockey): يقف بين المهاجم والمرمى على مسافة مناسبة لسرعته، بيتوقع مكانه بعد 0.3 ث، ومايل ناحية نص الملعب عشان يوجّهه للخط الجانبي.
       // لو المهاجم واقف بالكورة أكتر من 1.2 ث يقرّب عليه يضغطه
       const cs=hyp(c.vx,c.vy),pcx=c.x+c.vx*.3,pcy=c.y+c.vy*.3,qd0=hyp(g[0]-pcx,g[1]-pcy)||1,wv=cs>2&&(c.vx*(g[0]-pcx)+c.vy*(g[1]-pcy))>0?.5:0,qx=(g[0]-pcx)/qd0*(1-wv)+(wv?c.vx/cs:0)*wv,qy=(g[1]-pcy)/qd0*(1-wv)+(wv?c.vy/cs:0)*wv,qd=hyp(qx,qy)||1;c.stillT=cs<1?(c.stillT||0)+dt:0;
-      const jd=c.stillT>1.2?1.1:clamp(1.45+cs*.1,1.45,2.1),shade=clamp((CY-c.y)/20,-1,1)*.45;
+      // (3B) في مدى التسديد (≤28 م من المرمى) بيقرّب أكتر (1–1.5 م بدل 1.45–2.1) عشان يقفل زاوية التسديدة — كان نص التسديدات من غير مدافع في 3 م
+      const shR=hyp(g[0]-c.x,g[1]-c.y)<28,jd=c.stillT>1.2?1.1:shR?clamp(1+cs*.08,1,1.5):clamp(1.45+cs*.1,1.45,2.1),shade=clamp((CY-c.y)/20,-1,1)*.45;
       this.go(p,[pcx+qx/qd*jd,pcy+qy/qd*jd+shade],Math.min(1,(cs+1.2)/p.mse));}
      if(p.tcool<=0){const og=this.ownG(t),inBox=Math.abs(c.x-og[0])<17&&Math.abs(c.y-CY)<20.5;const dB=hyp(p.x-b.x,p.y-b.y),exposed=hyp(b.x-c.x,b.y-c.y)>.62,front=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/(dC||1)>-.35;const skill=(.5+t.R/200)*(1+(t.str||0)*.25)*(h&&c===h.ctrl?.85:1);
       // (2.4) فرصة الصراع: المدافع جنبه أو قدامه (مش وراه)، الكورة مش متغطية بجسم المهاجم، في المدى (≤1 م) وبعيدة عن رجل المهاجم (≥0.6 م)،
@@ -229,6 +234,9 @@ class Match{
     else if(!b.owner&&b.target&&b.target.team!==t&&!(b.target===b.last&&b.target.bigT>0)&&this.time-b.passT<.35)this.go(p,this.shape(p,false),.9);/* (2.3) لمسة طويلة لنفسه (bigTouch بس، مش السيطرة/التخميد) مش تمريرة: المدافع مايرجعش لمكانه، بيروح لمكان الكورة المتوقع */else this.go(p,b.owner?[pbx,pby]:this.intercept(p),1);continue;}
    if(p===t.second&&b.owner&&b.owner.team!==t&&!this.restartKind){const g=this.ownG(t);const dx=g[0]-b.x,dy=g[1]-b.y,d=hyp(dx,dy)||1;const sd=clamp(7-(t.str||0)*3-((t.T||TACTICS.bal).press-.5)*4,3,10);// المدافع التاني بيغطي: بين الكورة والمرمى، ولو الكورة على الطرف قريب من مرمانا بيقفل الطريق الداخلي
     const ins=Math.abs(b.y-CY)>9&&d<40?Math.sign(CY-b.y)*Math.min(2.5,(Math.abs(b.y-CY)-9)*.25):0;this.go(p,[b.x+dx/d*sd,b.y+dy/d*sd+ins],.92+Math.max(0,t.str||0)*.06);continue;}
+   // الرقابة بتفضل شغالة وهي الكورة في الهوا من تمريرة/عرضية الخصم (قبل كده أول ما الكورة تسيب رجل الممرر كل المدافعين يرجعوا لمكانهم في الخطة)
+   if(t.mk&&t.mk.has(p)&&!this.restartKind&&(b.owner?b.owner.team!==t:(b.last&&b.last.team!==t&&b.target&&b.target.team!==t))){const q=t.mk.get(p),og=this.ownG(t),gx=og[0]-q.x,gy=og[1]-q.y,gd=hyp(gx,gy)||1,bx2=b.x-q.x,by2=b.y-q.y,bd2=hyp(bx2,by2)||1;
+    this.go(p,[q.x+q.vx*.25+gx/gd*.9+bx2/bd2*.35,q.y+q.vy*.25+gy/gd*.9+by2/bd2*.35],.95);continue;}
    this.goS(p,this.shape(p,this.possS===t.idx),.76);
   }
   if(this.restartKind&&b.owner&&this.restartKind!=='pen'){const md=this.restartKind==='throw'?3:this.restartKind==='ko'?9.15:9.15;const ot=this.other(b.owner.team);for(const q of ot.pl){if(!q.tgt||q.wallP||q.role==='GK')continue;const dx=q.tgt[0]-b.x,dy=q.tgt[1]-b.y,d=hyp(dx,dy)||1;if(d<md)q.tgt=[b.x+dx/d*md,b.y+dy/d*md];}
@@ -244,7 +252,15 @@ class Match{
      let sc=Math.min(open,6)+fwd*(k?.22:.07)-hyp(px-p.x,py-p.y)*.12;for(const u of used)if(hyp(u[0]-px,u[1]-py)<7)sc-=4;if(sc>bs){bs=sc;best=[px,py];}}
     p.supT=best;if(best)used.push(best);});}
   else if(bx<50){const rc=o.pl.filter(q=>q!==c&&q.role!=='GK').sort((a,q)=>hyp(a.x-c.x,a.y-c.y)-hyp(q.x-c.x,q.y-c.y)).slice(0,2);let tgt=null;for(const q of rc){if(!tgt||(q.x-tgt.x)*o.dir>0)tgt=q;}
-   if(tgt){const og=this.ownG(t);if(hyp(tgt.x-og[0],tgt.y-og[1])>hyp(c.x-og[0],c.y-og[1])+2)tgt=null;}if(tgt){const pt=[c.x+(tgt.x-c.x)*.5,c.y+(tgt.y-c.y)*.5];let bp=null,bd=8;for(const p of t.pl){if(p.role==='GK'||p===t.chaser||p===t.second||p.stun>0||(h&&(p===h.ctrl||p===h.p2)))continue;const d=hyp(p.x-pt[0],p.y-pt[1]);if(d<bd){bd=d;bp=p;}}if(bp)t.cut={p:bp,pt};}}}
+   if(tgt){const og=this.ownG(t);if(hyp(tgt.x-og[0],tgt.y-og[1])>hyp(c.x-og[0],c.y-og[1])+2)tgt=null;}if(tgt){const pt=[c.x+(tgt.x-c.x)*.5,c.y+(tgt.y-c.y)*.5];let bp=null,bd=8;for(const p of t.pl){if(p.role==='GK'||p===t.chaser||p===t.second||p.stun>0||(h&&(p===h.ctrl||p===h.p2)))continue;const d=hyp(p.x-pt[0],p.y-pt[1]);if(d<bd){bd=d;bp=p;}}if(bp)t.cut={p:bp,pt};}}
+  // (3B) رقابة داخل/حوالين منطقة الجزاء: لما الخصم معاه الكورة قريب من مرمانا (≤45 م)، كل مهاجم خطير (≤25 م من المرمى) بياخد مدافع
+  // واحد (الأقرب، مش اللي بيضغط ولا اللي بيغطي ولا اللي بيقطع خط التمرير ولا اللاعب اللي البشري ماسكه) يقف بينه وبين المرمى.
+  // قبل كده الدفاع كان منطقة بس: الخط يقف على مسافة ثابتة والمهاجم اللي يجري جوه الصندوق محدش بيتبعه (95% من العينات من غير رقيب في 2 م)
+  {const pm=t.mk;t.mk=null;if(c.team!==t){const og=this.ownG(t);if(hyp(b.x-og[0],b.y-og[1])<45){const dng=o.pl.filter(q=>q!==c&&q.role!=='GK'&&!q.off&&hyp(q.x-og[0],q.y-og[1])<25&&Math.abs(q.y-CY)<26).sort((a,q)=>hyp(a.x-og[0],a.y-og[1])-hyp(q.x-og[0],q.y-og[1]));
+   const free=t.pl.filter(p=>p.role!=='GK'&&p.role!=='FW'&&p!==t.chaser&&p!==t.second&&!(t.cut&&t.cut.p===p)&&!(p.stun>0)&&!(h&&(p===h.ctrl||p===h.p2)));t.mk=new Map();const taken=new Set();
+   // ثبات: نفس المدافع يفضل على نفس المهاجم طول ما هو قريب منه (مش كل 0.3 ث يتبدلوا)
+   if(pm)for(const [p,q] of pm)if(free.includes(p)&&dng.includes(q)&&hyp(p.x-q.x,p.y-q.y)<20){t.mk.set(p,q);taken.add(q);}
+   for(const q of dng){if(taken.has(q))continue;let bp=null,bd=18;for(const p of free){if(t.mk.has(p))continue;const d=hyp(p.x-q.x,p.y-q.y);if(d<bd){bd=d;bp=p;}}if(bp){t.mk.set(bp,q);taken.add(q);}}}}}}
  go(p,tg,f){p.tgt=tg;p.spd=p.mse*f;}
  goS(p,tg,f){const k=Math.min(1,(this._dt||.016)*2.2);if(!p.sT||hyp(p.sT[0]-tg[0],p.sT[1]-tg[1])>14)p.sT=[tg[0],tg[1]];else{p.sT[0]+=(tg[0]-p.sT[0])*k;p.sT[1]+=(tg[1]-p.sT[1])*k;}const d=hyp(p.sT[0]-p.x,p.sT[1]-p.y);if(d<.9){p.tgt=null;p.des=[0,0];return;}this.go(p,[p.sT[0],p.sT[1]],f*(d<3?.55+d*.15:1));}
  landT(){const b=this.ball;if(b.z<.3&&b.vz<=.5)return 0;return(b.vz+Math.sqrt(b.vz*b.vz+19.6*b.z))/9.8;}
@@ -263,6 +279,8 @@ class Match{
   if(!best){this.go(p,this.intercept(p),1);return;}
   const bv=hyp(b.vx,b.vy);if(bv>1){best=[best[0]+b.vx/bv*.18,best[1]+b.vy/bv*.18];}const d=hyp(best[0]-p.x,best[1]-p.y);this.go(p,best,clamp(d/(bt*p.mse)*1.6+.25,.35,1));p.recvT=bt;}
  ballAt(t){const b=this.ball;const air=b.z>.3;const k=air?.1:(this.rain?.62:.85);const f=(1-Math.exp(-k*t))/k;return[b.x+b.vx*f,b.y+b.vy*f];}
+ // (3B) أول نقطة على مسار الكورة يقدر اللاعب يوصلها وهي تحت zCap (للكور العالية) — زي reachT بس بيرجع المكان
+ airPt(q,zCap){const b=this.ball,tl=this.landT(),ms=q.mse*.95;for(let t=.05;t<=3.2;t+=.05){if(tl>0&&t<tl){const zt=b.z+b.vz*t-4.9*t*t;if(zt>zCap)continue;}const c=this.ballAt(t);if(hyp(c[0]-q.x,c[1]-q.y)/ms+.12<=t)return c;}return null;}
  intercept(p){const b=this.ball;if(b.owner)return[b.x,b.y];for(let t=.1;t<=3;t+=.1){const q=this.ballAt(t);const d=hyp(q[0]-p.x,q[1]-p.y);if(d/(p.mse*.92)<=t+.08)return q;}return this.ballAt(3);}
  shape(p,att){const t=p.team,b=this.ball;const bx=t.dir===1?b.x:L-b.x,by=t.dir===1?b.y:W-b.y;
   if(!att&&!this.restartKind&&t.dl!=null&&p.role!=='FW'){const dl=t.dl;let x,y;

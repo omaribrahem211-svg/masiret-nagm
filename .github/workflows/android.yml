@@ -94,7 +94,9 @@ jobs:
           cp android/app/build/outputs/apk/debug/app-debug.apk out/masiret-v$VC-test.apk
           ls -la out
 
+      # Only builds of main replace the "builds" branch; test builds of other branches are kept as workflow artifacts only
       - name: Keep them on the "builds" branch
+        if: github.ref == 'refs/heads/main'
         run: |
           cd out
           git init -q -b builds

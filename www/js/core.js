@@ -310,10 +310,13 @@ class Match{
  airPt(q,zCap){const b=this.ball,tl=this.landT(),ms=q.mse*.95;for(let t=.05;t<=3.2;t+=.05){if(tl>0&&t<tl){const zt=b.z+b.vz*t-4.9*t*t;if(zt>zCap)continue;}const c=this.ballAt(t);if(hyp(c[0]-q.x,c[1]-q.y)/ms+.12<=t)return c;}return null;}
  intercept(p){const b=this.ball;if(b.owner)return[b.x,b.y];for(let t=.1;t<=3;t+=.1){const q=this.ballAt(t);const d=hyp(q[0]-p.x,q[1]-p.y);if(d/(p.mse*.92)<=t+.08)return q;}return this.ballAt(3);}
  shape(p,att){const t=p.team,b=this.ball;const bx=t.dir===1?b.x:L-b.x,by=t.dir===1?b.y:W-b.y;
-  if(!att&&!this.restartKind&&t.dl!=null&&p.role!=='FW'){const dl=t.dl;let x,y;
-   if(p.role==='DF'){x=dl+(p.bx-16)*.5;y=34+(p.by-34)*.92+(by-34)*.3;}
-   else if(p.role==='MF'){x=dl+14+(p.bx-32)*.4;y=34+(p.by-34)*.9+(by-34)*.32;}
-   else{x=Math.min(dl+30+(p.bx-50)*.3,68);y=34+(p.by-34)*.9+(by-34)*.3;}
+  if(!att&&!this.restartKind&&t.dl!=null&&p.role!=='FW'){const dl=t.dl;let x,y;const T0=t.T||TACTICS.bal;
+   // (v131 E2) شكل الدفاع بيختلف حسب طريقة اللعب: المسافة بين خط الدفاع والوسط (كانت 14 م ثابتة في كل الخطط) والانكماش بالعرض ناحية الكورة
+   // (العرض كان 44 م وهو بيدافع تقريباً زي ما هو بيهاجم). الضغط العالي أضيق قدام، الدفاع والمرتدات بلوك واطي متماسك، الاستحواذ/الأطراف في النص
+   const gapDM=T0.press>=.9?11:T0.line<=-5?10:12.5,kw=T0.line<=-5?.8:T0.press>=.9?.86:.84,sh=T0.line<=-5?.36:.32;
+   if(p.role==='DF'){x=dl+(p.bx-16)*.5;y=34+(p.by-34)*(kw+.1)+(by-34)*(sh-.04);}
+   else if(p.role==='MF'){x=dl+gapDM+(p.bx-32)*.4;y=34+(p.by-34)*kw+(by-34)*sh;}
+   else{x=Math.min(dl+30+(p.bx-50)*.3,68);y=34+(p.by-34)*(kw+.04)+(by-34)*sh;}
    return this.toW(t,clamp(x,6,90),clamp(y,2.5,W-2.5));}
   // (3C) في الهجمة الفريق بيطلع ورا الكورة أكتر لما تعدّي نص الملعب (0.75 من حركة الكورة بدل 0.55 + 2 م): قبل كده والكورة على بعد 25 م من المرمى
   // لاعيبة الوسط كانوا على بعد ~50 م. (0.9 اتجربت: تسديدات أكتر بس قطع كورة ومرتدات أكتر بكتير — اترفضت)
@@ -321,7 +324,8 @@ class Match{
   // (v131 E1) في الهجمة الفريق بيقرّب ناحية الكورة بالعرض: الجناح اللي في ناحية الكورة يفضل واسع، لكن الجناح البعيد بيدخل لجوه
   // ولاعيبة النص بيتحركوا مع الكورة أكتر (0.45 بدل 0.3) عشان حامل الكورة يلاقي حد قريب يمرر له على الأرض
   {const far=(p.by-34)*(by-34)<0;if(att&&p.role!=='DF'&&Math.abs(p.by-34)>13)y=far?34+(p.by-34)*.8*TT.width+(by-34)*.4:34+(p.by-34)*1.12*TT.width+(by-34)*.15;else if(att)y=34+(p.by-34)*(.6+.4*TT.width)+(by-34)*(p.role==='DF'?.35:.45);}
-  if(att&&p.role==='DF'&&bx>40)x+=4;/* (v131 E1) خط الدفاع بيطلع ورا الوسط في الهجمة: المسافة بين الخطين كانت 17 م */
+  if(!att&&p.role==='FW'){const k2=TT.line<=-5?.88:TT.press>=.9?.92:.9;y=34+(p.by-34)*k2+(by-34)*.32;}/* (v131 E2) المهاجمين وهو بيدافع بيقفلوا لجوه شوية (الأجنحة كانت فاضلة على الخط) */
+  if(att&&p.role==='DF'&&bx>40)x+=4+(TT.line>=0?2:0);/* (v131 E1) خط الدفاع بيطلع ورا الوسط في الهجمة: المسافة بين الخطين كانت 17 م. (E2) +2 م كمان في كل الخطط ماعدا المرتدات */
   if(p.role==='DF')x=clamp(x,9,64);else if(p.role==='MF')x=clamp(x,16,84);else x=clamp(x,30,97);
   if(att&&p.role==='FW'&&bx>50)x=Math.max(x,Math.min(98,bx+9+(p.i%2)*4));if(att&&p.role!=='DF')x=Math.min(x,t.offLine-.6-(p.role==='MF'?7:0));
   // انطلاقات المهاجمين ورا المدافعين (أكتر في خطة المرتدات)

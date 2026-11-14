@@ -439,14 +439,10 @@ class Match{
   {const rvx=bvx-p.vx,rvy=bvy-p.vy,v0=Math.max(0,(p.vx*dx+p.vy*dy)/(dB||1));
    if(huT){const vs=Math.min(Math.min(5,p.mse||6),v0+1.2);let ok=false;for(let i=1;i<=5&&!ok;i++){const t=T*i/5;if(hyp(dx+rvx*t,dy+rvy*t)-vs*t<=TKR-.15)ok=true;}if(!ok)return false;}
    else{const ex=Math.max(0,Math.min(Math.min(5,p.mse||6)-v0,1.2));
-   const reach=(vx,vy)=>{for(let i=2;i<=5;i++){const t=T*i/5;// الرجل محتاجة على الأقل 40% من الخطوة عشان تتمد، فالكورة لازم تبقى في المدى بعدها مش في أول لحظة بس
-    if(hyp(dx+vx*t,dy+vy*t)-(ex*t+3*t*t)<=TKR-.15)return true;}return false;};
-   // لازم يوصل بالحسابين: متوسط حركة المهاجم والكورة، وسرعة الكورة الفعلية (بعد لمسة سريعة الكورة بتبعد أسرع من المهاجم)
-   if(!reach(rvx,rvy)||!reach(b.vx-p.vx,b.vy-p.vy))return false;}}
+   // (2.3: اتشال شرط الـ 40% وشرط سرعة الكورة الخام: إعادة تشغيل الفرص اللي كانوا بيمنعوها وريت إنها كانت في المدى)
+   let ok=false;for(let i=1;i<=5&&!ok;i++){const t=T*i/5;if(hyp(dx+rvx*t,dy+rvy*t)-(ex*t+3*t*t)<=TKR-.15)ok=true;}if(!ok)return false;}}
   // المدافع لسه بيرجع لورا (بيراقب): لازم يثبّت رجله الأول، مايقدرش يمد رجله لقدام وهو ماشي لورا
   if((p.vx*dx+p.vy*dy)/(dB||1)<-.3)return false;
-  // بيجري للجنب بسرعة (أكتر من 3 م/ث عمودي على اتجاه الكورة): مايقدرش يثبّت رجله ويمدها ناحية الكورة في نفس الخطوة
-  if(!huT&&Math.abs(p.vx*dy-p.vy*dx)/(dB||1)>3)return false;
   // اللمسة الجاية للمهاجم: لو الكورة بعيدة عن رجله وهو هيلحقها ويلمسها قبل ما رجل المدافع توصل، اللمسة هتغيّر مسارها، فيستنى لحد بعد اللمسة
   if(dB>.8&&this.nextTouch(p)<T+.03)return false;
   if(dB<=1)return true;

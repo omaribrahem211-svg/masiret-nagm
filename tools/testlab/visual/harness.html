@@ -25,9 +25,11 @@ try{
  const def=m.t[0],att=m.t[1],og=m.ownG(def),sx=og[0]<L/2?-1:1;
  m.all.forEach((p,i)=>{if(p.role==='GK'){const g=m.ownG(p.team);p.x=g[0]+(g[0]<1?1:-1);p.y=CY;}else{p.x=20+(i%8)*9;p.y=W-1.5-(i%3)*.8;}p.vx=p.vy=0;p.stun=p.slide=p.cool=p.tcool=0;p.spT=null;p.pend=null;p.hold=0;p.chalOn=null;});
  const a=att.pl.find(p=>p.role==='FW'),d=def.pl.find(p=>p.role==='DF');
- const sp=S==='SLOW'?3:7.5;if(sp>a.ms)a.ms=a.mse=sp+.3;
+ const sp=S==='SLOW'?3:S==='SH'||S==='SHB'?6:7.5;if(sp>a.ms)a.ms=a.mse=sp+.3;
  const dist=S==='A3'?3:S==='B2'?10:12,lat=S==='B2'?3:0;
  a.x=L/2-sx*8;a.y=CY;a.fx=sx;a.fy=0;a.vx=sx*sp;a.vy=0;d.x=a.x+sx*dist;d.y=CY+lat;d.fx=-sx;d.fy=0;
+ // (3A) SH: defender running alongside the carrier (1 m to his side, same speed); SHB: chasing 1.6 m behind (H1 / H8 lab scenarios)
+ if(S==='SH'||S==='SHB'){const bh=S==='SHB',al=Q.get('al')!=null?+Q.get('al'):bh?-1.6:0,be=Q.get('be')!=null?+Q.get('be'):bh?.3:1;d.x=a.x+sx*al;d.y=a.y+be;d.fx=sx;d.fy=0;d.vx=sx*sp;d.vy=0;}
  Object.assign(m.ball,{x:a.x+a.fx*.45,y:a.y,z:0,vx:a.vx,vy:0,vz:0,owner:a,last:a,target:null,shot:null,inHands:false,offside:null});
  // attacker never passes (1-v-1), like the 'np' lab scenarios
  const BP=m.bestPass.bind(m),PS=m.pass.bind(m);m.bestPass=(p,...r)=>p===a?null:BP(p,...r);m.pass=(p,...r)=>{if(p===a)return;return PS(p,...r);};
@@ -36,7 +38,7 @@ try{
  for(let i=0;i<N;i++){m.update(1/60);t+=1000/60;
   // simple side camera close to the defender (the renderer's own broadcast camera is used; we steer its target via the ball)
   R3.render(m,1920,1080,1,t);const pd=R3.project(d.x,d.y,1,1920,1080),pa=R3.project(a.x,a.y,1,1920,1080);
-  log.push({i,dx:+(d.x-a.x).toFixed(2),dv:[+d.vx.toFixed(1),+d.vy.toFixed(1)],f:[+d.fx.toFixed(2),+d.fy.toFixed(2)],tk:!!d.tkL,stun:+d.stun.toFixed(2),rec:+(d.recT||0).toFixed(2),act:d._act||'',own:m.ball.owner?m.ball.owner.role+m.ball.owner.team.idx:'-',pd,pa,ch:def.chaser===d,tt:m.ball.owner===a?m.tkTime(d):null,bl:m.ball.owner===a?m.tkBlocked(d,a):null,dB:+Math.hypot(m.ball.x-d.x,m.ball.y-d.y).toFixed(2),tcool:+d.tcool.toFixed(2),chal:d.chalOn===a});
+  log.push({i,dx:+(d.x-a.x).toFixed(2),dv:[+d.vx.toFixed(1),+d.vy.toFixed(1)],f:[+d.fx.toFixed(2),+d.fy.toFixed(2)],tk:!!d.tkL,stun:+d.stun.toFixed(2),rec:+(d.recT||0).toFixed(2),act:d._act||'',sh:d.shC&&m.time-d.shC.t<.5?+(m.time-d.shC.t).toFixed(2):null,ash:a.shC&&m.time-a.shC.t<.5?+(m.time-a.shC.t).toFixed(2):null,own:m.ball.owner?m.ball.owner.role+m.ball.owner.team.idx:'-',pd,pa,ch:def.chaser===d,tt:m.ball.owner===a?m.tkTime(d):null,bl:m.ball.owner===a?m.tkBlocked(d,a):null,dB:+Math.hypot(m.ball.x-d.x,m.ball.y-d.y).toFixed(2),tcool:+d.tcool.toFixed(2),chal:d.chalOn===a});
   if(i%EVERY===0)out.push(cv.toDataURL('image/jpeg',.82));
  }
  document.getElementById('out').textContent=JSON.stringify({ok:true,log,frames:out});

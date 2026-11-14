@@ -1,0 +1,37 @@
+{
+ "meta": {
+  "www": "/home/claude/masiret-nagm/www/js",
+  "n": 20,
+  "tactic": "wings"
+ },
+ "inPossession": {
+  "gapDFtoMF": 14.74,
+  "gapMFtoFW": 14.22,
+  "length": 33.75,
+  "width": 52.57
+ },
+ "outOfPossession": {
+  "gapDFtoMF": 15.04,
+  "gapMFtoFW": 14.34,
+  "length": 33.71,
+  "width": 44.72
+ },
+ "optionsMedian": 4,
+ "optionsZeroShare": 0.11,
+ "crowdShare": 0.01,
+ "abandonedShare": 0,
+ "perMatch": {
+  "overlaps": 0,
+  "overlapUseful": 0,
+  "overlapUnnecessary": 0,
+  "underlaps": 0,
+  "underlapUseful": 0,
+  "underlapUnnecessary": 0,
+  "thirdManAttempts": 39.6,
+  "thirdManCompleted": 10.3,
+  "switchPasses": 28.25,
+  "switchCompleted": 12.8
+ },
+ "fullbackRecoveryMedianSec": 1.65,
+ "fullbackRecoveryOver6s": 0.09
+}

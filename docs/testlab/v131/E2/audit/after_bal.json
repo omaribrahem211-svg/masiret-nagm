@@ -1,0 +1,47 @@
+{
+ "meta": {
+  "www": "/tmp/e2/F/js",
+  "n": 20,
+  "tactic": "bal"
+ },
+ "inPossession": {
+  "gapDFtoMF": 12.78,
+  "gapMFtoFW": 14.85,
+  "length": 32.87,
+  "width": 47.83
+ },
+ "outOfPossession": {
+  "gapDFtoMF": 12.77,
+  "gapMFtoFW": 16.09,
+  "length": 33.47,
+  "width": 45.19
+ },
+ "optionsMedian": 5,
+ "optionsZeroShare": 0.12,
+ "crowdShare": 0.01,
+ "abandonedShare": 0,
+ "perMatch": {
+  "overlaps": 0.2,
+  "overlapUseful": 0.1,
+  "overlapUnnecessary": 0,
+  "underlaps": 0,
+  "underlapUseful": 0,
+  "underlapUnnecessary": 0,
+  "thirdManAttempts": 38.55,
+  "thirdManCompleted": 12.7,
+  "switchPasses": 12.45,
+  "switchCompleted": 4.9
+ },
+ "runsAssignedPerMatch": {
+  "overlap": 1.45,
+  "underlap": 0.7
+ },
+ "thirdManRunsPerMatch": 11.65,
+ "thirdManPassBtoCPerMatch": 5.65,
+ "thirdManReceivedPerMatch": 4.55,
+ "passesToRunnerPerMatch": 0.6,
+ "runnerReceivedPerMatch": 0.45,
+ "runsEndedWithBallLostAndRunnerAheadOfBallPerMatch": 0.1,
+ "fullbackRecoveryMedianSec": 1.78,
+ "fullbackRecoveryOver6s": 0.12
+}

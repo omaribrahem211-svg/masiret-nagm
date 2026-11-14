@@ -1,0 +1,47 @@
+{
+ "meta": {
+  "www": "/tmp/e2/F/js",
+  "n": 20,
+  "tactic": "wings"
+ },
+ "inPossession": {
+  "gapDFtoMF": 12.75,
+  "gapMFtoFW": 14.62,
+  "length": 32.5,
+  "width": 51.89
+ },
+ "outOfPossession": {
+  "gapDFtoMF": 12.94,
+  "gapMFtoFW": 14.97,
+  "length": 32.62,
+  "width": 45.74
+ },
+ "optionsMedian": 4,
+ "optionsZeroShare": 0.11,
+ "crowdShare": 0.01,
+ "abandonedShare": 0,
+ "perMatch": {
+  "overlaps": 0.05,
+  "overlapUseful": 0.05,
+  "overlapUnnecessary": 0,
+  "underlaps": 0,
+  "underlapUseful": 0,
+  "underlapUnnecessary": 0,
+  "thirdManAttempts": 38.85,
+  "thirdManCompleted": 10,
+  "switchPasses": 31.4,
+  "switchCompleted": 14.1
+ },
+ "runsAssignedPerMatch": {
+  "overlap": 2,
+  "underlap": 2
+ },
+ "thirdManRunsPerMatch": 8.6,
+ "thirdManPassBtoCPerMatch": 2.95,
+ "thirdManReceivedPerMatch": 2.45,
+ "passesToRunnerPerMatch": 0.8,
+ "runnerReceivedPerMatch": 0.7,
+ "runsEndedWithBallLostAndRunnerAheadOfBallPerMatch": 0.3,
+ "fullbackRecoveryMedianSec": 1.97,
+ "fullbackRecoveryOver6s": 0.12
+}

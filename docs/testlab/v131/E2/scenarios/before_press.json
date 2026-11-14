@@ -1,0 +1,74 @@
+{
+ "www": "/tmp/e2/basejs",
+ "tactic": "press",
+ "runsPerCase": 40,
+ "cases": {
+  "A": {
+   "runs": 40,
+   "runsAssigned": {},
+   "overlap": 0,
+   "underlap": 2,
+   "passToRunner": 0,
+   "runnerReceived": 0,
+   "possessionLost": 8
+  },
+  "B": {
+   "runs": 40,
+   "runsAssigned": {},
+   "overlap": 0,
+   "underlap": 0,
+   "passToRunner": 0,
+   "runnerReceived": 0,
+   "possessionLost": 18
+  },
+  "C": {
+   "runs": 40,
+   "runsAssigned": {},
+   "overlap": 0,
+   "underlap": 0,
+   "passToRunner": 0,
+   "runnerReceived": 0,
+   "possessionLost": 5
+  },
+  "E": {
+   "runs": 40,
+   "runsAssigned": {},
+   "overlap": 0,
+   "underlap": 0,
+   "passToRunner": 0,
+   "runnerReceived": 0,
+   "possessionLost": 21
+  },
+  "J": {
+   "runs": 40,
+   "runsAssigned": {},
+   "overlap": 0,
+   "underlap": 0,
+   "passToRunner": 0,
+   "runnerReceived": 0,
+   "possessionLost": 0
+  },
+  "D": {
+   "runs": 40,
+   "bToC": 12,
+   "cReceived": 10
+  },
+  "F": {
+   "runs": 40,
+   "firstPassIsSwitch": 18,
+   "switchReceivedByTarget": 4,
+   "possessionLost": 17
+  },
+  "G": {
+   "runs": 40,
+   "fullbackBackInOwnHalfMedianSec": 4.38,
+   "notBackWithin6s": "36/80",
+   "possessionLost": 29
+  },
+  "H": {
+   "runs": 40,
+   "crowdShare": 0.03,
+   "defendersGoalSideMedianAtEnd": 7
+  }
+ }
+}

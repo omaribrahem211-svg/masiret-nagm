@@ -48,6 +48,9 @@ const cases = {
   C: k => { const m = setup(k), s = wingSetup(m, k, 'line'); return { m, ...s }; },
   E: k => { const m = setup(k), s = wingSetup(m, k, 'free'), o = O(m); const z = o.pl.filter(p => p.role === 'MF').slice(0, 2); z.forEach((p, i) => { p.x = s.wg.x + T(m).dir * (1.6 + i * .4); p.y = s.wg.y + (i ? 1.5 : -1.5); }); return { m, ...s }; },
   J: k => { const m = setup(k, true), s = wingSetup(m, k, 'free'); m.human.ctrl = s.wg; Input.jx = T(m).dir; Input.jy = 0; return { m, ...s, human: true }; },
+  // J2: human winger who uses the run — walks forward (stick at half), and once the AI runner is 2 m ahead of him points the stick at the
+  //     runner and taps X (pass) like the touch layer does
+  J2: k => { const m = setup(k, true), s = wingSetup(m, k, 'free'); m.human.ctrl = s.wg; Input.jx = T(m).dir * .5; Input.jy = 0; return { m, ...s, human: true, human2: true }; },
   D: k => { const m = setup(k), t = T(m), side = k % 2 ? 1 : -1; const mf = t.pl.filter(p => p.role === 'MF'), a = mf[0], b2 = t.pl.find(p => p.role === 'FW' && Math.abs(p.by - 34) < 8), c = mf[1];
     place(a, t, 60, 34, 2); place(b2, t, 72, 34 - side * 4, 0); place(c, t, 62, 34 + side * 12, 3); give(m, a); return { m, a, b: b2, c }; },
   F: k => { const m = setup(k), t = T(m), o = O(m), side = k % 2 ? 1 : -1; const a = t.pl.find(p => p.role === 'MF' && (p.by - 34) * side > 8) || t.pl.filter(p => p.role === 'MF')[0];
@@ -69,7 +72,10 @@ for (const [name, mk] of Object.entries(cases)) {
     let ov = false, un = false, passR = false, recvR = false, third = false, thirdOk = false, sw = false, swOk = false, lostT = null, last = b.owner, passes = [];
     const fbBack = (s.fbs || []).map(() => null);
     for (let i = 0; i < 360; i++) {
-      if (s.human) { Input.jx = t.dir; Input.jy = 0; }
+      if (s.human && !s.human2) { Input.jx = t.dir; Input.jy = 0; }
+      if (s.human2) { if (s.__xUp != null && i >= s.__xUp) { Input.up('X'); s.__xUp = null; }
+        const rr = t.run; if (!s.__pr && rr && b.owner === s.wg && X(t, rr.p.x) > X(t, s.wg.x) + 2) { const dx = rr.p.x - s.wg.x, dy = rr.p.y - s.wg.y, dd = hyp(dx, dy) || 1; Input.jx = dx / dd; Input.jy = -dy / dd; /* stick y is screen-up = world -y (humanPass uses dy = -Input.jy) */ Input.down('X'); s.__xUp = i + 6; s.__pr = 1; R.humanPressed = (R.humanPressed || 0) + 1; }
+        else if (!s.__pr) { Input.jx = t.dir * .5; Input.jy = 0; } }
       m.update(1 / 60); if (m.phase !== 'play' || m.restartKind) break;
       if (t.run && !s.__as) { s.__as = t.run.kind + ':' + t.run.p.role; R.assigned[s.__as] = (R.assigned[s.__as] || 0) + 1; }
       const own = b.owner;
@@ -79,6 +85,7 @@ for (const [name, mk] of Object.entries(cases)) {
           if (q === s.fb && sameSide && ahead && Math.abs(qy) > Math.abs(wy) + .5) ov = true;
           if ((q === s.fb || q.role === 'MF') && sameSide && X(t, q.x) > X(t, s.wg.x) + 2 && Math.abs(qy) > 6 && Math.abs(qy) < 16) un = true; } }
       if (s.wg && t.run) s.__rp = t.run.p;
+      if (process.env.JDBG && s.human2 && b.passer === s.wg && b.passT === m.time) { const q = b.target; console.log('J2 pass', k, q && q.role, q === s.__rp, q && Math.round(hyp(q.x - s.wg.x, q.y - s.wg.y)), s.__rp && Math.round(hyp(s.__rp.x - s.wg.x, s.__rp.y - s.wg.y)), 'pressedAt', s.__pr ? 1 : 0); }
       if (s.wg && b.passer === s.wg && b.passT === m.time) { const q = b.target; if (q && q === s.__rp) passR = true; }
       if (s.wg && own && own !== s.wg && own.team === t && passR) recvR = true;
       if (s.c && b.passT === m.time && b.passer === s.b && b.target === s.c) third = true;
@@ -102,6 +109,7 @@ for (const [name, mk] of Object.entries(cases)) {
   const o = { runs: R.runs };
   if ('ABCEJ'.includes(name)) Object.assign(o, { runsAssigned: R.assigned, overlap: R.overlap, underlap: R.underlap, passToRunner: R.passToRunner, runnerReceived: R.runnerReceived, possessionLost: R.lost });
   if (name === 'D') Object.assign(o, { bToC: R.third, cReceived: R.thirdOk });
+  if (name === 'J2') Object.assign(o, { humanPressedPassTowardRunner: R.humanPressed || 0, passToRunner: R.passToRunner, runnerReceived: R.runnerReceived });
   if (name === 'F') Object.assign(o, { firstPassIsSwitch: R.switchPass, switchReceivedByTarget: R.switchOk, possessionLost: R.lost });
   if (name === 'G') Object.assign(o, { fullbackBackInOwnHalfMedianSec: med(R.fbBackSec), notBackWithin6s: R.fbBackSec.filter(v => v >= 6).length + '/' + R.fbBackSec.length, possessionLost: R.lost });
   if (name === 'H') Object.assign(o, { crowdShare: r2(R.crowd / (R.crowdS || 1)), defendersGoalSideMedianAtEnd: med(R.goalSide) });

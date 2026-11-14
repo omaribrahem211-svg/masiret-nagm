@@ -1,0 +1,72 @@
+{
+ "all": {
+  "n": 1342,
+  "atTake": 4.42,
+  "after025": 3.84,
+  "loss": -0.15,
+  "ndMed": 7.58,
+  "pressedLt3": 0.05,
+  "restFree_after025": 4.06,
+  "restFree_atTake": 4.31
+ },
+ "runCarrier": {
+  "n": 0,
+  "atTake": null,
+  "after025": null,
+  "loss": null,
+  "ndMed": null,
+  "pressedLt3": 0,
+  "restFree_after025": null,
+  "restFree_atTake": null
+ },
+ "thirdB": {
+  "n": 0,
+  "atTake": null,
+  "after025": null,
+  "loss": null,
+  "ndMed": null,
+  "pressedLt3": 0,
+  "restFree_after025": null,
+  "restFree_atTake": null
+ },
+ "runner": {
+  "n": 0,
+  "atTake": null,
+  "after025": null,
+  "loss": null,
+  "ndMed": null,
+  "pressedLt3": 0,
+  "restFree_after025": null,
+  "restFree_atTake": null
+ },
+ "actWithin05": {
+  "n": 338,
+  "atTake": 4.6,
+  "after025": 3.13,
+  "loss": 0.17,
+  "ndMed": 5.16,
+  "pressedLt3": 0.16,
+  "restFree_after025": 3.38,
+  "restFree_atTake": 4.5
+ },
+ "rest": {
+  "n": 1004,
+  "atTake": 4.34,
+  "after025": 4.23,
+  "loss": -0.24,
+  "ndMed": 8.27,
+  "pressedLt3": 0.02,
+  "restFree_after025": 4.19,
+  "restFree_atTake": 4.25
+ },
+ "restNoAct1s": {
+  "n": 560,
+  "atTake": 4.25,
+  "after025": 4.73,
+  "loss": -0.32,
+  "ndMed": 9.89,
+  "pressedLt3": 0.01,
+  "restFree_after025": 4.65,
+  "restFree_atTake": 4.11
+ }
+}

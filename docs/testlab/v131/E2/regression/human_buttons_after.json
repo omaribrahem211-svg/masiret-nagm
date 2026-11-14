@@ -1,0 +1,32 @@
+{
+ "www": "/tmp/e2/F/js",
+ "runs": 60,
+ "results": {
+  "X pass": {
+   "pass": 32,
+   "pass (lofted)": 28
+  },
+  "O lob/cross": {
+   "pass (lofted)": 60
+  },
+  "T through ball": {
+   "pass": 32,
+   "pass (lofted)": 28
+  },
+  "S shoot (tap) from 20 m": {
+   "shot": 60
+  },
+  "S held 0.6 s (power shot)": {
+   "shot": 60
+  },
+  "X pass while running (stick held forward)": {
+   "pass": 45,
+   "nothing": 2,
+   "opponent took the ball before the kick (not a control failure)": 1,
+   "lost the ball before the press (not counted)": 12
+  },
+  "stick only (move up)": {
+   "moved": 60
+  }
+ }
+}

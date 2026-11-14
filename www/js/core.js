@@ -207,7 +207,10 @@ class Match{
       // لمسة طويلة والمهاجم سريع: يدخل على الكورة لو هيوصلها قبل ما المهاجم يلحقها (مش يفضل يراقب المهاجم والكورة بتعدّي جنبه)
       dC<3.5&&(hyp(b.x-p.x,b.y-p.y)-.6)/(p.mse*.8)+.1<Math.min(this.nextTouch(p),(bAt-.5)/Math.max(.5,hyp(c.vx,c.vy)-hyp(b.vx,b.vy)*.5)));
      const fr=engage?null:this.fastBlock(p,c,g,dt);
-     if(fr){}else if(dC>3.5||!goalSide)this.go(p,[c.x+gx/gd*1.3+c.vx*.3,c.y+gy/gd*1.3+c.vy*.3],1);else if(engage)this.go(p,[b.x+b.vx*.2+gx/gd*.35,b.y+b.vy*.2+gy/gd*.35],1);
+     if(fr){}else if(!goalSide&&dC<3.2&&hyp(c.vx,c.vy)>1.5){// (3A) جاي من ورا: يلف على جنب المهاجم بدل ما يخبط في ضهره (كان بيدي فاولات كتير)، ولما يبقى جنبه يميل عليه بالكتف
+      const cs2=hyp(c.vx,c.vy),ux=c.vx/cs2,uy=c.vy/cs2,lx=-uy,ly=ux,rl=(p.x-c.x)*lx+(p.y-c.y)*ly,ra=(p.x-c.x)*ux+(p.y-c.y)*uy,sg=Math.sign(rl)||1,lean=ra>-.7&&Math.abs(rl)<1.6&&p.stam>20&&p.tcool<=0;
+      this.go(p,[c.x+c.vx*.25+lx*sg*(lean?.45:1)+ux*(lean?.15:.3),c.y+c.vy*.25+ly*sg*(lean?.45:1)+uy*(lean?.15:.3)],1);}
+     else if(dC>3.5||!goalSide)this.go(p,[c.x+gx/gd*1.3+c.vx*.3,c.y+gy/gd*1.3+c.vy*.3],1);else if(engage)this.go(p,[b.x+b.vx*.2+gx/gd*.35,b.y+b.vy*.2+gy/gd*.35],1);
      else{// مراقبة (jockey): يقف بين المهاجم والمرمى على مسافة مناسبة لسرعته، بيتوقع مكانه بعد 0.3 ث، ومايل ناحية نص الملعب عشان يوجّهه للخط الجانبي.
       // لو المهاجم واقف بالكورة أكتر من 1.2 ث يقرّب عليه يضغطه
       const cs=hyp(c.vx,c.vy),pcx=c.x+c.vx*.3,pcy=c.y+c.vy*.3,qd0=hyp(g[0]-pcx,g[1]-pcy)||1,wv=cs>2&&(c.vx*(g[0]-pcx)+c.vy*(g[1]-pcy))>0?.5:0,qx=(g[0]-pcx)/qd0*(1-wv)+(wv?c.vx/cs:0)*wv,qy=(g[1]-pcy)/qd0*(1-wv)+(wv?c.vy/cs:0)*wv,qd=hyp(qx,qy)||1;c.stillT=cs<1?(c.stillT||0)+dt:0;
@@ -698,7 +701,37 @@ class Match{
    const nx=dx/d,ny=dy/d,mp=72+p.st.phys*.25+(b.owner===p?0:4),mq=72+q.st.phys*.25+(b.owner===q?0:4),wp=mq/(mp+mq),wq=mp/(mp+mq),pen=RAD-d;
    p.x-=nx*pen*wp;p.y-=ny*pen*wp;q.x+=nx*pen*wq;q.y+=ny*pen*wq;const rv=(q.vx-p.vx)*nx+(q.vy-p.vy)*ny;
    if(rv<0){const im=-rv*.85;p.vx-=nx*im*wp;p.vy-=ny*im*wp;q.vx+=nx*im*wq;q.vy+=ny*im*wq;
-    if(this.phase==='play'&&!this.restartKind&&-rv>1.6&&p.team!==q.team){const own=b.owner===p?p:b.owner===q?q:null;if(own&&!b.inHands&&own.role!=='GK'){const ch=own===p?q:p;if(!(ch.tcool>0)&&!(own.shT>this.time)){own.shT=this.time+.6;const bh=((ch.x-own.x)*own.fx+(ch.y-own.y)*own.fy)/d<-.3;const hc=this.human&&this.human.ctrl===ch;if((bh||-rv>4.2)&&Math.random()<(hc?(bh&&-rv>4?.1:0):(bh?.33:.14))){this.foul(ch,own,false,bh);return;}const pr=clamp(.12+(ch.st.phys-own.st.phys)/130+(-rv-1.6)*.07+(hyp(b.x-own.x,b.y-own.y)>.7?.12:0),.03,.55);if(Math.random()<pr){own.stats.lost++;ch.stats.tk++;b.owner=null;b.last=ch;b.passFrom=null;const sx=own===p?-nx:nx,sy=own===p?-ny:ny;b.vx=own.vx*.5+sx*R(1,3)+R(-1.5,1.5);b.vy=own.vy*.5+sy*R(1,3)+R(-1.5,1.5);own.stun=.3;ch.tcool=.5;SFX.kick(.25);if(this.human&&ch.team.idx===this.human.team)this.ev('tackle',{p:ch},8);}}}}}}}}
+    // (3A) التلامس بين حامل الكورة والخصم بيتحسم في shoulder(): من ورا / من قدام / كتف في كتف — كل واحد ليه قواعده
+    if(this.phase==='play'&&!this.restartKind&&p.team!==q.team){const own=b.owner===p?p:b.owner===q?q:null;if(own&&!b.inHands&&own.role!=='GK'){const ch=own===p?q:p;if(!(ch.tcool>0)&&!(own.shT>this.time)&&!ch.tkL&&!(ch.slide>0)&&!(ch.stun>0)){if(this.shoulder(ch,own,-rv)==='foul')return;}}}}}}}
+ // ---- (3A) صراع الجسم مع حامل الكورة. cv = سرعة الاقتراب على خط التلامس (م/ث). بيرجع 'none' | 'held' | 'won' | 'foul'
+ //  • من ورا: مش صراع قانوني — مافيش سرقة كورة أبداً. خبطة خفيفة = ولا حاجة (المدافع بيتصد)، دفعة قوية = فاول (احتماله بيزيد مع سرعة الدفعة)
+ //  • من قدام (المدافع في طريقه): بلوك — الكورة ممكن ترتد لو كانت بينهم، زي الأول
+ //  • من الجنب (كتف في كتف): يتحسم بالقوة البدنية + فرق السرعة والاندفاع + اللياقة + توازن المهاجم (المراوغة)، والكورة لازم تكون في مدى اللعب.
+ //    الكسب = المهاجم بيتزق برّه خط جريه ويفقد لمسته والكورة بتكمل طريقها لوحدها (مش بتتنقل للمدافع) — اللي يوصلها الأول ياخدها.
+ //    الخسارة = المدافع بيرتد ويتأخر لحظة. الاتنين بياخدوا ميلة جسم بالكتف (shC) بتترسم في skel.js
+ shoulder(ch,own,cv){const b=this.ball,dx=ch.x-own.x,dy=ch.y-own.y,d=hyp(dx,dy)||1,nx=dx/d,ny=dy/d,cs=nx*own.fx+ny*own.fy,hc=!!(this.human&&this.human.ctrl===ch);
+  const oS=hyp(own.vx,own.vy),cS=hyp(ch.vx,ch.vy),bx=b.x-own.x,by=b.y-own.y,bD=hyp(bx,by),same=(own.fx*ny-own.fy*nx)*(own.fx*by-own.fy*bx)>0;
+  if(cs<-.3){if(cv<1.6)return'none';own.shT=this.time+.6;
+   if(Math.random()<(hc?(cv>4?.1:0):clamp((cv-2)*.16,0,.45))){this.foul(ch,own,false,true);return'foul';}
+   this.shVis(ch,own,.45);ch.vx*=.7;ch.vy*=.7;return'none';}
+  if(cs>.5){if(cv<1.6)return'none';own.shT=this.time+.6;
+   if(cv>4.2&&Math.random()<(hc?0:.14)){this.foul(ch,own,false,false);return'foul';}
+   const pr=clamp(.12+(ch.st.phys-own.st.phys)/130+(cv-1.6)*.07+(bD>.7?.12:0),.03,.55);
+   if(Math.random()<pr){own.stats.lost++;ch.stats.tk++;b.owner=null;b.last=ch;b.passFrom=null;b.vx=own.vx*.5-nx*R(1,3)+R(-1.5,1.5);b.vy=own.vy*.5-ny*R(1,3)+R(-1.5,1.5);own.stun=.3;ch.tcool=.5;SFX.kick(.25);this.shVis(ch,own,.7);if(this.human&&ch.team.idx===this.human.team)this.ev('tackle',{p:ch},8);return'won';}
+   return'none';}
+  // ضغط كتف في كتف مستمر (الاتنين جنب بعض وسرعة الاقتراب صغيرة لأن التصادم بيلغيها كل فريم): بعد 0.18 ث تلامس متواصل بيتحسم كصراع
+  if(cv<.8){if(ch.shP===own&&this.time-ch.shL<.06)ch.shD=(ch.shD||0)+this.time-ch.shL;else ch.shD=0;ch.shP=own;ch.shL=this.time;if(ch.shD<.18)return'none';ch.shD=0;cv=.9;}
+  if(bD>1.4){own.shT=this.time+.4;this.shVis(ch,own,.4);return'none';}
+  own.shT=this.time+.6;
+  if(cv>3.6&&Math.random()<(hc?.08:.22)){this.foul(ch,own,false,false);return'foul';}
+  const par=oS>.5&&cS>.5?(own.vx*ch.vx+own.vy*ch.vy)/(oS*cS):0;
+  const s=(ch.st.phys-own.st.phys)/100*.9+clamp(cS-oS,-2,2)*.05+Math.min(cv,3)*.05+(ch.stam-own.stam)/500-(own.st.drib-60)/400+(same?.08:-.12)+(par>.5?.04:0);
+  const pw=clamp(.3+s,.06,.7);this.shVis(ch,own,Math.min(1,.5+cv*.2));
+  if(Math.random()<pw){own.stats.lost++;ch.stats.tk++;b.owner=null;b.last=ch;b.passFrom=null;b.target=null;b.vx=own.vx*.9+R(-.4,.4);b.vy=own.vy*.9+R(-.4,.4);
+   own.vx-=nx*1.3;own.vy-=ny*1.3;own.stun=.28;ch.tcool=.4;SFX.kick(.2);if(this.human&&ch.team.idx===this.human.team)this.ev('tackle',{p:ch},8);return'won';}
+  ch.vx+=nx*1.1;ch.vy+=ny*1.1;ch.tcool=.25;return'held';}
+ // ميلة الكتف المرئية: s = ناحية التلامس بالنسبة لشمال اللاعب (+1 شمال / -1 يمين)، k = شدتها
+ shVis(ch,own,k){const t=this.time,sd=(a,o)=>Math.sign((o.x-a.x)*-a.fy+(o.y-a.y)*a.fx)||1;ch.shC={t,s:sd(ch,own),k};own.shC={t,s:sd(own,ch),k:k*.75};}
  // المراوغة: الكورة بتمشي مع اللاعب على إيقاع خطوته — بتتقدّم لما الرجل تلمسها وترجع لحد ما اللمسة الجاية، وبتلف معاه بتأخير بسيط على قد مهارته
  dribble(o,dt){const b=this.ball;const sp=hyp(o.vx,o.vy),ctl=o.st.drib/100;if(b.z>.35){return;}
   if(o.bdx==null||o.bdOwn!==b.passT+'|'+o.i){o.bdOwn=b.passT+'|'+o.i;const rx=b.x-o.x,ry=b.y-o.y,rd=hyp(rx,ry);if(rd>.15){o.bdx=rx/rd;o.bdy=ry/rd;}else{o.bdx=o.fx;o.bdy=o.fy;}o.boff=Math.min(rd,1.6);}

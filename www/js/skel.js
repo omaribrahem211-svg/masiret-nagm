@@ -125,6 +125,8 @@ const Skel=(()=>{
   if(celeb&&!act){if(sp>1.5){arm(1,.15,.15,1.3,1);arm(-1,.15,.15,1.3,1);add(J['spine.001'],Qz(Math.sin(t*2.2)*.18));}
    else{const k=.5+.5*Math.sin(t*6);arm(1,2.7+k*.2,.35,.25,1);arm(-1,2.7+(1-k)*.2,.35,.25,1);add(J['spine.001'],Qx(-.12));}}
   if(!celeb&&!slide&&!dive&&kick<0&&!act)add(J['spine.001'],Qx(.02+Math.min(1,sp/7)*.12));
+  // (3A) صراع كتف في كتف: الجسم بيميل ناحية الخصم والدراع اللي ناحيته بيبعد شوية (من غير أنيميشن جديد) — 0.5 ث
+  if(p.shC&&!slide&&!dive&&!act){const e=m.time-p.shC.t;if(e>=0&&e<.5){const k=Math.sin(Math.PI*e/.5)*p.shC.k;add(J['spine.001'],Qz(-p.shC.s*k*.32));arm(p.shC.s,.25,.7,.55,.8*k);}}
   computeGlobals();
   // world: lift/pitch/roll around a pivot, then yaw to facing
   const yaw=Math.atan2(p.fx,-p.fy);let lift=0,pitch=0,roll=0,piv=.95;

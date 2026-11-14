@@ -36,7 +36,8 @@ const SK = G.Skel; let poseOK = !!(SK && SK.pose && SK.jointPoint && SK.J);
 const PM = poseOK ? new Float32Array(SK.nJ * 16) : null, PW = new Float32Array(16), PO = [0, 0, 0];
 function gkBodyDist(g, m, b) {
   if (!poseOK) return null;
-  const keep = {}; for (const k of ['_act', '_dvL', '_fallen', '_hs', '_kS', '_smo', 'slideMax']) keep[k] = g[k];
+  const keep = {}; for (const k of ['_act', '_dvL', '_fallen', '_hs', '_kS', '_smo', 'slideMax', '_aw', '_an', '_au', '_pt']) keep[k] = g[k];
+  g._aw = 1; g._pt = null;  // v131: skel.js fades action clips in over 0.08 s; measure the keeper's pose as drawn once the clip is fully in
   try {
     for (let i = 0; i < 3; i++) SK.pose(g, m, m.time * 1000, PM, 0, PW);
     let best = 9; for (const n of ['LeftHand', 'RightHand', 'Head', 'Spine2', 'LeftFoot', 'RightFoot']) { const j = SK.J[n]; if (j === undefined) continue; SK.jointPoint(j, PW, SK.gT[j], PO); const d = Math.hypot(PO[0] - b.x, -PO[2] - b.y, PO[1] - (b.z + .11)) - .11; if (d < best) best = d; }

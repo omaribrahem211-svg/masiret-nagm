@@ -8,7 +8,7 @@ name: Verify an existing APK build and publish it as a prerelease
 # touched). The run to verify is set in env below.
 on:
   push:
-    branches: [final-gameplay]
+    branches: [final-gameplay, gameplay-v131]
     paths: ['.github/workflows/verify-release.yml']
 
 permissions:
@@ -20,9 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      RUN_ID: '43581916610'
-      ARTIFACT: masiret-android-30
-      TAG: v130-rc1
+      RUN_ID: '43600771726'
+      ARTIFACT: masiret-android-31
+      TAG: v131-rc1
       PUBLISH: 'true'
     steps:
       - name: Checkout (full history, to compare with the build commit)
@@ -108,5 +108,5 @@ jobs:
         run: |
           set -euo pipefail
           APK=$(ls art/*-test.apk); SUM=$(sha256sum $APK | cut -d' ' -f1)
-          { echo "Release candidate for real-device testing. Built by run ${{ env.RUN_ID }} from commit ${{ steps.v.outputs.sha }} (branch final-gameplay). Not merged into main."; echo; echo "SHA-256 of the APK: \`$SUM\`"; echo; echo '```'; cat report.txt; echo '```'; } > notes.md
+          { echo "Release candidate for real-device testing. Built by run ${{ env.RUN_ID }} from commit ${{ steps.v.outputs.sha }} (branch ${{ github.ref_name }}). Not merged into main."; echo; echo "SHA-256 of the APK: \`$SUM\`"; echo; echo '```'; cat report.txt; echo '```'; } > notes.md
           gh release create "${{ env.TAG }}" "$APK" report.txt --prerelease --target "${{ steps.v.outputs.sha }}" --title "${{ env.TAG }}" --notes-file notes.md

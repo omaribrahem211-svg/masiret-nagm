@@ -813,9 +813,11 @@ class Match{
   if(best.role==='GK'){const g=this.ownG(best.team);if(Math.abs(b.x-g[0])<17&&Math.abs(b.y-CY)<20.2){const hard=sp>18||b.z>2.1;if(b.z>1.55){best.gkHi=.5;best.catchT=.3;best.gkLeap=b.z>2.05?(Math.random()<.5?2:true):Math.random()<.3?2:Math.random()<.35;}{const r=this.shotLive();if(r&&r.team!==best.team.idx)r.gkTouched=true;}if(hard&&Math.random()<.45){const s2=R(4,8);b.vx=-b.vx*.25+(g[0]<1?1:-1)*s2;b.vy=R(-6,6);b.vz=R(2,5);best.cool=.6;b.last=best;b.passFrom=null;b.target=null;SFX.kick(.4);return;}best.lowC=b.z<.35;this.take(best);best.hold=R(1.4,2.2);b.inHands=true;best.catchT=.35;return;}}
   if(best.ftQ>this.time&&best.role!=='GK'&&this.human&&best===this.human.ctrl&&!this.restartKind){this.firstTime(best);return;}
   if(b.z>1.25&&best.role!=='GK'){const mine=best===b.target||(b.last&&b.last.team===best.team&&!b.shot);if(mine&&!b.cross&&b.z<2.05&&!(best.wantHdr>this.time)){this.take(best);best.ctrlT=.22;best.chestT=.35;return;}
-   // (F) كورة زميل فوق مستوى الصدر ومفيش خصم قريب (≤1.5 م): اللاعب مايضربهاش براسه — بيسيبها تنزل ويستلمها (receive بيستهدف نقطة أوطى).
+   // (F) كورة زميل (مش هو المقصود بيها — المقصود بيهدّيها براسه زي ما كان) فوق مستوى الصدر ومفيش خصم قريب (≤1.5 م): اللاعب مايضربهاش براسه — بيسيبها تنزل ويستلمها (receive بيستهدف نقطة أوطى).
    // قبل كده أي لمسة راس كانت بتعمل تمريرة راس تانية → سلسلة رؤوس بين الزملاء (لحد 15 راس ورا بعض في الماتش)
-   if(mine&&!b.cross&&!best.hdrShot&&!(best.wantHdr>this.time)){let oq=99;for(const q of this.other(best.team).pl)oq=Math.min(oq,hyp(q.x-b.x,q.y-b.y));if(oq>1.5)return;}
+   if(mine&&!b.cross&&best!==b.target&&!best.hdrShot&&!(best.wantHdr>this.time)){let oq=99;for(const q of this.other(best.team).pl)oq=Math.min(oq,hyp(q.x-b.x,q.y-b.y));if(oq>1.5)return;}
+   // (F) بعد أي لعبة راس الكورة مايتلعبش بالراس تاني قبل 0.12 ث (كانت بتخبط بين 3–4 روس في 3 فريمات وسط الزحمة)
+   if(this.time-(b.hdrAt||-9)<.12)return;b.hdrAt=this.time;
    this.header(best);return;}
   if(sp>22&&Math.random()<.5&&b.target!==best){{const r=this.shotLive();if(r)this.shotEnd(best.team.idx===r.team?'retained':'blocked',best);}b.vx*=-.25;b.vy*=-.25;b.last=best;best.cool=.3;b.passFrom=null;return;}
   // قطع الكورة مش مضمون: كل ما الكورة أسرع وأبعد عن رجل المدافع، فرصة إنه يقطعها تقل (ممكن تلمسه وتغيّر اتجاهها أو تعدّي)

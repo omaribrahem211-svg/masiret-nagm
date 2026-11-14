@@ -206,7 +206,8 @@ class Match{
      const bAt=hyp(b.x-c.x,b.y-c.y),engage=goalSide&&p.tcool<=0&&p.stam>20&&!b.inHands&&bAt>.9&&(dC<2.5&&hyp(c.vx,c.vy)<5||
       // لمسة طويلة والمهاجم سريع: يدخل على الكورة لو هيوصلها قبل ما المهاجم يلحقها (مش يفضل يراقب المهاجم والكورة بتعدّي جنبه)
       dC<3.5&&(hyp(b.x-p.x,b.y-p.y)-.6)/(p.mse*.8)+.1<Math.min(this.nextTouch(p),(bAt-.5)/Math.max(.5,hyp(c.vx,c.vy)-hyp(b.vx,b.vy)*.5)));
-     if(dC>3.5||!goalSide)this.go(p,[c.x+gx/gd*1.3+c.vx*.3,c.y+gy/gd*1.3+c.vy*.3],1);else if(engage)this.go(p,[b.x+b.vx*.2+gx/gd*.35,b.y+b.vy*.2+gy/gd*.35],1);
+     const fr=engage?null:this.fastBlock(p,c,g,dt);
+     if(fr){}else if(dC>3.5||!goalSide)this.go(p,[c.x+gx/gd*1.3+c.vx*.3,c.y+gy/gd*1.3+c.vy*.3],1);else if(engage)this.go(p,[b.x+b.vx*.2+gx/gd*.35,b.y+b.vy*.2+gy/gd*.35],1);
      else{// مراقبة (jockey): يقف بين المهاجم والمرمى على مسافة مناسبة لسرعته، بيتوقع مكانه بعد 0.3 ث، ومايل ناحية نص الملعب عشان يوجّهه للخط الجانبي.
       // لو المهاجم واقف بالكورة أكتر من 1.2 ث يقرّب عليه يضغطه
       const cs=hyp(c.vx,c.vy),pcx=c.x+c.vx*.3,pcy=c.y+c.vy*.3,qd0=hyp(g[0]-pcx,g[1]-pcy)||1,wv=cs>2&&(c.vx*(g[0]-pcx)+c.vy*(g[1]-pcy))>0?.5:0,qx=(g[0]-pcx)/qd0*(1-wv)+(wv?c.vx/cs:0)*wv,qy=(g[1]-pcy)/qd0*(1-wv)+(wv?c.vy/cs:0)*wv,qd=hyp(qx,qy)||1;c.stillT=cs<1?(c.stillT||0)+dt:0;
@@ -395,6 +396,24 @@ class Match{
   {const hu=!!(this.human&&this.human.ctrl===p),T=hu?.12:TKL;const [bx,by]=this.tkAim(p,T),dx=bx-p.x,dy=by-p.y,d=hyp(dx,dy)||1;const v0=(p.vx*dx+p.vy*dy)/d,sp=Math.min(clamp(v0+1.2,1.5,Math.min(5,p.mse||6)),d/T);
    p.tkL={t:T,hu,clean:!!clean,c,dx:dx/d,dy:dy/d,sp};p.fx=dx/d;p.fy=dy/d;p.windT=p.windD=T;p.kickT=0;return;}}
  // سرعة الكورة المستخدمة في التوقع: لو مع لاعب، متوسط سرعة الكورة وسرعة الحامل (لمسات المراوغة بتروح وترجع حوالين رجله)
+ // مهاجم سريع (أكتر من 5.2 م/ث) جاي ناحية مرمانا: المدافع مايجريش عليه ولا يلف ضهره ويهرب. بيقف في طريقه:
+ // خط الصد = بين اتجاه جري المهاجم والطريق المباشر للمرمى. المدافع يتحرك للجنب عشان يدخل الخط قبل ما المهاجم يوصل، وبيرجع لورا ببطء (لحد 3.2 م/ث وهو باصص للكورة) عشان يقلل سرعة الاقتراب،
+ // وقبل الوصول بحوالي 2.5 م بيثبّت رجليه عشان يقدر يتدخل. لو مش هيلحق يدخل الخط من مكانه، بيختار نقطة أبعد على الخط يقدر يوصلها قبل المهاجم (بسرعته وعجلته الحقيقية).
+ // لو مفيش نقطة ممكنة أو المهاجم عدّاه خلاص: يرجع للسلوك العادي. بيرجّع true لو اتحكم في حركة المدافع
+ fastBlock(p,c,g,dt){const b=this.ball,cs=hyp(c.vx,c.vy);if(cs<5.2||b.inHands||p.stun>0||p.tkL||p.slide>0||p.recT>0)return false;
+  const gx=g[0]-c.x,gy=g[1]-c.y,gd=hyp(gx,gy)||1,ux=c.vx/cs,uy=c.vy/cs,toG=(ux*gx+uy*gy)/gd;if(toG<.3)return false;
+  let wx=ux*.6+gx/gd*.4,wy=uy*.6+gy/gd*.4;const wn=hyp(wx,wy)||1;wx/=wn;wy/=wn;
+  const rx=p.x-c.x,ry=p.y-c.y,dC=hyp(rx,ry);if(dC>15)return false;const along=rx*wx+ry*wy,lat=rx*wy-ry*wx;if(along<.8)return false;
+  const vAl=p.vx*wx+p.vy*wy,tA=along/Math.max(.6,cs-Math.max(0,vAl)),ms=p.mse||p.ms,need=Math.abs(lat);
+  if(need/(ms*.85)+.12<tA){// يلحق يدخل الخط من مكانه: جنب + رجوع بطيء + تثبيت قريب
+   const plant=dC<2.1+cs*.06,vr=plant?0:clamp(cs-4,0,3.2)*(.7+.3*p.stam/100),k=need/Math.max(.18,tA*.4);
+   // الجنب: يقفل المسافة للخط + يقلّد حركة المهاجم الجانبية (لو بيميل يميل معاه)
+   // الحركة الجانبية وهو باصص للكورة (shuffle) محدودة بـ 3.5 م/ث تقريباً، وبيقلّد ميل المهاجم بنص سرعته بس (رد فعل مش قراءة أفكار)
+   const cLat=c.vx*wy-c.vy*wx,sl=need>.02?-Math.sign(lat):0,sh=Math.min(3.5*(.8+.2*p.stam/100),ms*.55),lv=clamp(sl*k+cLat*.45,-sh,sh);let dx=wy*lv+wx*vr,dy=-wx*lv+wy*vr;const dn=hyp(dx,dy);if(dn>ms){dx*=ms/dn;dy*=ms/dn;}
+   p.des=[dx,dy];p.tgt=null;p.jockT=.1;p.fbM=plant?2:1;return true;}
+  // نقطة أبعد على الخط
+  for(let s=along+.5;s<along+12;s+=.5){const qx=c.x+wx*s,qy=c.y+wy*s,tD=hyp(qx-p.x,qy-p.y)/(ms*.9)+.15,tAt=s/cs;if(tD<=tAt-.2){this.go(p,[qx,qy],1);p.fbM=3;return true;}}
+  return false;}
  // الوقت لحد ما حامل الكورة يلحق الكورة ويلمسها تاني (لما تكون بعيدة عن رجله بعد لمسة طويلة). 9 = مش قريب
  nextTouch(p){const b=this.ball,c=b.owner;if(!c||c===p||b.inHands)return 9;const ex=b.x-c.x,ey=b.y-c.y,e=hyp(ex,ey);if(e<.6)return 9;const rel=((c.vx-b.vx)*ex+(c.vy-b.vy)*ey)/e;return rel>.3?(e-.5)/rel:9;}
  // هل الرجل توصل الكورة لو التدخل بدأ دلوقتي (خطوة مدتها T)؟ نفس حساب المدى في tkTime
@@ -412,13 +431,22 @@ class Match{
  tkStep(p,dx,dy){const d=hyp(dx,dy)||1,v0=(p.vx*dx+p.vy*dy)/d,sp=clamp(v0+1.2,1.5,Math.min(5,p.mse||6));return clamp(Math.max(0,v0)*TKL+6*TKL*TKL,0,sp*TKL);}
  tkTime(p){const b=this.ball;if(b.z>.6||p.stun>0||p.spinT>0||p.slide>0||p.recT>0)return false;
   // الحامل في نص حركة تمرير/تسديد والكورة هتخرج قبل ما الرجل توصل: تدخل مستحيل
-  const T=this.human&&this.human.ctrl===p?.12:TKL;{const c=b.owner;if(c&&c.pend&&c.pend.go&&(c.windT||0)<T+.02)return false;}const dx=b.x-p.x,dy=b.y-p.y,dB=hyp(dx,dy),[bvx,bvy]=this.tkBV();
+  const huT=this.human&&this.human.ctrl===p,T=huT?.12:TKL;// huT: اللاعب البشري بيستخدم نفس حسابات 2.1 بالظبط (تعديلات 2.2 للـ AI بس)
+  {const c=b.owner;if(c&&c.pend&&c.pend.go&&(c.windT||0)<T+.02)return false;}const dx=b.x-p.x,dy=b.y-p.y,dB=hyp(dx,dy),[bvx,bvy]=this.tkBV();
   {// المسافة المتوقعة لحظة التلامس: لو الكورة بتبعد عنه أسرع من خطوته يبقى التدخل هيفوت فمايبدأش
    const cl=-(dx*(bvx-p.vx)+dy*(bvy-p.vy))/(dB||1),st=Math.min(cl*T+6*T*T,Math.min(5,p.mse||6)*T);if(dB-st>TKR-.15)return false;}if((p.fx*dx+p.fy*dy)/(dB||1)<-.2)return false;
-  // الكورة هتعدّي جنبه: في لحظة ما خلال الخطوة، المسافة للكورة ناقص اللي الرجل اتحركته لحد اللحظة دي لازم تبقى جوه المدى (مش سرعة الاقتراب بس)
-  {const rvx=bvx-p.vx,rvy=bvy-p.vy,v0=Math.max(0,(p.vx*dx+p.vy*dy)/(dB||1)),vs=Math.min(Math.min(5,p.mse||6),v0+1.2);let ok=false;for(let i=1;i<=5&&!ok;i++){const t=T*i/5;if(hyp(dx+rvx*t,dy+rvy*t)-vs*t<=TKR-.15)ok=true;}if(!ok)return false;}
+  // الكورة هتعدّي جنبه: في لحظة ما خلال الخطوة، المسافة للكورة (بالسرعة النسبية اللي فيها حركة المدافع الحالية) ناقص الزيادة اللي الخطوة بتضيفها فوق حركته (لحد 1.2 م/ث + عجلة) لازم تبقى جوه المدى
+  {const rvx=bvx-p.vx,rvy=bvy-p.vy,v0=Math.max(0,(p.vx*dx+p.vy*dy)/(dB||1));
+   if(huT){const vs=Math.min(Math.min(5,p.mse||6),v0+1.2);let ok=false;for(let i=1;i<=5&&!ok;i++){const t=T*i/5;if(hyp(dx+rvx*t,dy+rvy*t)-vs*t<=TKR-.15)ok=true;}if(!ok)return false;}
+   else{const ex=Math.max(0,Math.min(Math.min(5,p.mse||6)-v0,1.2));
+   const reach=(vx,vy)=>{for(let i=2;i<=5;i++){const t=T*i/5;// الرجل محتاجة على الأقل 40% من الخطوة عشان تتمد، فالكورة لازم تبقى في المدى بعدها مش في أول لحظة بس
+    if(hyp(dx+vx*t,dy+vy*t)-(ex*t+3*t*t)<=TKR-.15)return true;}return false;};
+   // لازم يوصل بالحسابين: متوسط حركة المهاجم والكورة، وسرعة الكورة الفعلية (بعد لمسة سريعة الكورة بتبعد أسرع من المهاجم)
+   if(!reach(rvx,rvy)||!reach(b.vx-p.vx,b.vy-p.vy))return false;}}
   // المدافع لسه بيرجع لورا (بيراقب): لازم يثبّت رجله الأول، مايقدرش يمد رجله لقدام وهو ماشي لورا
   if((p.vx*dx+p.vy*dy)/(dB||1)<-.3)return false;
+  // بيجري للجنب بسرعة (أكتر من 3 م/ث عمودي على اتجاه الكورة): مايقدرش يثبّت رجله ويمدها ناحية الكورة في نفس الخطوة
+  if(!huT&&Math.abs(p.vx*dy-p.vy*dx)/(dB||1)>3)return false;
   // اللمسة الجاية للمهاجم: لو الكورة بعيدة عن رجله وهو هيلحقها ويلمسها قبل ما رجل المدافع توصل، اللمسة هتغيّر مسارها، فيستنى لحد بعد اللمسة
   if(dB>.8&&this.nextTouch(p)<T+.03)return false;
   if(dB<=1)return true;
@@ -432,8 +460,10 @@ class Match{
    if(hyp(tx,ty)>.05){const a0=Math.atan2(L0.dy,L0.dx),da=angDiff(Math.atan2(ty,tx),a0),mx=rate*dt,a1=a0+clamp(da,-mx,mx);L0.dx=Math.cos(a1);L0.dy=Math.sin(a1);}}
   p.des=[L0.dx*L0.sp,L0.dy*L0.sp];p.fx=L0.dx;p.fy=L0.dy;}}
  // الرجل بتقابل الكورة في أقرب نقطة: لو الكورة بقت قريبة وبدأت تبعد قبل نهاية الخطوة، التلامس بيحصل دلوقتي
- tkPost(dt){const b=this.ball;for(const p of this.all){const L0=p.tkL;if(!L0)continue;L0.t-=dt;p.windT=Math.max(0,L0.t);const d=hyp(b.x-p.x,b.y-p.y);const met=L0.pd!=null&&L0.pd<.9&&d>L0.pd+.02;
-  if(L0.t<=0||met){this.tkResolve(p,met?L0.rb:null);p.tkL=null;p.windT=0;p.kickT=(b.owner===p||(!b.owner&&b.last===p))?.28:.16;}else{L0.pd=d;L0.rb=[b.x-p.x,b.y-p.y];}}}
+ tkPost(dt){const b=this.ball;for(const p of this.all){const L0=p.tkL;if(!L0)continue;L0.t-=dt;p.windT=Math.max(0,L0.t);const d=hyp(b.x-p.x,b.y-p.y);const met=L0.pd!=null&&L0.pd<(L0.hu?.9:TKR)&&d>L0.pd+.02;
+  // الـ AI: التلامس بيحصل في أقرب نقطة وصلتها الكورة للرجل خلال الخطوة (لو كانت جوه المدى)، مش في آخر فريم بعد ما عدّت. قبل كده كان لازم تقرب أقل من 0.9 م عشان يتحسب تلامس. اللاعب البشري زي 2.1
+  if(L0.bd==null||d<L0.bd){L0.bd=d;L0.brb=[b.x-p.x,b.y-p.y];}
+  if(L0.t<=0||met){this.tkResolve(p,met?L0.rb:(!L0.hu&&L0.bd<TKR?L0.brb:null));p.tkL=null;p.windT=0;p.kickT=(b.owner===p||(!b.owner&&b.last===p))?.28:.16;}else{L0.pd=d;L0.rb=[b.x-p.x,b.y-p.y];}}}
  // لحظة التلامس: النتيجة بتتحسب بمكان الرجل والكورة الحقيقيين دلوقتي
  // سيطرة المهاجم على الكورة لحظة التلامس (0 = الكورة سايبة/لمسة طويلة، 1 = لازقة في رجله):
  // من بُعد الكورة عن رجله + هل هو على وشك يلمسها (نفس مرحلة الخطوة اللي بتستخدمها المراوغة في dribble)

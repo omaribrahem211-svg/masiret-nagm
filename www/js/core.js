@@ -254,6 +254,10 @@ class Match{
    // الرقابة بتفضل شغالة وهي الكورة في الهوا من تمريرة/عرضية الخصم (قبل كده أول ما الكورة تسيب رجل الممرر كل المدافعين يرجعوا لمكانهم في الخطة)
    if(t.mk&&t.mk.has(p)&&!this.restartKind&&(b.owner?b.owner.team!==t:(b.last&&b.last.team!==t&&b.target&&b.target.team!==t))){const q=t.mk.get(p),og=this.ownG(t),gx=og[0]-q.x,gy=og[1]-q.y,gd=hyp(gx,gy)||1,bx2=b.x-q.x,by2=b.y-q.y,bd2=hyp(bx2,by2)||1;
     this.go(p,[q.x+q.vx*.25+gx/gd*.9+bx2/bd2*.35,q.y+q.vy*.25+gy/gd*.9+by2/bd2*.35],.95);continue;}
+   /* (v131 E2) الارتداد الدفاعي: بعد ضياع الكورة المدافع/لاعب الوسط اللي متقدم عن الكورة (مش بين الكورة ومرماه) بيرجع لمكانه بسرعة شبه كاملة بدل 0.76
+      (الظهير اللي طلع overlap كان بيرجع ماشي). المهاجمين بيفضلوا بسرعتهم العادية — مش الفريق كله بيجري ورا الكورة. محتاج لياقة (>25) */
+   {const opp=this.possS!==t.idx&&(b.owner?b.owner.team!==t:b.last&&b.last.team!==t);const X=v=>t.dir===1?v:L-v;
+    if(opp&&!this.restartKind&&(p.role==='DF'||p.role==='MF')&&p.stam>25&&X(p.x)>X(b.x)-2){this.goS(p,this.shape(p,false),p.role==='DF'?.98:.9);continue;}}
    this.goS(p,this.shape(p,this.possS===t.idx),.76);
   }
   if(this.restartKind&&b.owner&&this.restartKind!=='pen'){const md=this.restartKind==='throw'?3:this.restartKind==='ko'?9.15:9.15;const ot=this.other(b.owner.team);for(const q of ot.pl){if(!q.tgt||q.wallP||q.role==='GK')continue;const dx=q.tgt[0]-b.x,dy=q.tgt[1]-b.y,d=hyp(dx,dy)||1;if(d<md)q.tgt=[b.x+dx/d*md,b.y+dy/d*md];}

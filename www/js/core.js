@@ -292,7 +292,16 @@ class Match{
   const w=pr>11?.2:pr>7?.08:0;let best=null,bs=1e9,bt=0;
   for(let t=t0;t<=3.2;t+=.05){if(tl>0&&t<tl){const zt=b.z+b.vz*t-4.9*t*t;if(zt>zMax||b.vz-9.8*t>0&&zt>1.7)continue;}const q=this.ballAt(t);if(q[0]<-.5||q[0]>L+.5||q[1]<-.5||q[1]>W+.5)break;const d=hyp(q[0]-p.x,q[1]-p.y);if(d/ms+.1>t)continue;const zq=tl>0&&t<tl?b.z+b.vz*t-4.9*t*t:0;const s=oT<9?t+(t>oT-.08?3:0):t+d*w+(b.cross?0:Math.max(0,zq-.9)*.5);if(s<bs){bs=s;best=q;bt=t;}}
   if(!best){this.go(p,this.intercept(p),1);return;}
-  const bv=hyp(b.vx,b.vy);if(bv>1){best=[best[0]+b.vx/bv*.18,best[1]+b.vy/bv*.18];}const d=hyp(best[0]-p.x,best[1]-p.y);this.go(p,best,clamp(d/(bt*p.mse)*1.6+.25,.35,1));p.recvT=bt;}
+  const bv=hyp(b.vx,b.vy);if(bv>1){best=[best[0]+b.vx/bv*.18,best[1]+b.vy/bv*.18];}
+  // (v131 A1) الاستلام وهو ماشي: قبل كده اللاعب كان بيفرمل في آخر 2.5 م قبل نقطة الاستلام (زي أي هدف حركة) فبيوصل شبه واقف
+  // (سرعته 5 م/ث قبل نص ثانية → 1.4 لحظة الاستلام → 4.6 بعدها: وقفة وبعدين يجري تاني). دلوقتي بيجري للنقطة بالسرعة اللي توصّله في ميعاد الكورة
+  // ومن غير فرملة الوصول، والهدف ممدود شوية بعد النقطة في نفس اتجاه جريه فبيعدّي فيها؛ لو وصل بدري وفاضل وقت كتير بس بيقف على النقطة (مايجريش يعدّيها)
+  // في آخر 0.35 ث قبل وصول الكورة النقطة بتتثبت (ماتتحسبش من جديد كل فريم وتلفّه في آخر لحظة)
+  // (كورة عالية: زي الأول — نقطة نزولها بتتحسب كل فريم والفرملة عادي، عشان مايعدّيش تحتها ويقابلها بالراس)
+  if(tl>.05){const d=hyp(best[0]-p.x,best[1]-p.y);this.go(p,best,clamp(d/(bt*p.mse)*1.6+.25,.35,1));p.recvT=bt;return;}
+  if(p.rcvFix&&p.rcvFix.k===b.passT&&p.rcvFix.t>this.time){best=p.rcvFix.pt;bt=Math.max(.05,p.rcvFix.t-this.time);}else if(bt<.35)p.rcvFix={k:b.passT,pt:best,t:this.time+bt};
+  const d=hyp(best[0]-p.x,best[1]-p.y),need=d/Math.max(bt-.05,.05),sf=clamp(Math.max(need,hyp(p.vx,p.vy)*.8)/p.mse,.35,1),early=d<.6&&bt>.5;
+  if(early)this.go(p,best,sf);else{const ux=(best[0]-p.x)/(d||1),uy=(best[1]-p.y)/(d||1),ext=Math.min(1.2,need*.15);this.go(p,[best[0]+ux*ext,best[1]+uy*ext],sf);p.runThru=true;}p.recvT=bt;}
  ballAt(t){const b=this.ball;const air=b.z>.3;const k=air?.1:(this.rain?.62:.85);const f=(1-Math.exp(-k*t))/k;return[b.x+b.vx*f,b.y+b.vy*f];}
  // (3B) أول نقطة على مسار الكورة يقدر اللاعب يوصلها وهي تحت zCap (للكور العالية) — زي reachT بس بيرجع المكان
  airPt(q,zCap){const b=this.ball,tl=this.landT(),ms=q.mse*.95;for(let t=.05;t<=3.2;t+=.05){if(tl>0&&t<tl){const zt=b.z+b.vz*t-4.9*t*t;if(zt>zCap)continue;}const c=this.ballAt(t);if(hyp(c[0]-q.x,c[1]-q.y)/ms+.12<=t)return c;}return null;}
@@ -705,7 +714,7 @@ class Match{
   if(p.spinT>0)p.spinT-=dt;p.spinCd=Math.max(0,(p.spinCd||0)-dt);if(bo===p&&p.spinCd<=0&&this.phase==='play'&&!this.restartKind&&p.des){const dl=hyp(p.des[0],p.des[1]);if(dl>2.5&&(p.des[0]*p.fx+p.des[1]*p.fy)/dl<-.35){p.spinT=.55;p.spinCd=2.2;}}p.tcool=Math.max(0,p.tcool-dt);p.stun=Math.max(0,p.stun-dt);if(p.recT>0&&!(p.stun>0))p.recT-=dt;p.slide=Math.max(0,p.slide-dt);
    if(p.slide>0){p.vx*=Math.exp(-2.2*dt);p.vy*=Math.exp(-2.2*dt);if(this.phase==='play')this.slideCheck(p);}
    else if(p.stun>0){p.vx*=Math.exp(-6*dt);p.vy*=Math.exp(-6*dt);}
-   else{let tx=0,ty=0;if(p.des){tx=p.des[0];ty=p.des[1];}else if(p.tgt){const dx=p.tgt[0]-p.x,dy=p.tgt[1]-p.y,d=hyp(dx,dy);if(d>.05){let s=p.spd;if(d<2.5)s*=d/2.5;tx=dx/d*s;ty=dy/d*s;}}
+   else{let tx=0,ty=0;if(p.des){tx=p.des[0];ty=p.des[1];}else if(p.tgt){const dx=p.tgt[0]-p.x,dy=p.tgt[1]-p.y,d=hyp(dx,dy);if(d>.05){let s=p.spd;if(d<2.5&&!p.runThru)s*=d/2.5;tx=dx/d*s;ty=dy/d*s;}}p.runThru=false;
     const own=this.ball.owner===p;
     p.ix=tx;p.iy=ty;
     const ts=hyp(tx,ty);p._steer=0;

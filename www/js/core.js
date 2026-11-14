@@ -425,11 +425,11 @@ class Match{
   const dG=hyp(g[0]-p.x,g[1]-p.y);
   // (v131 E2) B استلم وفيه راجل تالت جاري: يديهاله في طريقه لو الممر لسه فاضي وC مش متسلل (أول لمستين/أول 1.2 ث، ومش كل مرة: 75%)
   {const tm=t.third;if(tm&&tm.b===p&&b.owner===p&&!p.pend&&this.time-(p.takeAt||0)<1.2&&tm.p.team===t){const q=tm.p,qx=t.dir===1?q.x:L-q.x,lead=[q.x+q.vx*.5,q.y+q.vy*.5];
-    if(tm.roll==null)tm.roll=Math.random();if(tm.roll<.75&&qx<t.offLine&&t.dir*(q.x-p.x)>4&&o.pl.every(z=>segDist(z.x,z.y,p.x,p.y,lead[0],lead[1])>2.2&&hyp(z.x-lead[0],z.y-lead[1])>3.5)){tm.passed=true;this.pass(p,q,true,false);return;}}}
+    if(tm.roll==null)tm.roll=Math.random();if(tm.roll<.75&&qx<t.offLine&&t.dir*(q.x-p.x)>4&&o.pl.every(z=>segDist(z.x,z.y,p.x,p.y,lead[0],lead[1])>2.2&&hyp(z.x-lead[0],z.y-lead[1])>3.5)){tm.passed=true;this.pass(p,q,false,false);return;}}}/* (E2 fix) تمريرة عادية بقيادة على حركة C — كانت thru فالكورة بتروح 8 م ناحية المرمى بعيد عن الممر اللي اتفحص (51% منها كانت بتتقطع) */
   // (v131 E2) (كل فريم) الجناح وفيه ظهير/لاعب وسط بيعمل overlap/underlap: لو الجاري بقى قدامه وممر التمريرة فاضي يمررها في طريقه،
    // ولو لسه ماوصلش ومفيش ضغط عليه (أقرب خصم > 3.4 م) يمشي بالكورة على مهله لحد 3 ث (لجوه شوية لو overlap عشان يفتح الممر برّه، ولبرّه لو underlap) يستناه بدل ما يعرّض أو يرجّع
   {const rn=t.run&&t.run.carrier===p?t.run:null;if(rn&&b.owner===p){const q=rn.p,ahead=t.dir*(q.x-p.x)>(nd<3.4?-2.5:1.5);/* تحت الضغط بيمررها في طريقه أول ما يبقى جنبه تقريباً */
-     if(ahead&&o.pl.every(z=>segDist(z.x,z.y,p.x,p.y,q.x+q.vx*.5,q.y+q.vy*.5)>1.6)&&(t.dir===1?q.x:L-q.x)<t.offLine){rn.passed=true;this.pass(p,q,true,false);return;}
+     if(ahead&&o.pl.every(z=>segDist(z.x,z.y,p.x,p.y,q.x+q.vx*.5,q.y+q.vy*.5)>1.6)&&(t.dir===1?q.x:L-q.x)<t.offLine){rn.passed=true;this.pass(p,q,false,false);return;}
      if(!ahead&&nd>(hyp(q.x-p.x,q.y-p.y)<7?1.8:3.4)&&this.time-rn.t0<3){p.tgt=[p.x+t.dir*3,p.y-Math.sign(p.y-CY)*(rn.kind==='overlap'?.8:-.3)];p.spd=p.mse*.45;return;}}}
   p.dec-=dt;
   if(p.dec<=0){p.dec=R(.22,.45)*(1.5-t.R/100)*(1-(t.aiK||0)*.1);

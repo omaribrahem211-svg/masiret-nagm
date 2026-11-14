@@ -285,6 +285,9 @@ class Match{
   const tT=this.reachT(tg,2.35);let bq=null,bt=tT-.5;for(const q of tg.team.pl){if(q===tg||q.role==='GK'||q.off||q.stun>0||q===b.passer)continue;const t=this.reachT(q,2.35);if(t<bt){bt=t;bq=q;}}
   if(bq&&tT>this.landT()+.2&&!(b.passer&&this.isOffside(bq,b.passer))){b.target=bq;if(h&&!h.lock&&bq.team.idx===h.team)h.ctrl=bq;}}
  reachT(q,zCap,slow){const b=this.ball,tl=this.landT(),ms=q.mse*(slow||.9);for(let t=.05;t<=3.2;t+=.05){if(tl>0&&t<tl){const zt=b.z+b.vz*t-4.9*t*t;if(zt>zCap)continue;}const c=this.ballAt(t);if(hyp(c[0]-q.x,c[1]-q.y)/ms+.12<=t)return t;}return 9;}
+ // (v131 A2) أحسن نقطة استلام في اتجاه الجويستيك (ux,uy): من النقط اللي يقدر يوصلها قبل الكورة، الأكتر توافقاً مع الاتجاه (وأبدر شوية)
+ stickRecv(p,ux,uy){const ms=p.mse*.95;let best=null,bs=-1e9,bt=0;for(let t=.1;t<=3;t+=.05){const q=this.ballAt(t);if(q[0]<.5||q[0]>L-.5||q[1]<.5||q[1]>W-.5)break;const dx=q[0]-p.x,dy=q[1]-p.y,d=hyp(dx,dy);if(d/ms+.1>t)continue;const al=d<.5?1:(dx*ux+dy*uy)/d;if(al<.2)continue;const sc=al*2+Math.min(d,8)*.1-t*.35;if(sc>bs){bs=sc;best=q;bt=t;}}
+  if(!best)return false;const d=hyp(best[0]-p.x,best[1]-p.y),need=d/Math.max(bt-.05,.05);this.go(p,[best[0]+ux*.6,best[1]+uy*.6],clamp(Math.max(need,hyp(p.vx,p.vy)*.8)/p.mse,.35,1.03));p.runThru=true;p.des=null;return true;}
  receive(p){const b=this.ball;const tl=this.landT();const t0=.05;const ms=p.mse*.9;let zMax=b.cross?2.3:1.7;
   let o=this.other(p.team),pr=1e9;for(const q of o.pl){const d=hyp(q.x-p.x,q.y-p.y);if(d<pr)pr=d;}
   // كورة عالية والخصم ممكن يسبقه عليها: يهاجم الكورة في أبدر نقطة (حتى لو بالراس) بدل ما يستناها تنزل
@@ -604,7 +607,7 @@ class Match{
   if(b.offside){const q=b.offside;b.offside=null;if(q===p){this.offsideCall(p);return;}}
   if(b.passFrom){if(b.passFrom.team===p.team&&b.passFrom!==p)b.passFrom.stats.pc++;else if(b.passFrom.team!==p.team)b.passFrom.stats.pf++;b.passFrom=null;}
   {const r=this.shotLive();if(r)this.shotEnd(p.team.idx===r.team?'retained':r.gkTouched?'saved':r.wood?'off_target':'blocked',p);}
-  const wasT=b.target===p;b.inHands=false;b.cx=b.cy=0;b.sw=0;b.tw=0;if(this.restartKind!=='ko'&&!this.restartKind)for(const q of this.all){if(q.spT){q.spT=null;q.wallP=0;}}b.owner=p;b.last=p;b.target=null;b.cross=false;b.shot=null;p.ctrlT=0;p.touchT=.2;p.rcvT=.3;p.bdx=null;this.firstTouch(p,wasT);if(this.human)this.human.recv=null;
+  const wasT=b.target===p;b.inHands=false;b.cx=b.cy=0;b.sw=0;b.tw=0;if(this.restartKind!=='ko'&&!this.restartKind)for(const q of this.all){if(q.spT){q.spT=null;q.wallP=0;}}b.owner=p;b.last=p;b.target=null;b.cross=false;b.shot=null;p.ctrlT=0;p.touchT=.2;p.rcvT=.3;p.bdx=null;p.takeAt=this.time;this.firstTouch(p,wasT);if(this.human)this.human.recv=null;
   if(p.star&&p.team.idx===0)this.ev('star_ball',{p},7);
   const h=this.human;if(h&&!h.lock){if(p.team.idx===h.team){h.ctrl=p;if(p.role==='GK')p.gkHoldT=0;}else if(prev&&prev===this.t[h.team]&&p.team.idx!==h.team){h.swAt=0;this.autoSwitch(false);}}}
  firstTouch(p,wasT){const b=this.ball;if(b.inHands||this.restartKind)return;if(wasT)p.rcvA=.45;const v=hyp(b.vx,b.vy);const q=.45+p.st.drib/180+(wasT?.08:0);const h=this.human;let dx=p.fx,dy=p.fy;
@@ -633,9 +636,16 @@ class Match{
      // ✕ مضغوط: التدخل الأوتوماتيكي بيختار اللحظة: الكورة في المدى بعد الخطوة، مش قبل لمسة المهاجم الجاية، المدافع مش راجع لورا ولا بيتعافى، وفرصة الكسب المتوقعة (سيطرة المهاجم، الزاوية، السرعة، اللياقة) معقولة.
      // لو الكورة لازقة في رجل المهاجم يفضل يضغط لحد ما يلمسها لمسة أبعد أو يبقى في وشه خالص
      if(front&&dB<TKR+.7&&this.tkTime(c)){const q=this.tkEst(c,.12);if(q>=.2||dB<.7)this.tackle(c,false,true);}}}else this.go(c,this.intercept(c),1);c.stam=Math.max(0,c.stam-dt*10/this.halfLen);}
-   else if(!has&&ownPass&&b.target===c){c.des=null;this.receive(c);}
+   // (v131 A2) الكورة جاية للاعبك: لو انت ماسك الجويستيك هو اللي بيحرّك اللاعب (تقدر تجري على الكورة أو تفتح لمساحة)، ومنطقة الاستلام في
+   // ballSim بتساعد الكورة توصل لرجله. قبل كده الاستلام الأوتوماتيك كان بيلغي الجويستيك لحد ما الكورة توصل (اللاعب اتحرك 0.17 م بس وانت دافع لقدام)
+   else if(!has&&ownPass&&b.target===c&&mag<=.15){c.des=null;this.receive(c);}
+   // ماسك الجويستيك والكورة جاية على الأرض: اللاعب بيجري في اتجاه الجويستيك على أقرب نقطة في مسار الكورة توافق الاتجاه ده ويقدر يوصلها
+   // (يجري على الكورة لقدّام أو يفتح لجنب)؛ لو مافيش نقطة كده الاستلام الأوتوماتيك يكمّل (عشان الكورة ماتضيعش لو الاتجاه بعيد عن مسارها)
+   else if(!has&&ownPass&&b.target===c&&!(this.landT()>.05)){if(!this.stickRecv(c,jx/mag,jy/mag)){c.des=null;this.receive(c);}}
    else if(mag>.15){const spr=(I.sprint||mag>.93)&&c.stam>4;const sp=c.mse*(spr?1.03:.16+.76*clamp((mag-.15)/.78,0,1))*(has?(spr?.95:.97):1);const n=mag>1?mag:1;c.des=[jx/n*sp,jy/n*sp];if(spr)c.stam=Math.max(0,c.stam-dt*16/this.halfLen);}
    else if(!has){c.des=null;this.assistAI(c);}
+   // (v131 A2) استلمت والجويستيك سايب: اللاعب يكمّل جريته 0.5 ث ويهدّي (بدل ما يقف مكانه فجأة لحظة الاستلام)
+   else if(this.time-(c.takeAt||-9)<.5){const k=.9-(this.time-c.takeAt)*1.2;c.des=[c.vx*Math.max(0,k),c.vy*Math.max(0,k)];}
    else c.des=[0,0];
   }else c.des=(has||penWait)?[0,0]:null;
   if(has&&setPiece){const ax=I.jx,ay=-I.jy;if(hyp(ax,ay)>.3){const n=hyp(ax,ay);c.fx+=(ax/n-c.fx)*.2;c.fy+=(ay/n-c.fy)*.2;const m=hyp(c.fx,c.fy)||1;c.fx/=m;c.fy/=m;}}

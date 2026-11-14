@@ -26,7 +26,7 @@ function setup(seed) {
 }
 const results = {};
 function scenario(name, place, opts = {}) {
-  const R = { attempts: 0, ballGoneBeforeContact: 0, reachedCarrier: 0, won: 0, wonKeep: 0, deflected: 0, missed: 0, beaten: 0, fouls: 0, recoveries: 0, decide: [], contact: [], recov: [], snap: [], back: [], trip: 0, bigRuns: 0, bigDef: 0, bigAtt: 0, bigT: [], longTouchOpp: 0, noAttemptRuns: 0, maxAttempts: 0 };
+  const R = { attempts: 0, ballGoneBeforeContact: 0, reachedCarrier: 0, won: 0, wonKeep: 0, deflected: 0, missed: 0, beaten: 0, fouls: 0, recoveries: 0, decide: [], contact: [], recov: [], snap: [], rotF: [], faceC: [], back: [], trip: 0, bigRuns: 0, bigDef: 0, bigAtt: 0, bigT: [], longTouchOpp: 0, noAttemptRuns: 0, maxAttempts: 0 };
   for (let k = 0; k < K; k++) {
     const S = setup(9000 + k), { m, def, att, sx } = S; const a = att.pl.find(p => p.role === 'FW'), d = def.pl.find(p => p.role === 'DF');
     const asp = opts.atSpeed || 5.5; if (asp > a.ms) a.ms = a.mse = asp + .3; a.x = L / 2 - sx * 10; a.y = CY; a.fx = sx; a.fy = 0; a.vx = sx * asp;
@@ -41,11 +41,11 @@ function scenario(name, place, opts = {}) {
     m.tackle = function (p, slide, clean) { if (p.team !== def || slide || !b.owner || b.owner.team === def) return T0(p, slide, clean);
       const c = b.owner, rec = { snap0: [p.fx, p.fy], t: m.time, p, c, dB: hyp(b.x - p.x, b.y - p.y), tk0: p.stats.tk, fl0: p.stats.fl }; n++; R.attempts++; R.decide.push(r2(rec.dB));
       if (opts.onStart) opts.onStart(m, c, S);
-      const r = T0(p, slide, clean); recs.push(rec); if (p.tkL) { const f0 = rec.snap0; R.snap.push(Math.abs(Math.atan2(f0[0] * p.tkL.dy - f0[1] * p.tkL.dx, f0[0] * p.tkL.dx + f0[1] * p.tkL.dy)) * 57.3); }
+      const f0b = [p.fx, p.fy]; const r = T0(p, slide, clean); recs.push(rec); { const a1 = Math.abs(Math.atan2(f0b[0] * p.fy - f0b[1] * p.fx, f0b[0] * p.fx + f0b[1] * p.fy)) * 57.3; rec.rmax = a1; } if (p.tkL) { const f0 = rec.snap0; R.snap.push(Math.abs(Math.atan2(f0[0] * p.tkL.dy - f0[1] * p.tkL.dx, f0[0] * p.tkL.dx + f0[1] * p.tkL.dy)) * 57.3); }
       if (!CONTACT) { rec.cdB = rec.dB; rec.ownerAtContact = 'carrier'; fin(rec, p, c); } return r; };
-    if (CONTACT) { const R0 = m.tkResolve.bind(m); m.tkResolve = function (p) { const rec = recs.find(x => x.p === p && x.res == null); if (!rec) return R0(p); rec.cdB = hyp(b.x - p.x, b.y - p.y); rec.ownerAtContact = b.owner === rec.c ? 'carrier' : b.owner ? 'other' : 'none'; const r = R0(p); fin(rec, p, rec.c); return r; }; }
+    if (CONTACT) { const R0 = m.tkResolve.bind(m); m.tkResolve = function (p) { const rec = recs.find(x => x.p === p && x.res == null); if (!rec) return R0(p); rec.cdB = hyp(b.x - p.x, b.y - p.y); { const dd = rec.cdB || 1; R.faceC.push((p.fx * (b.x - p.x) + p.fy * (b.y - p.y)) / dd); if (rec.rmax != null) R.rotF.push(rec.rmax); } rec.ownerAtContact = b.owner === rec.c ? 'carrier' : b.owner ? 'other' : 'none'; const r = R0(p); fin(rec, p, rec.c); return r; }; }
     let bigDone = !o.big;
-    for (let i = 0; i < 60 * 4; i++) { m.update(1 / 60); if (!bigDone && b.owner) { bigDone = true; if (b.owner.team === def) { R.bigDef++; R.bigT.push(r2(i / 60)); } else R.bigAtt++; } if (m.phase !== 'play' || m.restartKind) break;
+    for (let i = 0; i < 60 * 4; i++) { const fpv = new Map(recs.filter(r => r.p.tkL).map(r => [r, [r.p.fx, r.p.fy]])); m.update(1 / 60); for (const [rc, f] of fpv) { const q = rc.p, a1 = Math.abs(Math.atan2(f[0] * q.fy - f[1] * q.fx, f[0] * q.fx + f[1] * q.fy)) * 57.3; rc.rmax = Math.max(rc.rmax || 0, a1); } if (!bigDone && b.owner) { bigDone = true; if (b.owner.team === def) { R.bigDef++; R.bigT.push(r2(i / 60)); } else R.bigAtt++; } if (m.phase !== 'play' || m.restartKind) break;
       for (const rc of recs) { if (rc.res === 'won' && !rc.rv && m.time - rc.t < 1.5 && b.owner && b.owner.team === def) { rc.rv = 1; R.recoveries++; }
         if ((rc.res === 'beaten' || rc.res === 'miss' || rc.res === 'gone') && rc.rt == null && !(rc.p.stun > 0) && !rc.p.tkL) { rc.rt = r2(m.time - rc.t); R.recov.push(rc.rt); }
         if ((rc.res === 'beaten' || rc.res === 'miss') && !rc.p.tkL) { if (rc.p.stun > .4) R.trip++; if (rc.bk == null) { rc.tr = rc.tr || m.time; const q = rc.p, tw = (q.vx * (b.x - q.x) + q.vy * (b.y - q.y)) / (hyp(b.x - q.x, b.y - q.y) || 1); if (tw > 2.5) { rc.bk = 1; R.back.push(r2(m.time - rc.tr)); } else if (m.time - rc.tr > 1.5) { rc.bk = 1; R.back.push(1.5); } } } } }
@@ -54,7 +54,7 @@ function scenario(name, place, opts = {}) {
   const reachedPct = R.reachedCarrier ? r2(100 * R.won / R.reachedCarrier) : null;
   results[name] = { runs: K, attempts: R.attempts, ballReleasedBeforeContact: R.ballGoneBeforeContact, reachedCarrier: R.reachedCarrier, successful: R.won, keptPossession: R.wonKeep, ballDeflectedLoose: R.deflected, missedOutOfReach: R.missed, beaten: R.beaten, fouls: R.fouls,
     successPctOfAttempts: R.attempts ? r2(100 * R.won / R.attempts) : null, successPctWhenReached: reachedPct, defenceRegainedBallWithin1_5s: R.recoveries,
-    decideDistMedian: med(R.decide), startFacingSnapDegMedian: med(R.snap), afterFailChaseBackSecMedian: med(R.back), afterFailTripAnimFrames: R.trip, contactDistMedian: med(R.contact), recoveryAfterFailMedianSec: med(R.recov), runsWithoutAttempt: R.noAttemptRuns, ...(R.bigRuns ? { bigTouchRuns: R.bigRuns, bigTouchDefenceFirst: R.bigDef, bigTouchAttackerFirst: R.bigAtt, bigTouchDefenceTimeMedian: med(R.bigT) } : {}), maxAttemptsInRun: R.maxAttempts };
+    decideDistMedian: med(R.decide), startFacingSnapDegMedian: med(R.snap), bodyTurnMaxDegPerFrameMedian: med(R.rotF), bodyFacingBallAtContactMedian: med(R.faceC), afterFailChaseBackSecMedian: med(R.back), afterFailTripAnimFrames: R.trip, contactDistMedian: med(R.contact), recoveryAfterFailMedianSec: med(R.recov), runsWithoutAttempt: R.noAttemptRuns, ...(R.bigRuns ? { bigTouchRuns: R.bigRuns, bigTouchDefenceFirst: R.bigDef, bigTouchAttackerFirst: R.bigAtt, bigTouchDefenceTimeMedian: med(R.bigT) } : {}), maxAttemptsInRun: R.maxAttempts };
 }
 const sx = S => S.sx;
 scenario('01_front', (S, a, d) => { d.x = a.x + S.sx * 3; d.y = a.y + .3; d.fx = -S.sx; d.fy = 0; });

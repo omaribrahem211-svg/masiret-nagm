@@ -1,0 +1,6635 @@
+{
+"matches": "1-50",
+"vetoed": 260,
+"outcomes": {
+"won": 69,
+"beaten": 125,
+"missed_out_of_reach": 25,
+"poked_loose": 27,
+"state_changed": 3,
+"ball_already_gone": 10,
+"unresolved": 1
+},
+"byRule": null,
+"events": [
+{
+"id": 1,
+"frame": 5455,
+"t": 67.75,
+"pid": 5,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.12,
+"dM": 0.78,
+"angle": "side",
+"ballToFoot": 0.64,
+"carrierSpeed": 6.23,
+"defSpeed": 7.45,
+"closing": -1.83,
+"defSideways": 3.42,
+"defMovingAway": 0,
+"stam": 89
+},
+"closestDuringStep": 1.32,
+"contactDist": 1.1,
+"out": "won"
+},
+{
+"id": 1,
+"frame": 14097,
+"t": 177.48,
+"pid": 7,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.27,
+"dM": 1.74,
+"angle": "front",
+"ballToFoot": 1.19,
+"carrierSpeed": 6.01,
+"defSpeed": 4.31,
+"closing": 2.3,
+"defSideways": 1.37,
+"defMovingAway": 0,
+"stam": 86
+},
+"closestDuringStep": 0.61,
+"contactDist": 0.55,
+"out": "won"
+},
+{
+"id": 1,
+"frame": 19366,
+"t": 254.03,
+"pid": 107,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 0.56,
+"dM": 1.56,
+"angle": "side",
+"ballToFoot": 1.01,
+"carrierSpeed": 6.26,
+"defSpeed": 3.33,
+"closing": 14.29,
+"defSideways": 2.83,
+"defMovingAway": 0,
+"stam": 69
+},
+"closestDuringStep": 0.87,
+"contactDist": 0.51,
+"out": "won"
+},
+{
+"id": 2,
+"frame": 793,
+"t": 11.93,
+"pid": 109,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 0.99,
+"dM": 1.1,
+"angle": "side",
+"ballToFoot": 0.77,
+"carrierSpeed": 6.11,
+"defSpeed": 5.73,
+"closing": 0.51,
+"defSideways": 2.28,
+"defMovingAway": 0,
+"stam": 97
+},
+"closestDuringStep": 1.08,
+"contactDist": 0.93,
+"out": "won"
+},
+{
+"id": 2,
+"frame": 2892,
+"t": 46.92,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.95,
+"dM": 1.8,
+"angle": "front",
+"ballToFoot": 0.86,
+"carrierSpeed": 4.1,
+"defSpeed": 7.88,
+"closing": 10.19,
+"defSideways": 5.19,
+"defMovingAway": 0,
+"stam": 89
+},
+"closestDuringStep": 0.27,
+"contactDist": 0.3,
+"out": "won"
+},
+{
+"id": 2,
+"frame": 3945,
+"t": 64.47,
+"pid": 110,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.27,
+"dM": 1.89,
+"angle": "behind",
+"ballToFoot": 1.62,
+"carrierSpeed": 2.87,
+"defSpeed": 7.9,
+"closing": 3.07,
+"defSideways": 7.61,
+"defMovingAway": 0,
+"stam": 87
+},
+"closestDuringStep": 1.18,
+"contactDist": 1.19,
+"out": "won"
+},
+{
+"id": 2,
+"frame": 4470,
+"t": 69.6,
+"pid": 106,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.78,
+"dM": 1.07,
+"angle": "front",
+"ballToFoot": 0.65,
+"carrierSpeed": 2.12,
+"defSpeed": 6.24,
+"closing": 0.92,
+"defSideways": 4.92,
+"defMovingAway": 0,
+"stam": 87
+},
+"closestDuringStep": 0.8,
+"contactDist": 0.76,
+"out": "beaten"
+},
+{
+"id": 2,
+"frame": 8371,
+"t": 113.53,
+"pid": 105,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.98,
+"dM": 1.99,
+"angle": "side",
+"ballToFoot": 1.04,
+"carrierSpeed": 5.52,
+"defSpeed": 4.06,
+"closing": 4.22,
+"defSideways": 3.58,
+"defMovingAway": 0,
+"stam": 81
+},
+"closestDuringStep": 0.74,
+"contactDist": 0.67,
+"out": "beaten"
+},
+{
+"id": 2,
+"frame": 12398,
+"t": 176.33,
+"pid": 6,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.54,
+"dM": 2.01,
+"angle": "front",
+"ballToFoot": 1.2,
+"carrierSpeed": 6.15,
+"defSpeed": 2.7,
+"closing": 1.06,
+"defSideways": 2.07,
+"defMovingAway": 0,
+"stam": 83
+},
+"closestDuringStep": 1.19,
+"contactDist": 1.12,
+"out": "beaten"
+},
+{
+"id": 2,
+"frame": 13259,
+"t": 190.68,
+"pid": 107,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.43,
+"dM": 2.75,
+"angle": "behind",
+"ballToFoot": 1.33,
+"carrierSpeed": 6.23,
+"defSpeed": 7.31,
+"closing": 1.94,
+"defSideways": 4.98,
+"defMovingAway": 0,
+"stam": 81
+},
+"closestDuringStep": 1.51,
+"contactDist": 2.59,
+"out": "missed_out_of_reach"
+},
+{
+"id": 2,
+"frame": 13368,
+"t": 192.5,
+"pid": 8,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.99,
+"dM": 2.42,
+"angle": "behind",
+"ballToFoot": 1.89,
+"carrierSpeed": 4.26,
+"defSpeed": 8.41,
+"closing": 5.04,
+"defSideways": 7.44,
+"defMovingAway": 0,
+"stam": 77
+},
+"closestDuringStep": 0.85,
+"contactDist": 0.86,
+"out": "poked_loose"
+},
+{
+"id": 2,
+"frame": 16036,
+"t": 217.5,
+"pid": 105,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.77,
+"dM": 0.88,
+"angle": "side",
+"ballToFoot": 0.6,
+"carrierSpeed": 6.13,
+"defSpeed": 6.22,
+"closing": 3.64,
+"defSideways": 4.97,
+"defMovingAway": 0,
+"stam": 76
+},
+"closestDuringStep": 0.69,
+"contactDist": 0.63,
+"out": "poked_loose"
+},
+{
+"id": 2,
+"frame": 16429,
+"t": 224.05,
+"pid": 5,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.46,
+"dM": 1.97,
+"angle": "front",
+"ballToFoot": 1.25,
+"carrierSpeed": 6.02,
+"defSpeed": 3.86,
+"closing": 2.22,
+"defSideways": 2,
+"defMovingAway": 0,
+"stam": 76
+},
+"closestDuringStep": 1.41,
+"contactDist": 1.47,
+"out": "missed_out_of_reach"
+},
+{
+"id": 2,
+"frame": 16592,
+"t": 226.77,
+"pid": 110,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.76,
+"dM": 0.82,
+"angle": "front",
+"ballToFoot": 0.67,
+"carrierSpeed": 5.52,
+"defSpeed": 6.68,
+"closing": 2.45,
+"defSideways": 6.26,
+"defMovingAway": 0,
+"stam": 97
+},
+"closestDuringStep": 0.38,
+"contactDist": 0.3,
+"out": "won"
+},
+{
+"id": 2,
+"frame": 17206,
+"t": 237,
+"pid": 5,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1,
+"dM": 1.51,
+"angle": "behind",
+"ballToFoot": 0.63,
+"carrierSpeed": 4.68,
+"defSpeed": 7.08,
+"closing": 4.01,
+"defSideways": 5.93,
+"defMovingAway": 0,
+"stam": 74
+},
+"closestDuringStep": 0.51,
+"contactDist": 0.49,
+"out": "won"
+},
+{
+"id": 2,
+"frame": 18468,
+"t": 253.1,
+"pid": 8,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.07,
+"dM": 2.09,
+"angle": "front",
+"ballToFoot": 2.4,
+"carrierSpeed": 0,
+"defSpeed": 4.85,
+"closing": -1.83,
+"defSideways": 3.12,
+"defMovingAway": 0,
+"stam": 66
+},
+"closestDuringStep": 0.46,
+"contactDist": 0.4,
+"out": "won"
+},
+{
+"id": 2,
+"frame": 18491,
+"t": 253.48,
+"pid": 107,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.19,
+"dM": 1.66,
+"angle": "side",
+"ballToFoot": 0.57,
+"carrierSpeed": 1.55,
+"defSpeed": 1.81,
+"closing": 1.35,
+"defSideways": 1.07,
+"defMovingAway": 0,
+"stam": 71
+},
+"closestDuringStep": 1.31,
+"contactDist": 1.19,
+"out": "beaten"
+},
+{
+"id": 3,
+"frame": 874,
+"t": 13.28,
+"pid": 110,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.89,
+"dM": 1.76,
+"angle": "behind",
+"ballToFoot": 0.89,
+"carrierSpeed": 5.01,
+"defSpeed": 4.49,
+"closing": 16,
+"defSideways": 4.37,
+"defMovingAway": 0,
+"stam": 98
+},
+"closestDuringStep": 0.64,
+"contactDist": 0.6,
+"out": "beaten"
+},
+{
+"id": 3,
+"frame": 2854,
+"t": 43.1,
+"pid": 5,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.73,
+"dM": 1.5,
+"angle": "front",
+"ballToFoot": 0.85,
+"carrierSpeed": 6.11,
+"defSpeed": 3.45,
+"closing": 28.01,
+"defSideways": 3.44,
+"defMovingAway": 0,
+"stam": 92
+},
+"out": "state_changed"
+},
+{
+"id": 3,
+"frame": 2856,
+"t": 43.13,
+"pid": 110,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.99,
+"dM": 1.32,
+"angle": "front",
+"ballToFoot": 0.34,
+"carrierSpeed": 3.3,
+"defSpeed": 5.86,
+"closing": 8.06,
+"defSideways": 4.87,
+"defMovingAway": 0,
+"stam": 91
+},
+"closestDuringStep": 0.16,
+"contactDist": 0.16,
+"out": "beaten"
+},
+{
+"id": 3,
+"frame": 3978,
+"t": 61.83,
+"pid": 6,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.37,
+"dM": 1.6,
+"angle": "front",
+"ballToFoot": 0.82,
+"carrierSpeed": 6.24,
+"defSpeed": 3.13,
+"closing": 4.09,
+"defSideways": 1.41,
+"defMovingAway": 0,
+"stam": 88
+},
+"closestDuringStep": 1.28,
+"contactDist": 1.23,
+"out": "won"
+},
+{
+"id": 3,
+"frame": 4407,
+"t": 68.98,
+"pid": 106,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.49,
+"dM": 1.71,
+"angle": "front",
+"ballToFoot": 1.22,
+"carrierSpeed": 6.22,
+"defSpeed": 3.9,
+"closing": 1.93,
+"defSideways": 1.43,
+"defMovingAway": 0,
+"stam": 89
+},
+"closestDuringStep": 1.1,
+"contactDist": 1.02,
+"out": "won"
+},
+{
+"id": 3,
+"frame": 19833,
+"t": 219.4,
+"pid": 10,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.49,
+"dM": 1.33,
+"angle": "front",
+"ballToFoot": 0.58,
+"carrierSpeed": 4.62,
+"defSpeed": 6.12,
+"closing": 3.24,
+"defSideways": 0.35,
+"defMovingAway": 0,
+"stam": 71
+},
+"closestDuringStep": 1.2,
+"contactDist": 1.14,
+"out": "won"
+},
+{
+"id": 4,
+"frame": 2149,
+"t": 34.53,
+"pid": 6,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.01,
+"dM": 1.56,
+"angle": "front",
+"ballToFoot": 0.81,
+"carrierSpeed": 0,
+"defSpeed": 4.55,
+"closing": 4.02,
+"defSideways": 1.82,
+"defMovingAway": 0,
+"stam": 95
+},
+"closestDuringStep": 0.79,
+"contactDist": 0.75,
+"out": "beaten"
+},
+{
+"id": 4,
+"frame": 6990,
+"t": 104.97,
+"pid": 8,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1,
+"dM": 1.8,
+"angle": "front",
+"ballToFoot": 0.85,
+"carrierSpeed": 4.13,
+"defSpeed": 7.54,
+"closing": 6.28,
+"defSideways": 6.74,
+"defMovingAway": 0,
+"stam": 79
+},
+"closestDuringStep": 0.52,
+"contactDist": 0.52,
+"out": "beaten"
+},
+{
+"id": 4,
+"frame": 10540,
+"t": 159.82,
+"pid": 7,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.64,
+"dM": 1.65,
+"angle": "side",
+"ballToFoot": 1.33,
+"carrierSpeed": 3.04,
+"defSpeed": 4.41,
+"closing": 4.27,
+"defSideways": 3.83,
+"defMovingAway": 0,
+"stam": 87
+},
+"closestDuringStep": 0.41,
+"contactDist": 0.37,
+"out": "won"
+},
+{
+"id": 5,
+"frame": 10589,
+"t": 119.9,
+"pid": 107,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.49,
+"dM": 2.04,
+"angle": "front",
+"ballToFoot": 1.1,
+"carrierSpeed": 6.22,
+"defSpeed": 3.49,
+"closing": 2.93,
+"defSideways": 0.45,
+"defMovingAway": 0,
+"stam": 79
+},
+"closestDuringStep": 0.95,
+"contactDist": 0.9,
+"out": "won"
+},
+{
+"id": 5,
+"frame": 15449,
+"t": 188.28,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.98,
+"dM": 2.11,
+"angle": "behind",
+"ballToFoot": 1.55,
+"carrierSpeed": 4.05,
+"defSpeed": 8.33,
+"closing": 4.06,
+"defSideways": 6.11,
+"defMovingAway": 0,
+"stam": 76
+},
+"closestDuringStep": 0.98,
+"contactDist": 0.87,
+"out": "beaten"
+},
+{
+"id": 5,
+"frame": 16233,
+"t": 197.93,
+"pid": 7,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.97,
+"dM": 1.74,
+"angle": "behind",
+"ballToFoot": 0.97,
+"carrierSpeed": 6.24,
+"defSpeed": 7.61,
+"closing": 2.94,
+"defSideways": 7.44,
+"defMovingAway": 0,
+"stam": 79
+},
+"closestDuringStep": 0.9,
+"contactDist": 0.86,
+"out": "won"
+},
+{
+"id": 5,
+"frame": 18195,
+"t": 227.43,
+"pid": 109,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.86,
+"dM": 1.75,
+"angle": "front",
+"ballToFoot": 0.9,
+"carrierSpeed": 3.9,
+"defSpeed": 5.97,
+"closing": 8.49,
+"defSideways": 3.97,
+"defMovingAway": 0,
+"stam": 67
+},
+"closestDuringStep": 0.31,
+"contactDist": 0.34,
+"out": "beaten"
+},
+{
+"id": 6,
+"frame": 11236,
+"t": 159.12,
+"pid": 107,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.98,
+"dM": 1.42,
+"angle": "front",
+"ballToFoot": 1.15,
+"carrierSpeed": 6.27,
+"defSpeed": 5.19,
+"closing": 2.12,
+"defSideways": 3.87,
+"defMovingAway": 0,
+"stam": 85
+},
+"closestDuringStep": 0.54,
+"contactDist": 0.5,
+"out": "poked_loose"
+},
+{
+"id": 6,
+"frame": 12403,
+"t": 178.57,
+"pid": 107,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.98,
+"dM": 1.46,
+"angle": "front",
+"ballToFoot": 1.18,
+"carrierSpeed": 6.23,
+"defSpeed": 5.17,
+"closing": 2.18,
+"defSideways": 3.84,
+"defMovingAway": 0,
+"stam": 82
+},
+"closestDuringStep": 0.41,
+"contactDist": 0.41,
+"out": "beaten"
+},
+{
+"id": 6,
+"frame": 13241,
+"t": 189.38,
+"pid": 107,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.34,
+"dM": 2.61,
+"angle": "behind",
+"ballToFoot": 1.29,
+"carrierSpeed": 5.79,
+"defSpeed": 6.74,
+"closing": 0.82,
+"defSideways": 5.85,
+"defMovingAway": 0,
+"stam": 79
+},
+"closestDuringStep": 1.37,
+"contactDist": 1.68,
+"out": "missed_out_of_reach"
+},
+{
+"id": 7,
+"frame": 7543,
+"t": 118.32,
+"pid": 6,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.3,
+"dM": 1.94,
+"angle": "front",
+"ballToFoot": 1.02,
+"carrierSpeed": 6.13,
+"defSpeed": 2.65,
+"closing": 3.71,
+"defSideways": 2.06,
+"defMovingAway": 0,
+"stam": 80
+},
+"closestDuringStep": 1.14,
+"contactDist": 1.08,
+"out": "poked_loose"
+},
+{
+"id": 7,
+"frame": 9596,
+"t": 148.22,
+"pid": 106,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.02,
+"dM": 0.88,
+"angle": "side",
+"ballToFoot": 0.57,
+"carrierSpeed": 6.04,
+"defSpeed": 5.71,
+"closing": 0.71,
+"defSideways": 3.78,
+"defMovingAway": 0,
+"stam": 92
+},
+"closestDuringStep": 1.18,
+"contactDist": 1.01,
+"out": "poked_loose"
+},
+{
+"id": 7,
+"frame": 10980,
+"t": 168.08,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.4,
+"dM": 1.41,
+"angle": "side",
+"ballToFoot": 0.59,
+"carrierSpeed": 6.02,
+"defSpeed": 2.43,
+"closing": 0.55,
+"defSideways": 0.07,
+"defMovingAway": 0,
+"stam": 87
+},
+"closestDuringStep": 1.43,
+"contactDist": 1.9,
+"out": "missed_out_of_reach"
+},
+{
+"id": 7,
+"frame": 13922,
+"t": 197.65,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.22,
+"dM": 1.83,
+"angle": "front",
+"ballToFoot": 1.04,
+"carrierSpeed": 6.06,
+"defSpeed": 3.14,
+"closing": 4.06,
+"defSideways": 0.31,
+"defMovingAway": 0,
+"stam": 83
+},
+"closestDuringStep": 1.17,
+"contactDist": 1.15,
+"out": "won"
+},
+{
+"id": 7,
+"frame": 15150,
+"t": 218.12,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.16,
+"dM": 2.31,
+"angle": "behind",
+"ballToFoot": 1.47,
+"carrierSpeed": 3.61,
+"defSpeed": 4.22,
+"closing": 6.84,
+"defSideways": 3.22,
+"defMovingAway": 0,
+"stam": 66
+},
+"closestDuringStep": 0.99,
+"contactDist": 0.97,
+"out": "beaten"
+},
+{
+"id": 7,
+"frame": 18273,
+"t": 247.55,
+"pid": 5,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.26,
+"dM": 1.79,
+"angle": "front",
+"ballToFoot": 0.9,
+"carrierSpeed": 5.91,
+"defSpeed": 1.51,
+"closing": 3.96,
+"defSideways": 0.96,
+"defMovingAway": 0,
+"stam": 76
+},
+"closestDuringStep": 1.11,
+"contactDist": 1.06,
+"out": "poked_loose"
+},
+{
+"id": 8,
+"frame": 2959,
+"t": 44.72,
+"pid": 109,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.2,
+"dM": 1.13,
+"angle": "side",
+"ballToFoot": 0.6,
+"carrierSpeed": 5.26,
+"defSpeed": 6.13,
+"closing": 0.08,
+"defSideways": 5.14,
+"defMovingAway": 0,
+"stam": 91
+},
+"closestDuringStep": 1.27,
+"contactDist": 1.16,
+"out": "beaten"
+},
+{
+"id": 8,
+"frame": 3917,
+"t": 60.68,
+"pid": 105,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.48,
+"dM": 0.78,
+"angle": "behind",
+"ballToFoot": 0.79,
+"carrierSpeed": 4.72,
+"defSpeed": 4.79,
+"closing": 0.06,
+"defSideways": 4.36,
+"defMovingAway": 0,
+"stam": 90
+},
+"closestDuringStep": 0.49,
+"contactDist": 0.53,
+"out": "beaten"
+},
+{
+"id": 8,
+"frame": 10767,
+"t": 167.22,
+"pid": 6,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.64,
+"dM": 1.4,
+"angle": "side",
+"ballToFoot": 1,
+"carrierSpeed": 6.37,
+"defSpeed": 4.61,
+"closing": 11.15,
+"defSideways": 3.07,
+"defMovingAway": 0,
+"stam": 87
+},
+"closestDuringStep": 0.46,
+"contactDist": 0.4,
+"out": "poked_loose"
+},
+{
+"id": 8,
+"frame": 10873,
+"t": 168.98,
+"pid": 106,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.46,
+"dM": 2.07,
+"angle": "front",
+"ballToFoot": 1.16,
+"carrierSpeed": 6.05,
+"defSpeed": 2.08,
+"closing": 1.81,
+"defSideways": 0.29,
+"defMovingAway": 0,
+"stam": 88
+},
+"closestDuringStep": 1.25,
+"contactDist": 1.2,
+"out": "beaten"
+},
+{
+"id": 8,
+"frame": 14002,
+"t": 201.67,
+"pid": 108,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.19,
+"dM": 0.85,
+"angle": "side",
+"ballToFoot": 0.54,
+"carrierSpeed": 4.25,
+"defSpeed": 6.55,
+"closing": -1.06,
+"defSideways": 0.11,
+"defMovingAway": 0,
+"stam": 73
+},
+"closestDuringStep": 1.32,
+"contactDist": 1.14,
+"out": "beaten"
+},
+{
+"id": 8,
+"frame": 15467,
+"t": 226.08,
+"pid": 10,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.3,
+"dM": 1.82,
+"angle": "side",
+"ballToFoot": 0.89,
+"carrierSpeed": 3.78,
+"defSpeed": 6.5,
+"closing": 2.95,
+"defSideways": 5.24,
+"defMovingAway": 0,
+"stam": 71
+},
+"closestDuringStep": 1.28,
+"contactDist": 1.25,
+"out": "beaten"
+},
+{
+"id": 8,
+"frame": 16403,
+"t": 241.68,
+"pid": 106,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.41,
+"dM": 1.91,
+"angle": "front",
+"ballToFoot": 1.1,
+"carrierSpeed": 6.02,
+"defSpeed": 3.3,
+"closing": 2.34,
+"defSideways": 1.38,
+"defMovingAway": 0,
+"stam": 77
+},
+"closestDuringStep": 1.24,
+"contactDist": 1.17,
+"out": "beaten"
+},
+{
+"id": 8,
+"frame": 16778,
+"t": 247.93,
+"pid": 6,
+"src": "ai",
+"why": [
+"reach_40pct_extension",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.1,
+"dM": 2.09,
+"angle": "front",
+"ballToFoot": 1.26,
+"carrierSpeed": 6.6,
+"defSpeed": 5.23,
+"closing": 4.52,
+"defSideways": 1.64,
+"defMovingAway": 0,
+"stam": 76
+},
+"closestDuringStep": 1.1,
+"contactDist": 1.01,
+"out": "won"
+},
+{
+"id": 9,
+"frame": 4854,
+"t": 56.83,
+"pid": 8,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.98,
+"dM": 0.82,
+"angle": "side",
+"ballToFoot": 0.59,
+"carrierSpeed": 6.29,
+"defSpeed": 6.94,
+"closing": 4.79,
+"defSideways": 4.06,
+"defMovingAway": 0,
+"stam": 90
+},
+"closestDuringStep": 0.95,
+"contactDist": 0.85,
+"out": "won"
+},
+{
+"id": 9,
+"frame": 5321,
+"t": 64.62,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1,
+"dM": 1.76,
+"angle": "front",
+"ballToFoot": 1.26,
+"carrierSpeed": 5.64,
+"defSpeed": 4.14,
+"closing": 3.9,
+"defSideways": 3.02,
+"defMovingAway": 0,
+"stam": 87
+},
+"closestDuringStep": 0.6,
+"contactDist": 0.57,
+"out": "beaten"
+},
+{
+"id": 9,
+"frame": 5878,
+"t": 73.9,
+"pid": 6,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.26,
+"dM": 1.53,
+"angle": "front",
+"ballToFoot": 0.85,
+"carrierSpeed": 6.06,
+"defSpeed": 2.65,
+"closing": 3.07,
+"defSideways": 1.7,
+"defMovingAway": 0,
+"stam": 91
+},
+"closestDuringStep": 0.72,
+"contactDist": 0.67,
+"out": "poked_loose"
+},
+{
+"id": 9,
+"frame": 6749,
+"t": 85.1,
+"pid": 7,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.96,
+"dM": 1.28,
+"angle": "side",
+"ballToFoot": 0.32,
+"carrierSpeed": 1.28,
+"defSpeed": 7.36,
+"closing": 7.57,
+"defSideways": 3.96,
+"defMovingAway": 0,
+"stam": 89
+},
+"closestDuringStep": 0.17,
+"contactDist": 0.23,
+"out": "poked_loose"
+},
+{
+"id": 9,
+"frame": 12160,
+"t": 168.68,
+"pid": 5,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1,
+"dM": 1.44,
+"angle": "behind",
+"ballToFoot": 0.74,
+"carrierSpeed": 2.84,
+"defSpeed": 8.24,
+"closing": 7.49,
+"defSideways": 6.95,
+"defMovingAway": 0,
+"stam": 88
+},
+"closestDuringStep": 0.24,
+"contactDist": 0.3,
+"out": "beaten"
+},
+{
+"id": 10,
+"frame": 2414,
+"t": 19.48,
+"pid": 9,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.3,
+"dM": 1.77,
+"angle": "front",
+"ballToFoot": 0.98,
+"carrierSpeed": 6.21,
+"defSpeed": 3.47,
+"closing": 3.16,
+"defSideways": 1.44,
+"defMovingAway": 0,
+"stam": 97
+},
+"closestDuringStep": 1.27,
+"contactDist": 1.22,
+"out": "beaten"
+},
+{
+"id": 10,
+"frame": 7275,
+"t": 73.7,
+"pid": 106,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.52,
+"dM": 1.97,
+"angle": "front",
+"ballToFoot": 1.17,
+"carrierSpeed": 6.04,
+"defSpeed": 3.34,
+"closing": 2.5,
+"defSideways": 1.8,
+"defMovingAway": 0,
+"stam": 89
+},
+"closestDuringStep": 1.37,
+"contactDist": 1.32,
+"out": "missed_out_of_reach"
+},
+{
+"id": 10,
+"frame": 12849,
+"t": 162.28,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.49,
+"dM": 1.61,
+"angle": "side",
+"ballToFoot": 0.45,
+"carrierSpeed": 3.53,
+"defSpeed": 3.21,
+"closing": 3.95,
+"defSideways": 1.87,
+"defMovingAway": 0,
+"stam": 92
+},
+"closestDuringStep": 1.46,
+"contactDist": 1.8,
+"out": "missed_out_of_reach"
+},
+{
+"id": 10,
+"frame": 13158,
+"t": 167.43,
+"pid": 6,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.46,
+"dM": 1.36,
+"angle": "side",
+"ballToFoot": 0.92,
+"carrierSpeed": 6.18,
+"defSpeed": 4.06,
+"closing": 1.83,
+"defSideways": 0.87,
+"defMovingAway": 0,
+"stam": 88
+},
+"closestDuringStep": 1.02,
+"contactDist": 0.99,
+"out": "beaten"
+},
+{
+"id": 10,
+"frame": 14783,
+"t": 190.9,
+"pid": 6,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.51,
+"dM": 1.15,
+"angle": "side",
+"ballToFoot": 1.24,
+"carrierSpeed": 5.72,
+"defSpeed": 3.16,
+"closing": 4.06,
+"defSideways": 1.36,
+"defMovingAway": 0,
+"stam": 84
+},
+"closestDuringStep": 1.36,
+"contactDist": 1.31,
+"out": "missed_out_of_reach"
+},
+{
+"id": 10,
+"frame": 18551,
+"t": 242.67,
+"pid": 7,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.47,
+"dM": 2.04,
+"angle": "side",
+"ballToFoot": 0.59,
+"carrierSpeed": 6.02,
+"defSpeed": 4.74,
+"closing": 1.32,
+"defSideways": 3.45,
+"defMovingAway": 0,
+"stam": 73
+},
+"closestDuringStep": 1.44,
+"contactDist": 1.75,
+"out": "ball_already_gone"
+},
+{
+"id": 11,
+"frame": 11346,
+"t": 151.23,
+"pid": 108,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.22,
+"dM": 0.78,
+"angle": "front",
+"ballToFoot": 1.18,
+"carrierSpeed": 5.27,
+"defSpeed": 6.57,
+"closing": -0.23,
+"defSideways": 2.85,
+"defMovingAway": 0,
+"stam": 84
+},
+"closestDuringStep": 0.89,
+"contactDist": 0.83,
+"out": "beaten"
+},
+{
+"id": 11,
+"frame": 11572,
+"t": 155,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.97,
+"dM": 1.3,
+"angle": "front",
+"ballToFoot": 0.38,
+"carrierSpeed": 3.74,
+"defSpeed": 7.37,
+"closing": 9.88,
+"defSideways": 5.5,
+"defMovingAway": 0,
+"stam": 80
+},
+"closestDuringStep": 0.04,
+"contactDist": 0.1,
+"out": "won"
+},
+{
+"id": 11,
+"frame": 16767,
+"t": 202.65,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.07,
+"dM": 2.18,
+"angle": "behind",
+"ballToFoot": 1.74,
+"carrierSpeed": 4.21,
+"defSpeed": 8.26,
+"closing": 2.8,
+"defSideways": 7.16,
+"defMovingAway": 0,
+"stam": 71
+},
+"closestDuringStep": 1.07,
+"contactDist": 1.01,
+"out": "beaten"
+},
+{
+"id": 11,
+"frame": 17304,
+"t": 211.6,
+"pid": 7,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.1,
+"dM": 1.46,
+"angle": "front",
+"ballToFoot": 0.77,
+"carrierSpeed": 4.88,
+"defSpeed": 1.37,
+"closing": -2.1,
+"defSideways": 1.35,
+"defMovingAway": 0.25,
+"stam": 79
+},
+"closestDuringStep": 0.81,
+"contactDist": 0.79,
+"out": "beaten"
+},
+{
+"id": 11,
+"frame": 18200,
+"t": 226.53,
+"pid": 109,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.97,
+"dM": 1.04,
+"angle": "front",
+"ballToFoot": 0.43,
+"carrierSpeed": 1.39,
+"defSpeed": 6.53,
+"closing": 3.69,
+"defSideways": 5,
+"defMovingAway": 0,
+"stam": 98
+},
+"closestDuringStep": 0.7,
+"contactDist": 0.7,
+"out": "won"
+},
+{
+"id": 12,
+"frame": 1295,
+"t": 20.3,
+"pid": 107,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.41,
+"dM": 2.04,
+"angle": "front",
+"ballToFoot": 1.17,
+"carrierSpeed": 6.06,
+"defSpeed": 3.83,
+"closing": 3.65,
+"defSideways": 0.45,
+"defMovingAway": 0,
+"stam": 96
+},
+"closestDuringStep": 1.33,
+"contactDist": 1.34,
+"out": "missed_out_of_reach"
+},
+{
+"id": 12,
+"frame": 1383,
+"t": 21.77,
+"pid": 107,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.32,
+"dM": 1.4,
+"angle": "side",
+"ballToFoot": 0.62,
+"carrierSpeed": 6.4,
+"defSpeed": 6.28,
+"closing": 0.82,
+"defSideways": 6.02,
+"defMovingAway": 0,
+"stam": 96
+},
+"closestDuringStep": 1.07,
+"contactDist": 1.01,
+"out": "beaten"
+},
+{
+"id": 12,
+"frame": 1946,
+"t": 27.98,
+"pid": 104,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.21,
+"dM": 1.13,
+"angle": "side",
+"ballToFoot": 0.76,
+"carrierSpeed": 6.39,
+"defSpeed": 7.59,
+"closing": -0.61,
+"defSideways": 6.62,
+"defMovingAway": 0,
+"stam": 96
+},
+"closestDuringStep": 0.62,
+"contactDist": 0.6,
+"out": "poked_loose"
+},
+{
+"id": 12,
+"frame": 3388,
+"t": 52.02,
+"pid": 9,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.29,
+"dM": 1.03,
+"angle": "side",
+"ballToFoot": 1.14,
+"carrierSpeed": 4.99,
+"defSpeed": 5.28,
+"closing": 2.49,
+"defSideways": 0.94,
+"defMovingAway": 0,
+"stam": 88
+},
+"closestDuringStep": 0.95,
+"contactDist": 0.89,
+"out": "beaten"
+},
+{
+"id": 12,
+"frame": 3690,
+"t": 57.05,
+"pid": 7,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.7,
+"dM": 2.06,
+"angle": "side",
+"ballToFoot": 0.9,
+"carrierSpeed": 6.32,
+"defSpeed": 3.52,
+"closing": 3.41,
+"defSideways": 2.17,
+"defMovingAway": 0,
+"stam": 90
+},
+"closestDuringStep": 1.17,
+"contactDist": 1.1,
+"out": "beaten"
+},
+{
+"id": 12,
+"frame": 19206,
+"t": 240.7,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.15,
+"dM": 1.32,
+"angle": "side",
+"ballToFoot": 0.61,
+"carrierSpeed": 3.22,
+"defSpeed": 2.26,
+"closing": -1.3,
+"defSideways": 2.11,
+"defMovingAway": 0,
+"stam": 74
+},
+"closestDuringStep": 1.35,
+"contactDist": 1.22,
+"out": "beaten"
+},
+{
+"id": 12,
+"frame": 19353,
+"t": 243.15,
+"pid": 6,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.28,
+"dM": 1.62,
+"angle": "side",
+"ballToFoot": 0.66,
+"carrierSpeed": 3.79,
+"defSpeed": 2.01,
+"closing": -0.31,
+"defSideways": 1.98,
+"defMovingAway": 0,
+"stam": 76
+},
+"closestDuringStep": 1.12,
+"contactDist": 1.1,
+"out": "beaten"
+},
+{
+"id": 13,
+"frame": 2500,
+"t": 37.2,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.97,
+"dM": 1.74,
+"angle": "behind",
+"ballToFoot": 1.23,
+"carrierSpeed": 3.89,
+"defSpeed": 8.54,
+"closing": 5.21,
+"defSideways": 6.57,
+"defMovingAway": 0,
+"stam": 94
+},
+"closestDuringStep": 0.54,
+"contactDist": 0.49,
+"out": "ball_already_gone"
+},
+{
+"id": 13,
+"frame": 6447,
+"t": 102.98,
+"pid": 107,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 0.89,
+"dM": 2.38,
+"angle": "side",
+"ballToFoot": 2.71,
+"carrierSpeed": 0.37,
+"defSpeed": 3.49,
+"closing": -5.68,
+"defSideways": 0.23,
+"defMovingAway": 0,
+"stam": 80
+},
+"closestDuringStep": 1.23,
+"contactDist": 0.98,
+"out": "beaten"
+},
+{
+"id": 13,
+"frame": 8940,
+"t": 140.22,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.01,
+"dM": 0.81,
+"angle": "behind",
+"ballToFoot": 0.5,
+"carrierSpeed": 2.29,
+"defSpeed": 7.52,
+"closing": 1.72,
+"defSideways": 4.84,
+"defMovingAway": 0,
+"stam": 84
+},
+"out": "state_changed"
+},
+{
+"id": 13,
+"frame": 12099,
+"t": 169.88,
+"pid": 10,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.16,
+"dM": 1.13,
+"angle": "behind",
+"ballToFoot": 0.57,
+"carrierSpeed": 1.63,
+"defSpeed": 4.93,
+"closing": -0.16,
+"defSideways": 3.11,
+"defMovingAway": 0,
+"stam": 80
+},
+"closestDuringStep": 1.15,
+"contactDist": 1.09,
+"out": "beaten"
+},
+{
+"id": 13,
+"frame": 16397,
+"t": 213.63,
+"pid": 8,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.64,
+"dM": 0.78,
+"angle": "front",
+"ballToFoot": 0.59,
+"carrierSpeed": 3.63,
+"defSpeed": 5.21,
+"closing": 10.43,
+"defSideways": 4.64,
+"defMovingAway": 0,
+"stam": 72
+},
+"closestDuringStep": 0.32,
+"contactDist": 0.28,
+"out": "beaten"
+},
+{
+"id": 13,
+"frame": 16596,
+"t": 216.95,
+"pid": 109,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.96,
+"dM": 1.83,
+"angle": "front",
+"ballToFoot": 0.89,
+"carrierSpeed": 2.97,
+"defSpeed": 7.05,
+"closing": 6.53,
+"defSideways": 6.3,
+"defMovingAway": 0,
+"stam": 69
+},
+"closestDuringStep": 0.73,
+"contactDist": 0.75,
+"out": "won"
+},
+{
+"id": 14,
+"frame": 1124,
+"t": 17.45,
+"pid": 8,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.23,
+"dM": 1.14,
+"angle": "side",
+"ballToFoot": 0.64,
+"carrierSpeed": 6.17,
+"defSpeed": 5.83,
+"closing": 2.17,
+"defSideways": 0.28,
+"defMovingAway": 0,
+"stam": 96
+},
+"closestDuringStep": 1.29,
+"contactDist": 1.13,
+"out": "won"
+},
+{
+"id": 14,
+"frame": 5207,
+"t": 66.03,
+"pid": 106,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.17,
+"dM": 0.78,
+"angle": "behind",
+"ballToFoot": 0.65,
+"carrierSpeed": 6.3,
+"defSpeed": 7.5,
+"closing": -0.99,
+"defSideways": 4.35,
+"defMovingAway": 0,
+"stam": 90
+},
+"closestDuringStep": 1.32,
+"contactDist": 1.13,
+"out": "beaten"
+},
+{
+"id": 14,
+"frame": 6749,
+"t": 90.07,
+"pid": 9,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.95,
+"dM": 2.85,
+"angle": "behind",
+"ballToFoot": 2.42,
+"carrierSpeed": 1.1,
+"defSpeed": 8.38,
+"closing": 6.8,
+"defSideways": 7.2,
+"defMovingAway": 0,
+"stam": 81
+},
+"closestDuringStep": 0.94,
+"contactDist": 0.87,
+"out": "poked_loose"
+},
+{
+"id": 14,
+"frame": 7506,
+"t": 102.68,
+"pid": 110,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.02,
+"dM": 0.87,
+"angle": "side",
+"ballToFoot": 0.81,
+"carrierSpeed": 4.31,
+"defSpeed": 4.76,
+"closing": 3.1,
+"defSideways": 4.76,
+"defMovingAway": 0.09,
+"stam": 82
+},
+"closestDuringStep": 0.66,
+"contactDist": 0.62,
+"out": "poked_loose"
+},
+{
+"id": 14,
+"frame": 10949,
+"t": 136.28,
+"pid": 8,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.33,
+"dM": 0.95,
+"angle": "behind",
+"ballToFoot": 0.59,
+"carrierSpeed": 5.35,
+"defSpeed": 6.15,
+"closing": 2.54,
+"defSideways": 4.29,
+"defMovingAway": 0,
+"stam": 85
+},
+"closestDuringStep": 1.41,
+"contactDist": 1.51,
+"out": "missed_out_of_reach"
+},
+{
+"id": 14,
+"frame": 16185,
+"t": 216.55,
+"pid": 9,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.12,
+"dM": 1.69,
+"angle": "side",
+"ballToFoot": 0.75,
+"carrierSpeed": 5.2,
+"defSpeed": 4.33,
+"closing": 5.56,
+"defSideways": 3.55,
+"defMovingAway": 0,
+"stam": 67
+},
+"closestDuringStep": 0.8,
+"contactDist": 0.79,
+"out": "beaten"
+},
+{
+"id": 15,
+"frame": 4715,
+"t": 52.7,
+"pid": 109,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.96,
+"dM": 1.83,
+"angle": "behind",
+"ballToFoot": 1.34,
+"carrierSpeed": 3.93,
+"defSpeed": 8.48,
+"closing": 4.43,
+"defSideways": 6.28,
+"defMovingAway": 0,
+"stam": 89
+},
+"closestDuringStep": 0.85,
+"contactDist": 0.84,
+"out": "won"
+},
+{
+"id": 16,
+"frame": 3232,
+"t": 33.12,
+"pid": 2,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.97,
+"dM": 1.8,
+"angle": "side",
+"ballToFoot": 0.9,
+"carrierSpeed": 3.88,
+"defSpeed": 3.4,
+"closing": 3.93,
+"defSideways": 3.4,
+"defMovingAway": 0.04,
+"stam": 97
+},
+"closestDuringStep": 0.42,
+"contactDist": 0.4,
+"out": "won"
+},
+{
+"id": 16,
+"frame": 3637,
+"t": 39.87,
+"pid": 107,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.08,
+"dM": 1.53,
+"angle": "front",
+"ballToFoot": 0.95,
+"carrierSpeed": 6.36,
+"defSpeed": 3.44,
+"closing": 2.74,
+"defSideways": 1.46,
+"defMovingAway": 0,
+"stam": 92
+},
+"closestDuringStep": 1.08,
+"contactDist": 1.03,
+"out": "won"
+},
+{
+"id": 16,
+"frame": 8043,
+"t": 111.58,
+"pid": 9,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.24,
+"dM": 2.33,
+"angle": "behind",
+"ballToFoot": 1.5,
+"carrierSpeed": 4.43,
+"defSpeed": 8.3,
+"closing": -0.64,
+"defSideways": 5.11,
+"defMovingAway": 0,
+"stam": 74
+},
+"closestDuringStep": 1.4,
+"contactDist": 1.19,
+"out": "beaten"
+},
+{
+"id": 16,
+"frame": 15345,
+"t": 206.18,
+"pid": 5,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.51,
+"dM": 2.52,
+"angle": "behind",
+"ballToFoot": 1.67,
+"carrierSpeed": 2.91,
+"defSpeed": 6.32,
+"closing": 3.94,
+"defSideways": 5.32,
+"defMovingAway": 0,
+"stam": 74
+},
+"closestDuringStep": 1.32,
+"contactDist": 1.92,
+"out": "missed_out_of_reach"
+},
+{
+"id": 17,
+"frame": 3703,
+"t": 57.12,
+"pid": 109,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.96,
+"dM": 1.79,
+"angle": "front",
+"ballToFoot": 0.83,
+"carrierSpeed": 3.8,
+"defSpeed": 6.66,
+"closing": 10.68,
+"defSideways": 3.59,
+"defMovingAway": 0,
+"stam": 87
+},
+"closestDuringStep": 0.45,
+"contactDist": 0.43,
+"out": "beaten"
+},
+{
+"id": 17,
+"frame": 3980,
+"t": 61.73,
+"pid": 9,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.02,
+"dM": 1.16,
+"angle": "side",
+"ballToFoot": 0.78,
+"carrierSpeed": 6.36,
+"defSpeed": 5.75,
+"closing": 1.21,
+"defSideways": 2.93,
+"defMovingAway": 0,
+"stam": 87
+},
+"closestDuringStep": 0.4,
+"contactDist": 0.44,
+"out": "ball_already_gone"
+},
+{
+"id": 17,
+"frame": 5885,
+"t": 93.48,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.03,
+"dM": 2.6,
+"angle": "side",
+"ballToFoot": 1.89,
+"carrierSpeed": 3.47,
+"defSpeed": 4.27,
+"closing": 4.12,
+"defSideways": 3.13,
+"defMovingAway": 0,
+"stam": 80
+},
+"closestDuringStep": 1.09,
+"contactDist": 0.98,
+"out": "won"
+},
+{
+"id": 17,
+"frame": 6979,
+"t": 109.05,
+"pid": 2,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.15,
+"dM": 1.74,
+"angle": "side",
+"ballToFoot": 0.91,
+"carrierSpeed": 7.64,
+"defSpeed": 7.79,
+"closing": -0.24,
+"defSideways": 3.62,
+"defMovingAway": 0,
+"stam": 83
+},
+"closestDuringStep": 1.39,
+"contactDist": 1.13,
+"out": "beaten"
+},
+{
+"id": 17,
+"frame": 7917,
+"t": 121.37,
+"pid": 9,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.21,
+"dM": 1.82,
+"angle": "front",
+"ballToFoot": 1.3,
+"carrierSpeed": 5.55,
+"defSpeed": 2.96,
+"closing": 4.88,
+"defSideways": 0.43,
+"defMovingAway": 0,
+"stam": 75
+},
+"closestDuringStep": 1.15,
+"contactDist": 1.11,
+"out": "won"
+},
+{
+"id": 18,
+"frame": 12187,
+"t": 155.13,
+"pid": 2,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.04,
+"dM": 1.16,
+"angle": "side",
+"ballToFoot": 0.77,
+"carrierSpeed": 5.26,
+"defSpeed": 2.2,
+"closing": -0.59,
+"defSideways": 0.41,
+"defMovingAway": 0,
+"stam": 92
+},
+"closestDuringStep": 1.2,
+"contactDist": 1.05,
+"out": "won"
+},
+{
+"id": 19,
+"frame": 3095,
+"t": 26.82,
+"pid": 10,
+"src": "ai",
+"why": [
+"reach_no_double_count"
+],
+"decide": {
+"dB": 1.18,
+"dM": 0.93,
+"angle": "front",
+"ballToFoot": 0.88,
+"carrierSpeed": 7.72,
+"defSpeed": 1.36,
+"closing": 2.04,
+"defSideways": 1.15,
+"defMovingAway": 0,
+"stam": 96
+},
+"closestDuringStep": 1.18,
+"contactDist": 1.14,
+"out": "won"
+},
+{
+"id": 19,
+"frame": 4241,
+"t": 45.92,
+"pid": 109,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.83,
+"dM": 2.26,
+"angle": "behind",
+"ballToFoot": 1.53,
+"carrierSpeed": 3.02,
+"defSpeed": 8.5,
+"closing": 10.28,
+"defSideways": 4.48,
+"defMovingAway": 0,
+"stam": 91
+},
+"closestDuringStep": 0.39,
+"contactDist": 0.41,
+"out": "won"
+},
+{
+"id": 19,
+"frame": 4808,
+"t": 55.37,
+"pid": 109,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.65,
+"dM": 1.71,
+"angle": "front",
+"ballToFoot": 2.06,
+"carrierSpeed": 0,
+"defSpeed": 4.31,
+"closing": 29.97,
+"defSideways": 3.1,
+"defMovingAway": 0,
+"stam": 88
+},
+"closestDuringStep": 1.27,
+"contactDist": 0.63,
+"out": "won"
+},
+{
+"id": 19,
+"frame": 6700,
+"t": 86.9,
+"pid": 9,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.39,
+"dM": 0.78,
+"angle": "side",
+"ballToFoot": 1.15,
+"carrierSpeed": 7.24,
+"defSpeed": 7.37,
+"closing": 1.95,
+"defSideways": 2.34,
+"defMovingAway": 0,
+"stam": 81
+},
+"closestDuringStep": 1.4,
+"contactDist": 1.4,
+"out": "missed_out_of_reach"
+},
+{
+"id": 19,
+"frame": 8919,
+"t": 123.88,
+"pid": 109,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.4,
+"dM": 0.89,
+"angle": "behind",
+"ballToFoot": 0.68,
+"carrierSpeed": 2.19,
+"defSpeed": 2.69,
+"closing": 5.73,
+"defSideways": 2.41,
+"defMovingAway": 0,
+"stam": 73
+},
+"closestDuringStep": 1.21,
+"contactDist": 1.23,
+"out": "beaten"
+},
+{
+"id": 19,
+"frame": 12660,
+"t": 178.3,
+"pid": 10,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.99,
+"dM": 1.37,
+"angle": "side",
+"ballToFoot": 0.47,
+"carrierSpeed": 1.1,
+"defSpeed": 5.43,
+"closing": 1.16,
+"defSideways": 4.22,
+"defMovingAway": 0,
+"stam": 76
+},
+"closestDuringStep": 1,
+"contactDist": 0.95,
+"out": "beaten"
+},
+{
+"id": 19,
+"frame": 12785,
+"t": 180.38,
+"pid": 7,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.85,
+"dM": 1.18,
+"angle": "side",
+"ballToFoot": 1.49,
+"carrierSpeed": 6.98,
+"defSpeed": 3.5,
+"closing": 12.01,
+"defSideways": 3.28,
+"defMovingAway": 0,
+"stam": 82
+},
+"closestDuringStep": 0.36,
+"contactDist": 0.36,
+"out": "won"
+},
+{
+"id": 19,
+"frame": 13618,
+"t": 194.27,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.33,
+"dM": 3.11,
+"angle": "behind",
+"ballToFoot": 2.22,
+"carrierSpeed": 3.87,
+"defSpeed": 6.68,
+"closing": 6.12,
+"defSideways": 5.36,
+"defMovingAway": 0,
+"stam": 83
+},
+"closestDuringStep": 1.26,
+"contactDist": 1.21,
+"out": "beaten"
+},
+{
+"id": 19,
+"frame": 16501,
+"t": 239,
+"pid": 110,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.22,
+"dM": 0.78,
+"angle": "behind",
+"ballToFoot": 0.61,
+"carrierSpeed": 6.19,
+"defSpeed": 7.3,
+"closing": -0.49,
+"defSideways": 5.03,
+"defMovingAway": 0,
+"stam": 68
+},
+"closestDuringStep": 1.36,
+"contactDist": 1.19,
+"out": "beaten"
+},
+{
+"id": 20,
+"frame": 2370,
+"t": 34.8,
+"pid": 108,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.22,
+"dM": 1.19,
+"angle": "side",
+"ballToFoot": 0.3,
+"carrierSpeed": 0.94,
+"defSpeed": 7.56,
+"closing": -1.62,
+"defSideways": 3.12,
+"defMovingAway": 0,
+"stam": 93
+},
+"closestDuringStep": 1.18,
+"contactDist": 1.11,
+"out": "beaten"
+},
+{
+"id": 20,
+"frame": 2729,
+"t": 40.78,
+"pid": 110,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.71,
+"dM": 2.57,
+"angle": "behind",
+"ballToFoot": 1.16,
+"carrierSpeed": 4.6,
+"defSpeed": 4.36,
+"closing": 6.17,
+"defSideways": 3.19,
+"defMovingAway": 0,
+"stam": 92
+},
+"closestDuringStep": 1.59,
+"contactDist": 3.09,
+"out": "missed_out_of_reach"
+},
+{
+"id": 20,
+"frame": 3363,
+"t": 51.35,
+"pid": 6,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.34,
+"dM": 1.67,
+"angle": "front",
+"ballToFoot": 0.88,
+"carrierSpeed": 6.16,
+"defSpeed": 2.73,
+"closing": 3.9,
+"defSideways": 2.01,
+"defMovingAway": 0,
+"stam": 92
+},
+"closestDuringStep": 0.8,
+"contactDist": 0.74,
+"out": "beaten"
+},
+{
+"id": 20,
+"frame": 9612,
+"t": 124.72,
+"pid": 104,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.84,
+"dM": 1.31,
+"angle": "front",
+"ballToFoot": 1.11,
+"carrierSpeed": 6.23,
+"defSpeed": 7.51,
+"closing": 9.8,
+"defSideways": 3.26,
+"defMovingAway": 0,
+"stam": 84
+},
+"closestDuringStep": 0.28,
+"contactDist": 0.28,
+"out": "won"
+},
+{
+"id": 20,
+"frame": 11172,
+"t": 146.4,
+"pid": 7,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.93,
+"dM": 1.96,
+"angle": "side",
+"ballToFoot": 1.08,
+"carrierSpeed": 5.91,
+"defSpeed": 7.59,
+"closing": 7.63,
+"defSideways": 5.66,
+"defMovingAway": 0,
+"stam": 90
+},
+"closestDuringStep": 0.42,
+"contactDist": 0.34,
+"out": "won"
+},
+{
+"id": 20,
+"frame": 11182,
+"t": 146.57,
+"pid": 108,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.06,
+"dM": 1.34,
+"angle": "side",
+"ballToFoot": 0.65,
+"carrierSpeed": 5.19,
+"defSpeed": 4.53,
+"closing": 0.64,
+"defSideways": 4.45,
+"defMovingAway": 0,
+"stam": 86
+},
+"closestDuringStep": 0.73,
+"contactDist": 0.69,
+"out": "beaten"
+},
+{
+"id": 21,
+"frame": 403,
+"t": 5.43,
+"pid": 10,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.71,
+"dM": 1.47,
+"angle": "front",
+"ballToFoot": 1.78,
+"carrierSpeed": 1.28,
+"defSpeed": 7.75,
+"closing": 15.61,
+"defSideways": 5.45,
+"defMovingAway": 0,
+"stam": 99
+},
+"closestDuringStep": 0.76,
+"contactDist": 0.53,
+"out": "beaten"
+},
+{
+"id": 21,
+"frame": 4415,
+"t": 72.3,
+"pid": 102,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.26,
+"dM": 1.72,
+"angle": "side",
+"ballToFoot": 1.49,
+"carrierSpeed": 1.28,
+"defSpeed": 2.33,
+"closing": 0.06,
+"defSideways": 0.27,
+"defMovingAway": 0,
+"stam": 90
+},
+"closestDuringStep": 0.77,
+"contactDist": 0.73,
+"out": "won"
+},
+{
+"id": 21,
+"frame": 5816,
+"t": 76.18,
+"pid": 9,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.41,
+"dM": 1.73,
+"angle": "front",
+"ballToFoot": 1.23,
+"carrierSpeed": 6.34,
+"defSpeed": 3.4,
+"closing": 1.72,
+"defSideways": 1.35,
+"defMovingAway": 0,
+"stam": 83
+},
+"closestDuringStep": 1.11,
+"contactDist": 1.03,
+"out": "won"
+},
+{
+"id": 21,
+"frame": 8154,
+"t": 115.15,
+"pid": 8,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.27,
+"dM": 1.59,
+"angle": "side",
+"ballToFoot": 0.88,
+"carrierSpeed": 6.18,
+"defSpeed": 3.85,
+"closing": 2.21,
+"defSideways": 1.37,
+"defMovingAway": 0,
+"stam": 78
+},
+"closestDuringStep": 1.29,
+"contactDist": 1.2,
+"out": "beaten"
+},
+{
+"id": 21,
+"frame": 11091,
+"t": 153.03,
+"pid": 3,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.24,
+"dM": 1.63,
+"angle": "side",
+"ballToFoot": 0.91,
+"carrierSpeed": 5.35,
+"defSpeed": 2.9,
+"closing": 1.71,
+"defSideways": 0.88,
+"defMovingAway": 0,
+"stam": 91
+},
+"closestDuringStep": 1.28,
+"contactDist": 1.21,
+"out": "beaten"
+},
+{
+"id": 21,
+"frame": 17222,
+"t": 231.03,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.42,
+"dM": 1.87,
+"angle": "front",
+"ballToFoot": 1.05,
+"carrierSpeed": 5.8,
+"defSpeed": 3.39,
+"closing": 4.93,
+"defSideways": 1.77,
+"defMovingAway": 0,
+"stam": 78
+},
+"closestDuringStep": 0.74,
+"contactDist": 0.71,
+"out": "ball_already_gone"
+},
+{
+"id": 22,
+"frame": 977,
+"t": 13.45,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.97,
+"dM": 3.42,
+"angle": "behind",
+"ballToFoot": 2.63,
+"carrierSpeed": 0.91,
+"defSpeed": 8.58,
+"closing": 17.5,
+"defSideways": 4.6,
+"defMovingAway": 0,
+"stam": 97
+},
+"closestDuringStep": 0.57,
+"contactDist": 0.56,
+"out": "poked_loose"
+},
+{
+"id": 22,
+"frame": 4046,
+"t": 61.33,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.74,
+"dM": 1.41,
+"angle": "front",
+"ballToFoot": 0.72,
+"carrierSpeed": 2.41,
+"defSpeed": 6.96,
+"closing": 7.75,
+"defSideways": 3.35,
+"defMovingAway": 0,
+"stam": 87
+},
+"closestDuringStep": 0.25,
+"contactDist": 0.23,
+"out": "won"
+},
+{
+"id": 22,
+"frame": 7070,
+"t": 92.27,
+"pid": 102,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.32,
+"dM": 0.78,
+"angle": "behind",
+"ballToFoot": 0.91,
+"carrierSpeed": 3.36,
+"defSpeed": 4.57,
+"closing": -0.1,
+"defSideways": 1.94,
+"defMovingAway": 0,
+"stam": 89
+},
+"closestDuringStep": 1.15,
+"contactDist": 1.1,
+"out": "beaten"
+},
+{
+"id": 22,
+"frame": 7954,
+"t": 107,
+"pid": 109,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.09,
+"dM": 2.1,
+"angle": "side",
+"ballToFoot": 1.16,
+"carrierSpeed": 3.87,
+"defSpeed": 3.44,
+"closing": -0.11,
+"defSideways": 0.98,
+"defMovingAway": 0,
+"stam": 78
+},
+"closestDuringStep": 1.35,
+"contactDist": 1.13,
+"out": "beaten"
+},
+{
+"id": 22,
+"frame": 8069,
+"t": 108.92,
+"pid": 5,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.78,
+"dM": 0.83,
+"angle": "front",
+"ballToFoot": 0.69,
+"carrierSpeed": 5.34,
+"defSpeed": 5.89,
+"closing": 4.3,
+"defSideways": 3.22,
+"defMovingAway": 0,
+"stam": 82
+},
+"closestDuringStep": 0.69,
+"contactDist": 0.64,
+"out": "won"
+},
+{
+"id": 22,
+"frame": 10038,
+"t": 137.42,
+"pid": 105,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.2,
+"dM": 2.82,
+"angle": "behind",
+"ballToFoot": 1.98,
+"carrierSpeed": 3.33,
+"defSpeed": 6.68,
+"closing": 3.79,
+"defSideways": 5.16,
+"defMovingAway": 0,
+"stam": 93
+},
+"closestDuringStep": 1.3,
+"contactDist": 1.14,
+"out": "beaten"
+},
+{
+"id": 22,
+"frame": 13418,
+"t": 170.27,
+"pid": 108,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.93,
+"dM": 0.86,
+"angle": "side",
+"ballToFoot": 1.8,
+"carrierSpeed": 1,
+"defSpeed": 5.86,
+"closing": -2.13,
+"defSideways": 5.68,
+"defMovingAway": 0,
+"stam": 82
+},
+"closestDuringStep": 0.4,
+"contactDist": 0.38,
+"out": "won"
+},
+{
+"id": 23,
+"frame": 963,
+"t": 14.77,
+"pid": 107,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.22,
+"dM": 0.78,
+"angle": "side",
+"ballToFoot": 0.6,
+"carrierSpeed": 7.31,
+"defSpeed": 8.49,
+"closing": -0.78,
+"defSideways": 5.34,
+"defMovingAway": 0,
+"stam": 97
+},
+"closestDuringStep": 1.38,
+"contactDist": 1.18,
+"out": "beaten"
+},
+{
+"id": 23,
+"frame": 7380,
+"t": 110.42,
+"pid": 5,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.51,
+"dM": 1.84,
+"angle": "front",
+"ballToFoot": 1.12,
+"carrierSpeed": 5.84,
+"defSpeed": 3.61,
+"closing": 3.17,
+"defSideways": 1.49,
+"defMovingAway": 0,
+"stam": 79
+},
+"closestDuringStep": 0.78,
+"contactDist": 0.73,
+"out": "won"
+},
+{
+"id": 23,
+"frame": 8425,
+"t": 124.53,
+"pid": 109,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.88,
+"dM": 2.25,
+"angle": "behind",
+"ballToFoot": 1.49,
+"carrierSpeed": 3.43,
+"defSpeed": 8.28,
+"closing": 9.61,
+"defSideways": 3.94,
+"defMovingAway": 0,
+"stam": 73
+},
+"closestDuringStep": 0.44,
+"contactDist": 0.36,
+"out": "won"
+},
+{
+"id": 23,
+"frame": 16498,
+"t": 220.03,
+"pid": 101,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.87,
+"dM": 0.98,
+"angle": "side",
+"ballToFoot": 0.58,
+"carrierSpeed": 6.16,
+"defSpeed": 7.36,
+"closing": 3.34,
+"defSideways": 6.6,
+"defMovingAway": 0,
+"stam": 87
+},
+"closestDuringStep": 0.82,
+"contactDist": 0.76,
+"out": "beaten"
+},
+{
+"id": 23,
+"frame": 18010,
+"t": 245.23,
+"pid": 9,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.34,
+"dM": 0.87,
+"angle": "side",
+"ballToFoot": 0.56,
+"carrierSpeed": 5.17,
+"defSpeed": 6.12,
+"closing": 0.62,
+"defSideways": 1.28,
+"defMovingAway": 0,
+"stam": 91
+},
+"closestDuringStep": 1.45,
+"contactDist": 1.53,
+"out": "missed_out_of_reach"
+},
+{
+"id": 24,
+"frame": 5407,
+"t": 79.33,
+"pid": 5,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.32,
+"dM": 1.75,
+"angle": "front",
+"ballToFoot": 1.14,
+"carrierSpeed": 6.15,
+"defSpeed": 3.11,
+"closing": 3.7,
+"defSideways": 1.34,
+"defMovingAway": 0,
+"stam": 84
+},
+"closestDuringStep": 1.12,
+"contactDist": 1.05,
+"out": "beaten"
+},
+{
+"id": 25,
+"frame": 1524,
+"t": 20.8,
+"pid": 108,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.95,
+"dM": 1.43,
+"angle": "behind",
+"ballToFoot": 0.5,
+"carrierSpeed": 1.44,
+"defSpeed": 6.56,
+"closing": 5.75,
+"defSideways": 4.92,
+"defMovingAway": 0,
+"stam": 96
+},
+"closestDuringStep": 0.59,
+"contactDist": 0.56,
+"out": "ball_already_gone"
+},
+{
+"id": 25,
+"frame": 6842,
+"t": 87.12,
+"pid": 8,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.95,
+"dM": 1.79,
+"angle": "front",
+"ballToFoot": 0.84,
+"carrierSpeed": 4.14,
+"defSpeed": 8.2,
+"closing": 10.03,
+"defSideways": 6.09,
+"defMovingAway": 0,
+"stam": 84
+},
+"closestDuringStep": 0.16,
+"contactDist": 0.18,
+"out": "beaten"
+},
+{
+"id": 25,
+"frame": 12023,
+"t": 149.68,
+"pid": 105,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.1,
+"dM": 0.82,
+"angle": "side",
+"ballToFoot": 0.6,
+"carrierSpeed": 6.02,
+"defSpeed": 6.44,
+"closing": 0.86,
+"defSideways": 3.96,
+"defMovingAway": 0,
+"stam": 90
+},
+"closestDuringStep": 1.16,
+"contactDist": 1.04,
+"out": "beaten"
+},
+{
+"id": 25,
+"frame": 20256,
+"t": 247.97,
+"pid": 7,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.69,
+"dM": 1.76,
+"angle": "side",
+"ballToFoot": 0.91,
+"carrierSpeed": 4.83,
+"defSpeed": 4.18,
+"closing": 2.57,
+"defSideways": 2.07,
+"defMovingAway": 0,
+"stam": 72
+},
+"closestDuringStep": 1.56,
+"contactDist": 1.71,
+"out": "missed_out_of_reach"
+},
+{
+"id": 26,
+"frame": 6483,
+"t": 95.23,
+"pid": 109,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.21,
+"dM": 1.85,
+"angle": "behind",
+"ballToFoot": 1.29,
+"carrierSpeed": 3.39,
+"defSpeed": 8.36,
+"closing": 3.55,
+"defSideways": 6.75,
+"defMovingAway": 0,
+"stam": 79
+},
+"closestDuringStep": 1.15,
+"contactDist": 1.11,
+"out": "beaten"
+},
+{
+"id": 26,
+"frame": 7517,
+"t": 112.47,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_40pct_extension",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.01,
+"dM": 1.63,
+"angle": "side",
+"ballToFoot": 0.66,
+"carrierSpeed": 5.9,
+"defSpeed": 3.87,
+"closing": 4.31,
+"defSideways": 1.48,
+"defMovingAway": 0,
+"stam": 79
+},
+"closestDuringStep": 1.32,
+"contactDist": 1.01,
+"out": "won"
+},
+{
+"id": 26,
+"frame": 10231,
+"t": 149.93,
+"pid": 6,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.93,
+"dM": 1.41,
+"angle": "side",
+"ballToFoot": 1,
+"carrierSpeed": 6.41,
+"defSpeed": 5.52,
+"closing": 9.87,
+"defSideways": 4.27,
+"defMovingAway": 0,
+"stam": 91
+},
+"closestDuringStep": 0.42,
+"contactDist": 0.34,
+"out": "beaten"
+},
+{
+"id": 27,
+"frame": 829,
+"t": 12.53,
+"pid": 109,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.07,
+"dM": 3.41,
+"angle": "behind",
+"ballToFoot": 2.84,
+"carrierSpeed": 4.72,
+"defSpeed": 8.58,
+"closing": 8.42,
+"defSideways": 6.24,
+"defMovingAway": 0,
+"stam": 98
+},
+"closestDuringStep": 0.95,
+"contactDist": 0.92,
+"out": "beaten"
+},
+{
+"id": 27,
+"frame": 1291,
+"t": 20.23,
+"pid": 7,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.35,
+"dM": 1.48,
+"angle": "side",
+"ballToFoot": 0.49,
+"carrierSpeed": 5.97,
+"defSpeed": 3.18,
+"closing": -0.79,
+"defSideways": 0.62,
+"defMovingAway": 0,
+"stam": 97
+},
+"closestDuringStep": 1.56,
+"contactDist": 2.1,
+"out": "missed_out_of_reach"
+},
+{
+"id": 27,
+"frame": 1882,
+"t": 30.08,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.47,
+"dM": 1.96,
+"angle": "front",
+"ballToFoot": 1.1,
+"carrierSpeed": 6.34,
+"defSpeed": 3.43,
+"closing": 2.72,
+"defSideways": 1.63,
+"defMovingAway": 0,
+"stam": 95
+},
+"closestDuringStep": 1.12,
+"contactDist": 1.06,
+"out": "ball_already_gone"
+},
+{
+"id": 27,
+"frame": 2823,
+"t": 45.77,
+"pid": 7,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.2,
+"dM": 1.75,
+"angle": "front",
+"ballToFoot": 1.05,
+"carrierSpeed": 6.15,
+"defSpeed": 3.79,
+"closing": 3.97,
+"defSideways": 1.23,
+"defMovingAway": 0,
+"stam": 93
+},
+"closestDuringStep": 1.2,
+"contactDist": 1.13,
+"out": "beaten"
+},
+{
+"id": 27,
+"frame": 3949,
+"t": 64.53,
+"pid": 110,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.93,
+"dM": 1.5,
+"angle": "front",
+"ballToFoot": 0.57,
+"carrierSpeed": 4.2,
+"defSpeed": 5.82,
+"closing": 11.16,
+"defSideways": 4.88,
+"defMovingAway": 0,
+"stam": 87
+},
+"closestDuringStep": 0.48,
+"contactDist": 0.5,
+"out": "poked_loose"
+},
+{
+"id": 27,
+"frame": 4836,
+"t": 79.32,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.98,
+"dM": 2.17,
+"angle": "behind",
+"ballToFoot": 1.62,
+"carrierSpeed": 1.68,
+"defSpeed": 8.22,
+"closing": 6.46,
+"defSideways": 6.4,
+"defMovingAway": 0,
+"stam": 81
+},
+"closestDuringStep": 0.71,
+"contactDist": 0.72,
+"out": "beaten"
+},
+{
+"id": 27,
+"frame": 15576,
+"t": 224.28,
+"pid": 10,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.42,
+"dM": 2.23,
+"angle": "behind",
+"ballToFoot": 0.83,
+"carrierSpeed": 5.08,
+"defSpeed": 4.67,
+"closing": 2.08,
+"defSideways": 1.96,
+"defMovingAway": 0,
+"stam": 68
+},
+"closestDuringStep": 0.73,
+"contactDist": 0.67,
+"out": "poked_loose"
+},
+{
+"id": 28,
+"frame": 6188,
+"t": 95.27,
+"pid": 106,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.29,
+"dM": 1.48,
+"angle": "side",
+"ballToFoot": 0.66,
+"carrierSpeed": 6.08,
+"defSpeed": 2.75,
+"closing": 2.23,
+"defSideways": 0.19,
+"defMovingAway": 0,
+"stam": 85
+},
+"closestDuringStep": 1.34,
+"contactDist": 1.24,
+"out": "beaten"
+},
+{
+"id": 28,
+"frame": 12019,
+"t": 165.35,
+"pid": 109,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.78,
+"dM": 1.44,
+"angle": "front",
+"ballToFoot": 0.67,
+"carrierSpeed": 2.96,
+"defSpeed": 7.14,
+"closing": 4.24,
+"defSideways": 5.09,
+"defMovingAway": 0,
+"stam": 77
+},
+"closestDuringStep": 0.65,
+"contactDist": 0.62,
+"out": "won"
+},
+{
+"id": 28,
+"frame": 17507,
+"t": 225.45,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.91,
+"dM": 1.56,
+"angle": "front",
+"ballToFoot": 0.85,
+"carrierSpeed": 3.51,
+"defSpeed": 7.77,
+"closing": 5.42,
+"defSideways": 7.52,
+"defMovingAway": 0,
+"stam": 98
+},
+"closestDuringStep": 0.8,
+"contactDist": 0.83,
+"out": "beaten"
+},
+{
+"id": 29,
+"frame": 5083,
+"t": 80.62,
+"pid": 7,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.28,
+"dM": 1.3,
+"angle": "side",
+"ballToFoot": 0.58,
+"carrierSpeed": 3.01,
+"defSpeed": 3.87,
+"closing": 6.05,
+"defSideways": 3.85,
+"defMovingAway": 0,
+"stam": 84
+},
+"closestDuringStep": 1.13,
+"contactDist": 1.14,
+"out": "beaten"
+},
+{
+"id": 29,
+"frame": 5286,
+"t": 84,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.13,
+"dM": 0.81,
+"angle": "behind",
+"ballToFoot": 0.58,
+"carrierSpeed": 4.13,
+"defSpeed": 5.08,
+"closing": 0.55,
+"defSideways": 3.14,
+"defMovingAway": 0,
+"stam": 79
+},
+"closestDuringStep": 1.04,
+"contactDist": 0.98,
+"out": "beaten"
+},
+{
+"id": 29,
+"frame": 11850,
+"t": 159.52,
+"pid": 109,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 0.61,
+"dM": 1.24,
+"angle": "behind",
+"ballToFoot": 1.75,
+"carrierSpeed": 1.87,
+"defSpeed": 6.07,
+"closing": 31.43,
+"defSideways": 2.38,
+"defMovingAway": 0,
+"stam": 78
+},
+"out": "state_changed"
+},
+{
+"id": 29,
+"frame": 16308,
+"t": 210.77,
+"pid": 108,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.4,
+"dM": 1.06,
+"angle": "front",
+"ballToFoot": 0.69,
+"carrierSpeed": 6.27,
+"defSpeed": 0.97,
+"closing": 1.37,
+"defSideways": 0.84,
+"defMovingAway": 0,
+"stam": 71
+},
+"closestDuringStep": 0.56,
+"contactDist": 0.54,
+"out": "won"
+},
+{
+"id": 29,
+"frame": 17249,
+"t": 221.62,
+"pid": 7,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.5,
+"dM": 1.5,
+"angle": "side",
+"ballToFoot": 0.6,
+"carrierSpeed": 5.28,
+"defSpeed": 4.19,
+"closing": 3.11,
+"defSideways": 0.81,
+"defMovingAway": 0,
+"stam": 73
+},
+"closestDuringStep": 1.42,
+"contactDist": 1.38,
+"out": "missed_out_of_reach"
+},
+{
+"id": 30,
+"frame": 6598,
+"t": 66.43,
+"pid": 105,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.96,
+"dM": 3.11,
+"angle": "behind",
+"ballToFoot": 2.37,
+"carrierSpeed": 3.32,
+"defSpeed": 5.39,
+"closing": 11.05,
+"defSideways": 3.63,
+"defMovingAway": 0,
+"stam": 91
+},
+"closestDuringStep": 0.7,
+"contactDist": 0.69,
+"out": "poked_loose"
+},
+{
+"id": 30,
+"frame": 9476,
+"t": 91.62,
+"pid": 7,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.12,
+"dM": 2.13,
+"angle": "front",
+"ballToFoot": 1.19,
+"carrierSpeed": 5.52,
+"defSpeed": 3.81,
+"closing": 4.49,
+"defSideways": 0.55,
+"defMovingAway": 0,
+"stam": 86
+},
+"closestDuringStep": 1.09,
+"contactDist": 1.03,
+"out": "won"
+},
+{
+"id": 30,
+"frame": 10691,
+"t": 108.65,
+"pid": 109,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.52,
+"dM": 2,
+"angle": "front",
+"ballToFoot": 1.22,
+"carrierSpeed": 6.23,
+"defSpeed": 3.13,
+"closing": 2.28,
+"defSideways": 0.38,
+"defMovingAway": 0,
+"stam": 80
+},
+"closestDuringStep": 0.84,
+"contactDist": 0.79,
+"out": "beaten"
+},
+{
+"id": 30,
+"frame": 11866,
+"t": 124.78,
+"pid": 107,
+"src": "ai",
+"why": [
+"reach_40pct_extension",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 0.88,
+"dM": 1.31,
+"angle": "side",
+"ballToFoot": 0.54,
+"carrierSpeed": 4.03,
+"defSpeed": 4.77,
+"closing": 15.04,
+"defSideways": 0.69,
+"defMovingAway": 0,
+"stam": 82
+},
+"closestDuringStep": 0.97,
+"contactDist": 0.78,
+"out": "beaten"
+},
+{
+"id": 30,
+"frame": 14444,
+"t": 163.43,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.61,
+"dM": 1.54,
+"angle": "side",
+"ballToFoot": 0.83,
+"carrierSpeed": 6.18,
+"defSpeed": 6.68,
+"closing": 0.74,
+"defSideways": 0.97,
+"defMovingAway": 0,
+"stam": 90
+},
+"closestDuringStep": 1.13,
+"contactDist": 1.05,
+"out": "poked_loose"
+},
+{
+"id": 30,
+"frame": 14558,
+"t": 165.33,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.92,
+"dM": 1.4,
+"angle": "front",
+"ballToFoot": 0.49,
+"carrierSpeed": 5.42,
+"defSpeed": 5.79,
+"closing": 12.55,
+"defSideways": 3.35,
+"defMovingAway": 0,
+"stam": 79
+},
+"closestDuringStep": 0.08,
+"contactDist": 0.14,
+"out": "won"
+},
+{
+"id": 30,
+"frame": 19875,
+"t": 224.52,
+"pid": 9,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 0.96,
+"dM": 1.47,
+"angle": "front",
+"ballToFoot": 0.56,
+"carrierSpeed": 3.28,
+"defSpeed": 3.67,
+"closing": 8.42,
+"defSideways": 0.92,
+"defMovingAway": 0,
+"stam": 96
+},
+"closestDuringStep": 0.37,
+"contactDist": 0.38,
+"out": "beaten"
+},
+{
+"id": 31,
+"frame": 543,
+"t": 7.77,
+"pid": 108,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.86,
+"dM": 1.64,
+"angle": "side",
+"ballToFoot": 0.81,
+"carrierSpeed": 2.31,
+"defSpeed": 4.38,
+"closing": 8.82,
+"defSideways": 3.09,
+"defMovingAway": 0,
+"stam": 99
+},
+"closestDuringStep": 0.74,
+"contactDist": 0.7,
+"out": "beaten"
+},
+{
+"id": 31,
+"frame": 5018,
+"t": 60.23,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.3,
+"dM": 2.01,
+"angle": "front",
+"ballToFoot": 1.06,
+"carrierSpeed": 5.61,
+"defSpeed": 1,
+"closing": 2.62,
+"defSideways": 0.62,
+"defMovingAway": 0,
+"stam": 90
+},
+"closestDuringStep": 1.01,
+"contactDist": 0.99,
+"out": "beaten"
+},
+{
+"id": 31,
+"frame": 6515,
+"t": 85.18,
+"pid": 106,
+"src": "ai",
+"why": [
+"reach_40pct_extension",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.02,
+"dM": 1.88,
+"angle": "front",
+"ballToFoot": 1.16,
+"carrierSpeed": 6.75,
+"defSpeed": 5.27,
+"closing": 1.03,
+"defSideways": 0.78,
+"defMovingAway": 0,
+"stam": 88
+},
+"closestDuringStep": 1.11,
+"contactDist": 0.97,
+"out": "won"
+},
+{
+"id": 31,
+"frame": 12313,
+"t": 154.72,
+"pid": 107,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.58,
+"dM": 1.74,
+"angle": "side",
+"ballToFoot": 0.94,
+"carrierSpeed": 4.53,
+"defSpeed": 4.42,
+"closing": 3.02,
+"defSideways": 2.53,
+"defMovingAway": 0,
+"stam": 89
+},
+"closestDuringStep": 0.83,
+"contactDist": 0.77,
+"out": "beaten"
+},
+{
+"id": 31,
+"frame": 13918,
+"t": 181.47,
+"pid": 108,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.28,
+"dM": 0.96,
+"angle": "side",
+"ballToFoot": 0.84,
+"carrierSpeed": 3.47,
+"defSpeed": 1.54,
+"closing": -0.19,
+"defSideways": 0.21,
+"defMovingAway": 0,
+"stam": 77
+},
+"closestDuringStep": 0.91,
+"contactDist": 0.89,
+"out": "beaten"
+},
+{
+"id": 31,
+"frame": 16429,
+"t": 223.32,
+"pid": 8,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.04,
+"dM": 0.78,
+"angle": "behind",
+"ballToFoot": 0.48,
+"carrierSpeed": 5.09,
+"defSpeed": 5.52,
+"closing": -1.97,
+"defSideways": 3.1,
+"defMovingAway": 0,
+"stam": 69
+},
+"closestDuringStep": 1.18,
+"contactDist": 1.03,
+"out": "beaten"
+},
+{
+"id": 31,
+"frame": 17407,
+"t": 239.62,
+"pid": 107,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.78,
+"dM": 3.1,
+"angle": "behind",
+"ballToFoot": 2.44,
+"carrierSpeed": 5.29,
+"defSpeed": 7.2,
+"closing": 13.16,
+"defSideways": 6.12,
+"defMovingAway": 0,
+"stam": 73
+},
+"closestDuringStep": 0.42,
+"contactDist": 0.48,
+"out": "won"
+},
+{
+"id": 31,
+"frame": 17547,
+"t": 241.95,
+"pid": 109,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.83,
+"dM": 1.56,
+"angle": "front",
+"ballToFoot": 0.74,
+"carrierSpeed": 3.34,
+"defSpeed": 7.84,
+"closing": 10.25,
+"defSideways": 3.4,
+"defMovingAway": 0,
+"stam": 61
+},
+"closestDuringStep": 0.29,
+"contactDist": 0.27,
+"out": "beaten"
+},
+{
+"id": 32,
+"frame": 1451,
+"t": 22.9,
+"pid": 9,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.33,
+"dM": 1.71,
+"angle": "side",
+"ballToFoot": 1.04,
+"carrierSpeed": 6.1,
+"defSpeed": 4.71,
+"closing": 2.27,
+"defSideways": 0.66,
+"defMovingAway": 0,
+"stam": 94
+},
+"closestDuringStep": 0.84,
+"contactDist": 0.77,
+"out": "poked_loose"
+},
+{
+"id": 32,
+"frame": 4449,
+"t": 72.87,
+"pid": 8,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.45,
+"dM": 1.65,
+"angle": "side",
+"ballToFoot": 0.73,
+"carrierSpeed": 5.03,
+"defSpeed": 3.62,
+"closing": 1.15,
+"defSideways": 1.32,
+"defMovingAway": 0,
+"stam": 84
+},
+"closestDuringStep": 1.21,
+"contactDist": 1.13,
+"out": "beaten"
+},
+{
+"id": 32,
+"frame": 7997,
+"t": 124.82,
+"pid": 110,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.15,
+"dM": 1.09,
+"angle": "side",
+"ballToFoot": 0.78,
+"carrierSpeed": 6.88,
+"defSpeed": 5.91,
+"closing": 1.29,
+"defSideways": 3.65,
+"defMovingAway": 0,
+"stam": 74
+},
+"closestDuringStep": 1.1,
+"contactDist": 1.07,
+"out": "beaten"
+},
+{
+"id": 32,
+"frame": 13787,
+"t": 213.38,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.45,
+"dM": 0.78,
+"angle": "behind",
+"ballToFoot": 0.84,
+"carrierSpeed": 5.74,
+"defSpeed": 5.76,
+"closing": -1.79,
+"defSideways": 5.76,
+"defMovingAway": 0,
+"stam": 67
+},
+"closestDuringStep": 0.54,
+"contactDist": 0.51,
+"out": "poked_loose"
+},
+{
+"id": 32,
+"frame": 14937,
+"t": 232.55,
+"pid": 7,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.39,
+"dM": 1.38,
+"angle": "side",
+"ballToFoot": 0.59,
+"carrierSpeed": 6.17,
+"defSpeed": 7.22,
+"closing": 1.99,
+"defSideways": 6.9,
+"defMovingAway": 0,
+"stam": 75
+},
+"closestDuringStep": 1.37,
+"contactDist": 1.49,
+"out": "missed_out_of_reach"
+},
+{
+"id": 33,
+"frame": 2223,
+"t": 32.57,
+"pid": 108,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.42,
+"dM": 1.64,
+"angle": "behind",
+"ballToFoot": 0.43,
+"carrierSpeed": 3.08,
+"defSpeed": 3.7,
+"closing": 1.27,
+"defSideways": 1.43,
+"defMovingAway": 0,
+"stam": 93
+},
+"closestDuringStep": 1.32,
+"contactDist": 1.94,
+"out": "missed_out_of_reach"
+},
+{
+"id": 33,
+"frame": 14744,
+"t": 193.72,
+"pid": 5,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.07,
+"dM": 1.78,
+"angle": "front",
+"ballToFoot": 1.27,
+"carrierSpeed": 5.79,
+"defSpeed": 3.35,
+"closing": -0.59,
+"defSideways": 0.72,
+"defMovingAway": 0,
+"stam": 78
+},
+"closestDuringStep": 1.4,
+"contactDist": 1.17,
+"out": "beaten"
+},
+{
+"id": 33,
+"frame": 15708,
+"t": 206.47,
+"pid": 10,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.31,
+"dM": 1.52,
+"angle": "front",
+"ballToFoot": 0.21,
+"carrierSpeed": 0.57,
+"defSpeed": 3.19,
+"closing": 1.45,
+"defSideways": 3.18,
+"defMovingAway": 0,
+"stam": 74
+},
+"closestDuringStep": 1.18,
+"contactDist": 1.19,
+"out": "beaten"
+},
+{
+"id": 33,
+"frame": 17435,
+"t": 235.25,
+"pid": 8,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.94,
+"dM": 1.55,
+"angle": "behind",
+"ballToFoot": 0.65,
+"carrierSpeed": 2.88,
+"defSpeed": 4.66,
+"closing": 4.04,
+"defSideways": 4.63,
+"defMovingAway": 0,
+"stam": 68
+},
+"closestDuringStep": 0.82,
+"contactDist": 0.78,
+"out": "beaten"
+},
+{
+"id": 33,
+"frame": 17750,
+"t": 240.5,
+"pid": 7,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.21,
+"dM": 1.65,
+"angle": "front",
+"ballToFoot": 0.83,
+"carrierSpeed": 6.2,
+"defSpeed": 3.37,
+"closing": 4.75,
+"defSideways": 0.36,
+"defMovingAway": 0,
+"stam": 72
+},
+"closestDuringStep": 1.2,
+"contactDist": 1.13,
+"out": "won"
+},
+{
+"id": 34,
+"frame": 4867,
+"t": 62.58,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.99,
+"dM": 1.4,
+"angle": "side",
+"ballToFoot": 0.56,
+"carrierSpeed": 0.57,
+"defSpeed": 8.31,
+"closing": 3.69,
+"defSideways": 3.83,
+"defMovingAway": 0,
+"stam": 87
+},
+"closestDuringStep": 0.79,
+"contactDist": 0.74,
+"out": "beaten"
+},
+{
+"id": 34,
+"frame": 6686,
+"t": 85.82,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.03,
+"dM": 0.89,
+"angle": "side",
+"ballToFoot": 0.58,
+"carrierSpeed": 6.23,
+"defSpeed": 7.41,
+"closing": -0.12,
+"defSideways": 7.05,
+"defMovingAway": 0,
+"stam": 81
+},
+"closestDuringStep": 1.11,
+"contactDist": 1.03,
+"out": "beaten"
+},
+{
+"id": 34,
+"frame": 13314,
+"t": 185.82,
+"pid": 6,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.98,
+"dM": 1.46,
+"angle": "front",
+"ballToFoot": 1.19,
+"carrierSpeed": 5.67,
+"defSpeed": 4.86,
+"closing": 4.53,
+"defSideways": 3.47,
+"defMovingAway": 0,
+"stam": 82
+},
+"closestDuringStep": 0.34,
+"contactDist": 0.35,
+"out": "beaten"
+},
+{
+"id": 34,
+"frame": 14059,
+"t": 198.23,
+"pid": 6,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.43,
+"dM": 1.83,
+"angle": "front",
+"ballToFoot": 1.2,
+"carrierSpeed": 6.13,
+"defSpeed": 3.77,
+"closing": 1.86,
+"defSideways": 1.27,
+"defMovingAway": 0,
+"stam": 80
+},
+"closestDuringStep": 0.82,
+"contactDist": 0.76,
+"out": "beaten"
+},
+{
+"id": 34,
+"frame": 14960,
+"t": 213.25,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.98,
+"dM": 1.73,
+"angle": "front",
+"ballToFoot": 0.79,
+"carrierSpeed": 4.14,
+"defSpeed": 7.9,
+"closing": 9.5,
+"defSideways": 4.8,
+"defMovingAway": 0,
+"stam": 66
+},
+"closestDuringStep": 0.49,
+"contactDist": 0.47,
+"out": "beaten"
+},
+{
+"id": 35,
+"frame": 21205,
+"t": 195.12,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.97,
+"dM": 1.21,
+"angle": "front",
+"ballToFoot": 1.15,
+"carrierSpeed": 6.32,
+"defSpeed": 5.38,
+"closing": 2.66,
+"defSideways": 3.33,
+"defMovingAway": 0,
+"stam": 74
+},
+"closestDuringStep": 0.16,
+"contactDist": 0.13,
+"out": "won"
+},
+{
+"id": 35,
+"frame": 25764,
+"t": 239.4,
+"pid": 107,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.22,
+"dM": 1.39,
+"angle": "side",
+"ballToFoot": 0.55,
+"carrierSpeed": 2.31,
+"defSpeed": 4.74,
+"closing": 3.53,
+"defSideways": 3.33,
+"defMovingAway": 0,
+"stam": 77
+},
+"closestDuringStep": 1.07,
+"contactDist": 1.04,
+"out": "beaten"
+},
+{
+"id": 36,
+"frame": 4362,
+"t": 68.1,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.38,
+"dM": 1.75,
+"angle": "side",
+"ballToFoot": 0.85,
+"carrierSpeed": 5.34,
+"defSpeed": 5.42,
+"closing": 5.84,
+"defSideways": 0.19,
+"defMovingAway": 0,
+"stam": 88
+},
+"closestDuringStep": 0.91,
+"contactDist": 0.84,
+"out": "beaten"
+},
+{
+"id": 36,
+"frame": 4482,
+"t": 70.1,
+"pid": 105,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.93,
+"dM": 0.81,
+"angle": "front",
+"ballToFoot": 0.72,
+"carrierSpeed": 5.87,
+"defSpeed": 5.97,
+"closing": -2.15,
+"defSideways": 3.42,
+"defMovingAway": 0,
+"stam": 88
+},
+"closestDuringStep": 1.09,
+"contactDist": 0.92,
+"out": "beaten"
+},
+{
+"id": 36,
+"frame": 5201,
+"t": 82.08,
+"pid": 5,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.8,
+"dM": 2.15,
+"angle": "front",
+"ballToFoot": 1.24,
+"carrierSpeed": 5.55,
+"defSpeed": 4.08,
+"closing": 3.28,
+"defSideways": 0.27,
+"defMovingAway": 0,
+"stam": 85
+},
+"closestDuringStep": 1.41,
+"contactDist": 1.34,
+"out": "missed_out_of_reach"
+},
+{
+"id": 36,
+"frame": 5736,
+"t": 91,
+"pid": 109,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.71,
+"dM": 0.92,
+"angle": "behind",
+"ballToFoot": 0.73,
+"carrierSpeed": 2.77,
+"defSpeed": 8.37,
+"closing": 1.77,
+"defSideways": 7.53,
+"defMovingAway": 0,
+"stam": 80
+},
+"closestDuringStep": 0.71,
+"contactDist": 0.67,
+"out": "beaten"
+},
+{
+"id": 36,
+"frame": 6484,
+"t": 103.47,
+"pid": 106,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.59,
+"dM": 0.86,
+"angle": "behind",
+"ballToFoot": 0.34,
+"carrierSpeed": 6.18,
+"defSpeed": 7.38,
+"closing": -1.93,
+"defSideways": 7.31,
+"defMovingAway": 0,
+"stam": 83
+},
+"closestDuringStep": 0.81,
+"contactDist": 0.69,
+"out": "won"
+},
+{
+"id": 36,
+"frame": 11148,
+"t": 135.78,
+"pid": 8,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.98,
+"dM": 1.16,
+"angle": "side",
+"ballToFoot": 0.54,
+"carrierSpeed": 4.82,
+"defSpeed": 5.12,
+"closing": 1.32,
+"defSideways": 4.93,
+"defMovingAway": 0,
+"stam": 87
+},
+"closestDuringStep": 0.61,
+"contactDist": 0.58,
+"out": "beaten"
+},
+{
+"id": 36,
+"frame": 11331,
+"t": 138.83,
+"pid": 110,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.94,
+"dM": 1.46,
+"angle": "behind",
+"ballToFoot": 0.59,
+"carrierSpeed": 2.06,
+"defSpeed": 4.36,
+"closing": -1.78,
+"defSideways": 4.33,
+"defMovingAway": 0,
+"stam": 87
+},
+"closestDuringStep": 1.02,
+"contactDist": 0.98,
+"out": "won"
+},
+{
+"id": 36,
+"frame": 12236,
+"t": 153.92,
+"pid": 105,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.97,
+"dM": 1.83,
+"angle": "side",
+"ballToFoot": 0.93,
+"carrierSpeed": 4.14,
+"defSpeed": 3.65,
+"closing": 2.76,
+"defSideways": 3.46,
+"defMovingAway": 0,
+"stam": 90
+},
+"closestDuringStep": 0.6,
+"contactDist": 0.52,
+"out": "poked_loose"
+},
+{
+"id": 36,
+"frame": 14689,
+"t": 188.02,
+"pid": 109,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.22,
+"dM": 1.9,
+"angle": "behind",
+"ballToFoot": 0.83,
+"carrierSpeed": 4.28,
+"defSpeed": 5.36,
+"closing": -1.34,
+"defSideways": 2.77,
+"defMovingAway": 0,
+"stam": 75
+},
+"closestDuringStep": 1.25,
+"contactDist": 1.21,
+"out": "beaten"
+},
+{
+"id": 36,
+"frame": 18578,
+"t": 233.37,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.45,
+"dM": 1.69,
+"angle": "front",
+"ballToFoot": 1.19,
+"carrierSpeed": 5.95,
+"defSpeed": 4.81,
+"closing": 1.91,
+"defSideways": 1.19,
+"defMovingAway": 0,
+"stam": 77
+},
+"closestDuringStep": 1.21,
+"contactDist": 1.15,
+"out": "beaten"
+},
+{
+"id": 37,
+"frame": 4979,
+"t": 69.42,
+"pid": 110,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.98,
+"dM": 1.32,
+"angle": "behind",
+"ballToFoot": 0.68,
+"carrierSpeed": 3.2,
+"defSpeed": 8.03,
+"closing": 4.01,
+"defSideways": 4.23,
+"defMovingAway": 0,
+"stam": 86
+},
+"closestDuringStep": 0.6,
+"contactDist": 0.52,
+"out": "poked_loose"
+},
+{
+"id": 37,
+"frame": 7609,
+"t": 113.25,
+"pid": 109,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.72,
+"dM": 0.78,
+"angle": "side",
+"ballToFoot": 0.83,
+"carrierSpeed": 4.35,
+"defSpeed": 3.15,
+"closing": 5.69,
+"defSideways": 3.15,
+"defMovingAway": 0.17,
+"stam": 79
+},
+"closestDuringStep": 0.66,
+"contactDist": 0.63,
+"out": "beaten"
+},
+{
+"id": 37,
+"frame": 18058,
+"t": 235.6,
+"pid": 9,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.16,
+"dM": 0.85,
+"angle": "behind",
+"ballToFoot": 0.65,
+"carrierSpeed": 3.05,
+"defSpeed": 4.2,
+"closing": -1.62,
+"defSideways": 3.04,
+"defMovingAway": 0,
+"stam": 96
+},
+"closestDuringStep": 0.93,
+"contactDist": 0.9,
+"out": "beaten"
+},
+{
+"id": 38,
+"frame": 3745,
+"t": 54.62,
+"pid": 6,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.83,
+"dM": 1.27,
+"angle": "side",
+"ballToFoot": 0.66,
+"carrierSpeed": 6.26,
+"defSpeed": 5.48,
+"closing": -7.18,
+"defSideways": 3.69,
+"defMovingAway": 0,
+"stam": 91
+},
+"closestDuringStep": 1.13,
+"contactDist": 0.91,
+"out": "won"
+},
+{
+"id": 38,
+"frame": 10445,
+"t": 155.33,
+"pid": 8,
+"src": "ai",
+"why": [
+"reach_40pct_extension",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.05,
+"dM": 0.78,
+"angle": "side",
+"ballToFoot": 0.33,
+"carrierSpeed": 1.16,
+"defSpeed": 0.82,
+"closing": 1.18,
+"defSideways": 0.49,
+"defMovingAway": 0,
+"stam": 81
+},
+"closestDuringStep": 1.26,
+"contactDist": 1.1,
+"out": "beaten"
+},
+{
+"id": 38,
+"frame": 17223,
+"t": 248.83,
+"pid": 8,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.35,
+"dM": 2.03,
+"angle": "front",
+"ballToFoot": 1.67,
+"carrierSpeed": 5.9,
+"defSpeed": 5.1,
+"closing": 5.2,
+"defSideways": 0.17,
+"defMovingAway": 0,
+"stam": 94
+},
+"closestDuringStep": 0.96,
+"contactDist": 0.93,
+"out": "beaten"
+},
+{
+"id": 39,
+"frame": 6557,
+"t": 81.9,
+"pid": 106,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.17,
+"dM": 0.8,
+"angle": "side",
+"ballToFoot": 0.5,
+"carrierSpeed": 1.36,
+"defSpeed": 0.37,
+"closing": 1.69,
+"defSideways": 0.12,
+"defMovingAway": 0,
+"stam": 86
+},
+"closestDuringStep": 0.92,
+"contactDist": 0.91,
+"out": "beaten"
+},
+{
+"id": 39,
+"frame": 9492,
+"t": 124.18,
+"pid": 101,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.96,
+"dM": 1.94,
+"angle": "behind",
+"ballToFoot": 1.01,
+"carrierSpeed": 5.58,
+"defSpeed": 4.17,
+"closing": 7.53,
+"defSideways": 3.32,
+"defMovingAway": 0,
+"stam": 82
+},
+"closestDuringStep": 0.75,
+"contactDist": 0.68,
+"out": "poked_loose"
+},
+{
+"id": 39,
+"frame": 10562,
+"t": 137.7,
+"pid": 107,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.05,
+"dM": 1.02,
+"angle": "side",
+"ballToFoot": 0.61,
+"carrierSpeed": 6.3,
+"defSpeed": 6.51,
+"closing": 0.74,
+"defSideways": 5.59,
+"defMovingAway": 0,
+"stam": 89
+},
+"closestDuringStep": 1.13,
+"contactDist": 1.01,
+"out": "won"
+},
+{
+"id": 39,
+"frame": 12801,
+"t": 155.55,
+"pid": 6,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.22,
+"dM": 1.24,
+"angle": "side",
+"ballToFoot": 0.66,
+"carrierSpeed": 6.3,
+"defSpeed": 5.01,
+"closing": 2.18,
+"defSideways": 2.66,
+"defMovingAway": 0,
+"stam": 88
+},
+"closestDuringStep": 1.25,
+"contactDist": 1.14,
+"out": "beaten"
+},
+{
+"id": 39,
+"frame": 14758,
+"t": 188.17,
+"pid": 109,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.99,
+"dM": 0.8,
+"angle": "side",
+"ballToFoot": 0.58,
+"carrierSpeed": 6.02,
+"defSpeed": 7.25,
+"closing": 3.55,
+"defSideways": 5.43,
+"defMovingAway": 0,
+"stam": 75
+},
+"closestDuringStep": 0.98,
+"contactDist": 0.9,
+"out": "beaten"
+},
+{
+"id": 39,
+"frame": 15008,
+"t": 192.33,
+"pid": 8,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.94,
+"dM": 1.5,
+"angle": "front",
+"ballToFoot": 0.63,
+"carrierSpeed": 2.73,
+"defSpeed": 6.33,
+"closing": 4.45,
+"defSideways": 4.98,
+"defMovingAway": 0,
+"stam": 78
+},
+"closestDuringStep": 0.48,
+"contactDist": 0.5,
+"out": "poked_loose"
+},
+{
+"id": 39,
+"frame": 15922,
+"t": 207.57,
+"pid": 9,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.54,
+"dM": 1.61,
+"angle": "behind",
+"ballToFoot": 0.65,
+"carrierSpeed": 3.2,
+"defSpeed": 5.09,
+"closing": 2.7,
+"defSideways": 3.08,
+"defMovingAway": 0,
+"stam": 72
+},
+"closestDuringStep": 0.98,
+"contactDist": 0.93,
+"out": "beaten"
+},
+{
+"id": 39,
+"frame": 18428,
+"t": 246.32,
+"pid": 6,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.97,
+"dM": 1.02,
+"angle": "side",
+"ballToFoot": 0.59,
+"carrierSpeed": 6.04,
+"defSpeed": 7.24,
+"closing": -1.6,
+"defSideways": 7.24,
+"defMovingAway": 0,
+"stam": 74
+},
+"closestDuringStep": 1.03,
+"contactDist": 0.98,
+"out": "beaten"
+},
+{
+"id": 40,
+"frame": 2650,
+"t": 42.88,
+"pid": 109,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.09,
+"dM": 1.21,
+"angle": "side",
+"ballToFoot": 0.82,
+"carrierSpeed": 2.69,
+"defSpeed": 7.61,
+"closing": 3.02,
+"defSideways": 5.28,
+"defMovingAway": 0,
+"stam": 91
+},
+"closestDuringStep": 1.04,
+"contactDist": 1,
+"out": "won"
+},
+{
+"id": 40,
+"frame": 3003,
+"t": 48.77,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.33,
+"dM": 1.87,
+"angle": "front",
+"ballToFoot": 1.19,
+"carrierSpeed": 5.93,
+"defSpeed": 4.79,
+"closing": 2.55,
+"defSideways": 1.8,
+"defMovingAway": 0,
+"stam": 93
+},
+"closestDuringStep": 0.76,
+"contactDist": 0.7,
+"out": "beaten"
+},
+{
+"id": 40,
+"frame": 14404,
+"t": 208.93,
+"pid": 106,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.47,
+"dM": 1.78,
+"angle": "side",
+"ballToFoot": 0.75,
+"carrierSpeed": 6.1,
+"defSpeed": 2.62,
+"closing": 3.37,
+"defSideways": 1.07,
+"defMovingAway": 0,
+"stam": 84
+},
+"closestDuringStep": 1.32,
+"contactDist": 1.25,
+"out": "missed_out_of_reach"
+},
+{
+"id": 41,
+"frame": 3795,
+"t": 58.65,
+"pid": 9,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.58,
+"dM": 1.52,
+"angle": "side",
+"ballToFoot": 1.08,
+"carrierSpeed": 5.37,
+"defSpeed": 6.44,
+"closing": 3.06,
+"defSideways": 1.74,
+"defMovingAway": 0,
+"stam": 86
+},
+"closestDuringStep": 1.48,
+"contactDist": null,
+"out": "unresolved"
+},
+{
+"id": 41,
+"frame": 6052,
+"t": 73.48,
+"pid": 109,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.75,
+"dM": 1.45,
+"angle": "behind",
+"ballToFoot": 0.79,
+"carrierSpeed": 1.03,
+"defSpeed": 4.54,
+"closing": 2.37,
+"defSideways": 3.84,
+"defMovingAway": 0,
+"stam": 85
+},
+"closestDuringStep": 0.26,
+"contactDist": 0.19,
+"out": "poked_loose"
+},
+{
+"id": 41,
+"frame": 21107,
+"t": 255.5,
+"pid": 2,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.27,
+"dM": 1.34,
+"angle": "side",
+"ballToFoot": 0.94,
+"carrierSpeed": 5.65,
+"defSpeed": 4.77,
+"closing": 0.41,
+"defSideways": 2.18,
+"defMovingAway": 0,
+"stam": 81
+},
+"closestDuringStep": 1.31,
+"contactDist": 1.21,
+"out": "won"
+},
+{
+"id": 42,
+"frame": 2704,
+"t": 38.27,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.95,
+"dM": 1.51,
+"angle": "front",
+"ballToFoot": 0.57,
+"carrierSpeed": 3.26,
+"defSpeed": 7.03,
+"closing": 3.42,
+"defSideways": 6.36,
+"defMovingAway": 0,
+"stam": 93
+},
+"closestDuringStep": 0.9,
+"contactDist": 0.9,
+"out": "beaten"
+},
+{
+"id": 42,
+"frame": 3046,
+"t": 43.97,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.88,
+"dM": 3.6,
+"angle": "behind",
+"ballToFoot": 2.83,
+"carrierSpeed": 4.25,
+"defSpeed": 8.51,
+"closing": 16.55,
+"defSideways": 4.02,
+"defMovingAway": 0,
+"stam": 92
+},
+"closestDuringStep": 0.46,
+"contactDist": 0.45,
+"out": "won"
+},
+{
+"id": 42,
+"frame": 4077,
+"t": 61.15,
+"pid": 5,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.43,
+"dM": 2.02,
+"angle": "front",
+"ballToFoot": 1.26,
+"carrierSpeed": 5.46,
+"defSpeed": 3.97,
+"closing": 3.99,
+"defSideways": 2.17,
+"defMovingAway": 0,
+"stam": 89
+},
+"closestDuringStep": 0.95,
+"contactDist": 0.91,
+"out": "poked_loose"
+},
+{
+"id": 42,
+"frame": 12616,
+"t": 134.27,
+"pid": 107,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.12,
+"dM": 0.95,
+"angle": "side",
+"ballToFoot": 0.67,
+"carrierSpeed": 6.33,
+"defSpeed": 7.53,
+"closing": -1.18,
+"defSideways": 6.33,
+"defMovingAway": 0,
+"stam": 95
+},
+"closestDuringStep": 1.2,
+"contactDist": 1.08,
+"out": "beaten"
+},
+{
+"id": 42,
+"frame": 15674,
+"t": 178.45,
+"pid": 106,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.41,
+"dM": 1.07,
+"angle": "side",
+"ballToFoot": 0.58,
+"carrierSpeed": 6.18,
+"defSpeed": 7.26,
+"closing": 3.35,
+"defSideways": 5.67,
+"defMovingAway": 0,
+"stam": 89
+},
+"closestDuringStep": 0.8,
+"contactDist": 0.75,
+"out": "ball_already_gone"
+},
+{
+"id": 42,
+"frame": 16347,
+"t": 189.67,
+"pid": 7,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.54,
+"dM": 1.7,
+"angle": "behind",
+"ballToFoot": 0.66,
+"carrierSpeed": 2.21,
+"defSpeed": 3.6,
+"closing": 2.59,
+"defSideways": 1.18,
+"defMovingAway": 0,
+"stam": 82
+},
+"closestDuringStep": 1.48,
+"contactDist": 1.64,
+"out": "missed_out_of_reach"
+},
+{
+"id": 43,
+"frame": 7036,
+"t": 102.42,
+"pid": 7,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.18,
+"dM": 2.06,
+"angle": "side",
+"ballToFoot": 1.02,
+"carrierSpeed": 6.23,
+"defSpeed": 6.53,
+"closing": -0.28,
+"defSideways": 4.43,
+"defMovingAway": 0,
+"stam": 83
+},
+"closestDuringStep": 1.53,
+"contactDist": 1.21,
+"out": "won"
+},
+{
+"id": 43,
+"frame": 8285,
+"t": 119.95,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.39,
+"dM": 2.02,
+"angle": "front",
+"ballToFoot": 1.03,
+"carrierSpeed": 5.91,
+"defSpeed": 2.23,
+"closing": 3.97,
+"defSideways": 0.47,
+"defMovingAway": 0,
+"stam": 80
+},
+"closestDuringStep": 1.11,
+"contactDist": 1.07,
+"out": "beaten"
+},
+{
+"id": 43,
+"frame": 10861,
+"t": 155.15,
+"pid": 9,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.44,
+"dM": 1.69,
+"angle": "front",
+"ballToFoot": 1.23,
+"carrierSpeed": 5.59,
+"defSpeed": 4.8,
+"closing": 2.49,
+"defSideways": 0.25,
+"defMovingAway": 0,
+"stam": 77
+},
+"closestDuringStep": 0.65,
+"contactDist": 0.61,
+"out": "ball_already_gone"
+},
+{
+"id": 43,
+"frame": 14509,
+"t": 206.18,
+"pid": 10,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.97,
+"dM": 1.92,
+"angle": "behind",
+"ballToFoot": 1.07,
+"carrierSpeed": 2.49,
+"defSpeed": 7.72,
+"closing": 4.94,
+"defSideways": 5.71,
+"defMovingAway": 0,
+"stam": 71
+},
+"closestDuringStep": 0.76,
+"contactDist": 0.75,
+"out": "beaten"
+},
+{
+"id": 43,
+"frame": 14984,
+"t": 214.1,
+"pid": 5,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.99,
+"dM": 1.63,
+"angle": "side",
+"ballToFoot": 0.76,
+"carrierSpeed": 3.63,
+"defSpeed": 5.69,
+"closing": 3.46,
+"defSideways": 5.49,
+"defMovingAway": 0,
+"stam": 73
+},
+"closestDuringStep": 0.98,
+"contactDist": 0.95,
+"out": "beaten"
+},
+{
+"id": 44,
+"frame": 1077,
+"t": 16.67,
+"pid": 109,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.01,
+"dM": 2.21,
+"angle": "behind",
+"ballToFoot": 1.62,
+"carrierSpeed": 4.59,
+"defSpeed": 8.57,
+"closing": 1.14,
+"defSideways": 5.97,
+"defMovingAway": 0,
+"stam": 97
+},
+"closestDuringStep": 1.11,
+"contactDist": 0.95,
+"out": "won"
+},
+{
+"id": 44,
+"frame": 2871,
+"t": 46.57,
+"pid": 5,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.48,
+"dM": 1.64,
+"angle": "front",
+"ballToFoot": 0.86,
+"carrierSpeed": 6.2,
+"defSpeed": 3.16,
+"closing": 2.96,
+"defSideways": 1.35,
+"defMovingAway": 0,
+"stam": 92
+},
+"closestDuringStep": 0.62,
+"contactDist": 0.56,
+"out": "beaten"
+},
+{
+"id": 44,
+"frame": 8564,
+"t": 130.57,
+"pid": 109,
+"src": "ai",
+"why": [
+"reach_no_double_count"
+],
+"decide": {
+"dB": 1.55,
+"dM": 1.83,
+"angle": "front",
+"ballToFoot": 1.13,
+"carrierSpeed": 6.35,
+"defSpeed": 2.53,
+"closing": 1.89,
+"defSideways": 0.79,
+"defMovingAway": 0,
+"stam": 85
+},
+"closestDuringStep": 1.23,
+"contactDist": 1.17,
+"out": "beaten"
+},
+{
+"id": 44,
+"frame": 8980,
+"t": 137.5,
+"pid": 108,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.9,
+"dM": 1.18,
+"angle": "side",
+"ballToFoot": 0.6,
+"carrierSpeed": 5.88,
+"defSpeed": 5.64,
+"closing": 6,
+"defSideways": 3.06,
+"defMovingAway": 0,
+"stam": 84
+},
+"closestDuringStep": 0.82,
+"contactDist": 0.74,
+"out": "beaten"
+},
+{
+"id": 44,
+"frame": 9841,
+"t": 151.85,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.31,
+"dM": 1.85,
+"angle": "front",
+"ballToFoot": 0.99,
+"carrierSpeed": 6.24,
+"defSpeed": 2.83,
+"closing": 3.85,
+"defSideways": 1.32,
+"defMovingAway": 0,
+"stam": 88
+},
+"closestDuringStep": 1.26,
+"contactDist": 1.21,
+"out": "beaten"
+},
+{
+"id": 44,
+"frame": 10227,
+"t": 158.28,
+"pid": 5,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.63,
+"dM": 2.14,
+"angle": "side",
+"ballToFoot": 0.61,
+"carrierSpeed": 4.38,
+"defSpeed": 4.25,
+"closing": -0.09,
+"defSideways": 0.1,
+"defMovingAway": 0,
+"stam": 88
+},
+"closestDuringStep": 1.2,
+"contactDist": 1.13,
+"out": "beaten"
+},
+{
+"id": 44,
+"frame": 11311,
+"t": 174.47,
+"pid": 108,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.04,
+"dM": 0.78,
+"angle": "side",
+"ballToFoot": 0.75,
+"carrierSpeed": 3.71,
+"defSpeed": 4.69,
+"closing": -1.24,
+"defSideways": 3.17,
+"defMovingAway": 0,
+"stam": 76
+},
+"closestDuringStep": 1.05,
+"contactDist": 1.02,
+"out": "won"
+},
+{
+"id": 44,
+"frame": 13751,
+"t": 215.13,
+"pid": 8,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.97,
+"dM": 1.88,
+"angle": "behind",
+"ballToFoot": 1.32,
+"carrierSpeed": 4.92,
+"defSpeed": 8.35,
+"closing": 6.18,
+"defSideways": 4.85,
+"defMovingAway": 0,
+"stam": 72
+},
+"closestDuringStep": 0.8,
+"contactDist": 0.74,
+"out": "beaten"
+},
+{
+"id": 44,
+"frame": 14300,
+"t": 219.45,
+"pid": 6,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.45,
+"dM": 1.6,
+"angle": "front",
+"ballToFoot": 0.77,
+"carrierSpeed": 6.07,
+"defSpeed": 2.77,
+"closing": 2.4,
+"defSideways": 1.12,
+"defMovingAway": 0,
+"stam": 79
+},
+"closestDuringStep": 1.42,
+"contactDist": 1.48,
+"out": "missed_out_of_reach"
+},
+{
+"id": 45,
+"frame": 4313,
+"t": 44.83,
+"pid": 110,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.46,
+"dM": 1.71,
+"angle": "behind",
+"ballToFoot": 1.52,
+"carrierSpeed": 4.29,
+"defSpeed": 8.19,
+"closing": 1.51,
+"defSideways": 7.79,
+"defMovingAway": 0,
+"stam": 92
+},
+"closestDuringStep": 1.42,
+"contactDist": 1.99,
+"out": "missed_out_of_reach"
+},
+{
+"id": 45,
+"frame": 8442,
+"t": 108.43,
+"pid": 109,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.89,
+"dM": 2.02,
+"angle": "behind",
+"ballToFoot": 1.48,
+"carrierSpeed": 4.07,
+"defSpeed": 8.35,
+"closing": 7.02,
+"defSideways": 5.7,
+"defMovingAway": 0,
+"stam": 78
+},
+"closestDuringStep": 0.77,
+"contactDist": 0.73,
+"out": "beaten"
+},
+{
+"id": 45,
+"frame": 20136,
+"t": 245.8,
+"pid": 7,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.38,
+"dM": 1.78,
+"angle": "front",
+"ballToFoot": 1.2,
+"carrierSpeed": 6.06,
+"defSpeed": 4.45,
+"closing": 2.44,
+"defSideways": 1,
+"defMovingAway": 0,
+"stam": 75
+},
+"closestDuringStep": 0.67,
+"contactDist": 0.6,
+"out": "poked_loose"
+},
+{
+"id": 46,
+"frame": 915,
+"t": 11.93,
+"pid": 6,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1,
+"dM": 1.13,
+"angle": "side",
+"ballToFoot": 0.59,
+"carrierSpeed": 6.35,
+"defSpeed": 6.94,
+"closing": 1.08,
+"defSideways": 6.91,
+"defMovingAway": 0,
+"stam": 98
+},
+"closestDuringStep": 0.97,
+"contactDist": 0.95,
+"out": "beaten"
+},
+{
+"id": 46,
+"frame": 2221,
+"t": 28.2,
+"pid": 6,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.2,
+"dM": 2.48,
+"angle": "side",
+"ballToFoot": 1.31,
+"carrierSpeed": 5.92,
+"defSpeed": 6.65,
+"closing": 0.53,
+"defSideways": 4.39,
+"defMovingAway": 0,
+"stam": 96
+},
+"closestDuringStep": 1.23,
+"contactDist": 1.15,
+"out": "won"
+},
+{
+"id": 46,
+"frame": 9825,
+"t": 140.37,
+"pid": 103,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.22,
+"dM": 1.43,
+"angle": "front",
+"ballToFoot": 0.6,
+"carrierSpeed": 5.32,
+"defSpeed": 2.55,
+"closing": 5.2,
+"defSideways": 0.33,
+"defMovingAway": 0,
+"stam": 96
+},
+"closestDuringStep": 1.18,
+"contactDist": 1.14,
+"out": "won"
+},
+{
+"id": 46,
+"frame": 16901,
+"t": 228.57,
+"pid": 7,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.19,
+"dM": 1.19,
+"angle": "side",
+"ballToFoot": 0.86,
+"carrierSpeed": 8.07,
+"defSpeed": 7.38,
+"closing": 1.9,
+"defSideways": 1.26,
+"defMovingAway": 0,
+"stam": 78
+},
+"closestDuringStep": 1.13,
+"contactDist": 1.04,
+"out": "beaten"
+},
+{
+"id": 47,
+"frame": 551,
+"t": 7.9,
+"pid": 110,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.13,
+"dM": 1.77,
+"angle": "side",
+"ballToFoot": 0.71,
+"carrierSpeed": 4.91,
+"defSpeed": 0.89,
+"closing": -0.57,
+"defSideways": 0.83,
+"defMovingAway": 0,
+"stam": 98
+},
+"closestDuringStep": 1.15,
+"contactDist": 1.14,
+"out": "beaten"
+},
+{
+"id": 47,
+"frame": 1624,
+"t": 25.78,
+"pid": 5,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.75,
+"dM": 2.42,
+"angle": "side",
+"ballToFoot": 1.69,
+"carrierSpeed": 6.24,
+"defSpeed": 6.78,
+"closing": -3.46,
+"defSideways": 5.61,
+"defMovingAway": 0,
+"stam": 96
+},
+"closestDuringStep": 1.06,
+"contactDist": 0.83,
+"out": "won"
+},
+{
+"id": 47,
+"frame": 8958,
+"t": 98.63,
+"pid": 107,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.26,
+"dM": 2.39,
+"angle": "behind",
+"ballToFoot": 1.93,
+"carrierSpeed": 3.88,
+"defSpeed": 7.43,
+"closing": 4.35,
+"defSideways": 7.05,
+"defMovingAway": 0,
+"stam": 86
+},
+"closestDuringStep": 1.19,
+"contactDist": 1.2,
+"out": "beaten"
+},
+{
+"id": 47,
+"frame": 15566,
+"t": 170.98,
+"pid": 109,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.08,
+"dM": 1.8,
+"angle": "behind",
+"ballToFoot": 1.38,
+"carrierSpeed": 3.63,
+"defSpeed": 8.37,
+"closing": 3.63,
+"defSideways": 7.12,
+"defMovingAway": 0,
+"stam": 80
+},
+"closestDuringStep": 1.03,
+"contactDist": 1.01,
+"out": "beaten"
+},
+{
+"id": 47,
+"frame": 18999,
+"t": 221.57,
+"pid": 10,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.28,
+"dM": 1.14,
+"angle": "side",
+"ballToFoot": 0.76,
+"carrierSpeed": 5.74,
+"defSpeed": 5.66,
+"closing": -0.08,
+"defSideways": 3.15,
+"defMovingAway": 0,
+"stam": 72
+},
+"closestDuringStep": 1.32,
+"contactDist": 1.22,
+"out": "beaten"
+},
+{
+"id": 47,
+"frame": 19050,
+"t": 222.42,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.33,
+"dM": 1.01,
+"angle": "side",
+"ballToFoot": 0.51,
+"carrierSpeed": 4.42,
+"defSpeed": 5.46,
+"closing": 0.2,
+"defSideways": 1.2,
+"defMovingAway": 0,
+"stam": 80
+},
+"closestDuringStep": 1.4,
+"contactDist": 1.36,
+"out": "missed_out_of_reach"
+},
+{
+"id": 47,
+"frame": 20696,
+"t": 249.85,
+"pid": 107,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.96,
+"dM": 2,
+"angle": "front",
+"ballToFoot": 1.72,
+"carrierSpeed": 2.55,
+"defSpeed": 4.12,
+"closing": 3.4,
+"defSideways": 3.31,
+"defMovingAway": 0,
+"stam": 78
+},
+"closestDuringStep": 0.73,
+"contactDist": 0.65,
+"out": "won"
+},
+{
+"id": 48,
+"frame": 1605,
+"t": 25.47,
+"pid": 107,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.93,
+"dM": 1.38,
+"angle": "front",
+"ballToFoot": 0.52,
+"carrierSpeed": 6.39,
+"defSpeed": 3.29,
+"closing": 24.42,
+"defSideways": 3.22,
+"defMovingAway": 0,
+"stam": 96
+},
+"closestDuringStep": 1.01,
+"contactDist": 0.68,
+"out": "beaten"
+},
+{
+"id": 48,
+"frame": 7570,
+"t": 81.93,
+"pid": 109,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.23,
+"dM": 0.78,
+"angle": "side",
+"ballToFoot": 1.15,
+"carrierSpeed": 7.09,
+"defSpeed": 7.46,
+"closing": 1.53,
+"defSideways": 2.45,
+"defMovingAway": 0,
+"stam": 82
+},
+"closestDuringStep": 1.26,
+"contactDist": 1.12,
+"out": "won"
+},
+{
+"id": 48,
+"frame": 15768,
+"t": 191.37,
+"pid": 107,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.43,
+"dM": 2.57,
+"angle": "side",
+"ballToFoot": 1.18,
+"carrierSpeed": 6.12,
+"defSpeed": 7.41,
+"closing": -0.2,
+"defSideways": 4.47,
+"defMovingAway": 0,
+"stam": 80
+},
+"closestDuringStep": 1.4,
+"contactDist": 1.35,
+"out": "ball_already_gone"
+},
+{
+"id": 48,
+"frame": 18743,
+"t": 234.43,
+"pid": 5,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.71,
+"dM": 1.98,
+"angle": "side",
+"ballToFoot": 1.2,
+"carrierSpeed": 5.59,
+"defSpeed": 5.01,
+"closing": 2.49,
+"defSideways": 1.83,
+"defMovingAway": 0,
+"stam": 72
+},
+"closestDuringStep": 1.15,
+"contactDist": 1.08,
+"out": "beaten"
+},
+{
+"id": 49,
+"frame": 4660,
+"t": 73.17,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.69,
+"dM": 2.06,
+"angle": "front",
+"ballToFoot": 1.2,
+"carrierSpeed": 6.25,
+"defSpeed": 3.73,
+"closing": 1.62,
+"defSideways": 1.06,
+"defMovingAway": 0,
+"stam": 87
+},
+"closestDuringStep": 1.12,
+"contactDist": 1.06,
+"out": "beaten"
+},
+{
+"id": 49,
+"frame": 5358,
+"t": 81.58,
+"pid": 106,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.38,
+"dM": 0.78,
+"angle": "side",
+"ballToFoot": 1.16,
+"carrierSpeed": 7.4,
+"defSpeed": 7.34,
+"closing": 2.42,
+"defSideways": 1.96,
+"defMovingAway": 0,
+"stam": 87
+},
+"closestDuringStep": 1.32,
+"contactDist": 1.24,
+"out": "won"
+},
+{
+"id": 49,
+"frame": 17299,
+"t": 226.57,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 0.78,
+"dM": 1.26,
+"angle": "side",
+"ballToFoot": 0.55,
+"carrierSpeed": 6.13,
+"defSpeed": 0.99,
+"closing": -4.46,
+"defSideways": 0.7,
+"defMovingAway": 0,
+"stam": 76
+},
+"closestDuringStep": 1.13,
+"contactDist": 0.89,
+"out": "poked_loose"
+},
+{
+"id": 49,
+"frame": 18190,
+"t": 238.23,
+"pid": 5,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.41,
+"dM": 1.96,
+"angle": "front",
+"ballToFoot": 1.23,
+"carrierSpeed": 5.7,
+"defSpeed": 3.82,
+"closing": 2.83,
+"defSideways": 1.84,
+"defMovingAway": 0,
+"stam": 74
+},
+"closestDuringStep": 0.61,
+"contactDist": 0.6,
+"out": "ball_already_gone"
+},
+{
+"id": 49,
+"frame": 19236,
+"t": 250.83,
+"pid": 9,
+"src": "ai",
+"why": [
+"reach_raw_ball_velocity",
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.98,
+"dM": 2.9,
+"angle": "behind",
+"ballToFoot": 2.67,
+"carrierSpeed": 3.75,
+"defSpeed": 8.1,
+"closing": 4.05,
+"defSideways": 7.73,
+"defMovingAway": 0,
+"stam": 57
+},
+"closestDuringStep": 0.96,
+"contactDist": 0.95,
+"out": "beaten"
+},
+{
+"id": 50,
+"frame": 8680,
+"t": 110.83,
+"pid": 5,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.3,
+"dM": 1.79,
+"angle": "side",
+"ballToFoot": 0.71,
+"carrierSpeed": 5.38,
+"defSpeed": 3.46,
+"closing": 14.46,
+"defSideways": 0.74,
+"defMovingAway": 0,
+"stam": 83
+},
+"closestDuringStep": 1.44,
+"contactDist": 1.2,
+"out": "beaten"
+},
+{
+"id": 50,
+"frame": 9126,
+"t": 118.27,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.31,
+"dM": 0.78,
+"angle": "side",
+"ballToFoot": 1.11,
+"carrierSpeed": 7.24,
+"defSpeed": 7.5,
+"closing": 1.19,
+"defSideways": 2.49,
+"defMovingAway": 0,
+"stam": 81
+},
+"closestDuringStep": 1.31,
+"contactDist": 1.19,
+"out": "won"
+},
+{
+"id": 50,
+"frame": 10220,
+"t": 132.18,
+"pid": 107,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 0.96,
+"dM": 1.94,
+"angle": "front",
+"ballToFoot": 0.99,
+"carrierSpeed": 3.37,
+"defSpeed": 5.19,
+"closing": 15.2,
+"defSideways": 4.45,
+"defMovingAway": 0,
+"stam": 93
+},
+"closestDuringStep": 0.68,
+"contactDist": 0.66,
+"out": "won"
+},
+{
+"id": 50,
+"frame": 11130,
+"t": 147.35,
+"pid": 7,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.47,
+"dM": 2.29,
+"angle": "front",
+"ballToFoot": 1.23,
+"carrierSpeed": 6.07,
+"defSpeed": 4.09,
+"closing": 1.64,
+"defSideways": 0.3,
+"defMovingAway": 0,
+"stam": 88
+},
+"closestDuringStep": 1.17,
+"contactDist": 1.1,
+"out": "won"
+},
+{
+"id": 50,
+"frame": 13074,
+"t": 176.53,
+"pid": 9,
+"src": "ai",
+"why": [
+"sideways_over_3ms"
+],
+"decide": {
+"dB": 1.1,
+"dM": 0.78,
+"angle": "behind",
+"ballToFoot": 0.56,
+"carrierSpeed": 4.18,
+"defSpeed": 5.35,
+"closing": 2.14,
+"defSideways": 3.25,
+"defMovingAway": 0,
+"stam": 75
+},
+"closestDuringStep": 1.13,
+"contactDist": 1.03,
+"out": "beaten"
+},
+{
+"id": 50,
+"frame": 15780,
+"t": 202.17,
+"pid": 105,
+"src": "ai",
+"why": [
+"reach_no_double_count",
+"reach_raw_ball_velocity"
+],
+"decide": {
+"dB": 1.44,
+"dM": 1.83,
+"angle": "front",
+"ballToFoot": 1.15,
+"carrierSpeed": 6.18,
+"defSpeed": 2.95,
+"closing": 0.68,
+"defSideways": 0.73,
+"defMovingAway": 0,
+"stam": 81
+},
+"closestDuringStep": 1.4,
+"contactDist": 1.33,
+"out": "missed_out_of_reach"
+}
+]
+}

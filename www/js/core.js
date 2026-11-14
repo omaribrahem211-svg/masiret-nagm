@@ -850,7 +850,7 @@ class Match{
    if(mine&&!b.cross&&best!==b.target&&!best.hdrShot&&!(best.wantHdr>this.time)){let oq=99;for(const q of this.other(best.team).pl)oq=Math.min(oq,hyp(q.x-b.x,q.y-b.y));if(oq>1.5)return;}
    // (F) بعد أي لعبة راس الكورة مايتلعبش بالراس تاني قبل 0.12 ث (كانت بتخبط بين 3–4 روس في 3 فريمات وسط الزحمة)
    if(this.time-(b.hdrAt||-9)<.12)return;b.hdrAt=this.time;
-   this.header(best);return;}
+   this.header(best);/* (v131) من تالت راس ورا بعض (أي نوع، حتى المتنازع عليها) الكورة مابتطلعش تاني لفوق: كانت بتتخبط 7–11 راس في نفس المكان وسط الزحمة */if(b.hdrN>=3&&!b.shot&&b.vz>1)b.vz=1;return;}
   if(sp>22&&Math.random()<.5&&b.target!==best){{const r=this.shotLive();if(r)this.shotEnd(best.team.idx===r.team?'retained':'blocked',best);}b.vx*=-.25;b.vy*=-.25;b.last=best;best.cool=.3;b.passFrom=null;return;}
   // قطع الكورة مش مضمون: كل ما الكورة أسرع وأبعد عن رجل المدافع، فرصة إنه يقطعها تقل (ممكن تلمسه وتغيّر اتجاهها أو تعدّي)
   if(b.target!==best&&sp>7&&b.last&&b.last.team!==best.team&&!this.restartKind){const dd=fast&&b.z<1.25?segDist(best.x,best.y,b.px,b.py,b.x,b.y):hyp(best.x-b.x,best.y-b.y);const facing=((b.x-best.x)*best.fx+(b.y-best.y)*best.fy)/(dd||1);
@@ -871,16 +871,20 @@ class Match{
   {const r=this.shotLive();if(r)this.shotEnd(p.team.idx===r.team?'retained':'blocked',p);}
   const t=p.team,g=this.attG(t),og=this.ownG(t);const wasT=b.target===p,ownBall=b.last&&b.last.team===t,wasX=!!b.cross;p.hdrHi=b.z>1.85;p.jumpT=.45;p.cool=.35;b.hdrN=(b.hdrN||0)+1;const chain=b.hdrN>=2;b.last=p;b.target=null;b.passFrom=null;SFX.kick(.4);
   const dG=hyp(g[0]-p.x,g[1]-p.y),h=this.human;const wants=p.hdrShot||(h&&p===h.ctrl?Input.hold.S||Input.hold.O||dG<14:true);
-  if((dG<17||p.hdrShot&&dG<24)&&wants){const ty=CY+R(-3,3)*(1.15-p.st.head/100)+(Math.random()<.5?-2:2);const dx=g[0]-p.x,dy=ty-p.y,d=hyp(dx,dy)||1;const s2=12+p.st.phys/100*5;b.vx=dx/d*s2;b.vy=dy/d*s2;b.vz=R(-1,1.5);b.shot={by:p,t:this.time,hdr:true,d:dG};this.shotNew(p);p.stats.sh++;this.shotsT[t.idx]++;this.ev('shot',{p});return;}
+  if((dG<17||p.hdrShot&&dG<24)&&wants&&!(chain&&dG>11)){/* (v131 C) كورة جاية من راس تاني من غير ما تلمس الأرض: تسديد بالراس بس لو قريب (≤11 م)، غير كده تمريرة/تنزيل */const ty=CY+R(-3,3)*(1.15-p.st.head/100)+(Math.random()<.5?-2:2);const dx=g[0]-p.x,dy=ty-p.y,d=hyp(dx,dy)||1;const s2=12+p.st.phys/100*5;b.vx=dx/d*s2;b.vy=dy/d*s2;b.vz=R(-1,1.5);b.shot={by:p,t:this.time,hdr:true,d:dG};this.shotNew(p);p.stats.sh++;this.shotsT[t.idx]++;this.ev('shot',{p});return;}
   let pr=99;for(const q of this.other(t).pl)pr=Math.min(pr,hyp(q.x-p.x,q.y-p.y));
   // المستلم المقصود ومفيش ضغط: يهدّي الكورة براسه لتحت قدام رجله (الراس بتمتص سرعة الكورة) ويكمل استلام برجله
   // الكورة بتنزل (سرعة رأسية سالبة) فمستحيل ترجع لارتفاع الراس تاني، ومش مسموح يهدّيها براسه تاني قبل ثانية
   if(wasT&&!wasX&&!p.hdrShot&&pr>1.6&&!(this.time-(p.cushAt||-9)<1.2)){const vz0=-.8,z0=Math.max(.3,b.z),tf=(vz0+Math.sqrt(vz0*vz0+19.6*z0))/9.8;const bv=hyp(b.vx,b.vy)||1,ix=b.vx/bv,iy=b.vy/bv;
    let ax=p.fx*.8+ix*.2,ay=p.fy*.8+iy*.2;const an=hyp(ax,ay)||1;ax/=an;ay/=an;const hs=.85/tf;b.vx=ax*hs;b.vy=ay*hs;b.vz=vz0;b.sw=0;b.tw=0;b.target=p;b.passT=this.time;p.cool=.4;p.cushAt=this.time;p.cushT=.4;return;}
-  if(hyp(og[0]-p.x,og[1]-p.y)<30&&!(ownBall&&hyp(og[0]-p.x,og[1]-p.y)>22)){const dx=p.x-og[0],dy=p.y-og[1],d=hyp(dx,dy)||1;b.vx=dx/d*(chain?16:14);b.vy=dy/d*(chain?16:14);b.vz=chain?2.2:4.5;return;}
+  if(hyp(og[0]-p.x,og[1]-p.y)<30&&!(ownBall&&hyp(og[0]-p.x,og[1]-p.y)>22)){let dx=p.x-og[0],dy=p.y-og[1];const d=hyp(dx,dy)||1;dx/=d;dy/=d;
+   // (v131 C) التشتيت بالراس بيروح ناحية الخط الجانبي اللي في ناحيته مش في خط مستقيم من المرمى، ولو فيه خصم قدامه (≤7 م في نفس الاتجاه) بيلف أكتر.
+   // قبل كده التشتيت كان بيرجع لنفس المهاجم بالظبط وهو بيرجّعها براسه للمرمى: 11 راس ورا بعض بين اتنين في 2.4 ث
+   const sd=Math.sign(p.y-CY)||1;let ang=.6;for(const q of this.other(t).pl){const ox=q.x-p.x,oy=q.y-p.y,od=hyp(ox,oy);if(od<7&&od>.3&&(ox*dx+oy*dy)/od>.8){ang=1;break;}}
+   const a0=Math.atan2(dy,dx),a1=Math.sin(a0+ang)*sd>Math.sin(a0-ang)*sd?a0+ang:a0-ang,v=chain?16:14;b.vx=Math.cos(a1)*v;b.vy=Math.sin(a1)*v;b.vz=chain?2.2:4.5;return;}
   // تمريرة بالراس لأقرب زميل مناسب قدامه بدل ما يخبطها في أي اتجاه
   let bq=null,bs=-1e9;for(const q of t.pl){if(q===p||q.role==='GK'||q.off)continue;const dx=q.x-p.x,dy=q.y-p.y,d=hyp(dx,dy);if(d<5||d>24)continue;let opp=99;for(const o of this.other(t).pl)opp=Math.min(opp,hyp(o.x-q.x,o.y-q.y));const fw=(dx*t.dir)/d;const sc=fw*6-Math.abs(d-12)*.25+Math.min(opp,6)*1.2+((dx*p.fx+dy*p.fy)/d)*3;if(sc>bs){bs=sc;bq=q;}}
-  if(bq){const offs=this.isOffside(bq,p);const dx=bq.x-p.x,dy=bq.y-p.y,d=hyp(dx,dy);const s2=clamp(6+d*.45,8,15),T=d/s2;b.vx=dx/d*s2;b.vy=dy/d*s2;b.vz=chain?Math.min(.5,4.9*T-b.z/T):Math.max(1.5,4.9*T-b.z/T);/* (F) تاني راس ورا بعض من غير ما الكورة تلمس الأرض: الراس بينزّلها لرجل الزميل */b.target=bq;b.passer=p;b.passT=this.time;b.passFrom=p;b.offside=offs?bq:null;return;}
+  if(bq){const offs=this.isOffside(bq,p);const dx=bq.x-p.x,dy=bq.y-p.y,d=hyp(dx,dy);const s2=clamp(6+d*.45,8,15),T=d/s2;b.vx=dx/d*s2;b.vy=dy/d*s2;b.vz=chain?Math.min(-1.5,4.9*T-b.z/T):Math.max(1.5,4.9*T-b.z/T);/* (F) تاني راس ورا بعض من غير ما الكورة تلمس الأرض: الراس بينزّلها لرجل الزميل */b.target=bq;b.passer=p;b.passT=this.time;b.passFrom=p;b.offside=offs?bq:null;return;}
   b.vx=p.fx*10;b.vy=p.fy*10;b.vz=2.5;}
  bounds(){const b=this.ball;if(this.walk||b.owner&&this.restartKind)return;
   if(b.x<0||b.x>L){const side=b.x<0?0:1;const defT=this.t.find(t=>(t.dir===1)===(side===0));const def=defT.idx;

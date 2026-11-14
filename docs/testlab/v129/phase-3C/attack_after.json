@@ -1,0 +1,45 @@
+{
+ "meta": {
+  "www": "/tmp/et/p3c/vFA2",
+  "n": 40,
+  "seed0": 1000
+ },
+ "finalThirdShare": 0.34,
+ "boxMatesWide": 0.19,
+ "boxMatesCentral": 0.07,
+ "aheadOfBall": 1.24,
+ "openOptions": 2.94,
+ "runOnLastDefenderShare": 0.01,
+ "throughBalls": {
+  "perMatch": 1.05,
+  "completed": 0.52
+ },
+ "crosses": {
+  "perMatch": 7.73,
+  "boxMatesAtCross": 2.25
+ },
+ "shots": {
+  "perMatch": 8.6,
+  "insideBox": 0.54,
+  "within1sOfReceiving": 0.68
+ },
+ "raw": {
+  "ft": 5746,
+  "ftWide": 4479,
+  "ftCentral": 1267,
+  "boxW": 836,
+  "boxC": 88,
+  "ahead": 7142,
+  "samples": 17142,
+  "open": 50404,
+  "behind": 97,
+  "passes": 4549,
+  "thr": 42,
+  "thrOk": 22,
+  "crosses": 309,
+  "crossBox": 696,
+  "shots": 344,
+  "shotsBox": 185,
+  "shotsQuick": 235
+ }
+}

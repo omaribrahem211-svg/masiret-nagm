@@ -1,0 +1,763 @@
+{
+ "meta": {
+  "www": "/tmp/et/p3c/vF",
+  "n": 60,
+  "seed0": 1000
+ },
+ "perMatch": {
+  "collideSteal": 0,
+  "shoulderWon": 1.3,
+  "shoulderTry": 67.43,
+  "collideFoul": 0.95,
+  "pokeTake": 1.28,
+  "tackleWonOrPoked": 0,
+  "contactFrames": 57.57,
+  "contactEpisodes": 33.73,
+  "fouls": 1.13
+ },
+ "totals": {
+  "collideSteal": 0,
+  "shoulderWon": 78,
+  "shoulderTry": 4046,
+  "collideFoul": 57,
+  "pokeTake": 77,
+  "tackleWonOrPoked": 0,
+  "contactFrames": 3454,
+  "contactEpisodes": 2024,
+  "fouls": 68,
+  "foulsByKind": {
+   "collide": 57,
+   "tackle": 10,
+   "slide": 1
+  },
+  "foulsInBoxByKind": {
+   "collide:behind:cv-1:chaser": 19,
+   "collide:behind:cv0:marker:chaser": 1,
+   "collide:behind:cv0:chaser": 2
+  }
+ },
+ "collideSteal": {
+  "byPos": {},
+  "ballSameSide": {},
+  "closeMedian": null,
+  "ballDMedian": null
+ },
+ "collideFoul": {
+  "byPos": {
+   "behind": 48,
+   "side": 7,
+   "front": 2
+  },
+  "closeMedian": 0.63
+ },
+ "shoulder": {
+  "byRes": {
+   "none": 3810,
+   "held": 101,
+   "foul": 57,
+   "won": 78
+  },
+  "byPos": {
+   "behind:none": 2708,
+   "side:none": 728,
+   "front:none": 374,
+   "side:held": 101,
+   "behind:foul": 48,
+   "side:won": 59,
+   "front:won": 19,
+   "side:foul": 7,
+   "front:foul": 2
+  },
+  "ballSameSide": {
+   "false:none": 2112,
+   "false:held": 68,
+   "true:foul": 38,
+   "true:none": 1698,
+   "true:held": 33,
+   "false:won": 41,
+   "true:won": 37,
+   "false:foul": 19
+  }
+ },
+ "sample": [
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.96,
+   "close": 0.06,
+   "carSp": 7.21,
+   "chSp": 7.29,
+   "ballD": 0.99,
+   "ballSameSide": false,
+   "phys": [
+    74,
+    78
+   ],
+   "t": 57.03
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.94,
+   "close": 0.04,
+   "carSp": 7.11,
+   "chSp": 7.19,
+   "ballD": 1,
+   "ballSameSide": false,
+   "phys": [
+    74,
+    78
+   ],
+   "t": 57.05
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.9,
+   "close": 0.03,
+   "carSp": 7.02,
+   "chSp": 7.12,
+   "ballD": 1.02,
+   "ballSameSide": false,
+   "phys": [
+    74,
+    78
+   ],
+   "t": 57.07
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.86,
+   "close": 0.02,
+   "carSp": 6.95,
+   "chSp": 7.06,
+   "ballD": 1.05,
+   "ballSameSide": false,
+   "phys": [
+    74,
+    78
+   ],
+   "t": 57.08
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.8,
+   "close": 0.02,
+   "carSp": 6.89,
+   "chSp": 7.02,
+   "ballD": 1.07,
+   "ballSameSide": false,
+   "phys": [
+    74,
+    78
+   ],
+   "t": 57.1
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.74,
+   "close": 0.02,
+   "carSp": 6.85,
+   "chSp": 7.01,
+   "ballD": 1.09,
+   "ballSameSide": false,
+   "phys": [
+    74,
+    78
+   ],
+   "t": 57.12
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.67,
+   "close": 0.03,
+   "carSp": 6.84,
+   "chSp": 7.02,
+   "ballD": 1.08,
+   "ballSameSide": false,
+   "phys": [
+    74,
+    78
+   ],
+   "t": 57.13
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.59,
+   "close": 0.12,
+   "carSp": 6.35,
+   "chSp": 6.81,
+   "ballD": 1.06,
+   "ballSameSide": false,
+   "phys": [
+    74,
+    78
+   ],
+   "t": 57.15
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.51,
+   "close": 0.12,
+   "carSp": 5.91,
+   "chSp": 6.62,
+   "ballD": 1.02,
+   "ballSameSide": false,
+   "phys": [
+    74,
+    78
+   ],
+   "t": 57.17
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.42,
+   "close": 0.11,
+   "carSp": 5.48,
+   "chSp": 6.49,
+   "ballD": 0.95,
+   "ballSameSide": false,
+   "phys": [
+    74,
+    78
+   ],
+   "t": 57.18
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.33,
+   "close": 0.07,
+   "carSp": 4.96,
+   "chSp": 6.34,
+   "ballD": 0.86,
+   "ballSameSide": false,
+   "phys": [
+    74,
+    78
+   ],
+   "t": 57.2
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "side",
+   "cos": -0.24,
+   "close": 0.04,
+   "carSp": 4.41,
+   "chSp": 6.21,
+   "ballD": 0.76,
+   "ballSameSide": false,
+   "phys": [
+    74,
+    78
+   ],
+   "t": 57.22
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "side",
+   "cos": -0.14,
+   "close": 0.01,
+   "carSp": 3.83,
+   "chSp": 6.03,
+   "ballD": 0.7,
+   "ballSameSide": false,
+   "phys": [
+    74,
+    78
+   ],
+   "t": 57.23
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "front",
+   "cos": 0.66,
+   "close": 0.1,
+   "carSp": 6.03,
+   "chSp": 5.82,
+   "ballD": 0.77,
+   "ballSameSide": false,
+   "phys": [
+    76,
+    79
+   ],
+   "t": 86.88
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "front",
+   "cos": 0.65,
+   "close": 0.01,
+   "carSp": 6.11,
+   "chSp": 5.9,
+   "ballD": 0.7,
+   "ballSameSide": false,
+   "phys": [
+    76,
+    79
+   ],
+   "t": 86.9
+  },
+  {
+   "kind": "shoulder",
+   "res": "held",
+   "hc": false,
+   "pos": "side",
+   "cos": -0.02,
+   "close": 0.93,
+   "carSp": 2.66,
+   "chSp": 3.92,
+   "ballD": 1.37,
+   "ballSameSide": false,
+   "phys": [
+    81,
+    76
+   ],
+   "t": 90.62
+  },
+  {
+   "kind": "collideFoul",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.99,
+   "close": 0.84,
+   "carSp": 3.45,
+   "chSp": 4.39,
+   "ballD": 0.53,
+   "ballSameSide": true,
+   "phys": [
+    77,
+    76
+   ],
+   "t": 103.68
+  },
+  {
+   "kind": "shoulder",
+   "res": "foul",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.99,
+   "close": 0.84,
+   "carSp": 3.45,
+   "chSp": 4.39,
+   "ballD": 0.53,
+   "ballSameSide": true,
+   "phys": [
+    77,
+    76
+   ],
+   "t": 103.68
+  },
+  {
+   "kind": "shoulder",
+   "res": "held",
+   "hc": false,
+   "pos": "side",
+   "cos": 0.02,
+   "close": 0.27,
+   "carSp": 5.28,
+   "chSp": 5.9,
+   "ballD": 1.01,
+   "ballSameSide": false,
+   "phys": [
+    81,
+    74
+   ],
+   "t": 118.88
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.75,
+   "close": 0,
+   "carSp": 7.74,
+   "chSp": 7.3,
+   "ballD": 0.97,
+   "ballSameSide": true,
+   "phys": [
+    77,
+    80
+   ],
+   "t": 170.13
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.91,
+   "close": 0.04,
+   "carSp": 7.12,
+   "chSp": 6.73,
+   "ballD": 1.11,
+   "ballSameSide": true,
+   "phys": [
+    77,
+    80
+   ],
+   "t": 170.18
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.94,
+   "close": 0.06,
+   "carSp": 7.03,
+   "chSp": 6.77,
+   "ballD": 1.17,
+   "ballSameSide": true,
+   "phys": [
+    77,
+    80
+   ],
+   "t": 170.2
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.97,
+   "close": 0.06,
+   "carSp": 6.94,
+   "chSp": 6.82,
+   "ballD": 1.21,
+   "ballSameSide": true,
+   "phys": [
+    77,
+    80
+   ],
+   "t": 170.22
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.99,
+   "close": 0.07,
+   "carSp": 6.86,
+   "chSp": 6.8,
+   "ballD": 1.23,
+   "ballSameSide": true,
+   "phys": [
+    77,
+    80
+   ],
+   "t": 170.23
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -1,
+   "close": 0.06,
+   "carSp": 6.77,
+   "chSp": 6.74,
+   "ballD": 1.22,
+   "ballSameSide": true,
+   "phys": [
+    77,
+    80
+   ],
+   "t": 170.25
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -1,
+   "close": 0,
+   "carSp": 6.54,
+   "chSp": 6.44,
+   "ballD": 1.18,
+   "ballSameSide": false,
+   "phys": [
+    77,
+    80
+   ],
+   "t": 170.27
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.35,
+   "close": 0.12,
+   "carSp": 2.12,
+   "chSp": 2.27,
+   "ballD": 0.61,
+   "ballSameSide": false,
+   "phys": [
+    77,
+    80
+   ],
+   "t": 170.52
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.37,
+   "close": 0.03,
+   "carSp": 1.8,
+   "chSp": 1.93,
+   "ballD": 0.45,
+   "ballSameSide": false,
+   "phys": [
+    77,
+    80
+   ],
+   "t": 170.53
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.37,
+   "close": 0.02,
+   "carSp": 1.46,
+   "chSp": 1.65,
+   "ballD": 0.33,
+   "ballSameSide": false,
+   "phys": [
+    77,
+    80
+   ],
+   "t": 170.55
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.37,
+   "close": 0.01,
+   "carSp": 1.12,
+   "chSp": 1.39,
+   "ballD": 0.26,
+   "ballSameSide": false,
+   "phys": [
+    77,
+    80
+   ],
+   "t": 170.57
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "behind",
+   "cos": -0.37,
+   "close": 0,
+   "carSp": 0.8,
+   "chSp": 1.15,
+   "ballD": 0.24,
+   "ballSameSide": false,
+   "phys": [
+    77,
+    80
+   ],
+   "t": 170.58
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "front",
+   "cos": 0.98,
+   "close": 0.04,
+   "carSp": 0.55,
+   "chSp": 0.49,
+   "ballD": 0.8,
+   "ballSameSide": false,
+   "phys": [
+    79,
+    69
+   ],
+   "t": 177.63
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "front",
+   "cos": 0.91,
+   "close": 0.03,
+   "carSp": 0.58,
+   "chSp": 0.66,
+   "ballD": 0.81,
+   "ballSameSide": false,
+   "phys": [
+    79,
+    69
+   ],
+   "t": 177.65
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "front",
+   "cos": 0.8,
+   "close": 0.01,
+   "carSp": 0.66,
+   "chSp": 0.84,
+   "ballD": 0.84,
+   "ballSameSide": false,
+   "phys": [
+    79,
+    69
+   ],
+   "t": 177.67
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "front",
+   "cos": 0.66,
+   "close": 0.01,
+   "carSp": 0.79,
+   "chSp": 1.03,
+   "ballD": 0.87,
+   "ballSameSide": false,
+   "phys": [
+    79,
+    69
+   ],
+   "t": 177.68
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "side",
+   "cos": 0.49,
+   "close": 0.02,
+   "carSp": 0.93,
+   "chSp": 1.22,
+   "ballD": 0.91,
+   "ballSameSide": false,
+   "phys": [
+    79,
+    69
+   ],
+   "t": 177.7
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "side",
+   "cos": 0.39,
+   "close": 0.04,
+   "carSp": 1.07,
+   "chSp": 1.35,
+   "ballD": 0.95,
+   "ballSameSide": false,
+   "phys": [
+    79,
+    69
+   ],
+   "t": 177.72
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "side",
+   "cos": 0.39,
+   "close": 0.04,
+   "carSp": 1.21,
+   "chSp": 1.43,
+   "ballD": 0.97,
+   "ballSameSide": false,
+   "phys": [
+    79,
+    69
+   ],
+   "t": 177.73
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "side",
+   "cos": 0.4,
+   "close": 0.04,
+   "carSp": 1.34,
+   "chSp": 1.53,
+   "ballD": 0.97,
+   "ballSameSide": false,
+   "phys": [
+    79,
+    69
+   ],
+   "t": 177.75
+  },
+  {
+   "kind": "shoulder",
+   "res": "none",
+   "hc": false,
+   "pos": "side",
+   "cos": 0.4,
+   "close": 0.04,
+   "carSp": 1.48,
+   "chSp": 1.64,
+   "ballD": 0.93,
+   "ballSameSide": false,
+   "phys": [
+    79,
+    69
+   ],
+   "t": 177.77
+  }
+ ]
+}

@@ -1,0 +1,27 @@
+{
+ "meta": {
+  "www": "/home/claude/masiret-nagm/www/js",
+  "n": 20,
+  "dt": 0.016666666666666666
+ },
+ "receptions": 821,
+ "perMatch": 41.05,
+ "speedMedian": {
+  "before05": 5,
+  "before025": 3.47,
+  "atTake": 1.36,
+  "after025": 2.9,
+  "after05": 4.62
+ },
+ "receiverStillAtTake": 0.31,
+ "stopStart": 0.21,
+ "waitedStillOver05s": 0.16,
+ "waitedStillMedian": 0.05,
+ "dipWhileRunning": 0.38,
+ "ballSnapOver02m": 0.03,
+ "snapMedian": 0.09,
+ "recvClipWhileMoving": 0.94,
+ "recvClipFramesMedian": 16,
+ "nextActionMedian": 0.8,
+ "passBallSpeedMedian": 8.42
+}

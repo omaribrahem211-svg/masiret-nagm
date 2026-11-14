@@ -28,7 +28,7 @@ P.take = function (p) {
   if (this === M && wasT && z < .3 && b.owner === p && !this.restartKind && passer && passer.team === p.team && passer !== p) {
     const H = p.__h || []; const at = k => { const e = H[H.length - 1 - Math.round(k / DT)]; return e ? e[0] : null; };
     let still = 0; for (let i = H.length - 1; i >= 0 && i >= H.length - Math.round(1.5 / DT); i--) if (H[i][0] < .8) still += DT;
-    const e = { p, t: this.time, bv: r2(bv), sm05: at(.5), sm025: at(.25), s0: r2(hyp(p.vx, p.vy)), waitedStill: r2(still), bx, by, bvx, bvy, after: [], clipF: 0, next: null, human: !!(this.human && this.human.ctrl === p) };
+    const e = { p, t: this.time, bv: r2(bv), sm05: at(.5), sm025: at(.25), sm01: at(.1), sPrev: H.length ? r2(H[H.length - 1][0]) : null, s0: r2(hyp(p.vx, p.vy)), waitedStill: r2(still), bx, by, bvx, bvy, after: [], clipF: 0, next: null, human: !!(this.human && this.human.ctrl === p) };
     REC.push(e); open.push(e);
   }
   return r;
@@ -57,7 +57,7 @@ const med = a => { a = a.filter(v => v != null); if (!a.length) return null; con
 const share = (a, f) => a.length ? r2(a.filter(f).length / a.length) : null;
 for (const e of REC) { const k = Math.round(.25 / DT); e.sp025 = e.after[k] != null ? r2(e.after[k]) : null; e.sp05 = e.after[Math.min(e.after.length - 1, Math.round(.5 / DT))] != null ? r2(e.after[Math.min(e.after.length - 1, Math.round(.5 / DT))]) : null; e.minAround = r2(Math.min(e.s0, ...(e.after.slice(0, Math.round(.4 / DT))))); }
 const out = { meta: { www: WWW, n: N, dt: DT }, receptions: REC.length, perMatch: r2(REC.length / N),
-  speedMedian: { before05: med(REC.map(e => e.sm05)), before025: med(REC.map(e => e.sm025)), atTake: med(REC.map(e => e.s0)), after025: med(REC.map(e => e.sp025)), after05: med(REC.map(e => e.sp05)) },
+  speedMedian: { before05: med(REC.map(e => e.sm05)), before025: med(REC.map(e => e.sm025)), before01: med(REC.map(e => e.sm01)), previousFrame: med(REC.map(e => e.sPrev)), atTake: med(REC.map(e => e.s0)), after025: med(REC.map(e => e.sp025)), after05: med(REC.map(e => e.sp05)) },
   receiverStillAtTake: share(REC, e => e.s0 < 1), stopStart: share(REC, e => e.s0 < 1 && e.sp05 > 3), waitedStillOver05s: share(REC, e => e.waitedStill >= .5), waitedStillMedian: med(REC.map(e => e.waitedStill)),
   dipWhileRunning: share(REC, e => e.sm025 > 4 && e.minAround < e.sm025 * .6),
   ballSnapOver02m: share(REC, e => e.snap > .2), snapMedian: med(REC.map(e => e.snap)),

@@ -288,7 +288,9 @@ class Match{
    else if(p.role==='MF'){x=dl+14+(p.bx-32)*.4;y=34+(p.by-34)*.9+(by-34)*.32;}
    else{x=Math.min(dl+30+(p.bx-50)*.3,68);y=34+(p.by-34)*.9+(by-34)*.3;}
    return this.toW(t,clamp(x,6,90),clamp(y,2.5,W-2.5));}
-  const TT=t.T||TACTICS.bal;let x=p.bx+(bx-52.5)*.55+(att?8+(t.str||0)*4+TT.line*.3:-3+(t.str||0)*3+TT.line*.4),y=p.by+(by-34)*.3;
+  // (3C) في الهجمة الفريق بيطلع ورا الكورة أكتر لما تعدّي نص الملعب (0.75 من حركة الكورة بدل 0.55 + 2 م): قبل كده والكورة على بعد 25 م من المرمى
+  // لاعيبة الوسط كانوا على بعد ~50 م. (0.9 اتجربت: تسديدات أكتر بس قطع كورة ومرتدات أكتر بكتير — اترفضت)
+  const TT=t.T||TACTICS.bal;let x=p.bx+(bx-52.5)*(att&&bx>52.5?.75:.55)+(att?(bx>52.5?10:8)+(t.str||0)*4+TT.line*.3:-3+(t.str||0)*3+TT.line*.4),y=p.by+(by-34)*.3;
   if(att&&p.role!=='DF'&&Math.abs(p.by-34)>13)y=34+(p.by-34)*1.12*TT.width+(by-34)*.15;else if(att)y=34+(p.by-34)*(.6+.4*TT.width)+(by-34)*.3;
   if(p.role==='DF')x=clamp(x,9,64);else if(p.role==='MF')x=clamp(x,16,84);else x=clamp(x,30,97);
   if(att&&p.role==='FW'&&bx>50)x=Math.max(x,Math.min(98,bx+9+(p.i%2)*4));if(att&&p.role!=='DF')x=Math.min(x,t.offLine-.6-(p.role==='MF'?7:0));

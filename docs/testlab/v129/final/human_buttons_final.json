@@ -1,0 +1,32 @@
+{
+ "www": "/home/claude/masiret-nagm/www/js",
+ "runs": 40,
+ "results": {
+  "X pass": {
+   "pass": 20,
+   "pass (lofted)": 20
+  },
+  "O lob/cross": {
+   "pass (lofted)": 40
+  },
+  "T through ball": {
+   "pass": 20,
+   "pass (lofted)": 20
+  },
+  "S shoot (tap) from 20 m": {
+   "shot": 40
+  },
+  "S held 0.6 s (power shot)": {
+   "shot": 40
+  },
+  "X pass while running (stick held forward)": {
+   "pass": 36,
+   "nothing": 2,
+   "pass (lofted)": 2
+  },
+  "stick only (move up)": {
+   "moved": 39,
+   "did not move": 1
+  }
+ }
+}

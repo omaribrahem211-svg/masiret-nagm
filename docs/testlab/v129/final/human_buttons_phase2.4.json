@@ -1,0 +1,34 @@
+{
+ "www": "/tmp/et/v24/js",
+ "runs": 40,
+ "results": {
+  "X pass": {
+   "pass": 28,
+   "pass (lofted)": 12
+  },
+  "O lob/cross": {
+   "pass (lofted)": 40
+  },
+  "T through ball": {
+   "pass": 28,
+   "pass (lofted)": 12
+  },
+  "S shoot (tap) from 20 m": {
+   "shot": 39,
+   "nothing": 1
+  },
+  "S held 0.6 s (power shot)": {
+   "shot": 39,
+   "nothing": 1
+  },
+  "X pass while running (stick held forward)": {
+   "pass": 30,
+   "nothing": 1,
+   "pass (lofted)": 4,
+   "lost the ball before the press (not counted)": 5
+  },
+  "stick only (move up)": {
+   "moved": 40
+  }
+ }
+}

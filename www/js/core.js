@@ -214,8 +214,14 @@ class Match{
       const jd=c.stillT>1.2?1.1:clamp(1.45+cs*.1,1.45,2.1),shade=clamp((CY-c.y)/20,-1,1)*.45;
       this.go(p,[pcx+qx/qd*jd,pcy+qy/qd*jd+shade],Math.min(1,(cs+1.2)/p.mse));}
      if(p.tcool<=0){const og=this.ownG(t),inBox=Math.abs(c.x-og[0])<17&&Math.abs(c.y-CY)<20.5;const dB=hyp(p.x-b.x,p.y-b.y),exposed=hyp(b.x-c.x,b.y-c.y)>.62,front=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/(dC||1)>-.35;const skill=(.5+t.R/200)*(1+(t.str||0)*.25)*(h&&c===h.ctrl?.85:1);
-      if(front&&dB<3&&this.time-(p.tkW||-9)>.6&&this.tkTime(p)){p.tkW=this.time;// يستنى اللمسة الطويلة: لو الكورة لازقة في رجل المهاجم نادراً ما يتدخل
-       if(Math.random()<(.1+.5*(1-this.dribCtrl(c)))*skill*(.6+.4*p.stam/100))this.tackle(p,false,inBox&&Math.random()<.8);}
+      // (2.4) فرصة الصراع: المدافع جنبه أو قدامه (مش وراه)، الكورة مش متغطية بجسم المهاجم، في المدى (≤1 م) وبعيدة عن رجل المهاجم (≥0.6 م)،
+      // والأهم: لحظة التلامس (بعد مدة الخطوة) هتيجي في نص المسافة بين لمستين للمهاجم (الكورة بعيدة عن رجله)، مش قبل اللمسة الجاية مباشرة.
+      // قبل كده القرار كان كل 0.6 ث في لحظة عشوائية فكان بيفوّت اللحظات دي ويجري جنبه ثواني (اتشاف في الـ 3D)، ولو اتدخل والكورة ممدودة
+      // كان التلامس بيحصل بعد ما المهاجم يلمسها ويرجعها (مكسب ~10%). باقي الحالات زي ما هي: يستنى اللمسة الطويلة
+      const bAtt=hyp(b.x-c.x,b.y-c.y),phC=this.touchPhaseAt(c,TKL),contest=front&&dB<=1&&bAtt>=.6&&!this.tkBlocked(p,c)&&phC>=.25&&phC<=.75&&this.tkEst(p,TKL,true)>=.45;
+      if(front&&dB<3&&this.time-(p.tkW||-9)>(contest?.2:.6)&&this.tkTime(p)){p.tkW=this.time;// يستنى اللمسة الطويلة: لو الكورة لازقة في رجل المهاجم نادراً ما يتدخل
+       const pr=contest?.5:(.1+.5*(1-this.dribCtrl(c)));
+       if(Math.random()<pr*skill*(.6+.4*p.stam/100))this.tackle(p,false,inBox&&Math.random()<.8);}
       else if(!inBox&&!front&&dC>1.6&&dC<2.8&&hyp(c.vx,c.vy)>4&&Math.random()<dt*.25*skill)this.tackle(p,true);}}
     else if(!b.owner&&b.target&&b.target.team!==t&&!(b.target===b.last&&b.target.bigT>0)&&this.time-b.passT<.35)this.go(p,this.shape(p,false),.9);/* (2.3) لمسة طويلة لنفسه (bigTouch بس، مش السيطرة/التخميد) مش تمريرة: المدافع مايرجعش لمكانه، بيروح لمكان الكورة المتوقع */else this.go(p,b.owner?[pbx,pby]:this.intercept(p),1);continue;}
    if(p===t.second&&b.owner&&b.owner.team!==t&&!this.restartKind){const g=this.ownG(t);const dx=g[0]-b.x,dy=g[1]-b.y,d=hyp(dx,dy)||1;const sd=clamp(7-(t.str||0)*3-((t.T||TACTICS.bal).press-.5)*4,3,10);// المدافع التاني بيغطي: بين الكورة والمرمى، ولو الكورة على الطرف قريب من مرمانا بيقفل الطريق الداخلي
@@ -419,8 +425,8 @@ class Match{
  // هل الرجل توصل الكورة لو التدخل بدأ دلوقتي (خطوة مدتها T)؟ نفس حساب المدى في tkTime
  tkReach(p,T){const b=this.ball,dx=b.x-p.x,dy=b.y-p.y,dB=hyp(dx,dy),[bvx,bvy]=this.tkBV();const cl=-(dx*(bvx-p.vx)+dy*(bvy-p.vy))/(dB||1),st=Math.min(cl*T+6*T*T,Math.min(5,p.mse||6)*T);return dB-st<=TKR-.15;}
  // تقدير فرصة الكسب لو بدأ التدخل دلوقتي (من غير عشوائية): نفس tkProb بمسافة التلامس المتوقعة
- tkEst(p,T){const b=this.ball,c=b.owner;if(!c||c.team===p.team)return 0;const dx=b.x-p.x,dy=b.y-p.y,dB=hyp(dx,dy),[bvx,bvy]=this.tkBV();const cl=-(dx*(bvx-p.vx)+dy*(bvy-p.vy))/(dB||1),st=Math.min(Math.max(0,cl)*T+6*T*T,Math.min(5,p.mse||6)*T),dC=Math.max(.3,dB-st),dM=hyp(c.x-p.x,c.y-p.y)||.01;
-  const shield=segDist(c.x,c.y,p.x,p.y,b.x,b.y)<.33;return this.tkProb(p,c,dC,dM,1,shield,true).win;}
+ tkEst(p,T,realFace){const b=this.ball,c=b.owner;if(!c||c.team===p.team)return 0;const dx=b.x-p.x,dy=b.y-p.y,dB=hyp(dx,dy),[bvx,bvy]=this.tkBV();const cl=-(dx*(bvx-p.vx)+dy*(bvy-p.vy))/(dB||1),st=Math.min(Math.max(0,cl)*T+6*T*T,Math.min(5,p.mse||6)*T),dC=Math.max(.3,dB-st),dM=hyp(c.x-p.x,c.y-p.y)||.01;
+  const shield=segDist(c.x,c.y,p.x,p.y,b.x,b.y)<.33;return this.tkProb(p,c,dC,dM,realFace?(p.fx*dx+p.fy*dy)/(dB||1):1,shield,true).win;}
  // نقطة التصويب: مكان الكورة بعد T، بس لو الكورة جاية عليه مباشرة (هتعدّي أقل من نص متر منه قبل T) يصوّب على أقرب نقطة في طريقها (مش على نقطة وراه)
  tkAim(p,T){const b=this.ball,[bvx,bvy]=this.tkBV(),dx=b.x-p.x,dy=b.y-p.y,rvx=bvx-p.vx,rvy=bvy-p.vy,r2=rvx*rvx+rvy*rvy;let t=r2>.01?clamp(-(dx*rvx+dy*rvy)/r2,0,T):T;if(hyp(dx+rvx*t,dy+rvy*t)>.5)t=T;const ax=b.x+bvx*t,ay=b.y+bvy*t;
   // الكورة جاية في رجله بالظبط: يحط رجله في طريقها (ناحية الكورة دلوقتي) بدل اتجاه عشوائي
@@ -466,6 +472,8 @@ class Match{
  // لحظة التلامس: النتيجة بتتحسب بمكان الرجل والكورة الحقيقيين دلوقتي
  // سيطرة المهاجم على الكورة لحظة التلامس (0 = الكورة سايبة/لمسة طويلة، 1 = لازقة في رجله):
  // من بُعد الكورة عن رجله + هل هو على وشك يلمسها (نفس مرحلة الخطوة اللي بتستخدمها المراوغة في dribble)
+ // مرحلة خطوة المراوغة بعد T ثانية (0 = لحظة اللمسة، 0.5 = الكورة أبعد حاجة عن الرجل، 1 = اللمسة الجاية)، من نفس حسابات dribble()
+ touchPhaseAt(c,T){const sp=hyp(c.vx,c.vy);if(sp<1.2)return 0;const ua=((c.anim||0)+sp*T*6.283/strideLen(sp))/(2*Math.PI),u=((ua%1)+1)%1,two=sp<3.2&&!c.dHi,uT=c.dHi?.42:.05;let ph=((u-uT)%1+1)%1;if(two&&ph>=.5)ph-=.5;return ph/(two?.5:1);}
  dribCtrl(c){const b=this.ball,e=hyp(b.x-c.x,b.y-c.y),sp=hyp(c.vx,c.vy);let k=clamp((.95-e)/.5,0,1);if(sp>1.2){const ua=(c.anim||0)/(2*Math.PI),u=((ua%1)+1)%1,two=sp<3.2&&!c.dHi,uT=c.dHi?.42:.05;let ph=((u-uT)%1+1)%1;if(two&&ph>=.5)ph-=.5;const phi=ph/(two?.5:1);if(phi<.18||phi>.88)k=Math.min(1,k+.25);}return k;}
  // احتمال كسب الكورة لحظة التلامس: مدى الرجل، سيطرة المهاجم، زاوية التدخل، بصّة المدافع، اتجاه حركة المهاجم، المهارات، اللياقة
  tkProb(p,c,dB,dM,face,shield,clean){const reach=clamp((TKR-dB)/.5,0,1),ctrl=this.dribCtrl(c),cosA=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/dM;

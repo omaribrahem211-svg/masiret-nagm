@@ -545,7 +545,7 @@ class Match{
   if(c.team===p.team||b.inHands)return;
   const dB=hyp(rx,ry),dM=hyp(c.x-p.x,c.y-p.y)||.01;
   // سرعة اصطدام المدافع بجسم المهاجم (نسبية): هي اللي بتحدد إذا كان فيه خبطة تستاهل فاول
-  const crash=((p.vx-c.vx)*(c.x-p.x)+(p.vy-c.vy)*(c.y-p.y))/dM;
+  const crash=(p.vx*(c.x-p.x)+p.vy*(c.y-p.y))/dM;/* (v131) سرعة اندفاع المدافع نفسه ناحية المهاجم، مش السرعة النسبية: مهاجم بيجري في مدافع واقف كان بيتحسب "خبطة" وفاول على المدافع */
   const behind=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/dM<-.35,exposedD=hyp(b.x-c.x,b.y-c.y);
   if(dB<TKR){const ux=rx/(dB||1),uy=ry/(dB||1);const face=p.fx*ux+p.fy*uy;const shield=segDist(c.x,c.y,p.x,p.y,p.x+rx,p.y+ry)<.33;
    if(clean&&behind&&shield){this.tkFail(p,clean,1);return;}

@@ -870,7 +870,11 @@ class Match{
   if(b.offside){if(b.offside===p){this.offsideCall(p);return;}b.offside=null;}
   {const r=this.shotLive();if(r)this.shotEnd(p.team.idx===r.team?'retained':'blocked',p);}
   const t=p.team,g=this.attG(t),og=this.ownG(t);const wasT=b.target===p,ownBall=b.last&&b.last.team===t,wasX=!!b.cross;p.hdrHi=b.z>1.85;p.jumpT=.45;p.cool=.35;b.hdrN=(b.hdrN||0)+1;const chain=b.hdrN>=2;b.last=p;b.target=null;b.passFrom=null;SFX.kick(.4);
-  const dG=hyp(g[0]-p.x,g[1]-p.y),h=this.human;const wants=p.hdrShot||(h&&p===h.ctrl?Input.hold.S||Input.hold.O||dG<14:true);
+  const dG=hyp(g[0]-p.x,g[1]-p.y),h=this.human;
+  // (v131 C1) قرار التسديد بالراس للـ AI: مش كل كورة جوه 17 م تبقى تسديدة. بيحسب زاوية المرمى المفتوحة من مكانه (عرض المرمى × جيب الزاوية ÷ المسافة)
+  // واتجاه جسمه: من زاوية ضيقة أو وهو ضهره للمرمى بيمرر بالراس/ينزّلها لزميل بدل ما يسدد
+  const hq=GW*Math.abs(g[0]-p.x)/(dG*dG||1),face=((g[0]-p.x)*p.fx+(g[1]-p.y)*p.fy)/(dG||1);
+  const wants=p.hdrShot||(h&&p===h.ctrl?Input.hold.S||Input.hold.O||dG<14:(hq>.33&&face>-.3)||dG<7);
   if((dG<17||p.hdrShot&&dG<24)&&wants&&!(chain&&dG>11)){/* (v131 C) كورة جاية من راس تاني من غير ما تلمس الأرض: تسديد بالراس بس لو قريب (≤11 م)، غير كده تمريرة/تنزيل */const ty=CY+R(-3,3)*(1.15-p.st.head/100)+(Math.random()<.5?-2:2);const dx=g[0]-p.x,dy=ty-p.y,d=hyp(dx,dy)||1;const s2=12+p.st.phys/100*5;b.vx=dx/d*s2;b.vy=dy/d*s2;b.vz=R(-1,1.5);b.shot={by:p,t:this.time,hdr:true,d:dG};this.shotNew(p);p.stats.sh++;this.shotsT[t.idx]++;this.ev('shot',{p});return;}
   let pr=99;for(const q of this.other(t).pl)pr=Math.min(pr,hyp(q.x-p.x,q.y-p.y));
   // المستلم المقصود ومفيش ضغط: يهدّي الكورة براسه لتحت قدام رجله (الراس بتمتص سرعة الكورة) ويكمل استلام برجله

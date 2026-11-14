@@ -187,7 +187,7 @@ class Match{
   if(this.pen&&this.pen.live&&!b.shot)this.pen=null;
   const pbx=b.owner?b.x:b.x+b.vx*.4,pby=b.owner?b.y:b.y+b.vy*.4;
   for(const t of this.t){let c1=null,d1=1e9,c2=null,d2=1e9;for(const p of t.pl){if(p.role==='GK'||p.stun>0||p.enterT>0||p.upT>0)continue;const d=hyp(p.x-pbx,p.y-pby)-(p===t.chaser?2.2:p===t.second?1.2:0);if(d<d1){c2=c1;d2=d1;c1=p;d1=d;}else if(d<d2){c2=p;d2=d;}}t.chaser=c1;t.second=c2;
-   const o=this.other(t);let m=0;for(const q of o.pl){if(q.role==='GK')continue;const qx=t.dir===1?q.x:L-q.x;if(qx>m)m=qx;}const bx=t.dir===1?b.x:L-b.x;t.offLine=Math.max(m,bx,52.5);t.str=clamp(((t.R||60)-(o.R||60))/15,-1,1);t.q=clamp(((t.R||60)-50)/35,0,1);this.tactic(t,o,bx);}
+   const o=this.other(t);let m=0;for(const q of o.pl){if(q.role==='GK')continue;const qx=t.dir===1?q.x:L-q.x;if(qx>m)m=qx;}const bx=t.dir===1?b.x:L-b.x;t.offLine=Math.max(m,bx,52.5);t.str=clamp(((t.R||60)-(o.R||60))/15,-1,1);t.q=clamp(((t.R||60)-50)/35,0,1);if(!b.owner&&b.target&&b.target.team===t&&b.passer&&b.passer.team===t&&t.tmK!==b.passT&&!this.restartKind){t.tmK=b.passT;this.thirdMan(t,o,b.passer,b.target);}if(t.third&&(this.time>t.third.until||(b.owner&&b.owner.team!==t)||this.restartKind))t.third=null;this.tactic(t,o,bx);}
   const h=this.human;
   if(h)this.humanCtl(dt);
   const penWait=this.pen&&!this.pen.live;
@@ -209,6 +209,7 @@ class Match{
    if(b.owner===p){this.carrierAI(p,dt);continue;}
    if(b.target===p&&!b.owner){this.receive(p);continue;}
    if(t.run&&t.run.p===p&&!this.restartKind&&(b.owner?b.owner.team===t:b.last&&b.last.team===t&&b.target&&b.target.team===t)){this.go(p,t.run.pt,1);continue;}/* (v131 E2) جاري overlap/underlap */
+   if(t.third&&t.third.p===p&&!this.restartKind&&(b.owner?b.owner.team===t:b.target&&b.target.team===t)){this.go(p,t.third.pt,1);continue;}/* (v131 E2) جري الراجل التالت */
    if(p.spT&&!this.restartKind&&!b.owner&&b.target&&b.target.team!==t&&b.z>.4&&!p.wallP){const bt=b.target;if(hyp(p.x-bt.x,p.y-bt.y)<3.5){const og=this.ownG(t),q=[bt.x,bt.y],dx=og[0]-q[0],dy=og[1]-q[1],dd=hyp(dx,dy)||1;this.go(p,[q[0]+dx/dd*.55,q[1]+dy/dd*.55],1);continue;}}
    if(p.spT){if(this.restartKind||(!b.owner&&this.time-(this.spKick||-9)<2.2)){this.go(p,p.spT,this.restartKind?.75:.9);continue;}p.spT=null;p.wallP=0;}
    if(!b.owner&&b.target&&b.target.team===t&&!b.target.off&&this.time-b.passT<3.2){this.goS(p,this.shape(p,true),.8);continue;}
@@ -279,6 +280,17 @@ class Match{
   if(touch||!free(ov,5)){let q=fbOk?fb:null;if(!q)q=t.pl.filter(p=>p.role==='MF'&&okP(p)&&Math.sign(p.y-CY)===side).sort((a,z)=>hyp(a.x-c.x,a.y-c.y)-hyp(z.x-c.x,z.y-c.y))[0];
    if(q&&free(un,4)&&c.runRoll<want)return t.run={p:q,kind:'underlap',carrier:c,until:this.time+3.5,pt:un,t0:this.time};}
   return null;}
+ // (v131 E2) الراجل التالت: لما A يمرر لـ B، بيدوّر على زميل C يقدر يجري لمساحة فاضية قدّام B (9–15 م ناحية المرمى، في نص ملعب الخصم بس، مش متسلل،
+ // مافيش خصم في 4 م منها، والممر من B ليها مفتوح بهامش 2.4 م، ويوصلها في ≤2.6 ث ولياقته فوق 40). مش كل تمريرة: احتمال حسب runs في الخطة،
+ // ولو مافيش مساحة حقيقية مافيش جري. B لما يستلم يقدر يديها لـ C على طول (مش إجباري)
+ thirdMan(t,o,a,bR){const h=this.human,TT=t.T||TACTICS.bal;const tl=this.landT();if(tl>.05&&this.ball.z>1)return;
+  const ex=bR.x,ey=bR.y,offX=t.offLine-.6;let best=null,bs=-1e9;
+  for(const c of t.pl){if(c===a||c===bR||c.role==='GK'||c.stun>0||c.stam<40||(h&&(c===h.ctrl||c===h.p2))||(t.run&&t.run.p===c))continue;
+   const cx=t.dir===1?c.x:L-c.x,bxT=t.dir===1?ex:L-ex;if(bxT<45)return;if(c.role==='DF'&&Math.abs(c.by-34)<13)continue;
+   for(const fw of [9,12,15])for(const lat of [-9,-4,4,9]){const tx=Math.min(bxT+fw,offX),ty=clamp((t.dir===1?ey:W-ey)+lat,4,W-4);if(tx<bxT+6)continue;const w=t.dir===1?[tx,ty]:[L-tx,W-ty];
+    const dc=hyp(w[0]-c.x,w[1]-c.y);if(dc/(c.mse*.95)>2.6||dc<4)continue;let sp=9;for(const q of o.pl)sp=Math.min(sp,hyp(q.x-w[0],q.y-w[1]));if(sp<4)continue;
+    if(o.pl.some(q=>segDist(q.x,q.y,ex,ey,w[0],w[1])<2.4))continue;const sc=Math.min(sp,8)+fw*.15-dc*.12+(c.role==='FW'?.5:0);if(sc>bs){bs=sc;best={p:c,pt:w};}}}
+  if(best&&bs>6&&Math.random()<.12+.3*TT.runs){t.third={p:best.p,pt:best.pt,b:bR,a,until:this.time+3.5,t0:this.time};}}
  tactic(t,o,bx){const b=this.ball,c=b.owner;
   let mn=105;for(const q of o.pl){if(q.role==='GK')continue;const qx=t.dir===1?q.x:L-q.x;if(qx<mn)mn=qx;}
   const TT=t.T||TACTICS.bal;let dl=clamp(16+(bx-52.5)*.5+(bx>70?4:0)+(t.str||0)*5+TT.line,bx<20?6.5:bx<30?10.5:12.5,50);dl=Math.max(8,Math.min(dl,mn-.4));t.dl=t.dl==null?dl:t.dl+(dl-t.dl)*.12;
@@ -405,6 +417,9 @@ class Match{
   const h=this.human;if(h&&h.lock&&h.call>0&&t.idx===h.team&&h.ctrl!==p){const s=h.ctrl,d=hyp(s.x-p.x,s.y-p.y);if(d<50){this.pass(p,s,d>14&&(t.dir*(s.x-p.x))>6,d>30);h.call=0;return;}}
   let nd=1e9,no=null;for(const q of o.pl){const d=hyp(q.x-p.x,q.y-p.y);if(d<nd){nd=d;no=q;}}
   const dG=hyp(g[0]-p.x,g[1]-p.y);
+  // (v131 E2) B استلم وفيه راجل تالت جاري: يديهاله في طريقه لو الممر لسه فاضي وC مش متسلل (أول لمستين/أول 1.2 ث، ومش كل مرة: 75%)
+  {const tm=t.third;if(tm&&tm.b===p&&b.owner===p&&!p.pend&&this.time-(p.ownT||0)<1.2&&tm.p.team===t){const q=tm.p,qx=t.dir===1?q.x:L-q.x,lead=[q.x+q.vx*.5,q.y+q.vy*.5];
+    if(tm.roll==null)tm.roll=Math.random();if(tm.roll<.75&&qx<t.offLine&&t.dir*(q.x-p.x)>4&&o.pl.every(z=>segDist(z.x,z.y,p.x,p.y,lead[0],lead[1])>2.2&&hyp(z.x-lead[0],z.y-lead[1])>3.5)){tm.passed=true;this.pass(p,q,true,false);return;}}}
   // (v131 E2) (كل فريم) الجناح وفيه ظهير/لاعب وسط بيعمل overlap/underlap: لو الجاري بقى قدامه وممر التمريرة فاضي يمررها في طريقه،
    // ولو لسه ماوصلش ومفيش ضغط عليه (أقرب خصم > 3.4 م) يمشي بالكورة على مهله لحد 3 ث (لجوه شوية لو overlap عشان يفتح الممر برّه، ولبرّه لو underlap) يستناه بدل ما يعرّض أو يرجّع
   {const rn=t.run&&t.run.carrier===p?t.run:null;if(rn&&b.owner===p){const q=rn.p,ahead=t.dir*(q.x-p.x)>(nd<3.4?-2.5:1.5);/* تحت الضغط بيمررها في طريقه أول ما يبقى جنبه تقريباً */

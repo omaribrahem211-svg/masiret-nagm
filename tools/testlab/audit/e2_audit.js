@@ -31,7 +31,7 @@ vm.runInContext([fs.readFileSync(path.join(WWW, 'data.js'), 'utf8'), fs.readFile
 const G = ctx.__G, { L, CY } = G, P = G.Match.prototype, hyp = Math.hypot, r2 = v => Math.round(v * 100) / 100;
 const segD = (px, py, ax, ay, bx, by) => { const dx = bx - ax, dy = by - ay, l = dx * dx + dy * dy || 1, t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / l)); return hyp(px - ax - t * dx, py - ay - t * dy); };
 const S = { inP: { gDM: [], gMF: [], len: [], wid: [] }, outP: { gDM: [], gMF: [], len: [], wid: [] }, options: [], crowd: 0, crowdS: 0, abandon: 0, abandonS: 0,
-  overlap: { n: 0, useful: 0, unnecessary: 0 }, underlap: { n: 0, useful: 0, unnecessary: 0 }, third: { n: 0, done: 0 }, sw: { att: 0, ok: 0 }, fbRec: [], runA: { overlap: 0, underlap: 0 }, runPass: 0, runRecv: 0, runLostAhead: 0 };
+  overlap: { n: 0, useful: 0, unnecessary: 0 }, underlap: { n: 0, useful: 0, unnecessary: 0 }, third: { n: 0, done: 0 }, sw: { att: 0, ok: 0 }, fbRec: [], runA: { overlap: 0, underlap: 0 }, runPass: 0, runRecv: 0, runLostAhead: 0, tmA: 0, tmP: 0, tmR: 0 };
 let M = null; const pend = [], passes = [], runs = [];
 const X = (t, x) => t.dir === 1 ? x : L - x;
 const oPass = P.pass;
@@ -52,6 +52,7 @@ for (let id = 1; id <= N; id++) {
   while (m.phase !== 'end' && f < 40000) {
     m.update(1 / 60); f++;
     const own = b.owner, live = m.phase === 'play' && !m.restartKind && !b.inHands;
+    for (const tm of m.t) { const th = tm.third; if (th && th !== tm.__lastTh) { tm.__lastTh = th; S.tmA++; } if (th && b.passT === m.time && b.passer === th.b && b.target === th.p && !th.__p) { th.__p = 1; S.tmP++; } if (th && th.__p && !th.__r && own === th.p) { th.__r = 1; S.tmR++; } }
     for (const tm of m.t) { const rr = tm.run; if (rr && rr !== tm.__lastRun) { tm.__lastRun = rr; S.runA[rr.kind]++; rr.__team = tm; } }
     if (b.passT === m.time && b.passer && b.passer.team.run && b.target === b.passer.team.run.p) { S.runPass++; b.passer.team.run.__passed = true; }
     for (const tm of m.t) { const rr = tm.__lastRun; if (rr && rr.__passed && !rr.__recv && own === rr.p) { rr.__recv = true; S.runRecv++; } if (rr && !rr.__cl && own && own.team !== tm) { rr.__cl = true; if (m.time - rr.t0 < 6 && X(tm, rr.p.x) > X(tm, b.x) && !rr.__recv) S.runLostAhead++; } }
@@ -95,6 +96,6 @@ const out = { meta: { www: WWW, n: N, tactic: TAC }, inPossession: sh('inP'), ou
   crowdShare: r2(S.crowd / (S.crowdS || 1)), abandonedShare: r2(S.abandon / (S.abandonS || 1)),
   perMatch: { overlaps: r2(S.overlap.n / N), overlapUseful: r2(S.overlap.useful / N), overlapUnnecessary: r2(S.overlap.unnecessary / N), underlaps: r2(S.underlap.n / N), underlapUseful: r2(S.underlap.useful / N), underlapUnnecessary: r2(S.underlap.unnecessary / N),
     thirdManAttempts: r2(S.third.n / N), thirdManCompleted: r2(S.third.done / N), switchPasses: r2(S.sw.att / N), switchCompleted: r2(S.sw.ok / N) },
-  runsAssignedPerMatch: { overlap: r2(S.runA.overlap / N), underlap: r2(S.runA.underlap / N) }, passesToRunnerPerMatch: r2(S.runPass / N), runnerReceivedPerMatch: r2(S.runRecv / N), runsEndedWithBallLostAndRunnerAheadOfBallPerMatch: r2(S.runLostAhead / N),
+  runsAssignedPerMatch: { overlap: r2(S.runA.overlap / N), underlap: r2(S.runA.underlap / N) }, thirdManRunsPerMatch: r2(S.tmA / N), thirdManPassBtoCPerMatch: r2(S.tmP / N), thirdManReceivedPerMatch: r2(S.tmR / N), passesToRunnerPerMatch: r2(S.runPass / N), runnerReceivedPerMatch: r2(S.runRecv / N), runsEndedWithBallLostAndRunnerAheadOfBallPerMatch: r2(S.runLostAhead / N),
   fullbackRecoveryMedianSec: med(S.fbRec), fullbackRecoveryOver6s: r2(S.fbRec.filter(v => v >= 6).length / (S.fbRec.length || 1)) };
 fs.writeFileSync(A.out, JSON.stringify(out, null, 1)); console.log(JSON.stringify(out, null, 1));

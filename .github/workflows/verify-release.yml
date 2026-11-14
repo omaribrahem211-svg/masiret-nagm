@@ -56,24 +56,24 @@ jobs:
           BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1); say "build-tools: $(basename $BT)"
           say "--- aapt2 dump badging"
           $BT/aapt2 dump badging $APK > badging.txt || fail "aapt2 could not read the APK"
-          grep -E "^package:|^sdkVersion|^targetSdkVersion|^application-label:|^launchable-activity|^native-code" badging.txt | tee -a $R || true
+          grep -E "^package:|[sS]dkVersion|^application-label:|^launchable-activity|^native-code|^uses-permission" badging.txt | tee -a $R || true
           grep -q "package: name='com.asomygames.masiretnagm'" badging.txt || fail "package id"
           VC=$(sed -n "s/.*versionCode='\([0-9]*\)'.*/\1/p" badging.txt); VN=$(sed -n "s/.*versionName='\([^']*\)'.*/\1/p" badging.txt)
           EXP=$(( $(echo "$RUN" | jq -r .run_number) + 100 )); [ "$VC" = "$EXP" ] || fail "versionCode $VC != expected $EXP"
           say "versionCode=$VC versionName=$VN (expected code $EXP)"
-          grep -q "^sdkVersion:'24'" badging.txt || fail "minSdk is not 24 (android/variables.gradle)"
+          grep -Eq "^(sdkVersion|minSdkVersion):'24'" badging.txt && say "minSdk 24 (Android 7.0) as in android/variables.gradle" || fail "minSdk is not 24 (android/variables.gradle)"
           say "--- zipalign"
           $BT/zipalign -c -P 16 -v 4 $APK > zipalign.txt 2>&1 && say "zipalign: OK (4-byte, 16 KB page alignment for .so)" || { tail -5 zipalign.txt | tee -a $R; $BT/zipalign -c 4 $APK && say "zipalign: OK (4-byte)" || fail "zipalign"; }
           say "--- apksigner"
           $BT/apksigner verify --verbose --print-certs $APK > signer.txt 2>&1 || fail "apksigner verify"
-          grep -E "^Verifies|Verified using|Number of signers|Signer #1 certificate (DN|SHA-256)" signer.txt | tee -a $R || true
-          grep -q "Signer #1 certificate DN: C=US, O=Android, CN=Android Debug" signer.txt && say "WARNING: signed with the Android debug key (KEYSTORE secret missing)" || say "Signed with the project upload key (not the Android debug key)"
-          NEW=$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' signer.txt)
+          grep -Ei "^Verifies|Verified using|Number of signers|certificate DN|certificate SHA-256" signer.txt | tee -a $R || true
+          grep -q "CN=Android Debug" signer.txt && say "WARNING: signed with the Android debug key (KEYSTORE secret missing)" || say "Signed with the project upload key (not the Android debug key)"
+          NEW=$(grep -i "certificate SHA-256 digest" signer.txt | head -1 | sed 's/.*digest: //')
           say "--- update compatibility with the previous test APK on the 'builds' branch"
           git fetch -q origin builds && OLDN=$(git ls-tree --name-only origin/builds | grep -- '-test.apk' | head -1) && git show origin/builds:$OLDN > old.apk && say "previous: $OLDN"
           $BT/aapt2 dump badging old.apk | grep "^package:" | tee -a $R
           $BT/apksigner verify --print-certs old.apk > oldsig.txt 2>&1 || true
-          OLD=$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' oldsig.txt)
+          grep -Ei "certificate DN|certificate SHA-256" oldsig.txt | sed 's/^/  previous: /' | tee -a $R || true; OLD=$(grep -i "certificate SHA-256 digest" oldsig.txt | head -1 | sed 's/.*digest: //')
           OVC=$($BT/aapt2 dump badging old.apk | sed -n "s/.*versionCode='\([0-9]*\)'.*/\1/p")
           [ -n "$NEW" ] && [ "$NEW" = "$OLD" ] && say "same signing certificate as $OLDN: YES ($NEW)" || fail "signing certificate differs from $OLDN"
           [ "$VC" -gt "$OVC" ] && say "versionCode $VC > $OVC: update allowed" || fail "versionCode not higher than previous"
@@ -84,7 +84,7 @@ jobs:
           say "www files at build commit: $N   missing: $MISS   different: $DIFF"
           [ $MISS = 0 ] || fail "missing web files"
           [ $DIFF = 0 ] || fail "web files differ from the build commit"
-          say "files only in the APK web folder (generated at build time): $(cd x/assets/public && find . -type f | sed 's#^\./#www/#' | sort > /tmp/a.txt; git ls-tree -r --name-only $SHA www | sort > /tmp/b.txt; comm -23 /tmp/a.txt /tmp/b.txt | sed 's#^www/##' | awk -F/ '{print $1"/"$2}' | sort | uniq -c | tr '\n' ';')"
+          say "files only in the APK web folder (generated at build time): $(cd x/assets/public && find . -type f | sed 's#^\./#www/#' | LC_ALL=C sort > /tmp/a.txt; git -C "$GITHUB_WORKSPACE" ls-tree -r --name-only $SHA www | LC_ALL=C sort > /tmp/b.txt; LC_ALL=C comm -23 /tmp/a.txt /tmp/b.txt | sed 's#^www/##' | awk -F/ '{print (NF>1?$1"/":$0)}' | sort | uniq -c | tr '\n' ';')"
           say "--- JavaScript syntax (node --check) of every .js in the APK web folder"
           BAD=0; for j in $(find x/assets/public -name '*.js'); do node --check "$j" 2>/dev/null || { BAD=$((BAD+1)); say "syntax error: $j"; }; done
           say "js files checked: $(find x/assets/public -name '*.js' | wc -l)   syntax errors: $BAD"; [ $BAD = 0 ] || fail "javascript syntax"

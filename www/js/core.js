@@ -217,7 +217,7 @@ class Match{
       if(front&&dB<3&&this.time-(p.tkW||-9)>.6&&this.tkTime(p)){p.tkW=this.time;// يستنى اللمسة الطويلة: لو الكورة لازقة في رجل المهاجم نادراً ما يتدخل
        if(Math.random()<(.1+.5*(1-this.dribCtrl(c)))*skill*(.6+.4*p.stam/100))this.tackle(p,false,inBox&&Math.random()<.8);}
       else if(!inBox&&!front&&dC>1.6&&dC<2.8&&hyp(c.vx,c.vy)>4&&Math.random()<dt*.25*skill)this.tackle(p,true);}}
-    else if(!b.owner&&b.target&&b.target.team!==t&&this.time-b.passT<.35)this.go(p,this.shape(p,false),.9);else this.go(p,b.owner?[pbx,pby]:this.intercept(p),1);continue;}
+    else if(!b.owner&&b.target&&b.target.team!==t&&!(b.target===b.last&&b.target.bigT>0)&&this.time-b.passT<.35)this.go(p,this.shape(p,false),.9);/* (2.3) لمسة طويلة لنفسه (bigTouch بس، مش السيطرة/التخميد) مش تمريرة: المدافع مايرجعش لمكانه، بيروح لمكان الكورة المتوقع */else this.go(p,b.owner?[pbx,pby]:this.intercept(p),1);continue;}
    if(p===t.second&&b.owner&&b.owner.team!==t&&!this.restartKind){const g=this.ownG(t);const dx=g[0]-b.x,dy=g[1]-b.y,d=hyp(dx,dy)||1;const sd=clamp(7-(t.str||0)*3-((t.T||TACTICS.bal).press-.5)*4,3,10);// المدافع التاني بيغطي: بين الكورة والمرمى، ولو الكورة على الطرف قريب من مرمانا بيقفل الطريق الداخلي
     const ins=Math.abs(b.y-CY)>9&&d<40?Math.sign(CY-b.y)*Math.min(2.5,(Math.abs(b.y-CY)-9)*.25):0;this.go(p,[b.x+dx/d*sd,b.y+dy/d*sd+ins],.92+Math.max(0,t.str||0)*.06);continue;}
    this.goS(p,this.shape(p,this.possS===t.idx),.76);

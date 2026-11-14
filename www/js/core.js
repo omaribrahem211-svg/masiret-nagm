@@ -42,6 +42,11 @@ function vib(n){try{navigator.vibrate&&navigator.vibrate(n);}catch(e){}}
 const Input={jx:0,jy:0,sprint:false,q:{},hold:{},keys:{},joy:null,
  push(n){this.q[n]=true;},take(n){if(this.q[n]){this.q[n]=false;return true;}return false;},clear(){this.q={};this.hold={};this.jx=this.jy=0;this.sprint=false;},
  down(b){this.hold[b]=true;this.push(b+'d');},up(b){this.hold[b]=false;this.push(b+'u');}};
+// (v131 A0) الماتش بيتحسب بخطوة ثابتة 1/60 ث مهما كان معدل الفريمات (زي الـ Test Lab بالظبط). قبل كده الموبايل كان بيعمل خطوة واحدة
+// في كل فريم بـ dt لحد 33 مللي ث: فريمات 50–66 مللي ث (كتير على الموبايل) كانت بتضيّع وقت من الماتش (19% في فيديو اللعب) والحركة
+// بتتقطّع، والفيزيا بتشتغل بخطوة 1/30 اللي عمرها ما اتختبرت (الكورة بتنط أكتر من 20 سم لحظة الاستلام في 67% من المرات).
+// S = حالة اللوب (acc = الوقت المتراكم). أقصى 6 خطوات في الفريم (0.1 ث) عشان ما يحصلش تراكم لو الجهاز علّق
+const SIM_DT=1/60;function simAdvance(m,raw,S){S.acc=(S.acc||0)+Math.min(Math.max(raw||0,0),.1);let n=0;while(S.acc>=SIM_DT-1e-9&&n<6){m.update(SIM_DT);S.acc-=SIM_DT;n++;}if(n>=6)S.acc=0;return n;}
 function keyAxis(){if(Input.joy)return;const k=Input.keys;let x=(k.ArrowRight||k.KeyD?1:0)-(k.ArrowLeft||k.KeyA?1:0),y=(k.ArrowDown||k.KeyS?1:0)-(k.ArrowUp||k.KeyW?1:0);const m=hyp(x,y)||1;Input.jx=x/m*(x||y?1:0);Input.jy=y/m*(x||y?1:0);}
 const KEYMAP={KeyJ:'X',Space:'X',KeyK:'S',KeyL:'O',KeyI:'T',KeyU:'F'};
 addEventListener('keydown',e=>{if(e.repeat){if(e.code.startsWith('Arrow')||e.code==='Space')e.preventDefault();return;}Input.keys[e.code]=true;if(App.match){if(e.code.startsWith('Arrow')||e.code==='Space')e.preventDefault();if(KEYMAP[e.code])Input.down(KEYMAP[e.code]);if(e.code==='ShiftLeft'||e.code==='ShiftRight')Input.sprint=true;if(e.code==='Escape')togglePause();}keyAxis();});

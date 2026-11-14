@@ -541,12 +541,12 @@ Promise.race([document.fonts&&document.fonts.load?document.fonts.load('800 34px 
 function resize(){const dpr=Math.min(2,window.devicePixelRatio||1);CW=innerWidth;CH=innerHeight;ov.width=Math.round(CW*dpr);ov.height=Math.round(CH*dpr);octx.setTransform(dpr,0,0,dpr,0,0);if(ctx){cv.width=Math.round(CW*dpr);cv.height=Math.round(CH*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);}}
 addEventListener('resize',resize);
 let last=performance.now();
-function frame(ts){const dt=Math.min(.033,Math.max(0,(ts-last)/1000));last=ts;FX.update(dt);const m=App.match||App.demo;
+const LOOP={acc:0};function frame(ts){const raw=Math.max(0,(ts-last)/1000),dt=Math.min(.033,raw);last=ts;FX.update(dt);const m=App.match||App.demo;
  if(m&&gfxReady){try{
   if(App.match&&(m.phase==='intro'||m.phase==='replay')){if(Input.take('Xd')|Input.take('Od')|Input.take('Td')|Input.take('Sd'))m.skip();Input.take('Su');Input.take('Xu');}
   if(App.match&&m.phase==='replay'&&!App.settings.replay)m.skip();if(App.match){coachTick(App.match);commTick(App.match,dt);Stadium.tick(App.match,dt);App._iT=(App._iT||0)+dt;if(App._iT>.5){App._iT=0;instLive(App.match);}}
   padPoll();
-  m.update(dt);
+  simAdvance(m,raw,LOOP);/* (v131 A0) خطوات ثابتة 1/60 بدل خطوة واحدة بـ dt متغير */
   if(R3){R3.quality=App.settings.gfx;const d0=window.devicePixelRatio||1;R3.render(m,CW,CH,App.settings.gfx>=2?Math.min(2,d0):Math.min(1.25,d0),ts);drawOverlay(octx,m,CW,CH,(x,y,z)=>R3.project(x,y,z,CW,CH));}
   else if(ctx){m.render(ctx,CW,CH);octx.clearRect(0,0,CW,CH);FX.draw(octx,CW,CH,m);}
  }catch(e){console.error(e);}if(App.match){hud(App.match);updButtons();}}

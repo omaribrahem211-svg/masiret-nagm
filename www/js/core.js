@@ -296,6 +296,8 @@ class Match{
   const TT=t.T||TACTICS.bal;let dl=clamp(16+(bx-52.5)*.5+(bx>70?4:0)+(t.str||0)*5+TT.line,bx<20?6.5:bx<30?10.5:12.5,50);dl=Math.max(8,Math.min(dl,mn-.4));t.dl=t.dl==null?dl:t.dl+(dl-t.dl)*.12;
   if(this.time<(t.tacAt||0))return;t.tacAt=this.time+.3;t.sup=null;t.cut=null;if(this.restartKind||!c)return;const h=this.human;
   if(c.team!==t)t.run=null;
+  /* (v131 E2) ناحية الكورة زحمة (5+ خصوم في 18 م والكورة على طرف): الجناح البعيد بيفضل واسع عشان تغيير اللعب يبقى ممكن (غير كده بيدخل لجوه) */
+  if(c.team===t){const cy=t.dir===1?c.y:W-c.y;let nb=0;for(const q of o.pl)if(hyp(q.x-c.x,q.y-c.y)<18)nb++;const cx=t.dir===1?c.x:L-c.x;t.swW=Math.abs(cy-34)>10&&nb>=5&&cx<62;}else t.swW=false;
   if(c.team===t){this.flankRun(t,o,c,TT);const cand=t.pl.filter(p=>p!==c&&p.role!=='GK'&&p.stun<=0&&!(t.run&&t.run.p===p)&&!(h&&(p===h.ctrl||p===h.p2))).sort((a,q)=>hyp(a.x-c.x,a.y-c.y)-hyp(q.x-c.x,q.y-c.y)).slice(0,3);t.sup=cand;const used=[];/* (v131 E1) 3 مساندين بدل 2 (كان متوسط الزملاء في 15 م من حامل الكورة 1، و22% من الوقت مافيش ولا واحد → الكورة الطويلة كانت الحل الوحيد) */
    cand.forEach((p,k)=>{let best=null,bs=-1e9;const rr=[9,12,15][k];for(let a=0;a<14;a++){const an=a/14*6.2832,px=c.x+Math.cos(an)*rr,py=c.y+Math.sin(an)*rr;if(px<2||px>L-2||py<2.5||py>W-2.5)continue;const fwd=(px-c.x)*t.dir;if(fwd<-7)continue;const tx=t.dir===1?px:L-px;if(tx>t.offLine-.5)continue;
      let open=9;for(const q of o.pl){open=Math.min(open,segDist(q.x,q.y,c.x,c.y,px,py)*1.5,hyp(q.x-px,q.y-py));}
@@ -358,7 +360,7 @@ class Match{
   const TT=t.T||TACTICS.bal;let x=p.bx+(bx-52.5)*(att&&bx>52.5?.75:.55)+(att?(bx>52.5?10:8)+(t.str||0)*4+TT.line*.3:-3+(t.str||0)*3+TT.line*.4),y=p.by+(by-34)*.3;
   // (v131 E1) في الهجمة الفريق بيقرّب ناحية الكورة بالعرض: الجناح اللي في ناحية الكورة يفضل واسع، لكن الجناح البعيد بيدخل لجوه
   // ولاعيبة النص بيتحركوا مع الكورة أكتر (0.45 بدل 0.3) عشان حامل الكورة يلاقي حد قريب يمرر له على الأرض
-  {const far=(p.by-34)*(by-34)<0;if(att&&p.role!=='DF'&&Math.abs(p.by-34)>13)y=far?34+(p.by-34)*.8*TT.width+(by-34)*.4:34+(p.by-34)*1.12*TT.width+(by-34)*.15;else if(att)y=34+(p.by-34)*(.6+.4*TT.width)+(by-34)*(p.role==='DF'?.35:.45);}
+  {const far=(p.by-34)*(by-34)<0;if(att&&p.role!=='DF'&&Math.abs(p.by-34)>13)y=far?(t.swW&&p.role==='FW'?34+(p.by-34)*1.02*TT.width+(by-34)*.15:34+(p.by-34)*.8*TT.width+(by-34)*.4):34+(p.by-34)*1.12*TT.width+(by-34)*.15;else if(att)y=34+(p.by-34)*(.6+.4*TT.width)+(by-34)*(p.role==='DF'?.35:.45);}
   if(!att&&p.role==='FW'){const k2=TT.line<=-5?.88:TT.press>=.9?.92:.9;y=34+(p.by-34)*k2+(by-34)*.32;}/* (v131 E2) المهاجمين وهو بيدافع بيقفلوا لجوه شوية (الأجنحة كانت فاضلة على الخط) */
   if(att&&p.role==='DF'&&bx>40)x+=4+(TT.line>=0?2:0);/* (v131 E1) خط الدفاع بيطلع ورا الوسط في الهجمة: المسافة بين الخطين كانت 17 م. (E2) +2 م كمان في كل الخطط ماعدا المرتدات */
   // (v131 E2) الظهير اللي في ناحية الكورة في نص ملعب الخصم بيقرّب ورا الجناح (~13 م، أبعد في خطة المرتدات) عشان يبقى فيه overlap/underlap ممكن؛
@@ -445,7 +447,7 @@ class Match{
   if(no&&nd<6&&t.dir*(no.x-p.x)>-1){const ax=p.x-no.x,ay=p.y-no.y;const px=-dy,py=dx;const side=(ax*px+ay*py)>=0?1:-1;const f=(1-nd/6)*1.2;dx+=px*side*f;dy+=py*side*f;d=hyp(dx,dy)||1;dx/=d;dy/=d;}
   if(p.y<3)dy=Math.abs(dy)*.5+.2;if(p.y>W-3)dy=-Math.abs(dy)*.5-.2;
   p.tgt=[p.x+dx*5,p.y+dy*5];const tq=t.q||0;p.spd=p.mse*(nd>6?.95+tq*.04:nd>3.5?.8+tq*.12:.64+tq*.14);}
- bestPass(p,lobOK,forceLob){const t=p.team,o=this.other(t),b=this.ball;let best=null,bs=-1e9;let pnd=99;for(const q of o.pl)pnd=Math.min(pnd,hyp(q.x-p.x,q.y-p.y));const axp=t.dir===1?p.x:L-p.x;const rmax=(pnd<2.2?.55:pnd<4?.45:.36)+(axp>68?.14:0);const sx=b.owner===p?b.x:p.x,sy=b.owner===p?b.y:p.y;const g=this.attG(t);
+ bestPass(p,lobOK,forceLob){const t=p.team,o=this.other(t),b=this.ball;let best=null,bs=-1e9;let pnd=99;for(const q of o.pl)pnd=Math.min(pnd,hyp(q.x-p.x,q.y-p.y));const axp=t.dir===1?p.x:L-p.x;const rmax=(pnd<2.2?.55:pnd<4?.45:.36)+(axp>68?.14:0);const sx=b.owner===p?b.x:p.x,sy=b.owner===p?b.y:p.y;const g=this.attG(t);let pnd15=0;for(const q of o.pl)if(hyp(q.x-sx,q.y-sy)<15)pnd15++;
   for(const q of t.pl){if(q===p||q.role==='GK'||q.off||q.stun>0)continue;const tx=q.x+q.vx*.35,ty=q.y+q.vy*.35,dx=tx-sx,dy=ty-sy,d=hyp(dx,dy);if(d<4.5||d>(p.role==='GK'?62:48))continue;
    const prog=t.dir*dx;if(prog<-24)continue;const vb=clamp(9+d*.45,10,24)*.82;let risk=0,recO=99;
    for(const r of o.pl){recO=Math.min(recO,hyp(r.x-tx,r.y-ty));if(r.stun>0)continue;let u=((r.x-sx)*dx+(r.y-sy)*dy)/(d*d);u=clamp(u,0,1);const dd=hyp(r.x-(sx+dx*u),r.y-(sy+dy*u));const tb=u*d/vb,tr=Math.max(0,dd-.85)/((r.mse||7)*.9)+(dd<2?.1:.25);const m=tb-tr;if(dd<1.05&&u*d<4)risk=1;else if(m>-.2)risk=Math.max(risk,clamp(.45+m*1.4,0,1));}
@@ -453,7 +455,10 @@ class Match{
    if(!forceLob&&risk>rmax)continue;if(recO<1.2&&!forceLob)continue;
    const dG=hyp(g[0]-tx,g[1]-ty);const TD=(t.T||TACTICS.bal).direct;let s=-risk*(14+(t.str||0)*2)*(1.3-TD*.6)+prog*(.22+TD*.3)*(1+(t.str||0)*.35)+clamp(prog,0,25)*.15-Math.max(0,d-24)*.15+Math.min(recO,6)*.6+(dG<20?6:dG<30?2.5:0)+(q.star?1.2:0)+R(0,2.5);
    if(forceLob){const inBox=Math.abs(g[0]-q.x)<17&&Math.abs(q.y-CY)<20;s+=inBox?10:-10;}
-   s+=(t.q||0)*clamp(prog,0,20)*.12;if(lob&&!forceLob)s-=3.5;{const axP=t.dir===1?sx:L-sx;if(axP>62&&prog<-2)s-=5;if(axP>62&&dG<18)s+=3;}if(s>bs){bs=s;best={p:q,lob,thru:!lob&&prog>8&&recO>5&&Math.random()<.3+(t.q||0)*.3,risk};}}
+   s+=(t.q||0)*clamp(prog,0,20)*.12;if(lob&&!forceLob)s-=3.5;
+   /* (v131 E2) تغيير اللعب: لما ناحية الكورة زحمة (3+ خصوم في 15 م من حامل الكورة) والزميل في الناحية التانية فاضي (أقرب خصم 7+ م) وفي التلت الأوسط بالطول،
+      التمريرة العرضية الطويلة ليه بتاخد أفضلية صغيرة حسب عرض الخطة. (نسخة أقوى + عقاب للتمريرة العرضية للاعب مراقب جابت تحويلات ناجحة أكتر بس قللت الأهداف ~0.2 — اترفضت) */
+   if(!forceLob&&Math.abs(ty-sy)>25&&(ty-CY)*(sy-CY)<0){{const axQ=t.dir===1?tx:L-tx;if(pnd15>=3&&recO>=7&&axQ>45&&axQ<85)s+=1.5+2*(t.T||TACTICS.bal).width;}}{const axP=t.dir===1?sx:L-sx;if(axP>62&&prog<-2)s-=5;if(axP>62&&dG<18)s+=3;}if(s>bs){bs=s;best={p:q,lob,thru:!lob&&prog>8&&recO>5&&Math.random()<.3+(t.q||0)*.3,risk};}}
   return best;}
  /* ---------- ACTIONS ---------- */
  gkThrow(p,q){const b=this.ball;const tx=q.x+q.vx*.4,ty=q.y+q.vy*.4,dx=tx-p.x,dy=ty-p.y,d=hyp(dx,dy)||1;p.fx=dx/d;p.fy=dy/d;const sp=clamp(7+d*.75,9,22);

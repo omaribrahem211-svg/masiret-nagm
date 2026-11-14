@@ -52,7 +52,9 @@ const cases = {
     place(a, t, 60, 34, 2); place(b2, t, 72, 34 - side * 4, 0); place(c, t, 62, 34 + side * 12, 3); give(m, a); return { m, a, b: b2, c }; },
   F: k => { const m = setup(k), t = T(m), o = O(m), side = k % 2 ? 1 : -1; const a = t.pl.find(p => p.role === 'MF' && (p.by - 34) * side > 8) || t.pl.filter(p => p.role === 'MF')[0];
     place(a, t, 62, 34 + side * 20, 1); const fw = t.pl.find(p => p.role === 'FW' && (p.by - 34) * side < -13); place(fw, t, 70, 34 - side * 26, 0);
-    o.pl.filter(p => p.role !== 'GK').slice(0, 5).forEach((p, i) => { const w = W2(t, 60 + i * 3, 34 + side * (12 + i * 3)); p.x = w[0]; p.y = w[1]; }); give(m, a); return { m, a, fw, side }; },
+    o.pl.filter(p => p.role !== 'GK').slice(0, 5).forEach((p, i) => { const w = W2(t, 60 + i * 3, 34 + side * (12 + i * 3)); p.x = w[0]; p.y = w[1]; });
+    /* the far winger really is unmarked: any opponent within 10 m of him is moved 12 m towards the centre */ o.pl.forEach(p => { if (p.role !== 'GK' && hyp(p.x - fw.x, p.y - fw.y) < 10) p.y += Math.sign(CY - fw.y) * 12; });
+    give(m, a); return { m, a, fw, side }; },
   G: k => { const m = setup(k), t = T(m), o = O(m); const fbs = t.pl.filter(p => p.role === 'DF' && Math.abs(p.by - 34) > 13); fbs.forEach((p, i) => place(p, t, 72, i ? 60 : 8, 5));
     const z = o.pl.find(p => p.role === 'MF'); place(z, t, 66, 34, 0); give(m, z); return { m, fbs }; },
   H: k => { const m = setup(k), t = T(m), o = O(m); const att = o.pl.filter(p => p.role === 'FW'); const df = t.pl.filter(p => p.role === 'DF').slice(1, 3);
@@ -81,8 +83,12 @@ for (const [name, mk] of Object.entries(cases)) {
       if (s.wg && own && own !== s.wg && own.team === t && passR) recvR = true;
       if (s.c && b.passT === m.time && b.passer === s.b && b.target === s.c) third = true;
       if (s.c && own === s.c && third) thirdOk = true;
-      if (s.fw && b.passT === m.time && b.passer && b.passer.team === t && Math.abs((b.target ? b.target.y : CY) - b.passer.y) > 25) { sw = true; }
-      if (s.fw && own && own.team === t && sw && Math.sign(own.y - CY) === -s.side) swOk = true;
+      // F: only the FIRST pass of the crowded carrier counts: a switch = to a team-mate on the far half of the width, >25 m across
+      if (s.fw && b.passT === m.time && b.passer === s.a && !s.__fp) { s.__fp = 1; const q = b.target; if (q && Math.abs(q.y - s.a.y) > 25 && Math.sign(q.y - CY) === -s.side) { sw = true; s.__sq = q; } }
+      if (s.fw && sw && own && own !== s.a && !s.__fr) { s.__fr = 1; if (own === s.__sq) swOk = true; }
+      if (process.env.FDBG && s.fw && b.passT === m.time && b.passer === s.a && s.__fp === 1) { s.__fp = 2; const q = b.target; console.log(JSON.stringify({k, tgt: q && q.role, isFw: q === s.fw, lob: b.z > .5 || b.vz > 1, d: q && Math.round(hyp(q.x - s.a.x, q.y - s.a.y)), qy: q && Math.round(q.y), ay: Math.round(s.a.y), fwy: Math.round(s.fw.y), fwx: Math.round(X(t, s.fw.x)), vz: Math.round(b.vz*10)/10, sp: Math.round(hyp(b.vx,b.vy)) })); }
+      if (process.env.FDBG && s.__fp === 2 && !s.__ld && b.z < .4 && b.vz < 0 && !own) { s.__ld = 1; console.log('  land', Math.round(X(t,b.x)), Math.round(b.y), 'tgt now', Math.round(X(t,s.__sq?s.__sq.x:0)), Math.round(s.__sq?s.__sq.y:0), 'nearestOpp', Math.round(Math.min(...O(m).pl.map(q=>hyp(q.x-b.x,q.y-b.y)))), 'tgtD', s.__sq?Math.round(hyp(s.__sq.x-b.x,s.__sq.y-b.y)):-1); }
+      if (process.env.FDBG && s.__fp === 2 && own && own !== s.a && !s.__fd) { s.__fd = 1; console.log('  ->', own.team === t ? own.role + (own === s.__sq ? '*' : '') : 'OPP', Math.round(m.time - b.passT ? 0 : 0)); }
       if (s.fbs) s.fbs.forEach((q, j) => { if (fbBack[j] == null && lostT != null && X(t, q.x) < 52.5) fbBack[j] = m.time - lostT; });
       if (s.att && i % 15 === 0) { R.crowdS++; if (t.pl.filter(p => p.role !== 'GK' && hyp(p.x - b.x, p.y - b.y) < 10).length >= 4) R.crowd++; }
     }
@@ -96,7 +102,7 @@ for (const [name, mk] of Object.entries(cases)) {
   const o = { runs: R.runs };
   if ('ABCEJ'.includes(name)) Object.assign(o, { runsAssigned: R.assigned, overlap: R.overlap, underlap: R.underlap, passToRunner: R.passToRunner, runnerReceived: R.runnerReceived, possessionLost: R.lost });
   if (name === 'D') Object.assign(o, { bToC: R.third, cReceived: R.thirdOk });
-  if (name === 'F') Object.assign(o, { switchPasses: R.switchPass, switchReachedFarSide: R.switchOk });
+  if (name === 'F') Object.assign(o, { firstPassIsSwitch: R.switchPass, switchReceivedByTarget: R.switchOk, possessionLost: R.lost });
   if (name === 'G') Object.assign(o, { fullbackBackInOwnHalfMedianSec: med(R.fbBackSec), notBackWithin6s: R.fbBackSec.filter(v => v >= 6).length + '/' + R.fbBackSec.length, possessionLost: R.lost });
   if (name === 'H') Object.assign(o, { crowdShare: r2(R.crowd / (R.crowdS || 1)), defendersGoalSideMedianAtEnd: med(R.goalSide) });
   out[name] = o; process.stderr.write(name + ' ' + JSON.stringify(o) + '\n');

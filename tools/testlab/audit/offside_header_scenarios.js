@@ -72,6 +72,9 @@ headerPassTo('3b header pass to a teammate in his own half (halfway-line rule)',
 for (const [name, off, lob, exp] of [['7 ground pass to an offside teammate (+3 m)', 3, false, true], ['8 ground pass to an onside teammate (−2 m)', -2, false, false], ['9 lofted pass to an offside teammate (+3 m)', 3, true, true], ['10 lofted pass to an onside teammate (−2 m)', -2, true, false]]) {
   const S = setup(110 + res.length), { m, t, o, sx, X } = S; const P = t.pl.find(p => p.role === 'MF'), Q = t.pl.find(p => p.role === 'FW');
   P.x = X - sx * 15; P.y = CY + 18; Q.x = X + sx * off; Q.y = CY + 18; S.dfs.forEach((d, i) => d.y = CY - 14 + i * 3);
+  // final programme: the opponents' midfielders and forwards are parked 35 m away — since Phase 3B an opponent forward standing next to Q heads
+  // the lob away first, and a deliberate play by an opponent correctly cancels the offside, so the test no longer tested the receiver
+  o.pl.filter(q => q.role === 'MF' || q.role === 'FW').forEach((q, i) => { q.x = X - sx * 35; q.y = 3 + i * 2; });
   Object.assign(m.ball, { x: P.x + sx * .3, y: P.y, z: 0, vx: 0, vy: 0, vz: 0, owner: P, last: P, target: null, shot: null, inHands: false, offside: null }); P.fx = sx; P.fy = 0;
   m.pass(P, Q, false, lob); runUntil(m, () => S.called() || (m.ball.owner && m.ball.owner !== P));
   add(name, exp, S.called() > 0, { receivedBy: m.ball.owner ? (m.ball.owner === Q ? 'Q' : m.ball.owner.role) : null });

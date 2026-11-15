@@ -22,7 +22,7 @@ const G = ctx.__G, P = G.Match.prototype;
 const O = {}, C = { catches: 0, parries: 0, shotsLive: 0 };
 let cur = null, M = null;
 const oShotEnd = P.shotEnd;
-P.shotEnd = function (res, by, ...r) { if (this === M && res === 'saved' && by && by.role === 'GK') { if (this.ball.owner === by) C.catches++; else { C.parries++; cur = { gk: by, t: this.time, att: this.other(by.team), shot: false }; } } return oShotEnd.call(this, res, by, ...r); };
+P.shotEnd = function (res, by, ...r) { if (this === M && res === 'saved' && by && by.role === 'GK') { if (this.ball.owner === by) C.catches++; else { C.parries++; cur = { gk: by, t: this.time, att: this.other(by.team), shot: false, first: true }; } } return oShotEnd.call(this, res, by, ...r); };
 const oRestart = P.restart;
 P.restart = function (kind, ...r) { if (this === M && cur) { const k = cur.pend ? (cur.shot ? 'attackShot' : 'attackOpenPlay') : kind; O[k] = (O[k] || 0) + 1; cur = null; } return oRestart.call(this, kind, ...r); };
 for (let id = 1; id <= N; id++) {
@@ -34,6 +34,9 @@ for (let id = 1; id <= N; id++) {
     m.update(1 / 60); f++;
     if (sc0() !== goals) { goals = sc0(); if (cur) { O[cur.pend ? 'attackShot' : 'goal'] = (O.goal || 0) + 1; cur = null; } }
     if (!cur) continue;
+    // final programme fix: the game calls shotEnd('saved') BEFORE take() when the keeper holds the ball, so a catch was counted as a parry
+    // followed by 'gkRecovers'. A save whose keeper has the ball in his hands in the very next frame is a catch.
+    if (cur.first) { cur.first = false; if (b.owner === cur.gk && b.inHands) { C.parries--; C.catches++; cur = null; continue; } }
     if (b.shot && b.shot.by.team === cur.att) cur.shot = true;
     const o = b.owner;
     if (o && !m.restartKind && !cur.pend) { const k = o === cur.gk ? 'gkRecovers' : o.team === cur.att ? (cur.shot ? 'attackShot' : 'attackOpenPlay') : 'defence'; if (k === 'attackOpenPlay') { cur.pend = true; } else { O[k] = (O[k] || 0) + 1; cur = null; continue; } }

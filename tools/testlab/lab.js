@@ -14,6 +14,8 @@ const N = +(A.n || 100), SEED0 = +(A.seed || 1000), HALF = +(A.half || 120), TEA
 const WWW = path.resolve(A.www || path.join(__dirname, '../../www/js'));
 const OUT = A.out ? path.resolve(A.out) : null, LABEL = A.label || 'run', ONLY = A.only ? A.only.split(',').map(Number) : null;
 const DT = 1 / 60;
+// --tacH/--tacA: team tactic (bal, press, counter, poss, wings); --RH/--RA: team rating (default 75 v 75, balanced)
+const TACH = A.tacH || 'bal', TACA = A.tacA || 'bal', RH = A.RH ? +A.RH : 75, RA = A.RA ? +A.RA : 75;
 const VAR = { swap: !!A.swap, mirror: A.mirror != null ? +A.mirror : null, kick: A.kick != null ? +A.kick : null, order: !!A.order };
 
 // ---------- seeded RNG (mulberry32) ----------
@@ -52,7 +54,7 @@ const zone = d => d < 15 ? 'short' : d < 30 ? 'medium' : 'long';
 
 function runMatch(id, seed) {
   RNG.f = mulberry32(TEAM_SEED); // identical squads, attributes and kick-off in every match
-  const m = new G.Match({ home: { name: 'Lab Home', kit: 3, R: 75, nm: 'ar' }, away: { name: 'Lab Away', kit: 0, R: 75, nm: 'en' }, human: null, halfLen: HALF, intro: false, onEvent: (t, d) => onEv(t, d), onEnd: () => {} });
+  const m = new G.Match({ home: { name: 'Lab Home', kit: 3, R: RH, nm: 'ar', tac: TACH }, away: { name: 'Lab Away', kit: 0, R: RA, nm: 'en', tac: TACA }, human: null, halfLen: HALF, intro: false, onEvent: (t, d) => onEv(t, d), onEnd: () => {} });
   G.App.match = m;
   // controlled-test variants (lab only; applied before kick-off, never during play)
   if (VAR.swap || VAR.mirror != null) {
@@ -364,7 +366,7 @@ for (const id of ids) {
   res.push(S);
   if (!A.quiet) process.stderr.write(`#${id} seed ${seed} ${S.ok ? 'ok' : 'FAIL'} ${S.score.join('-')} ${S.error || ''}\n`);
 }
-const meta = { variant: VAR, label: LABEL, core: coreHash, www: path.relative(process.cwd(), WWW), halfLenSec: HALF, dt: DT, teamSeed: TEAM_SEED, seedBase: SEED0, matches: res.length, completed: res.filter(r => r.ok).length, wallSec: Math.round((Date.now() - t0) / 1000), poseMeasure: poseOK, node: process.version, at: new Date().toISOString() };
+const meta = { variant: VAR, tacH: TACH, tacA: TACA, RH, RA, label: LABEL, core: coreHash, www: path.relative(process.cwd(), WWW), halfLenSec: HALF, dt: DT, teamSeed: TEAM_SEED, seedBase: SEED0, matches: res.length, completed: res.filter(r => r.ok).length, wallSec: Math.round((Date.now() - t0) / 1000), poseMeasure: poseOK, node: process.version, at: new Date().toISOString() };
 if (OUT) { fs.mkdirSync(OUT, { recursive: true }); fs.writeFileSync(path.join(OUT, 'matches.json'), JSON.stringify({ meta, matches: res })); }
 else process.stdout.write(JSON.stringify({ meta, matches: res }));
 process.stderr.write(`done ${meta.completed}/${meta.matches} in ${meta.wallSec}s\n`);

@@ -70,11 +70,14 @@ for (let id = 1; id <= N; id++) {
       }
       lastOwner = own; lastTeam = own.team;
     }
-    for (let i = recs.length - 1; i >= 0; i--) { const e = recs[i]; if (X(e.team, e.q.x) < L / 2 || m.time - e.t >= 10) { S.fbRec.push(r2(m.time - e.t)); recs.splice(i, 1); } }
+    for (let i = recs.length - 1; i >= 0; i--) { const e = recs[i]; if (X(e.team, e.q.x) < L / 2 || m.time - e.t >= 10) { S.fbRec.push(r2(m.time - e.t)); if (!e.regained) (S.fbRecDef = S.fbRecDef || []).push(r2(m.time - e.t)); recs.splice(i, 1); continue; }
+      // final programme: an episode in which the fullback's team wins the ball back before he is home is no longer a recovery (he is
+      // right to stay up). It is kept in the old fbRec (comparability) but excluded from fbRecDef (recovery while still defending)
+      if (!e.regained && own && own.team === e.team && m.time - e.t > .3) e.regained = true; }
     if (f % 15 || !live || !own || own.role === 'GK') continue;
     const t = own.team, o = m.other(t);
     for (const [tm, key] of [[t, 'inP'], [o, 'outP']]) { const pl = tm.pl.filter(p => p.role !== 'GK'); const xs = pl.map(p => X(tm, p.x)), ys = pl.map(p => p.y); const mx = r => { const a = pl.filter(p => p.role === r).map(p => X(tm, p.x)); return a.reduce((s, v) => s + v, 0) / (a.length || 1); };
-      S[key].gDM.push(mx('MF') - mx('DF')); S[key].gMF.push(mx('FW') - mx('MF')); S[key].len.push(Math.max(...xs) - Math.min(...xs)); S[key].wid.push(Math.max(...ys) - Math.min(...ys));
+      S[key].gDM.push(mx('MF') - mx('DF')); S[key].gMF.push(mx('FW') - mx('MF')); S[key].len.push(Math.max(...xs) - Math.min(...xs)); S[key].wid.push(Math.max(...ys) - Math.min(...ys)); { const y8 = pl.filter(p => p.role !== 'FW').map(p => p.y); (S[key].wid8 = S[key].wid8 || []).push(Math.max(...y8) - Math.min(...y8)); }
       const nb = pl.filter(p => hyp(p.x - b.x, p.y - b.y) < 10).length; S.crowdS++; if (nb >= 4) S.crowd++;
       for (const p of pl) { S.abandonS++; const sh = m.shape(p, tm === t); const d = hyp(p.x - sh[0], p.y - sh[1]); const k = far.get(p) || 0; far.set(p, d > 25 ? k + .25 : 0); if (far.get(p) > 4) S.abandon++; } }
     const offL = Math.max(...o.pl.map(z => X(t, z.x)).sort((a, c) => c - a).slice(1, 2));
@@ -91,11 +94,12 @@ for (let id = 1; id <= N; id++) {
   process.stderr.write(`match ${id}\n`);
 }
 const med = a => { if (!a.length) return null; const s = a.slice().sort((x, y) => x - y); return r2(s[s.length >> 1]); };
-const sh = k => ({ gapDFtoMF: med(S[k].gDM), gapMFtoFW: med(S[k].gMF), length: med(S[k].len), width: med(S[k].wid) });
+const sh = k => ({ gapDFtoMF: med(S[k].gDM), gapMFtoFW: med(S[k].gMF), length: med(S[k].len), width: med(S[k].wid), widthDFMF: med(S[k].wid8 || []) });
 const out = { meta: { www: WWW, n: N, tactic: TAC }, inPossession: sh('inP'), outOfPossession: sh('outP'), optionsMedian: med(S.options), optionsZeroShare: r2(S.options.filter(v => v === 0).length / (S.options.length || 1)),
   crowdShare: r2(S.crowd / (S.crowdS || 1)), abandonedShare: r2(S.abandon / (S.abandonS || 1)),
   perMatch: { overlaps: r2(S.overlap.n / N), overlapUseful: r2(S.overlap.useful / N), overlapUnnecessary: r2(S.overlap.unnecessary / N), underlaps: r2(S.underlap.n / N), underlapUseful: r2(S.underlap.useful / N), underlapUnnecessary: r2(S.underlap.unnecessary / N),
     thirdManAttempts: r2(S.third.n / N), thirdManCompleted: r2(S.third.done / N), switchPasses: r2(S.sw.att / N), switchCompleted: r2(S.sw.ok / N) },
   runsAssignedPerMatch: { overlap: r2(S.runA.overlap / N), underlap: r2(S.runA.underlap / N) }, thirdManRunsPerMatch: r2(S.tmA / N), thirdManPassBtoCPerMatch: r2(S.tmP / N), thirdManReceivedPerMatch: r2(S.tmR / N), passesToRunnerPerMatch: r2(S.runPass / N), runnerReceivedPerMatch: r2(S.runRecv / N), runsEndedWithBallLostAndRunnerAheadOfBallPerMatch: r2(S.runLostAhead / N),
-  fullbackRecoveryMedianSec: med(S.fbRec), fullbackRecoveryOver6s: r2(S.fbRec.filter(v => v >= 6).length / (S.fbRec.length || 1)) };
+  fullbackRecoveryMedianSec: med(S.fbRec), fullbackRecoveryOver6s: r2(S.fbRec.filter(v => v >= 6).length / (S.fbRec.length || 1)),
+  fullbackRecoveryWhileDefending: { n: (S.fbRecDef || []).length, of: S.fbRec.length, medianSec: med(S.fbRecDef || []), over6s: r2((S.fbRecDef || []).filter(v => v >= 6).length / ((S.fbRecDef || []).length || 1)) } };
 fs.writeFileSync(A.out, JSON.stringify(out, null, 1)); console.log(JSON.stringify(out, null, 1));

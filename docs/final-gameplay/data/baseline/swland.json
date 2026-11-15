@@ -1,0 +1,117 @@
+{
+ "n": 146,
+ "lofted": 52,
+ "ground": 9,
+ "all": {
+  "n": 52,
+  "res": {
+   "lost": 25,
+   "mate": 15,
+   "ok": 3,
+   "out": 9
+  },
+  "tgtDmed": 30.52,
+  "oppDmed": 1.65,
+  "flight": 1.28,
+  "ballSpLand": 11.19
+ },
+ "tgtCloser": {
+  "n": 4,
+  "res": {
+   "ok": 3,
+   "lost": 1
+  },
+  "tgtDmed": 1.83,
+  "oppDmed": 7.85,
+  "flight": 1.37,
+  "ballSpLand": 19.92
+ },
+ "oppCloser": {
+  "n": 48,
+  "res": {
+   "lost": 24,
+   "mate": 15,
+   "out": 9
+  },
+  "tgtDmed": 32.09,
+  "oppDmed": 1.37,
+  "flight": 1.28,
+  "ballSpLand": 10.86
+ },
+ "tgtWithin2": {
+  "n": 3,
+  "res": {
+   "ok": 3
+  },
+  "tgtDmed": 1.6,
+  "oppDmed": 7.85,
+  "flight": 1.37,
+  "ballSpLand": 19.92
+ },
+ "tgtOver5": {
+  "n": 47,
+  "res": {
+   "lost": 23,
+   "mate": 15,
+   "out": 9
+  },
+  "tgtDmed": 32.09,
+  "oppDmed": 1.37,
+  "flight": 1.28,
+  "ballSpLand": 10.86
+ },
+ "ok": {
+  "n": 3,
+  "res": {
+   "ok": 3
+  },
+  "tgtDmed": 1.6,
+  "oppDmed": 7.85,
+  "flight": 1.37,
+  "ballSpLand": 19.92
+ },
+ "lost": {
+  "n": 25,
+  "res": {
+   "lost": 25
+  },
+  "tgtDmed": 29.61,
+  "oppDmed": 1.06,
+  "flight": 1.1,
+  "ballSpLand": 9.99
+ },
+ "out": {
+  "n": 9,
+  "res": {
+   "out": 9
+  },
+  "tgtDmed": 36.44,
+  "oppDmed": 4.76,
+  "flight": 2.33,
+  "ballSpLand": 12.38
+ },
+ "freeAtPass": {
+  "n": 24,
+  "res": {
+   "lost": 12,
+   "mate": 5,
+   "ok": 2,
+   "out": 5
+  },
+  "tgtDmed": 32.09,
+  "oppDmed": 1.69,
+  "flight": 1.28,
+  "ballSpLand": 11.48
+ },
+ "markedAtPass": {
+  "n": 4,
+  "res": {
+   "lost": 3,
+   "out": 1
+  },
+  "tgtDmed": 34.09,
+  "oppDmed": 4.9,
+  "flight": 0.87,
+  "ballSpLand": 9.98
+ }
+}

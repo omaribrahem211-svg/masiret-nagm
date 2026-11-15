@@ -1,0 +1,15 @@
+{
+ "meta": {
+  "www": "/tmp/fin/base/js",
+  "n": 20
+ },
+ "catches": 14,
+ "parries": 62,
+ "parryOutcome": {
+  "attackOpenPlay": 9,
+  "defence": 29,
+  "corner": 21,
+  "attackShot": 1
+ },
+ "attackRegainShare": 0.167
+}

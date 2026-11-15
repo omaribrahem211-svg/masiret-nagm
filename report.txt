@@ -1,0 +1,50 @@
+APK: masiret-v132-test.apk
+Build run: 43727968819  branch=gameplay-final  commit=df6e5a59ab714db328f48a5fa598430193630f1a  conclusion=success  finished=2026-11-15T15:10:24Z
+Size: 16844594 bytes
+SHA-256: c899940a41d335d993aa5442848cf414ac1ed1dce4388f6c81fdf9a6af19214d
+build-tools: 37.0.0
+--- aapt2 dump badging
+package: name='com.asomygames.masiretnagm' versionCode='132' versionName='1.1.32' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+minSdkVersion:'24'
+targetSdkVersion:'36'
+uses-permission: name='android.permission.INTERNET'
+uses-permission: name='com.google.android.gms.permission.AD_ID'
+uses-permission: name='android.permission.ACCESS_ADSERVICES_AD_ID'
+uses-permission: name='android.permission.ACCESS_ADSERVICES_ATTRIBUTION'
+uses-permission: name='android.permission.ACCESS_ADSERVICES_TOPICS'
+uses-permission: name='android.permission.FOREGROUND_SERVICE'
+uses-permission: name='com.asomygames.masiretnagm.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+application-label:'مسيرة نجم'
+launchable-activity: name='com.asomygames.masiretnagm.MainActivity'  label='مسيرة نجم' icon=''
+versionCode=132 versionName=1.1.32 (expected code 132)
+minSdk 24 (Android 7.0) as in android/variables.gradle
+--- zipalign
+zipalign: OK (4-byte, 16 KB page alignment for .so)
+--- apksigner
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): false
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Number of signers: 1
+V2 Signer: certificate DN: CN=Masiret Nagm, O=asomygames, C=EG
+V2 Signer: certificate SHA-256 digest: df48cdf3a45c106334a8c2e8705a3109ff04e8ecc4a2a68730b8a132a75d901c
+Signed with the project upload key (not the Android debug key)
+--- update compatibility with the previous test APK on the 'builds' branch
+previous: masiret-v129-test.apk
+package: name='com.asomygames.masiretnagm' versionCode='129' versionName='1.1.29' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+  previous: V2 Signer: certificate DN: CN=Masiret Nagm, O=asomygames, C=EG
+  previous: V2 Signer: certificate SHA-256 digest: df48cdf3a45c106334a8c2e8705a3109ff04e8ecc4a2a68730b8a132a75d901c
+same signing certificate as masiret-v129-test.apk: YES (df48cdf3a45c106334a8c2e8705a3109ff04e8ecc4a2a68730b8a132a75d901c)
+versionCode 132 > 129: update allowed
+--- web assets: every file of www/ at the build commit is in the APK and byte-identical
+www files at build commit: 22   missing: 0   different: 0
+files only in the APK web folder (generated at build time):     206 audio/;      1 cordova.js;      1 cordova_plugins.js;     11 fonts/;
+--- JavaScript syntax (node --check) of every .js in the APK web folder
+js files checked: 20   syntax errors: 0
+index.html scripts present:      18 ok 
+capacitor.config.json in APK: {	"appId": "com.asomygames.masiretnagm",	"appName": "مسيرة نجم",	"webDir": "www",	"server": {		"androidScheme": "https"	},	"android": {		"allowMixedContent": false,		"captureInput": true,		"we
+--- result
+RESULT: ALL CHECKS PASSED

@@ -1,0 +1,93 @@
+{
+ "all": {
+  "n": 1312,
+  "atTake": 4.5,
+  "after025": 3.56,
+  "loss": -0.07,
+  "ndMed": 7.35,
+  "pressedLt3": 0.05,
+  "restFree_after025": 3.73,
+  "restFree_atTake": 4.34,
+  "dipWhileRunning": 0.214,
+  "dipCount": 281
+ },
+ "runCarrier": {
+  "n": 25,
+  "atTake": 4.4,
+  "after025": 2.4,
+  "loss": 0.3,
+  "ndMed": 5.39,
+  "pressedLt3": 0.08,
+  "restFree_after025": 2.2,
+  "restFree_atTake": 4.5,
+  "dipWhileRunning": 0.28,
+  "dipCount": 7
+ },
+ "thirdB": {
+  "n": 270,
+  "atTake": 4.57,
+  "after025": 1.51,
+  "loss": 0.54,
+  "ndMed": 6.91,
+  "pressedLt3": 0.04,
+  "restFree_after025": 1.21,
+  "restFree_atTake": 4.43,
+  "dipWhileRunning": 0.319,
+  "dipCount": 86
+ },
+ "runner": {
+  "n": 141,
+  "atTake": 4.98,
+  "after025": 4.3,
+  "loss": 0.09,
+  "ndMed": 6.74,
+  "pressedLt3": 0.12,
+  "restFree_after025": 4.55,
+  "restFree_atTake": 4.93,
+  "dipWhileRunning": 0.312,
+  "dipCount": 44
+ },
+ "actWithin05": {
+  "n": 459,
+  "atTake": 4.51,
+  "after025": 1.92,
+  "loss": 0.41,
+  "ndMed": 6.21,
+  "pressedLt3": 0.08,
+  "restFree_after025": 1.71,
+  "restFree_atTake": 4.35,
+  "dipWhileRunning": 0.44,
+  "dipCount": 202
+ },
+ "rest": {
+  "n": 637,
+  "atTake": 4.18,
+  "after025": 4.1,
+  "loss": -0.28,
+  "ndMed": 8.67,
+  "pressedLt3": 0.03,
+  "restFree_after025": 4.15,
+  "restFree_atTake": 4.07,
+  "dipWhileRunning": 0.08,
+  "dipCount": 51
+ },
+ "restNoAct1s": {
+  "n": 351,
+  "atTake": 4.03,
+  "after025": 4.3,
+  "loss": -0.3,
+  "ndMed": 10.01,
+  "pressedLt3": 0.02,
+  "restFree_after025": 4.29,
+  "restFree_atTake": 3.86,
+  "dipWhileRunning": 0.06,
+  "dipCount": 21
+ },
+ "restDipCauses": {
+  "n": 51,
+  "heavyTouch": 0,
+  "pressedUnder3m": 5,
+  "actionWithin1s": 29,
+  "neither": 19
+ }
+}

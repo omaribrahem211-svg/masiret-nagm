@@ -51,7 +51,7 @@ for (let id = 1; id <= N; id++) {
     for (let i = nTake; i < REC.length; i++) { const e = REC[i]; e.snap = r2(Math.max(0, hyp(b.x - (e.bx + e.bvx * DT), b.y - (e.by + e.bvy * DT)) - .05)); }
     for (const p of m.all) { (p.__h || (p.__h = [])).push([hyp(p.vx, p.vy)]); if (p.__h.length > 120) p.__h.shift(); }
     for (let i = open.length - 1; i >= 0; i--) { const e = open[i], dtk = m.time - e.t, sp = hyp(e.p.vx, e.p.vy);
-      if (dtk <= .3) { const T0 = e.p.team; if (T0.run && T0.run.carrier === e.p) e.runC = 1; if (T0.third && T0.third.b === e.p) e.thB = 1; if (T0.run && T0.run.p === e.p) e.runner = 1; if (T0.third && T0.third.p === e.p) e.thC = 1; }
+      if (dtk <= .3) { const T0 = e.p.team; if (T0.run && T0.run.carrier === e.p) e.runC = 1; if (T0.third && T0.third.b === e.p) e.thB = 1; if (T0.run && T0.run.p === e.p) e.runner = 1; if (T0.third && T0.third.p === e.p) e.thC = 1; if (e.p.heavyT != null && Math.abs(e.p.heavyT - e.t) < .05) e.heavy = 1; if (!e.dir0) e.dir0 = [e.p.vx, e.p.vy]; }
       if (dtk <= .52) { e.after.push(sp); if (dtk <= .45 && e.p.rcvA > 0 && sp < 3.5 && sp > 1 && b.owner === e.p) e.clipF++; }
       if (dtk > 4.1) open.splice(i, 1); }
   }
@@ -71,5 +71,5 @@ fs.writeFileSync(A.out, JSON.stringify(out, null, 1)); console.log(JSON.stringif
 
 {const md=a=>{a=a.filter(v=>v!=null).sort((x,y)=>x-y);return a.length?Math.round(a[a.length>>1]*100)/100:null;};
 const grp={all:REC,runCarrier:REC.filter(e=>e.runC),thirdB:REC.filter(e=>e.thB),runner:REC.filter(e=>e.runner||e.thC),actWithin05:REC.filter(e=>e.next!=null&&e.next<.5),rest:REC.filter(e=>!e.runC&&!e.thB&&!e.runner&&!e.thC&&!(e.next!=null&&e.next<.5)),restNoAct1s:REC.filter(e=>!e.runC&&!e.thB&&!e.runner&&!e.thC&&(e.next==null||e.next>1))};
-const o={};for(const[k,v]of Object.entries(grp))o[k]={n:v.length,atTake:md(v.map(e=>e.s0)),after025:md(v.map(e=>e.sp025)),loss:md(v.map(e=>e.s0>0.5&&e.sp025!=null?1-e.sp025/e.s0:null)),ndMed:md(v.map(e=>e.nd)),pressedLt3:Math.round(v.filter(e=>e.nd<3).length/Math.max(1,v.length)*100)/100,restFree_after025:md(v.filter(e=>e.nd>=5).map(e=>e.sp025)),restFree_atTake:md(v.filter(e=>e.nd>=5).map(e=>e.s0))};
-require('fs').writeFileSync(A.split||'reception_split.json',JSON.stringify(o,null,1));}
+const o={};for(const[k,v]of Object.entries(grp))o[k]={n:v.length,atTake:md(v.map(e=>e.s0)),after025:md(v.map(e=>e.sp025)),loss:md(v.map(e=>e.s0>0.5&&e.sp025!=null?1-e.sp025/e.s0:null)),ndMed:md(v.map(e=>e.nd)),pressedLt3:Math.round(v.filter(e=>e.nd<3).length/Math.max(1,v.length)*100)/100,restFree_after025:md(v.filter(e=>e.nd>=5).map(e=>e.sp025)),restFree_atTake:md(v.filter(e=>e.nd>=5).map(e=>e.s0)),dipWhileRunning:Math.round(v.filter(e=>e.sm025>4&&e.minAround<e.sm025*.6).length/Math.max(1,v.length)*1000)/1000,dipCount:v.filter(e=>e.sm025>4&&e.minAround<e.sm025*.6).length};
+o.restDipCauses=(()=>{const R2=REC.filter(e=>!e.runC&&!e.thB&&!e.runner&&!e.thC&&!(e.next!=null&&e.next<.5)&&e.sm025>4&&e.minAround<e.sm025*.6);return {n:R2.length,heavyTouch:R2.filter(e=>e.heavy).length,pressedUnder3m:R2.filter(e=>e.nd<3).length,actionWithin1s:R2.filter(e=>e.next!=null&&e.next<1).length,neither:R2.filter(e=>!e.heavy&&e.nd>=3&&!(e.next!=null&&e.next<1)).length};})();require('fs').writeFileSync(A.split||'reception_split.json',JSON.stringify(o,null,1));}

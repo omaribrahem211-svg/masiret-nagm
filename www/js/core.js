@@ -338,7 +338,7 @@ class Match{
  receive(p){const b=this.ball;const tl=this.landT();const t0=.05;const ms=p.mse*.9;let zMax=b.cross?2.3:1.7;
   let o=this.other(p.team),pr=1e9;for(const q of o.pl){const d=hyp(q.x-p.x,q.y-p.y);if(d<pr)pr=d;}
   // كورة عالية والخصم ممكن يسبقه عليها: يهاجم الكورة في أبدر نقطة (حتى لو بالراس) بدل ما يستناها تنزل
-  let oT=9;if(tl>.25&&!b.cross){for(const q of o.pl){if(q.role==='GK'&&!(Math.abs(b.x-this.ownG(o)[0])<17))continue;oT=Math.min(oT,this.reachT(q,2.5,.95));}if(oT<9)zMax=Math.max(zMax,2.35);}
+  let oT=9;if(tl>.25){for(const q of o.pl){if(q.role==='GK'&&!(Math.abs(b.x-this.ownG(o)[0])<17))continue;oT=Math.min(oT,this.reachT(q,2.5,.95));}if(oT<9)zMax=Math.max(zMax,b.cross?2.55:2.35);}/* (final) العرضية كمان: لو خصم ممكن يوصل الأول، المهاجم بيهاجم الكورة في أبدر نقطة (لحد 2.55 م = راس مع نطة). قبل كده في العرضيات كان بيستنى الكورة تنزل لـ 2.3 م فبيرجع لورا تحتها، والمدافع اللي قدامه بيضربها الأول حتى لو كان واقف وراه */
   const w=pr>11?.2:pr>7?.08:0;let best=null,bs=1e9,bt=0;
   for(let t=t0;t<=3.2;t+=.05){if(tl>0&&t<tl){const zt=b.z+b.vz*t-4.9*t*t;if(zt>zMax||b.vz-9.8*t>0&&zt>1.7)continue;}const q=this.ballAt(t);if(q[0]<-.5||q[0]>L+.5||q[1]<-.5||q[1]>W+.5)break;const d=hyp(q[0]-p.x,q[1]-p.y);if(d/ms+.1>t)continue;const zq=tl>0&&t<tl?b.z+b.vz*t-4.9*t*t:0;const s=oT<9?t+(t>oT-.08?3:0):t+d*w+(b.cross?0:Math.max(0,zq-.9)*.5);if(s<bs){bs=s;best=q;bt=t;}}
   if(!best){this.go(p,this.intercept(p),1);return;}

@@ -67,6 +67,13 @@ run('4_defensive_clearance', seed => { const m = setup(seed); const { t, o, og, 
 run('5_attacking_header_shot', seed => { const m = setup(seed); const { t, o, g, sx } = T(m); const ps = t.pl.find(p => p.role === 'MF'), q = t.pl.find(p => p.role === 'FW');
   place(ps, g[0] - sx * (8 + seed % 5), CY + 24); place(q, g[0] - sx * (8 + seed % 5), CY - 1 + (seed % 3)); const d = o.pl.find(p => p.role === 'DF'); place(d, q.x + sx * 2.5, q.y + 2.5); ps.fx = 0; ps.fy = -1; give(m, ps);
   return follow(m, t, q, () => m.pass(ps, q, false, true)); });
+// 5b/5c (final programme). Since Phase 3B the defender in scenario 5 (2.5 m goal-side AND towards the crosser) always meets the cross first, which
+// is correct; these two keep testing the attacking header itself: 5b defender 1 m behind the attacker on the far side of the cross, 5c attacker
+// unmarked (defender 7.8 m away on the far side)
+for (const [nm, dx, dy] of [['5b_attacking_header_defender_behind', -1, -.6], ['5c_attacking_header_unmarked', -6, -5]])
+  run(nm, seed => { const m = setup(seed); const { t, o, g, sx } = T(m); const ps = t.pl.find(p => p.role === 'MF'), q = t.pl.find(p => p.role === 'FW');
+    place(ps, g[0] - sx * (8 + seed % 5), CY + 24); place(q, g[0] - sx * (8 + seed % 5), CY - 1 + (seed % 3)); const d = o.pl.find(p => p.role === 'DF'); place(d, q.x + sx * dx, q.y + dy); ps.fx = 0; ps.fy = -1; give(m, ps);
+    return follow(m, t, q, () => m.pass(ps, q, false, true)); });
 // 6. ball rebounds off another player (an opponent's head) and drops near our receiver
 run('6_rebound_then_receive', seed => { const m = setup(seed); const { t, o, sx } = T(m); const q = t.pl.find(p => p.role === 'MF'), d = o.pl.find(p => p.role === 'DF');
   place(q, L / 2 + sx * 5, CY); place(d, q.x + sx * 3, q.y + 1); const b = m.ball;

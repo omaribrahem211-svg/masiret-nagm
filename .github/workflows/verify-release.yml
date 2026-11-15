@@ -8,7 +8,7 @@ name: Verify an existing APK build and publish it as a prerelease
 # touched). The run to verify is set in env below.
 on:
   push:
-    branches: [final-gameplay, gameplay-v131]
+    branches: [final-gameplay, gameplay-v131, gameplay-final]
     paths: ['.github/workflows/verify-release.yml']
 
 permissions:
@@ -22,8 +22,8 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       RUN_ID: '43600771726'
       ARTIFACT: masiret-android-31
-      TAG: v131-rc1
-      PUBLISH: 'true'
+      TAG: v131-rc1-launchcheck
+      PUBLISH: 'false'
     steps:
       - name: Checkout (full history, to compare with the build commit)
         uses: actions/checkout@v4
@@ -93,6 +93,25 @@ jobs:
           say "capacitor.config.json in APK: $(cat x/assets/capacitor.config.json | tr -d '\n' | head -c 200)"
           say "--- result"; if [ -f failed.flag ]; then say "RESULT: FAILED"; exit 1; else say "RESULT: ALL CHECKS PASSED"; fi
 
+      # Final programme: launch test on an Android emulator (the APK is installed, started, and must still run after 40 s with
+      # no crash, no ANR and no JavaScript error in the WebView log). This is not a real-device test.
+      - name: Enable KVM for the emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Install and launch the APK on an Android 11 emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          arch: x86_64
+          target: google_apis
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: bash scripts/emu_launch_check.sh
+
       - name: Keep the report
         if: always()
         uses: actions/upload-artifact@v4
@@ -102,6 +121,9 @@ jobs:
             report.txt
             badging.txt
             signer.txt
+            launch.txt
+            logcat.txt
+            screen_*.png
 
       - name: Publish the prerelease (only reached when every check passed)
         if: env.PUBLISH == 'true'
@@ -109,4 +131,4 @@ jobs:
           set -euo pipefail
           APK=$(ls art/*-test.apk); SUM=$(sha256sum $APK | cut -d' ' -f1)
           { echo "Release candidate for real-device testing. Built by run ${{ env.RUN_ID }} from commit ${{ steps.v.outputs.sha }} (branch ${{ github.ref_name }}). Not merged into main."; echo; echo "SHA-256 of the APK: \`$SUM\`"; echo; echo '```'; cat report.txt; echo '```'; } > notes.md
-          gh release create "${{ env.TAG }}" "$APK" report.txt --prerelease --target "${{ steps.v.outputs.sha }}" --title "${{ env.TAG }}" --notes-file notes.md
+          gh release create "${{ env.TAG }}" "$APK" report.txt launch.txt --prerelease --target "${{ steps.v.outputs.sha }}" --title "${{ env.TAG }}" --notes-file notes.md

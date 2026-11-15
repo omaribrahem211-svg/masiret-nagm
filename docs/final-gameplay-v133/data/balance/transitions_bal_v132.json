@@ -1,0 +1,50 @@
+{
+ "setup": "bal (home) v bal (away)",
+ "matches": 20,
+ "home_bal": {
+  "possessionsPerMatch": 14.3,
+  "regainZone": {
+   "own": 141,
+   "mid": 125,
+   "att": 19
+  },
+  "finalThirdPerPossession": 0.551,
+  "boxPerPossession": 0.088,
+  "shotPerPossession": 0.088,
+  "fromOwnThird": {
+   "starts": 141,
+   "reachedFinalThird": 62,
+   "within10s": 36,
+   "shot": 11
+  },
+  "avgPossessionSec": 8.5,
+  "lostIn": {
+   "own": 42,
+   "mid": 88,
+   "att": 143
+  }
+ },
+ "away_bal": {
+  "possessionsPerMatch": 14.7,
+  "regainZone": {
+   "own": 139,
+   "mid": 120,
+   "att": 34
+  },
+  "finalThirdPerPossession": 0.57,
+  "boxPerPossession": 0.116,
+  "shotPerPossession": 0.092,
+  "fromOwnThird": {
+   "starts": 139,
+   "reachedFinalThird": 64,
+   "within10s": 32,
+   "shot": 9
+  },
+  "avgPossessionSec": 8.7,
+  "lostIn": {
+   "own": 33,
+   "mid": 102,
+   "att": 150
+  }
+ }
+}

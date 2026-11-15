@@ -1,0 +1,70 @@
+{
+ "setup": "press (home) v counter (away)",
+ "matches": 20,
+ "home_press": {
+  "possessionsPerMatch": 18,
+  "regainZone": {
+   "own": 69,
+   "mid": 198,
+   "att": 93
+  },
+  "finalThirdPerPossession": 0.767,
+  "boxPerPossession": 0.161,
+  "shotPerPossession": 0.147,
+  "fromOwnThird": {
+   "starts": 69,
+   "reachedFinalThird": 33,
+   "within10s": 27,
+   "shot": 6
+  },
+  "avgPossessionSec": 8.6,
+  "lostIn": {
+   "own": 24,
+   "mid": 64,
+   "att": 260
+  },
+  "firstPassAfterOwnThirdRegain": {
+   "n": 64,
+   "avgProgress": 14.9,
+   "forward15plus": 37,
+   "through": 10,
+   "lofted": 30,
+   "toForward": 53,
+   "kept": 50,
+   "lost": 14
+  }
+ },
+ "away_counter": {
+  "possessionsPerMatch": 18.4,
+  "regainZone": {
+   "own": 240,
+   "mid": 110,
+   "att": 18
+  },
+  "finalThirdPerPossession": 0.166,
+  "boxPerPossession": 0.027,
+  "shotPerPossession": 0.024,
+  "fromOwnThird": {
+   "starts": 240,
+   "reachedFinalThird": 15,
+   "within10s": 10,
+   "shot": 2
+  },
+  "avgPossessionSec": 5.1,
+  "lostIn": {
+   "own": 134,
+   "mid": 169,
+   "att": 57
+  },
+  "firstPassAfterOwnThirdRegain": {
+   "n": 212,
+   "avgProgress": 23.7,
+   "forward15plus": 161,
+   "through": 11,
+   "lofted": 163,
+   "toForward": 167,
+   "kept": 132,
+   "lost": 80
+  }
+ }
+}

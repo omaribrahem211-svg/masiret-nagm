@@ -1,0 +1,50 @@
+{
+ "setup": "wings (home) v poss (away)",
+ "matches": 20,
+ "home_wings": {
+  "possessionsPerMatch": 14.3,
+  "regainZone": {
+   "own": 133,
+   "mid": 131,
+   "att": 23
+  },
+  "finalThirdPerPossession": 0.477,
+  "boxPerPossession": 0.052,
+  "shotPerPossession": 0.042,
+  "fromOwnThird": {
+   "starts": 133,
+   "reachedFinalThird": 51,
+   "within10s": 26,
+   "shot": 5
+  },
+  "avgPossessionSec": 8.2,
+  "lostIn": {
+   "own": 33,
+   "mid": 132,
+   "att": 116
+  }
+ },
+ "away_poss": {
+  "possessionsPerMatch": 15.1,
+  "regainZone": {
+   "own": 113,
+   "mid": 162,
+   "att": 26
+  },
+  "finalThirdPerPossession": 0.535,
+  "boxPerPossession": 0.116,
+  "shotPerPossession": 0.06,
+  "fromOwnThird": {
+   "starts": 113,
+   "reachedFinalThird": 37,
+   "within10s": 23,
+   "shot": 4
+  },
+  "avgPossessionSec": 8.7,
+  "lostIn": {
+   "own": 33,
+   "mid": 110,
+   "att": 144
+  }
+ }
+}

@@ -1,0 +1,116 @@
+{
+ "www": "/tmp/v3/final/js",
+ "tactic": "poss",
+ "runsPerCase": 40,
+ "cases": {
+  "A": {
+   "runs": 40,
+   "runsAssigned": {
+    "overlap:DF": 16,
+    "underlap:DF": 1
+   },
+   "overlap": 2,
+   "underlap": 0,
+   "passToRunner": 17,
+   "runnerReceived": 17,
+   "possessionLost": 15
+  },
+  "B": {
+   "runs": 40,
+   "runsAssigned": {
+    "underlap:DF": 15,
+    "overlap:DF": 1
+   },
+   "overlap": 1,
+   "underlap": 0,
+   "passToRunner": 14,
+   "runnerReceived": 14,
+   "possessionLost": 14
+  },
+  "C": {
+   "runs": 40,
+   "runsAssigned": {
+    "underlap:DF": 16,
+    "overlap:DF": 1
+   },
+   "overlap": 0,
+   "underlap": 0,
+   "passToRunner": 6,
+   "runnerReceived": 5,
+   "possessionLost": 20
+  },
+  "E": {
+   "runs": 40,
+   "runsAssigned": {
+    "overlap:DF": 26,
+    "underlap:DF": 1
+   },
+   "overlap": 0,
+   "underlap": 0,
+   "passToRunner": 16,
+   "runnerReceived": 15,
+   "possessionLost": 17
+  },
+  "J": {
+   "runs": 40,
+   "runsAssigned": {
+    "overlap:DF": 15
+   },
+   "overlap": 0,
+   "underlap": 0,
+   "passToRunner": 0,
+   "runnerReceived": 0,
+   "possessionLost": 0
+  },
+  "J2": {
+   "runs": 40,
+   "humanPressedPassTowardRunner": 12,
+   "passToRunner": 12,
+   "runnerReceived": 12
+  },
+  "D": {
+   "runs": 40,
+   "bToC": 9,
+   "cReceived": 9,
+   "aFirstPassTo": {
+    "B": 35,
+    "C": 2,
+    "other": 3
+   },
+   "bReceived": 39,
+   "thirdRunAssigned": {
+    "FW": 8,
+    "C": 5,
+    "MF": 1
+   },
+   "bHeavyTouch": 0,
+   "bFirstPassTo": {
+    "other": 25,
+    "C": 9
+   },
+   "bTakeToPassSecMedian": 1.27,
+   "bPassesWithin1s": 13,
+   "bPassWhenCAssigned": {
+    "C": 2,
+    "other": 3
+   }
+  },
+  "F": {
+   "runs": 40,
+   "firstPassIsSwitch": 11,
+   "switchReceivedByTarget": 2,
+   "possessionLost": 17
+  },
+  "G": {
+   "runs": 40,
+   "fullbackBackInOwnHalfMedianSec": 2.6,
+   "notBackWithin6s": "27/80",
+   "possessionLost": 34
+  },
+  "H": {
+   "runs": 40,
+   "crowdShare": 0,
+   "defendersGoalSideMedianAtEnd": 7
+  }
+ }
+}

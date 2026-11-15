@@ -1,0 +1,115 @@
+{
+ "www": "/tmp/v3/final/js",
+ "tactic": "press",
+ "runsPerCase": 40,
+ "cases": {
+  "A": {
+   "runs": 40,
+   "runsAssigned": {
+    "overlap:DF": 20,
+    "underlap:DF": 1
+   },
+   "overlap": 3,
+   "underlap": 1,
+   "passToRunner": 18,
+   "runnerReceived": 17,
+   "possessionLost": 13
+  },
+  "B": {
+   "runs": 40,
+   "runsAssigned": {
+    "underlap:DF": 18,
+    "overlap:DF": 1
+   },
+   "overlap": 1,
+   "underlap": 1,
+   "passToRunner": 16,
+   "runnerReceived": 15,
+   "possessionLost": 12
+  },
+  "C": {
+   "runs": 40,
+   "runsAssigned": {
+    "underlap:DF": 19,
+    "overlap:DF": 2
+   },
+   "overlap": 0,
+   "underlap": 0,
+   "passToRunner": 14,
+   "runnerReceived": 14,
+   "possessionLost": 14
+  },
+  "E": {
+   "runs": 40,
+   "runsAssigned": {
+    "overlap:DF": 26,
+    "underlap:DF": 1
+   },
+   "overlap": 1,
+   "underlap": 0,
+   "passToRunner": 16,
+   "runnerReceived": 14,
+   "possessionLost": 26
+  },
+  "J": {
+   "runs": 40,
+   "runsAssigned": {
+    "overlap:DF": 18
+   },
+   "overlap": 0,
+   "underlap": 0,
+   "passToRunner": 0,
+   "runnerReceived": 0,
+   "possessionLost": 0
+  },
+  "J2": {
+   "runs": 40,
+   "humanPressedPassTowardRunner": 17,
+   "passToRunner": 17,
+   "runnerReceived": 16
+  },
+  "D": {
+   "runs": 40,
+   "bToC": 8,
+   "cReceived": 8,
+   "aFirstPassTo": {
+    "other": 1,
+    "B": 24,
+    "C": 2
+   },
+   "bReceived": 27,
+   "thirdRunAssigned": {
+    "FW": 5,
+    "C": 3,
+    "MF": 1
+   },
+   "bHeavyTouch": 0,
+   "bFirstPassTo": {
+    "C": 8,
+    "other": 9
+   },
+   "bTakeToPassSecMedian": 1.65,
+   "bPassesWithin1s": 3,
+   "bPassWhenCAssigned": {
+    "C": 1
+   }
+  },
+  "F": {
+   "runs": 40,
+   "firstPassIsSwitch": 8,
+   "switchReceivedByTarget": 4,
+   "possessionLost": 25
+  },
+  "G": {
+   "runs": 40,
+   "fullbackBackInOwnHalfMedianSec": 2.3,
+   "notBackWithin6s": "20/80",
+   "possessionLost": 34
+  },
+  "H": {
+   "runs": 40,
+   "crowdShare": 0.04,
+   "defendersGoalSideMedianAtEnd": 7
+  }
+ }
+}

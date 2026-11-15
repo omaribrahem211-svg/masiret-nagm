@@ -8,7 +8,7 @@ name: Verify an existing APK build and publish it as a prerelease
 # touched). The run to verify is set in env below.
 on:
   push:
-    branches: [final-gameplay, gameplay-v131, gameplay-final]
+    branches: [final-gameplay, gameplay-v131, gameplay-final, gameplay-v133-repair]
     paths: ['.github/workflows/verify-release.yml']
 
 permissions:
@@ -20,9 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      RUN_ID: '43727968819'
-      ARTIFACT: masiret-android-32
-      TAG: v132-rc1
+      RUN_ID: '43757488696'
+      ARTIFACT: masiret-android-33
+      TAG: v133-rc1
       PUBLISH: 'true'
     steps:
       - name: Checkout (full history, to compare with the build commit)
@@ -135,13 +135,13 @@ jobs:
           { echo "Release candidate for real-device testing. Built by run ${{ env.RUN_ID }} from commit ${{ steps.v.outputs.sha }} (branch ${{ github.ref_name }}). Not merged into main."; echo; echo "SHA-256 of the APK: \`$SUM\`"; echo; echo '```'; cat report.txt; echo '```'; } > notes.md
           gh release create "${{ env.TAG }}" "$APK" report.txt launch.txt --prerelease --target "${{ steps.v.outputs.sha }}" --title "${{ env.TAG }}" --notes-file notes.md
 
-      # Final programme: if the token may not create releases, keep the verified APK on an orphan branch "test-builds" instead
-      # (one commit per verified build; main and "builds" are not touched)
+      # If the token may not create releases, keep the verified APK on an orphan branch test-builds-<TAG> (one branch per build, so earlier
+      # builds such as test-builds stay untouched; main and "builds" are not touched)
       - name: Fallback — keep the verified APK on the test-builds branch
         if: env.PUBLISH == 'true' && steps.pub.outcome != 'success'
         run: |
           set -euo pipefail
           mkdir pub && cp art/*-test.apk report.txt launch.txt pub/ && cd pub
           sha256sum *-test.apk > SHA256SUMS.txt
-          git init -q -b test-builds && git add . && git -c user.name="build bot" -c user.email="actions@users.noreply.github.com" commit -q -m "${{ env.TAG }}: verified and launch-tested APK from run ${{ env.RUN_ID }} (commit ${{ steps.v.outputs.sha }})"
-          git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" test-builds
+          git init -q -b test-builds-${{ env.TAG }} && git add . && git -c user.name="build bot" -c user.email="actions@users.noreply.github.com" commit -q -m "${{ env.TAG }}: verified and launch-tested APK from run ${{ env.RUN_ID }} (commit ${{ steps.v.outputs.sha }})"
+          git push -q "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" test-builds-${{ env.TAG }}

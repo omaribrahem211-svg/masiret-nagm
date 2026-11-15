@@ -12,7 +12,10 @@ say "--- launch"; T0=$(date +%s); adb shell monkey -p $PKG -c android.intent.cat
 for s in 5 15 40; do sleep $(( s - ( $(date +%s) - T0 ) > 0 ? s - ( $(date +%s) - T0 ) : 0 )); PID=$(adb shell pidof $PKG | tr -d '\r'); say "t=${s}s pid=${PID:-none}"; adb exec-out screencap -p > screen_${s}s.png || true; done
 adb logcat -d > logcat.txt
 FATAL=$(grep -c "FATAL EXCEPTION" logcat.txt || true); ANR=$(grep -c "ANR in $PKG" logcat.txt || true)
-JSERR=$(grep -E "chromium|Capacitor/Console|Console" logcat.txt | grep -ciE "Uncaught|TypeError|ReferenceError|SyntaxError" || true)
+# Known, not from the game: Capacitor 8 injects its safe-area CSS before the page exists ("Error injecting safe area CSS ... of null") — counted apart
+KNOWN=$(grep -c "Error injecting safe area CSS" logcat.txt || true)
+JSERR=$(grep -E "chromium|Capacitor/Console|Console" logcat.txt | grep -v "Error injecting safe area CSS" | grep -ciE "Uncaught|TypeError|ReferenceError|SyntaxError" || true)
+say "known Capacitor safe-area messages (not game code): $KNOWN"
 say "FATAL EXCEPTION lines: $FATAL   ANR: $ANR   JS errors in the WebView log: $JSERR"
 grep -E "Capacitor/Console|chromium" logcat.txt | grep -iE "Uncaught|Error" | head -20 | tee -a $R || true
 say "--- memory after 40 s"; adb shell dumpsys meminfo $PKG | grep -E "TOTAL PSS|TOTAL:|Native Heap|Graphics" | head -5 | tee -a $R || true

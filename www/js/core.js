@@ -632,9 +632,16 @@ class Match{
    if(Math.random()<P.win){this.winBall(p,c,Math.random()<P.keep);return;}
    // رجله لمست الكورة بس مش كفاية ياخدها: الكورة بتفلت من الحامل (لمسة إصبع)
    if(Math.random()<P.poke){b.owner=null;b.last=p;b.passFrom=null;const a=Math.atan2(c.vy||b.vy,c.vx||b.vx)+R(-1.2,1.2),s2=R(1.5,3);b.vx=Math.cos(a)*s2;b.vy=Math.sin(a)*s2;b.vz=0;c.cool=.25;p.cool=.2;p.stun=.15;return;}
-   if(!clean&&dM<1&&(behind||crash>4.5||Math.random()<clamp(.12+(c.st.drib-p.st.def)/300,.04,.3))){this.foul(p,c,false,behind);return;}this.tkFail(p,clean,1);return;}
+   if(!clean&&dM<1&&(behind||crash>4.5||Math.random()<clamp(.12+(c.st.drib-p.st.def)/300,.04,.3))){this.foul(p,c,false,behind);return;}
+   /* (v133) التدخل "الحريص" (clean) برضه ممكن يلمس رجل المهاجم لو فشل والمهاجم جوه مدى الرجل: نفس احتمال العرقلة × 0.4 */
+   if(clean&&dM<TKR+.15&&Math.random()<.4){const cosA=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/dM;if(Math.random()<(cosA<-.35?.55:cosA<.5?.3:.12)*clamp(1.25-(p.st.tackle||60)/120,.5,1)){this.foul(p,c,false,cosA<-.35);return;}}
+   this.tkFail(p,clean,1);return;}
   // الكورة بعدت عن الرجل لحظة التلامس (المهاجم سبق أو غيّر اتجاهه): التدخل فاته. الفاول بس لو المدافع خبط المهاجم فعلاً
   if(!clean&&dM<1&&(behind||crash>4.5)){this.foul(p,c,false,behind);return;}
+  /* (v133) عرقلة: الكورة بعدت عن مدى الرجل بس رجل المهاجم نفسها لسه في المدى (≤ مدى التدخل + 0.15 م) — الرجل الممدودة بتلمس رجل المهاجم. احتمالها حسب الزاوية
+     (من ورا 0.55، من الجنب 0.3، من قدّام 0.12) وأقل لِلمدافع الأشطر (الافتكاك). قبل كده الفاول في التدخل الواقف كان محتاج مركز جسم المدافع في 1 م من المهاجم،
+     فـ 444 من 682 تدخل فاشل كانوا بيعدّوا من غير أي تلامس (17 فاول بس، 2.5%). التدخل الحريص (clean، 75% من تدخلات الـ AI) ×0.4 */
+  if(dM<TKR+.15&&(!clean||Math.random()<.4)){const cosA=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/dM,pt=(cosA<-.35?.55:cosA<.5?.3:.12)*clamp(1.25-(p.st.tackle||60)/120,.5,1);if(Math.random()<pt){this.foul(p,c,false,cosA<-.35);return;}}
   this.tkFail(p,clean,1);}
  // التدخل فشل: المدافع بيتهز لحظة (مش بيقع ومش بيتجمد)، وبعدين يقدر يلف ويجري بس بعجلة أقل لحد ما يرجع توازنه
  tkFail(p,clean,k){p.stun=(clean?.15:.22)*k;p.recT=(clean?.4:.5)*k;}

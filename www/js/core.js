@@ -268,21 +268,29 @@ class Match{
  //    وفيه تغطية ورا (3 مدافعين غيره + لاعب وسط تحت الكورة) ولياقته فوق 45. الاحتمال بيزيد مع خطة الأطراف/الانطلاقات (runs × width)
  //  • underlap — لو الممر برّه مقفول أو الجناح على الخط: الظهير (لو التغطية موجودة) أو لاعب الوسط اللي في نفس الناحية يجري في القناة الداخلية
  // الانطلاقة بتفضل 3.5–4 ث طول ما نفس الجناح معاه الكورة، والجاري بيتشال من أدوار المساندة. t.run.done بيتسجّل لما ياخد الكورة
- runPt(t,c,kind){const side=Math.sign(c.y-CY)||1,ax=c.x+t.dir*(kind==='overlap'?9:7),y=kind==='overlap'?CY+side*30.5:CY+side*11,offX=t.dir===1?t.offLine-.6:L-(t.offLine-.6);
+ runPt(t,c,kind,fw,lat){const side=Math.sign(c.y-CY)||1,ax=c.x+t.dir*(fw||(kind==='overlap'?9:7)),y=CY+side*(lat||(kind==='overlap'?30.5:11)),offX=t.dir===1?t.offLine-.6:L-(t.offLine-.6);
   return[clamp(t.dir===1?Math.min(ax,offX):Math.max(ax,offX),2,L-2),clamp(y,2.5,W-2.5)];}
  flankRun(t,o,c,TT){const h=this.human,r=t.run;
-  if(r&&this.time<r.until&&!(r.p.stun>0)&&r.p!==c){if(r.carrier===c)r.pt=this.runPt(t,c,r.kind);return r;}/* الانطلاقة بتكمّل لحد آخر وقتها حتى لو الكورة اتنقلت لزميل تاني */
+  if(r&&this.time<r.until&&!(r.p.stun>0)&&r.p!==c){if(r.carrier===c)r.pt=this.runPt(t,c,r.kind,r.fw,r.lat);return r;}/* الانطلاقة بتكمّل لحد آخر وقتها حتى لو الكورة اتنقلت لزميل تاني */
   t.run=null;if(c.role!=='FW'||Math.abs(c.by-34)<=13||(h&&c.team.idx===h.team&&h.lockRuns))return null;
   const bxT=t.dir===1?c.x:L-c.x;if(bxT<55||bxT>94||Math.abs(c.y-CY)<17)return null;
   if(c.runChk!==c.takeAt){c.runChk=c.takeAt;c.runRoll=Math.random();}/* قرعة واحدة لكل استلام للجناح، والظروف بتتراجع كل 0.3 ث طول ما هو معاه الكورة */
   const side=Math.sign(c.y-CY),gs=q=>(t.dir===1?q.x:L-q.x)<bxT-5,fb=t.pl.find(p=>p.role==='DF'&&Math.abs(p.by-34)>13&&Math.sign(p.y-CY)===side);
   const cov=t.pl.filter(q=>q.role==='DF'&&q!==fb&&gs(q)).length>=3&&t.pl.some(q=>q.role==='MF'&&gs(q));
   const okP=q=>q&&!(q.stun>0)&&q.stam>45&&!(h&&(q===h.ctrl||q===h.p2));
-  const ov=this.runPt(t,c,'overlap'),un=this.runPt(t,c,'underlap'),free=(pt,rd)=>o.pl.every(q=>hyp(q.x-pt[0],q.y-pt[1])>rd);
   const touch=Math.abs(c.y-CY)>29.5,fbOk=okP(fb)&&cov&&(t.dir===1?fb.x:L-fb.x)<bxT+2&&(t.dir===1?fb.x:L-fb.x)>bxT-20&&hyp(fb.x-c.x,fb.y-c.y)<26,want=clamp(.2+.5*TT.runs*Math.min(1.3,TT.width),.1,.85);
+  const ov=this.runPt(t,c,'overlap'),free=(pt,rd)=>o.pl.every(q=>hyp(q.x-pt[0],q.y-pt[1])>rd);
   if(fbOk&&!touch&&free(ov,5)&&o.pl.every(q=>segDist(q.x,q.y,fb.x,fb.y,ov[0],ov[1])>1.5)){if(c.runRoll<want)return t.run={p:fb,kind:'overlap',carrier:c,until:this.time+4,pt:ov,t0:this.time};return null;}
-  if(touch||!free(ov,5)){let q=fbOk?fb:null;if(!q)q=t.pl.filter(p=>p.role==='MF'&&okP(p)&&Math.sign(p.y-CY)===side).sort((a,z)=>hyp(a.x-c.x,a.y-c.y)-hyp(z.x-c.x,z.y-c.y))[0];
-   if(q&&free(un,4)&&c.runRoll<want)return t.run={p:q,kind:'underlap',carrier:c,until:this.time+3.5,pt:un,t0:this.time};}
+  /* (final) الـ underlap: بدل نقطة واحدة ثابتة (11 م من النص) بيختار من 6 نقط (5/8 م قدّام × 9/12/15 م من النص) ومن جاريين (الظهير أو لاعب الوسط) اللي بتعمل أحسن
+     خيار تمرير: الجاري لازم يوصل مش متأخر عن أقرب خصم (غير اللي بيضغط الجناح — ده مشغول بيه) بأكتر من 1.8 ث (لو متأخر أكتر الخصم بيستلمها)، الممر من الجناح مفتوح 1.6 م وطريق الجاري مش مقفول.
+     القيمة = المساحة عند النقطة + فتحة الممر − وقت الوصول، ولازم تعدّي 5 — غير كده مفيش جري (الجناح يلعب لوحده) بدل جري لمكان فيه مدافع.
+     قبل كده: سيناريو C (الجناح على الخط) كان بيبعت underlap لنقطة المدافع بيوصلها في 0.2–0.5 ث، والكورة كانت بتضيع 15 من 40 */
+  if(touch||!free(ov,5)){const mf=t.pl.filter(p=>p.role==='MF'&&okP(p)&&Math.sign(p.y-CY)===side).sort((a,z)=>hyp(a.x-c.x,a.y-c.y)-hyp(z.x-c.x,z.y-c.y))[0];
+   let best=null,bv=5;for(const [fw,lat] of [[5,9],[8,9],[5,12],[8,12],[5,15],[8,15]]){const pt=this.runPt(t,c,'underlap',fw,lat);for(const q of [fbOk?fb:null,mf]){if(!q)continue;
+    const tR=hyp(pt[0]-q.x,pt[1]-q.y)/((q.mse||7)*.95);if(tR>3)continue;let tO=9,sp=9,lane=9,path=9;
+    for(const z of o.pl){const dz=hyp(z.x-pt[0],z.y-pt[1]);sp=Math.min(sp,dz);if(hyp(z.x-c.x,z.y-c.y)>3.5)tO=Math.min(tO,dz/((z.mse||7)*.9));lane=Math.min(lane,segDist(z.x,z.y,c.x,c.y,pt[0],pt[1]));path=Math.min(path,segDist(z.x,z.y,q.x,q.y,pt[0],pt[1]));}
+    if(tR>tO+1.8||lane<1.6||path<1.2)continue;const v=Math.min(sp,8)+Math.min(lane,4)-tR*1.2;if(v>bv){bv=v;best={p:q,kind:'underlap',carrier:c,until:this.time+3.5,pt,fw,lat,t0:this.time};}}}
+   if(best&&c.runRoll<want)return t.run=best;}
   return null;}
  // (v131 E2) الراجل التالت: لما A يمرر لـ B، بيدوّر على زميل C يقدر يجري لمساحة فاضية قدّام B (9–15 م ناحية المرمى، في نص ملعب الخصم بس، مش متسلل،
  // مافيش خصم في 4 م منها، والممر من B ليها مفتوح بهامش 2.4 م، ويوصلها في ≤2.6 ث ولياقته فوق 40). مش كل تمريرة: احتمال حسب runs في الخطة،
@@ -428,7 +436,7 @@ class Match{
    // ولو لسه ماوصلش ومفيش ضغط عليه (أقرب خصم > 3.4 م) يمشي بالكورة على مهله لحد 3 ث (لجوه شوية لو overlap عشان يفتح الممر برّه، ولبرّه لو underlap) يستناه بدل ما يعرّض أو يرجّع
   {const rn=t.run&&t.run.carrier===p?t.run:null;if(rn&&b.owner===p){const q=rn.p,ahead=t.dir*(q.x-p.x)>(nd<3.4?-2.5:1.5);/* تحت الضغط بيمررها في طريقه أول ما يبقى جنبه تقريباً */
      if(ahead&&o.pl.every(z=>segDist(z.x,z.y,p.x,p.y,q.x+q.vx*.5,q.y+q.vy*.5)>1.6)&&(t.dir===1?q.x:L-q.x)<t.offLine){rn.passed=true;this.pass(p,q,false,false);return;}
-     if(!ahead&&nd>(hyp(q.x-p.x,q.y-p.y)<7?1.8:3.4)&&this.time-rn.t0<3){p.tgt=[p.x+t.dir*3,p.y-Math.sign(p.y-CY)*(rn.kind==='overlap'?.8:-.3)];p.spd=p.mse*.45;return;}}}
+     if(!ahead&&nd>(hyp(q.x-p.x,q.y-p.y)<7?1.8:3.4)&&this.time-rn.t0<3){p.tgt=[p.x+t.dir*3,p.y-Math.sign(p.y-CY)*(rn.kind==='overlap'?.8:Math.abs(p.y-CY)>27?.4:-.3)];p.spd=p.mse*.45;return;}}}
   p.dec-=dt;
   if(p.dec<=0){p.dec=R(.22,.45)*(1.5-t.R/100)*(1-(t.aiK||0)*.1);
    if(dG<33&&Math.abs(p.y-CY)<20){const sk=p.st.shot/100;

@@ -1,0 +1,37 @@
+{
+ "www": "/tmp/fin/ft2",
+ "runs": 60,
+ "results": {
+  "X pass": {
+   "pass (lofted)": 36,
+   "pass": 23,
+   "opponent took the ball before the kick (not a control failure)": 1
+  },
+  "O lob/cross": {
+   "pass (lofted)": 59,
+   "opponent took the ball before the kick (not a control failure)": 1
+  },
+  "T through ball": {
+   "pass (lofted)": 35,
+   "pass": 24,
+   "opponent took the ball before the kick (not a control failure)": 1
+  },
+  "S shoot (tap) from 20 m": {
+   "shot": 60
+  },
+  "S held 0.6 s (power shot)": {
+   "shot": 59,
+   "nothing": 1
+  },
+  "X pass while running (stick held forward)": {
+   "pass": 49,
+   "lost the ball before the press (not counted)": 9,
+   "nothing": 1,
+   "pass (lofted)": 1
+  },
+  "stick only (move up)": {
+   "moved": 59,
+   "did not move": 1
+  }
+ }
+}

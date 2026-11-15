@@ -699,7 +699,15 @@ class Match{
   const h=this.human;if(h&&!h.lock){if(p.team.idx===h.team){h.ctrl=p;if(p.role==='GK')p.gkHoldT=0;}else if(prev&&prev===this.t[h.team]&&p.team.idx!==h.team){h.swAt=0;this.autoSwitch(false);}}}
  firstTouch(p,wasT){const b=this.ball;if(b.inHands||this.restartKind)return;if(wasT)p.rcvA=.45;const v=hyp(b.vx,b.vy);const q=.45+p.st.drib/180+(wasT?.08:0);const h=this.human;let dx=p.fx,dy=p.fy;
   if(h&&h.ctrl===p&&hyp(Input.jx,Input.jy)>.25){dx=Input.jx;dy=-Input.jy;}else if(!h||h.ctrl!==p){const g=this.attG(p.team);const gx=g[0]-p.x,gy=g[1]-p.y,gd=hyp(gx,gy)||1;dx=p.fx*.6+gx/gd*.4;dy=p.fy*.6+gy/gd*.4;}
-  const n=hyp(dx,dy)||1;dx/=n;dy/=n;const ps=hyp(p.vx,p.vy);const keep=clamp(1-q,0,.45);const out=Math.min(v,9)*keep*.6+ps+.4;
+  const n=hyp(dx,dy)||1;dx/=n;dy/=n;const ps=hyp(p.vx,p.vy);
+  /* (final) صعوبة اللمسة الأولى: غير التحكم (drib) وسرعة الكورة، بتعتمد على (1) قد إيه الكورة لازم تتلف من اتجاهها للاتجاه اللي عايزه (لمسة بترجّع الكورة عكس اتجاهها
+     أصعب من إنه يسيبها تكمّل) مضروبة في سرعتها، (2) الضغط (خصم أقل من 2 م)، (3) التوازن والرشاقة. كل ده بيكبّر هامش الخطأ (keep) — مش بيغيّر سرعة الاستجابة */
+  let keep=clamp(1-q,0,.45),turn=0,pr=0;{const vn=v||1,cosT=(b.vx*dx+b.vy*dy)/vn;turn=(1-cosT)/2*Math.min(v,14)/14;for(const z of this.other(p.team).pl)if(hyp(z.x-p.x,z.y-p.y)<2){pr=1;break;}
+   keep=clamp(keep*(1+.5*turn+.25*pr+(70-((p.st.bal||60)+(p.st.agi||60))/2)/200),0,.6);}
+  const out=Math.min(v,9)*keep*.6+ps+.4;
+  /* (final) لمسة تقيلة: فرصة حسب التحكم والكورة لازم تتلف قد إيه والضغط والتوازن/الرشاقة، مضروبة في سرعة الكورة (حوالي 2–4% لكورة عادية لِلاعب كويس، 10–15% لكورة سريعة بيلفها تحت ضغط)، إن الكورة تفلت 1.5–3 م منه (سايبة، أي حد يلحقها). قبل كده أي كورة أرضية لمست رجله
+     كانت بتبقى معاه على طول مهما كانت سرعتها أو اتجاهها أو الضغط — تحكم 50 و 90 كانوا نفس النتيجة تقريباً */
+  if(b.z<=.25&&!b.inHands){const ba=((p.st.bal||60)+(p.st.agi||60))/2,pH=clamp((.01+(1-p.st.drib/100)*.12+turn*.07+pr*.05+(65-ba)/1000)*Math.min(v,16)/12,0,.3);if(pH>0&&Math.random()<pH){const sv=out*1.25+1.5;b.owner=null;b.last=p;b.vx=dx*sv+R(-1,1)*1.2;b.vy=dy*sv+R(-1,1)*1.2;b.vz=0;p.cool=.28;p.heavyT=this.time;return;}}
   if(b.z>.25){const pv=hyp(p.vx,p.vy);b.vx=p.vx*.9+dx*(.9+pv*.1)+R(-1,1)*keep*.8;b.vy=p.vy*.9+dy*(.9+pv*.1)+R(-1,1)*keep*.8;b.vz=clamp(b.vz,-2,1)*.15;p.rcvT=.45;return;}
   b.vx=dx*out+b.vx*keep*.25+R(-1,1)*keep*1.5;b.vy=dy*out+b.vy*keep*.25+R(-1,1)*keep*1.5;b.vz=0;}
  /* ---------- HUMAN ---------- */

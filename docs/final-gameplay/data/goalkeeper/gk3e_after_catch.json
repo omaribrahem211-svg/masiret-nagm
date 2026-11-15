@@ -1,0 +1,16 @@
+{
+ "meta": {
+  "www": "/tmp/fin/gk1",
+  "n": 40
+ },
+ "catches": 34,
+ "parries": 78,
+ "parryOutcome": {
+  "defence": 35,
+  "corner": 30,
+  "attackOpenPlay": 8,
+  "gkRecovers": 2,
+  "attackShot": 1
+ },
+ "attackRegainShare": 0.118
+}

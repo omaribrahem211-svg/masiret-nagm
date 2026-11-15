@@ -1,0 +1,17 @@
+{
+ "meta": {
+  "www": "/tmp/fin/sl3",
+  "n": 40
+ },
+ "catches": 22,
+ "parries": 108,
+ "parryOutcome": {
+  "defence": 56,
+  "corner": 33,
+  "attackOpenPlay": 10,
+  "attackShot": 1,
+  "gkRecovers": 2,
+  "goal": 1
+ },
+ "attackRegainShare": 0.117
+}

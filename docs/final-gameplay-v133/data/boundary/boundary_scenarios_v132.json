@@ -1,0 +1,204 @@
+{
+ "passed": 12,
+ "total": 13,
+ "tests": [
+  {
+   "test": "touchline y=0 slow ground",
+   "restart": "throw",
+   "expected": "throw",
+   "lastToucherTeam": "deflector",
+   "ballCentreWhenStopped": [
+    40.392,
+    0.023
+   ],
+   "awardedTeam": 1,
+   "restartAt": [
+    40.4,
+    0.3
+   ],
+   "partOfBallStillOnLine": true,
+   "ok": true
+  },
+  {
+   "test": "touchline y=W slow ground",
+   "restart": "throw",
+   "expected": "throw",
+   "lastToucherTeam": "deflector",
+   "ballCentreWhenStopped": [
+    59.608,
+    67.977
+   ],
+   "awardedTeam": 1,
+   "restartAt": [
+    59.6,
+    67.7
+   ],
+   "partOfBallStillOnLine": true,
+   "ok": true
+  },
+  {
+   "test": "touchline y=0 medium ground",
+   "restart": "throw",
+   "expected": "throw",
+   "lastToucherTeam": "deflector",
+   "ballCentreWhenStopped": [
+    40.374,
+    0.006
+   ],
+   "awardedTeam": 1,
+   "restartAt": [
+    40.39,
+    0.3
+   ],
+   "partOfBallStillOnLine": true,
+   "ok": true
+  },
+  {
+   "test": "touchline y=W medium ground",
+   "restart": "throw",
+   "expected": "throw",
+   "lastToucherTeam": "deflector",
+   "ballCentreWhenStopped": [
+    59.626,
+    67.994
+   ],
+   "awardedTeam": 1,
+   "restartAt": [
+    59.61,
+    67.7
+   ],
+   "partOfBallStillOnLine": true,
+   "ok": true
+  },
+  {
+   "test": "touchline y=0 fast ground",
+   "restart": "throw",
+   "expected": "throw",
+   "lastToucherTeam": "deflector",
+   "ballCentreWhenStopped": [
+    40.185,
+    0.04
+   ],
+   "awardedTeam": 1,
+   "restartAt": [
+    40.2,
+    0.3
+   ],
+   "partOfBallStillOnLine": true,
+   "ok": true
+  },
+  {
+   "test": "touchline y=W fast ground",
+   "restart": "throw",
+   "expected": "throw",
+   "lastToucherTeam": "deflector",
+   "ballCentreWhenStopped": [
+    59.815,
+    67.96
+   ],
+   "awardedTeam": 1,
+   "restartAt": [
+    59.8,
+    67.7
+   ],
+   "partOfBallStillOnLine": true,
+   "ok": true
+  },
+  {
+   "test": "touchline lofted",
+   "restart": "throw",
+   "expected": "throw",
+   "lastToucherTeam": "deflector",
+   "ballCentreWhenStopped": [
+    51.415,
+    0.092
+   ],
+   "awardedTeam": 1,
+   "restartAt": [
+    51.45,
+    0.3
+   ],
+   "partOfBallStillOnLine": true,
+   "ok": true
+  },
+  {
+   "test": "byline, last touch attacker (team 0) -> goal kick",
+   "restart": "gk",
+   "expected": "gk",
+   "lastToucherTeam": "deflector",
+   "ballCentreWhenStopped": [
+    104.985,
+    49
+   ],
+   "awardedTeam": 1,
+   "restartAt": [
+    99.5,
+    34
+   ],
+   "partOfBallStillOnLine": true,
+   "ok": true
+  },
+  {
+   "test": "byline, last touch defender (team 1) -> corner",
+   "restart": "corner",
+   "expected": "corner",
+   "lastToucherTeam": "deflector",
+   "ballCentreWhenStopped": [
+    104.985,
+    49
+   ],
+   "awardedTeam": 0,
+   "restartAt": [
+    104.5,
+    67.5
+   ],
+   "partOfBallStillOnLine": true,
+   "ok": true
+  },
+  {
+   "test": "own byline, last touch team 0 -> corner for team 1",
+   "restart": "corner",
+   "expected": "corner",
+   "lastToucherTeam": "deflector",
+   "ballCentreWhenStopped": [
+    0.015,
+    19
+   ],
+   "awardedTeam": 1,
+   "restartAt": [
+    0.5,
+    0.5
+   ],
+   "partOfBallStillOnLine": true,
+   "ok": true
+  },
+  {
+   "test": "ball rolling into the goal",
+   "restart": "goal",
+   "expected": "goal|ko|celebrate",
+   "lastToucherTeam": "toucher",
+   "ballCentreWhenStopped": [
+    104.985,
+    34
+   ],
+   "awardedTeam": null,
+   "restartAt": null,
+   "partOfBallStillOnLine": true,
+   "ok": true
+  },
+  {
+   "test": "pass deflected out off a defender at the touchline (30 trials; throws after a deflection must go to the passer's team, others to the defender's)",
+   "expected": "throw to the passer's team",
+   "deflectedOut": 0,
+   "correct": 0,
+   "wrongTeam": 0,
+   "ok": true
+  },
+  {
+   "test": "ball centre 5 cm beyond the touchline, crawling (part of the ball still over the line)",
+   "expected": "stays in play",
+   "restart": "throw",
+   "ok": false
+  }
+ ]
+}

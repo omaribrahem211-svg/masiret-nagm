@@ -638,7 +638,11 @@ class Match{
  // التدخل فشل: المدافع بيتهز لحظة (مش بيقع ومش بيتجمد)، وبعدين يقدر يلف ويجري بس بعجلة أقل لحد ما يرجع توازنه
  tkFail(p,clean,k){p.stun=(clean?.15:.22)*k;p.recT=(clean?.4:.5)*k;}
  winBall(p,c,keep){const b=this.ball;c.stats.lost++;p.stats.tk++;c.stun=.5;c.cool=.55;SFX.kick(.3);
-  if(keep)this.take(p);else{b.owner=null;b.last=p;b.passFrom=null;const a=Math.atan2(p.fy,p.fx)+R(-.8,.8),sp=R(2.5,5);b.vx=Math.cos(a)*sp;b.vy=Math.sin(a)*sp;b.vz=0;p.cool=.1;}
+  if(keep)this.take(p);else{b.owner=null;b.last=p;b.passFrom=null;
+    /* (v133) الكورة اللي اتخطفت بالرجل بتتزق في اتجاه الرجل (من المدافع للكورة) وبسرعة على قد سرعة التدخل، وبتاخد جزء من سرعة الحامل.
+       قبل كده كانت بتروح في اتجاه وش المدافع ±45° بسرعة 2.5–5 م/ث عشوائية: مدافع بيتدخل من جوه ناحية الخط عمره ما كان بيطلّعها رمية تماس (0 من 81 كورة سايبة رايحة للخط في 20 ماتش كانت من تدخل) */
+    let ux=b.x-p.x,uy=b.y-p.y;const un=hyp(ux,uy);if(un<.15){ux=p.fx;uy=p.fy;}else{ux/=un;uy/=un;}const ap=Math.max(0,p.vx*ux+p.vy*uy),a=Math.atan2(uy,ux)+R(-.5,.5),sp=clamp(2.5+ap*.6+R(0,1.5),2.5,7);
+    b.vx=Math.cos(a)*sp+c.vx*.35;b.vy=Math.sin(a)*sp+c.vy*.35;b.vz=0;p.cool=.1;}
   if(this.human&&p.team.idx===this.human.team)this.ev('tackle',{p},8);}
  slideCheck(p){if(p.slideDone)return;const b=this.ball,c=b.owner;const dB=hyp(b.x-p.x,b.y-p.y);
   if(dB<1.05&&b.z<.5&&(!c||c.team!==p.team)){p.slideDone=true;if(c){c.stats.lost++;c.stun=.55;c.cool=.6;p.stats.tk++;}b.owner=null;b.last=p;b.passFrom=null;b.vx=p.vx*1.15+R(-1.5,1.5);b.vy=p.vy*1.15+R(-1.5,1.5);b.vz=.3;p.cool=.4;SFX.kick(.5);if(this.human&&p.team.idx===this.human.team)this.ev('tackle',{p},8);return;}
@@ -991,7 +995,8 @@ class Match{
   if(bq){const offs=this.isOffside(bq,p);const dx=bq.x-p.x,dy=bq.y-p.y,d=hyp(dx,dy);const s2=clamp(6+d*.45,8,15),T=d/s2;b.vx=dx/d*s2;b.vy=dy/d*s2;b.vz=chain?Math.min(-1.5,4.9*T-b.z/T):Math.max(1.5,4.9*T-b.z/T);/* (F) تاني راس ورا بعض من غير ما الكورة تلمس الأرض: الراس بينزّلها لرجل الزميل */b.target=bq;b.passer=p;b.passT=this.time;b.passFrom=p;b.offside=offs?bq:null;return;}
   b.vx=p.fx*10;b.vy=p.fy*10;b.vz=2.5;}
  bounds(){const b=this.ball;if(this.walk||b.owner&&this.restartKind)return;
-  if(b.x<0||b.x>L){const side=b.x<0?0:1;const defT=this.t.find(t=>(t.dir===1)===(side===0));const def=defT.idx;
+  /* (v133) الكورة بتطلع بس لما تعدّي الخط كلها (المركز أبعد من الخط بنص القطر BR) — القانون 9. قبل كده كانت بتطلع أول ما المركز يعدّي، وهي لسه نصها على الخط */
+  if(b.x<-BR||b.x>L+BR){const side=b.x<0?0:1;const defT=this.t.find(t=>(t.dir===1)===(side===0));const def=defT.idx;
    if(Math.abs(b.y-CY)<GW/2+.1&&b.z>=GH-.11&&b.z<GH+.22&&!b.owner){b.x=side===0?.05:L-.05;b.vx*=-.45;b.vz=-Math.abs(b.vz)*.4-1;this.wood(b);return;}
    if(Math.abs(b.y-CY)<GW/2&&b.z<GH){this.goal(1-def);return;}
    if(Math.abs(Math.abs(b.y-CY)-GW/2)<.3&&b.z<GH&&!b.owner){b.x=side===0?.05:L-.05;b.vx*=-.5;b.vy+=(Math.sign(b.y-CY)||1)*R(.5,2);this.wood(b);return;}
@@ -999,7 +1004,7 @@ class Match{
    {const r=this.shotLive();if(r)this.shotEnd(r.gkTouched?'saved':r.deflected&&r.onT?'blocked':'off_target');}
    if(b.shot){SFX.ooh();this.ev('miss',{p:b.shot.by,close:b.shot.d<12});}this.pen=null;
    if(last===def)this.restart('corner',1-def,side===0?.5:L-.5,b.y<CY?.5:W-.5);else this.restart('gk',def,side===0?5.5:L-5.5,CY);return;}
-  if(b.y<0||b.y>W){{const r=this.shotLive();if(r)this.shotEnd(r.gkTouched?'saved':'off_target');}const last=b.last?b.last.team.idx:0;if(b.passFrom){b.passFrom.stats.pf++;b.passFrom=null;}this.restart('throw',1-last,clamp(b.x,1,L-1),b.y<0?.3:W-.3);}}
+  if(b.y<-BR||b.y>W+BR){{const r=this.shotLive();if(r)this.shotEnd(r.gkTouched?'saved':'off_target');}const last=b.last?b.last.team.idx:0;if(b.passFrom){b.passFrom.stats.pf++;b.passFrom=null;}this.restart('throw',1-last,clamp(b.x,1,L-1),b.y<0?.3:W-.3);}}
  // القايمين والعارضة: اسطوانات حقيقية، الكورة بترتد حسب زاوية الخبطة
  woodHit(b){if(b.z>GH+.4||(b.x>2&&b.x<L-2))return;const gx=b.x<CX?0:L,rr=.06+BR;for(const sy of [-1,1]){const py=CY+sy*GW/2,dx=b.x-gx,dy=b.y-py,d=hyp(dx,dy);if(d<rr&&b.z<GH+.06){const nx=dx/(d||1),ny=dy/(d||1),vn=b.vx*nx+b.vy*ny;if(vn<0){b.vx-=1.62*vn*nx;b.vy-=1.62*vn*ny;b.vx*=.92;b.vy*=.92;b.sw=(b.sw||0)*.3;b.x=gx+nx*rr;b.y=py+ny*rr;this.wood(b);}return;}}
   if(Math.abs(b.y-CY)<GW/2){const dx=b.x-gx,dz=b.z-GH,d=hyp(dx,dz);if(d<rr){const nx=dx/(d||1),nz=dz/(d||1),vn=b.vx*nx+b.vz*nz;if(vn<0){b.vx-=1.6*vn*nx;b.vz-=1.6*vn*nz;b.vx*=.92;b.tw=-(b.tw||0)*.3;b.x=gx+nx*rr;b.z=GH+nz*rr;this.wood(b);}}}}

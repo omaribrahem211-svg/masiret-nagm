@@ -1,0 +1,2 @@
+ball distance to nearest touchline, share of live time: <3 0.8 3-6 1.9 6-10 7.5 10-15 13.3 15-20 12.4 20-27 33.6 27-34 30.6
+team width in possession (outfield max-min): 30+:0% 35+:1% 40+:9% 45+:86% 50+:4% 55+:0% 60+:0%

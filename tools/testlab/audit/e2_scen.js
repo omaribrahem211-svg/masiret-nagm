@@ -67,7 +67,7 @@ const out = {};
 for (const [name, mk] of Object.entries(cases)) {
   if (ONLY && !ONLY.test(name)) continue;
   const R = { runs: 0, overlap: 0, underlap: 0, passToRunner: 0, runnerReceived: 0, wingerKept: 0, lost: 0, crossOrShot: 0, third: 0, thirdOk: 0, switchPass: 0, switchOk: 0, fbBackSec: [], crowd: 0, crowdS: 0, goalSide: [], noRunBecauseHuman: 0, assigned: {} };
-  for (let k = 0; k < K; k++) {
+  for (let k = +(A.k0 || 0); k < K + +(A.k0 || 0); k++) {
     const s = mk(k), m = s.m, t = T(m), b = m.ball; R.runs++;
     let ov = false, un = false, passR = false, recvR = false, third = false, thirdOk = false, sw = false, swOk = false, lostT = null, last = b.owner, passes = [];
     const fbBack = (s.fbs || []).map(() => null);
@@ -88,6 +88,11 @@ for (const [name, mk] of Object.entries(cases)) {
       if (process.env.JDBG && s.human2 && b.passer === s.wg && b.passT === m.time) { const q = b.target; console.log('J2 pass', k, q && q.role, q === s.__rp, q && Math.round(hyp(q.x - s.wg.x, q.y - s.wg.y)), s.__rp && Math.round(hyp(s.__rp.x - s.wg.x, s.__rp.y - s.wg.y)), 'pressedAt', s.__pr ? 1 : 0); }
       if (s.wg && b.passer === s.wg && b.passT === m.time) { const q = b.target; if (q && q === s.__rp) passR = true; }
       if (s.wg && own && own !== s.wg && own.team === t && passR) recvR = true;
+      if (s.c && s.a && b.passT === m.time && b.passer === s.a && !s.__ap) { s.__ap = 1; R.aPassTo = R.aPassTo || {}; const k2 = b.target === s.b ? 'B' : b.target === s.c ? 'C' : 'other'; R.aPassTo[k2] = (R.aPassTo[k2] || 0) + 1; }
+      if (s.c && own === s.b && !s.__bt) { s.__bt = m.time; R.bReceived = (R.bReceived || 0) + 1; }
+      if (s.c && t.third && !s.__ta) { s.__ta = 1; R.thirdAssigned = R.thirdAssigned || {}; const k3 = t.third.p === s.c ? 'C' : t.third.p.role; R.thirdAssigned[k3] = (R.thirdAssigned[k3] || 0) + 1; }
+      if (s.c && s.__bt && !s.__bh && b.owner === s.b && s.b.heavyT === m.time) { s.__bh = 1; R.bHeavyTouch = (R.bHeavyTouch || 0) + 1; }
+      if (s.c && s.__bt && !s.__bp && b.passT === m.time && b.passer === s.b) { s.__bp = 1; (R.bDelay = R.bDelay || []).push(+(m.time - s.__bt).toFixed(2)); if (t.third && t.third.p === s.c) R.bPassWhenCAssigned = R.bPassWhenCAssigned || {}, R.bPassWhenCAssigned[b.target === s.c ? 'C' : 'other'] = (R.bPassWhenCAssigned[b.target === s.c ? 'C' : 'other'] || 0) + 1; R.bPassTo = R.bPassTo || {}; const k4 = b.target === s.c ? 'C' : t.third && b.target === t.third.p ? 'thirdRunner' : 'other'; R.bPassTo[k4] = (R.bPassTo[k4] || 0) + 1; }
       if (s.c && b.passT === m.time && b.passer === s.b && b.target === s.c) third = true;
       if (s.c && own === s.c && third) thirdOk = true;
       // F: only the FIRST pass of the crowded carrier counts: a switch = to a team-mate on the far half of the width, >25 m across
@@ -108,7 +113,7 @@ for (const [name, mk] of Object.entries(cases)) {
   const med = a => { if (!a.length) return null; const z = a.slice().sort((x, y) => x - y); return z[z.length >> 1]; };
   const o = { runs: R.runs };
   if ('ABCEJ'.includes(name)) Object.assign(o, { runsAssigned: R.assigned, overlap: R.overlap, underlap: R.underlap, passToRunner: R.passToRunner, runnerReceived: R.runnerReceived, possessionLost: R.lost });
-  if (name === 'D') Object.assign(o, { bToC: R.third, cReceived: R.thirdOk });
+  if (name === 'D') Object.assign(o, { bToC: R.third, cReceived: R.thirdOk, aFirstPassTo: R.aPassTo, bReceived: R.bReceived, thirdRunAssigned: R.thirdAssigned, bHeavyTouch: R.bHeavyTouch || 0, bFirstPassTo: R.bPassTo, bTakeToPassSecMedian: R.bDelay ? R.bDelay.sort((a, z) => a - z)[R.bDelay.length >> 1] : null, bPassesWithin1s: R.bDelay ? R.bDelay.filter(v => v < 1).length : 0, bPassWhenCAssigned: R.bPassWhenCAssigned });
   if (name === 'J2') Object.assign(o, { humanPressedPassTowardRunner: R.humanPressed || 0, passToRunner: R.passToRunner, runnerReceived: R.runnerReceived });
   if (name === 'F') Object.assign(o, { firstPassIsSwitch: R.switchPass, switchReceivedByTarget: R.switchOk, possessionLost: R.lost });
   if (name === 'G') Object.assign(o, { fullbackBackInOwnHalfMedianSec: med(R.fbBackSec), notBackWithin6s: R.fbBackSec.filter(v => v >= 6).length + '/' + R.fbBackSec.length, possessionLost: R.lost });

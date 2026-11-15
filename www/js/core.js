@@ -302,7 +302,8 @@ class Match{
    for(const fw of [9,12,15])for(const lat of [-9,-4,4,9]){const tx=Math.min(bxT+fw,offX),ty=clamp((t.dir===1?ey:W-ey)+lat,4,W-4);if(tx<bxT+6)continue;const w=t.dir===1?[tx,ty]:[L-tx,W-ty];
     const dc=hyp(w[0]-c.x,w[1]-c.y);if(dc/(c.mse*.95)>2.6||dc<4)continue;let sp=9;for(const q of o.pl)sp=Math.min(sp,hyp(q.x-w[0],q.y-w[1]));if(sp<4)continue;
     if(o.pl.some(q=>segDist(q.x,q.y,ex,ey,w[0],w[1])<2.4))continue;const sc=Math.min(sp,8)+fw*.15-dc*.12+(c.role==='FW'?.5:0);if(sc>bs){bs=sc;best={p:c,pt:w};}}}
-  if(best&&bs>6&&Math.random()<.12+.3*TT.runs){t.third={p:best.p,pt:best.pt,b:bR,a,until:this.time+3.5,t0:this.time};}}
+  /* (v133) كل ما المساحة اللي قدام C أوضح (bs أعلى من 7) الجري أكتر احتمالاً (+ لحد 0.35): مساحة 8 م فاضية قدام الجاري كانت بتتساب 73% من المرات في الخطة المتوازنة */
+  if(best&&bs>6&&Math.random()<.12+.3*TT.runs+clamp((bs-7)*.12,0,.35)){t.third={p:best.p,pt:best.pt,b:bR,a,until:this.time+3.5,t0:this.time};}}
  tactic(t,o,bx){const b=this.ball,c=b.owner;
   let mn=105;for(const q of o.pl){if(q.role==='GK')continue;const qx=t.dir===1?q.x:L-q.x;if(qx<mn)mn=qx;}
   const TT=t.T||TACTICS.bal;let dl=clamp(16+(bx-52.5)*.5+(bx>70?4:0)+(t.str||0)*5+TT.line,bx<20?6.5:bx<30?10.5:12.5,50);dl=Math.max(8,Math.min(dl,mn-.4));t.dl=t.dl==null?dl:t.dl+(dl-t.dl)*.12;
@@ -703,15 +704,18 @@ class Match{
   const h=this.human;if(h&&!h.lock){if(p.team.idx===h.team){h.ctrl=p;if(p.role==='GK')p.gkHoldT=0;}else if(prev&&prev===this.t[h.team]&&p.team.idx!==h.team){h.swAt=0;this.autoSwitch(false);}}}
  firstTouch(p,wasT){const b=this.ball;if(b.inHands||this.restartKind)return;if(wasT)p.rcvA=.45;const v=hyp(b.vx,b.vy);const q=.45+p.st.drib/180+(wasT?.08:0);const h=this.human;let dx=p.fx,dy=p.fy;
   if(h&&h.ctrl===p&&hyp(Input.jx,Input.jy)>.25){dx=Input.jx;dy=-Input.jy;}else if(!h||h.ctrl!==p){const g=this.attG(p.team);const gx=g[0]-p.x,gy=g[1]-p.y,gd=hyp(gx,gy)||1;dx=p.fx*.6+gx/gd*.4;dy=p.fy*.6+gy/gd*.4;}
+  /* (v133) لاعب B في تركيبة الراجل التالت (الـ AI): اللمسة الأولى بتتحضّر ناحية جرية C (تمهيد للتمريرة) بدل ناحية المرمى، ومن غير عقوبة الضغط ولا لمسة تقيلة —
+     اللمسة الأولى الأصعب في v132 كانت بتأخر تمريرة B فالتركيبة كانت بتفوت (سيناريو D: 34 → 20 تمريرة B→C في 120 محاولة) */
+  const tmB=(!h||h.ctrl!==p)&&p.team.third&&p.team.third.b===p&&!p.team.third.passed?p.team.third:null;if(tmB){const c3=tmB.p;dx=(c3.x+c3.vx*.4)-p.x;dy=(c3.y+c3.vy*.4)-p.y;}
   const n=hyp(dx,dy)||1;dx/=n;dy/=n;const ps=hyp(p.vx,p.vy);
   /* (final) صعوبة اللمسة الأولى: غير التحكم (drib) وسرعة الكورة، بتعتمد على (1) قد إيه الكورة لازم تتلف من اتجاهها للاتجاه اللي عايزه (لمسة بترجّع الكورة عكس اتجاهها
      أصعب من إنه يسيبها تكمّل) مضروبة في سرعتها، (2) الضغط (خصم أقل من 2 م)، (3) التوازن والرشاقة. كل ده بيكبّر هامش الخطأ (keep) — مش بيغيّر سرعة الاستجابة */
   let keep=clamp(1-q,0,.45),turn=0,pr=0;{const vn=v||1,cosT=(b.vx*dx+b.vy*dy)/vn;turn=(1-cosT)/2*Math.min(v,14)/14;for(const z of this.other(p.team).pl)if(hyp(z.x-p.x,z.y-p.y)<2){pr=1;break;}
-   keep=clamp(keep*(1+.5*turn+.25*pr+(70-((p.st.bal||60)+(p.st.agi||60))/2)/200),0,.6);}
+   if(!tmB)keep=clamp(keep*(1+.5*turn+.25*pr+(70-((p.st.bal||60)+(p.st.agi||60))/2)/200),0,.6);}
   const out=Math.min(v,9)*keep*.6+ps+.4;
   /* (final) لمسة تقيلة: فرصة حسب التحكم والكورة لازم تتلف قد إيه والضغط والتوازن/الرشاقة، مضروبة في سرعة الكورة (حوالي 2–4% لكورة عادية لِلاعب كويس، 10–15% لكورة سريعة بيلفها تحت ضغط)، إن الكورة تفلت 1.5–3 م منه (سايبة، أي حد يلحقها). قبل كده أي كورة أرضية لمست رجله
      كانت بتبقى معاه على طول مهما كانت سرعتها أو اتجاهها أو الضغط — تحكم 50 و 90 كانوا نفس النتيجة تقريباً */
-  if(b.z<=.25&&!b.inHands){const ba=((p.st.bal||60)+(p.st.agi||60))/2,pH=clamp((.01+(1-p.st.drib/100)*.12+turn*.07+pr*.05+(65-ba)/1000)*Math.min(v,16)/12,0,.3);if(pH>0&&Math.random()<pH){const sv=out*1.25+1.5;b.owner=null;b.last=p;b.vx=dx*sv+R(-1,1)*1.2;b.vy=dy*sv+R(-1,1)*1.2;b.vz=0;p.cool=.28;p.heavyT=this.time;return;}}
+  if(b.z<=.25&&!b.inHands&&!tmB){const ba=((p.st.bal||60)+(p.st.agi||60))/2,pH=clamp((.01+(1-p.st.drib/100)*.12+turn*.07+pr*.05+(65-ba)/1000)*Math.min(v,16)/12,0,.3);if(pH>0&&Math.random()<pH){const sv=out*1.25+1.5;b.owner=null;b.last=p;b.vx=dx*sv+R(-1,1)*1.2;b.vy=dy*sv+R(-1,1)*1.2;b.vz=0;p.cool=.28;p.heavyT=this.time;return;}}
   if(b.z>.25){const pv=hyp(p.vx,p.vy);b.vx=p.vx*.9+dx*(.9+pv*.1)+R(-1,1)*keep*.8;b.vy=p.vy*.9+dy*(.9+pv*.1)+R(-1,1)*keep*.8;b.vz=clamp(b.vz,-2,1)*.15;p.rcvT=.45;return;}
   b.vx=dx*out+b.vx*keep*.25+R(-1,1)*keep*1.5;b.vy=dy*out+b.vy*keep*.25+R(-1,1)*keep*1.5;b.vz=0;}
  /* ---------- HUMAN ---------- */

@@ -546,11 +546,13 @@ const LOOP={acc:0};function frame(ts){const raw=Math.max(0,(ts-last)/1000),dt=Ma
   if(App.match&&(m.phase==='intro'||m.phase==='replay')){if(Input.take('Xd')|Input.take('Od')|Input.take('Td')|Input.take('Sd'))m.skip();Input.take('Su');Input.take('Xu');}
   if(App.match&&m.phase==='replay'&&!App.settings.replay)m.skip();if(App.match){coachTick(App.match);commTick(App.match,dt);Stadium.tick(App.match,dt);App._iT=(App._iT||0)+dt;if(App._iT>.5){App._iT=0;instLive(App.match);}}
   padPoll();
-  simAdvance(m,raw,LOOP);/* (v131 A0) خطوات ثابتة 1/60 بدل خطوة واحدة بـ dt متغير */
+  const nSt=simAdvance(m,raw,LOOP);/* (v131 A0) خطوات ثابتة 1/60 بدل خطوة واحدة بـ dt متغير */const rT0=performance.now();
   if(R3){R3.quality=App.settings.gfx;const d0=window.devicePixelRatio||1;R3.render(m,CW,CH,App.settings.gfx>=2?Math.min(2,d0):Math.min(1.25,d0),ts);drawOverlay(octx,m,CW,CH,(x,y,z)=>R3.project(x,y,z,CW,CH));}
+  if(typeof Diag!=='undefined'&&Diag.on)Diag.frame(ts,raw,nSt,performance.now()-rT0,App.match);/* (v133) قياس الأداء (مقفول افتراضياً) */
   else if(ctx){m.render(ctx,CW,CH);octx.clearRect(0,0,CW,CH);FX.draw(octx,CW,CH,m);}
  }catch(e){console.error(e);}if(App.match){hud(App.match);updButtons();}}
  requestAnimationFrame(frame);}
+try{const bt=document.querySelector('#scr-title .brand');if(bt&&typeof Diag!=='undefined')bt.addEventListener('click',()=>Diag.brandTap());}catch(e){}/* (v133) 7 ضغطات على اسم اللعبة = قياس الأداء */
 load();Guard.boot();SFX.on=!!App.settings.sound;Comm.init();Comm.tts=!!App.settings.voice;Voice.on=!!App.settings.voice;Comm.text=!!App.settings.ctext;Voice.init();startDemo();renderTitle();
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(App.c)store();if(App.match&&!App.match.paused)togglePause();SFX.crowd(0,.1);}else if(App.match)SFX.crowd(.07,.5);});
 try{const CapApp=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;if(CapApp)CapApp.addListener('backButton',()=>{if(App.match){togglePause();return;}const cur=document.querySelector('.screen.on');const id=cur?cur.id.replace('scr-',''):'title';if(id==='title'){CapApp.exitApp();}else if(['player','comps','career','inbox','social','life','pre'].includes(id))show('hub');else if(id==='settings')show(App.returnTo||'title');else if(id==='hub'||id==='create')show('title');});}catch(e){}

@@ -7,7 +7,7 @@
 'use strict';
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const A = {}; for (let i = 2; i < process.argv.length; i += 2) A[process.argv[i].replace(/^--/, '')] = process.argv[i + 1];
-const FILES = ['data.js', 'core.js', 'render2d.js', 'rig.js', 'kittex.js', 'stad3d.js', 'skel.js', 'render3d.js', 'commlines.js', 'fx.js', 'world.js', 'real.js', 'season.js', 'guard.js', 'ads.js', 'app.js', 'films.js', 'card.js']; // index.html order
+const FILES = ['data.js', 'core.js', 'render2d.js', 'rig.js', 'kittex.js', 'stad3d.js', 'skel.js', 'render3d.js', 'commlines.js', 'fx.js', 'world.js', 'real.js', 'season.js', 'guard.js', 'diag.js', 'ads.js', 'app.js', 'films.js', 'card.js']; // index.html order
 function stub() { const f = function () { return P; }; const P = new Proxy(f, { get: (t, k) => k === Symbol.toPrimitive ? () => '' : k === 'length' ? 0 : k === 'then' ? undefined : P, set: () => true, apply: () => P, construct: () => P }); return P; }
 function env(dir) { const store = {}; const S = stub();
   const ctx = { console: { log() {}, warn() {}, error() {} }, Math, Date, JSON, setTimeout: () => 0, clearTimeout() {}, setInterval: () => 0, clearInterval() {}, requestAnimationFrame: () => 0, performance: { now: () => 0 },

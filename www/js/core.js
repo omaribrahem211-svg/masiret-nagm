@@ -247,7 +247,7 @@ class Match{
       if(front&&dB<3&&this.time-(p.tkW||-9)>(contest?.2:.6)&&this.tkTime(p)){p.tkW=this.time;// يستنى اللمسة الطويلة: لو الكورة لازقة في رجل المهاجم نادراً ما يتدخل
        const pr=contest?.5:(.1+.5*(1-this.dribCtrl(c)));
        if(Math.random()<pr*skill*(.6+.4*p.stam/100))this.tackle(p,false,inBox&&Math.random()<.8);}
-      else if(!inBox&&!front&&dC>1.6&&dC<2.8&&hyp(c.vx,c.vy)>4&&Math.random()<dt*.25*skill)this.tackle(p,true);}}
+      else if(!inBox&&dC>1.6&&dC<2.8&&hyp(c.vx,c.vy)>4&&Math.random()<dt*(front?.12:.25)*skill&&this.slideAim(p))this.tackle(p,true);/* (final) الـ AI بيزحلق بس لو نقطة التقاطع في متناوله (slideAim) — من ورا أو من الجنب/قدّام لما التدخل الواقف مش هيوصل (أبعد من 1.6 م). قبل كده كان بيزحلق من ورا بس، ومعظمها مستحيل (3.8–9% نجاح) */}}
     else if(!b.owner&&b.target&&b.target.team!==t&&!(b.target===b.last&&b.target.bigT>0)&&this.time-b.passT<.35)this.go(p,this.shape(p,false),.9);/* (2.3) لمسة طويلة لنفسه (bigTouch بس، مش السيطرة/التخميد) مش تمريرة: المدافع مايرجعش لمكانه، بيروح لمكان الكورة المتوقع */else this.go(p,b.owner?[pbx,pby]:this.intercept(p),1);continue;}
    if(p===t.second&&b.owner&&b.owner.team!==t&&!this.restartKind){const g=this.ownG(t);const dx=g[0]-b.x,dy=g[1]-b.y,d=hyp(dx,dy)||1;const sd=clamp(7-(t.str||0)*3-((t.T||TACTICS.bal).press-.5)*4,3,10);// المدافع التاني بيغطي: بين الكورة والمرمى، ولو الكورة على الطرف قريب من مرمانا بيقفل الطريق الداخلي
     const ins=Math.abs(b.y-CY)>9&&d<40?Math.sign(CY-b.y)*Math.min(2.5,(Math.abs(b.y-CY)-9)*.25):0;this.go(p,[b.x+dx/d*sd,b.y+dy/d*sd+ins],.92+Math.max(0,t.str||0)*.06);continue;}
@@ -517,8 +517,13 @@ class Match{
   if(dG2(p,g)<30)SFX.ooh();vib(25);this.ev('shot',{p,far:d>22});}
  // التدخل من ورا مستحيل لو الكورة مستخبية ورا جسم الحامل (الخط من المدافع للكورة بيعدي في جسمه) — نفس شروط التنفيذ في tackle()
  tkBlocked(p,c){const b=this.ball,dM=hyp(c.x-p.x,c.y-p.y)||.01;const behind=((p.x-c.x)*c.fx+(p.y-c.y)*c.fy)/dM<-.35;return behind&&segDist(c.x,c.y,p.x,p.y,b.x,b.y)<.33;}
+ // (final) نقطة تقاطع الزحلقة: أول لحظة t (0.08–0.55 ث) الرِجل (مسافة الزحلقة + 0.8 م مدّ رِجل) توصل فيها لمكان الكورة المتوقع (سرعة الحامل/الكورة ثابتة). مفيش = null
+ slideAim(p){const b=this.ball,c=b.owner,vx=c?c.vx:b.vx,vy=c?c.vy:b.vy,bx0=c?b.x:b.x,by0=c?b.y:b.y;
+  for(let t=.08;t<=.55;t+=.02){const x=bx0+vx*t,y=by0+vy*t,sd=9*(1-Math.exp(-2.2*t))/2.2;if(hyp(x-p.x,y-p.y)<=sd+.8)return[x,y,t];}return null;}
  tackle(p,slide,clean){const b=this.ball,c=b.owner;p.tcool=slide?1.3:clean?.85:.8;if(c&&b.inHands)return;
-  if(slide){const tx=b.x+b.vx*.3-p.x,ty=b.y+b.vy*.3-p.y,d=hyp(tx,ty)||1;const fx=d<7?tx/d:p.fx,fy=d<7?ty/d:p.fy;p.vx=fx*9;p.vy=fy*9;p.fx=fx;p.fy=fy;p.slide=.6;p.slideDone=false;return;}
+  if(slide){/* (final) الزحلقة بتتوجّه لنقطة التقاطع: المكان اللي الكورة هتبقى فيه لما رجل المزحلق توصله (الزحلقة 9 م/ث وبتهدى، أقصى مسافة ~3 م في 0.6 ث).
+     قبل كده كانت بتروح لمكان الكورة بعد 0.3 ث ثابتة، فالمهاجم السريع كان بيبعد قبل ما توصل (7–9% بس من الزحلقات كانت بتكسب الكورة) */
+   const I=this.slideAim(p);let tx,ty;if(I){tx=I[0]-p.x;ty=I[1]-p.y;}else{tx=b.x+b.vx*.3-p.x;ty=b.y+b.vy*.3-p.y;}const d=hyp(tx,ty)||1;const fx=d<7?tx/d:p.fx,fy=d<7?ty/d:p.fy;p.vx=fx*9;p.vy=fy*9;p.fx=fx;p.fy=fy;p.slide=.6;p.slideDone=false;return;}
   p.kType='tackle';
   if(!c||c.team===p.team){p.kickT=.28;if(!c&&hyp(b.x-p.x,b.y-p.y)<1.3&&b.z<.6)this.take(p);return;}
   // بداية التدخل: المدافع بيخطو ناحية المكان اللي الكورة هتكون فيه بعد TKL، والاتجاه بيتثبت (لو المهاجم غيّر اتجاهه، التدخل ممكن يفوت)

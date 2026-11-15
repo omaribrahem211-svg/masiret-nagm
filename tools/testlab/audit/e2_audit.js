@@ -66,11 +66,11 @@ for (let id = 1; id <= N; id++) {
         if (p1 && p2 && p1.a !== own && p1.spd.get(own) > 4 && X(own.team, own.x) > X(own.team, lastOwner.x)) S.third.done++; }
       if (lastTeam && own.team !== lastTeam && live) { // possession lost by lastTeam
         for (const rr of runs) if (!rr.done && rr.team === lastTeam && m.time - rr.t < 4) { rr.done = true; if (X(rr.team, rr.p.x) > X(rr.team, b.x)) S[rr.kind].unnecessary++; }
-        for (const q of lastTeam.pl) if (isFB(q) && X(lastTeam, q.x) > L / 2) recs.push({ q, t: m.time, team: lastTeam });
+        for (const q of lastTeam.pl) if (isFB(q) && X(lastTeam, q.x) > L / 2) recs.push({ q, t: m.time, team: lastTeam, d0: X(lastTeam, q.x) - L / 2 });
       }
       lastOwner = own; lastTeam = own.team;
     }
-    for (let i = recs.length - 1; i >= 0; i--) { const e = recs[i]; if (X(e.team, e.q.x) < L / 2 || m.time - e.t >= 10) { S.fbRec.push(r2(m.time - e.t)); if (!e.regained) (S.fbRecDef = S.fbRecDef || []).push(r2(m.time - e.t)); recs.splice(i, 1); continue; }
+    for (let i = recs.length - 1; i >= 0; i--) { const e = recs[i]; if (X(e.team, e.q.x) < L / 2 || m.time - e.t >= 10) { S.fbRec.push(r2(m.time - e.t)); if (!e.regained) { (S.fbRecDef = S.fbRecDef || []).push(r2(m.time - e.t)); if (m.time - e.t < 10 && m.time - e.t > .2) { (S.fbD0 = S.fbD0 || []).push(r2(e.d0)); (S.fbV = S.fbV || []).push(r2(e.d0 / (m.time - e.t))); } } recs.splice(i, 1); continue; }
       // final programme: an episode in which the fullback's team wins the ball back before he is home is no longer a recovery (he is
       // right to stay up). It is kept in the old fbRec (comparability) but excluded from fbRecDef (recovery while still defending)
       if (!e.regained && own && own.team === e.team && m.time - e.t > .3) e.regained = true; }
@@ -101,5 +101,5 @@ const out = { meta: { www: WWW, n: N, tactic: TAC }, inPossession: sh('inP'), ou
     thirdManAttempts: r2(S.third.n / N), thirdManCompleted: r2(S.third.done / N), switchPasses: r2(S.sw.att / N), switchCompleted: r2(S.sw.ok / N) },
   runsAssignedPerMatch: { overlap: r2(S.runA.overlap / N), underlap: r2(S.runA.underlap / N) }, thirdManRunsPerMatch: r2(S.tmA / N), thirdManPassBtoCPerMatch: r2(S.tmP / N), thirdManReceivedPerMatch: r2(S.tmR / N), passesToRunnerPerMatch: r2(S.runPass / N), runnerReceivedPerMatch: r2(S.runRecv / N), runsEndedWithBallLostAndRunnerAheadOfBallPerMatch: r2(S.runLostAhead / N),
   fullbackRecoveryMedianSec: med(S.fbRec), fullbackRecoveryOver6s: r2(S.fbRec.filter(v => v >= 6).length / (S.fbRec.length || 1)),
-  fullbackRecoveryWhileDefending: { n: (S.fbRecDef || []).length, of: S.fbRec.length, medianSec: med(S.fbRecDef || []), over6s: r2((S.fbRecDef || []).filter(v => v >= 6).length / ((S.fbRecDef || []).length || 1)) } };
+  fullbackRecoveryWhileDefending: { n: (S.fbRecDef || []).length, of: S.fbRec.length, medianSec: med(S.fbRecDef || []), startMetresIntoOppHalfMedian: med(S.fbD0 || []), homewardSpeedMedian: med(S.fbV || []), over6s: r2((S.fbRecDef || []).filter(v => v >= 6).length / ((S.fbRecDef || []).length || 1)) } };
 fs.writeFileSync(A.out, JSON.stringify(out, null, 1)); console.log(JSON.stringify(out, null, 1));

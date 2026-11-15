@@ -20,10 +20,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      RUN_ID: '43600771726'
-      ARTIFACT: masiret-android-31
-      TAG: v131-rc1-launchcheck
-      PUBLISH: 'false'
+      RUN_ID: '43727968819'
+      ARTIFACT: masiret-android-32
+      TAG: v132-rc1
+      PUBLISH: 'true'
     steps:
       - name: Checkout (full history, to compare with the build commit)
         uses: actions/checkout@v4

@@ -646,9 +646,15 @@ class Match{
  foul(p,c,slide,behind,force){p.stats.fl++;let card=null;
   const g0=this.ownG(p.team),cG=hyp(c.x-g0[0],c.y-g0[1]);const lastMan=cG<30&&Math.abs(c.y-CY)<20&&p.role!=='GK'&&!p.team.pl.some(q=>q!==p&&q.role!=='GK'&&hyp(q.x-g0[0],q.y-g0[1])<cG+1);const inBox0=Math.abs(c.x-g0[0])<16.5&&Math.abs(c.y-CY)<20.16;
   const fast=hyp(p.vx,p.vy)>7.5;
-  if(lastMan&&(slide||behind))card=inBox0&&!behind?'yellow':'red';
+  /* (final) DOGSO (منع فرصة هدف محققة) بمعايير القانون 12 كلها مش "آخر مدافع" بس: (1) المسافة للمرمى ≤30 م وفي النص، (2) اتجاه اللعب ناحية المرمى (المهاجم رايح للمرمى
+     أو واقف قدّامه ≤20 م)، (3) الكورة في حيازته أو هيسيطر عليها (≤1.5 م منه)، (4) عدد المدافعين: مفيش مدافع غير اللي عمل الفاول بين المهاجم والمرمى، والحارس مش
+     قريب كفاية يلحقه (≥4 م). جوه المنطقة لو المدافع كان بيلعب الكورة (مش من ورا ولا دفعة) = أصفر بس (قاعدة "العقوبة المزدوجة")، غير كده أحمر.
+     قبل كده: آخر مدافع + زحلقة/من ورا = أحمر حتى لو المهاجم مدّي ضهره للمرمى أو الكورة بعيدة عنه، وآخر مدافع بتدخل واقف = أصفر دايماً حتى لو كانت فرصة محققة */
+  const cv0=hyp(c.vx,c.vy),toG0=cv0>1.5?((g0[0]-c.x)*c.vx+(g0[1]-c.y)*c.vy)/(cv0*(cG||1))>.4:cG<20,ctl=this.ball.owner===c||hyp(this.ball.x-c.x,this.ball.y-c.y)<1.5,gkP=this.gkOf(p.team),gkFar=!gkP||gkP.off||hyp(gkP.x-c.x,gkP.y-c.y)>=4;
+  const dogso=lastMan&&toG0&&ctl&&gkFar;
+  if(dogso)card=inBox0&&!behind&&!(force>0)?'yellow':'red';
   else if(slide&&(behind||fast))card='yellow';
-  else if(lastMan||p.stats.fl>=3&&!p.yc)card='yellow';
+  else if(p.stats.fl>=3&&!p.yc)card='yellow';
   // (3H) كارت أصفر كمان لـ: (1) تدخل متهوّر — دفعة جسم بسرعة اقتراب >5.5 م/ث أو تدخل واقف والمدافع جاي بأكتر من 6.5 م/ث،
   // (2) إيقاف هجمة واعدة — المهاجم في نص ملعبنا، رايح ناحية المرمى (≤35 م)، وقدامه مدافع واحد بالكتير غير اللي عمل الفاول.
   // قبل كده الكارت كان بييجي بس من الزحلقة من ورا/آخر رجل/3 فاولات: 2 كارت في 100 ماتش
@@ -954,7 +960,7 @@ class Match{
   // التسلل: لو اللاعب المتسلل هو اللي لعب الكورة (براسه) يبقى اشترك في اللعب → تسلل. أي لعبة راس مقصودة من حد تاني بتلغي الحالة القديمة
   // (الخصم لعبها بقصد، أو زميل لعبها لعبة جديدة بتتقيّم من الأول). اللمسات العرضية (ارتداد) مش بتعدي من هنا فالحالة بتفضل
   if(b.offside){if(b.offside===p){this.offsideCall(p);return;}b.offside=null;}
-  {const r=this.shotLive();if(r)this.shotEnd(p.team.idx===r.team?'retained':'blocked',p);}
+  {const r=this.shotLive();if(r)this.shotEnd(p.team.idx===r.team?'retained':'blocked',p);}b.shot=null;/* (final) لعبة راس مقصودة بتنهي التسديدة القديمة: كانت b.shot بتفضل، فلو الكورة دخلت بعدها الهدف كان بيتحسب للمسدد الأول (اتشافت في ماتش المختبر 4053) */
   const t=p.team,g=this.attG(t),og=this.ownG(t);const wasT=b.target===p,ownBall=b.last&&b.last.team===t,wasX=!!b.cross;p.hdrHi=b.z>1.85;p.jumpT=.45;p.cool=.35;b.hdrN=(b.hdrN||0)+1;const chain=b.hdrN>=2;b.last=p;b.target=null;b.passFrom=null;SFX.kick(.4);
   const dG=hyp(g[0]-p.x,g[1]-p.y),h=this.human;
   // (v131 C1) قرار التسديد بالراس للـ AI: مش كل كورة جوه 17 م تبقى تسديدة. بيحسب زاوية المرمى المفتوحة من مكانه (عرض المرمى × جيب الزاوية ÷ المسافة)

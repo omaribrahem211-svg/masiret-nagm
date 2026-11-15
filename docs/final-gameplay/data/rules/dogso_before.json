@@ -1,0 +1,60 @@
+{
+ "passed": 5,
+ "total": 9,
+ "tests": [
+  {
+   "test": "1 through on goal 22 m, trip from behind, no cover, keeper on line",
+   "expected": "red",
+   "card": "red",
+   "ok": true
+  },
+  {
+   "test": "2 same with a covering defender goal-side",
+   "expected": "yellow|none",
+   "card": "yellow",
+   "ok": true
+  },
+  {
+   "test": "3 last defender, attacker running away from goal",
+   "expected": "yellow|none",
+   "card": "red",
+   "ok": false
+  },
+  {
+   "test": "4 last defender, ball 4 m away from the attacker (no control)",
+   "expected": "yellow|none",
+   "card": "red",
+   "ok": false
+  },
+  {
+   "test": "5 in the box, standing challenge from the front (attempt to play the ball)",
+   "expected": "yellow",
+   "card": "yellow",
+   "ok": true
+  },
+  {
+   "test": "6 in the box, from behind",
+   "expected": "red",
+   "card": "red",
+   "ok": true
+  },
+  {
+   "test": "7 keeper 2 m from the attacker",
+   "expected": "yellow|none",
+   "card": "red",
+   "ok": false
+  },
+  {
+   "test": "8 last defender 40 m from goal",
+   "expected": "yellow|none",
+   "card": "none",
+   "ok": true
+  },
+  {
+   "test": "9 through on goal 25 m, standing trip from the front-side, outside the box",
+   "expected": "red",
+   "card": "yellow",
+   "ok": false
+  }
+ ]
+}

@@ -1,0 +1,118 @@
+{
+ "www": "/tmp/fin/final/js",
+ "runsPerScenario": 30,
+ "scenarios": {
+  "v9_with_free_ctrl50": {
+   "runs": 30,
+   "taken": 30,
+   "ctrlDistMed": 0.4,
+   "lost": 0,
+   "ctrlDistP90": 3.97
+  },
+  "v9_with_free_ctrl90": {
+   "runs": 30,
+   "taken": 30,
+   "ctrlDistMed": 0.4,
+   "lost": 0,
+   "ctrlDistP90": 3.96
+  },
+  "v9_with_press_ctrl50": {
+   "runs": 30,
+   "taken": 30,
+   "ctrlDistMed": 3.91,
+   "lost": 0,
+   "ctrlDistP90": 3.99
+  },
+  "v9_with_press_ctrl90": {
+   "runs": 30,
+   "taken": 30,
+   "ctrlDistMed": 3.9,
+   "lost": 0,
+   "ctrlDistP90": 3.98
+  },
+  "v9_turn_free_ctrl50": {
+   "runs": 30,
+   "taken": 30,
+   "ctrlDistMed": 0.4,
+   "lost": 0,
+   "ctrlDistP90": 4
+  },
+  "v9_turn_free_ctrl90": {
+   "runs": 30,
+   "taken": 30,
+   "ctrlDistMed": 0.39,
+   "lost": 0,
+   "ctrlDistP90": 3.98
+  },
+  "v9_turn_press_ctrl50": {
+   "runs": 30,
+   "taken": 30,
+   "ctrlDistMed": 0.5,
+   "lost": 0,
+   "ctrlDistP90": 3.98
+  },
+  "v9_turn_press_ctrl90": {
+   "runs": 30,
+   "taken": 30,
+   "ctrlDistMed": 0.5,
+   "lost": 0,
+   "ctrlDistP90": 3.96
+  },
+  "v17_with_free_ctrl50": {
+   "runs": 30,
+   "taken": 30,
+   "ctrlDistMed": 0.85,
+   "lost": 0,
+   "ctrlDistP90": 4.06
+  },
+  "v17_with_free_ctrl90": {
+   "runs": 30,
+   "taken": 30,
+   "ctrlDistMed": 0.78,
+   "lost": 0,
+   "ctrlDistP90": 4.19
+  },
+  "v17_with_press_ctrl50": {
+   "runs": 30,
+   "taken": 30,
+   "ctrlDistMed": 0.63,
+   "lost": 0,
+   "ctrlDistP90": 3.89
+  },
+  "v17_with_press_ctrl90": {
+   "runs": 30,
+   "taken": 30,
+   "ctrlDistMed": 0.6,
+   "lost": 0,
+   "ctrlDistP90": 3.88
+  },
+  "v17_turn_free_ctrl50": {
+   "runs": 30,
+   "taken": 30,
+   "ctrlDistMed": 0.77,
+   "lost": 0,
+   "ctrlDistP90": 4.14
+  },
+  "v17_turn_free_ctrl90": {
+   "runs": 30,
+   "taken": 30,
+   "ctrlDistMed": 0.74,
+   "lost": 0,
+   "ctrlDistP90": 4.18
+  },
+  "v17_turn_press_ctrl50": {
+   "runs": 30,
+   "taken": 30,
+   "ctrlDistMed": 0.61,
+   "lost": 0,
+   "ctrlDistP90": 3.93
+  },
+  "v17_turn_press_ctrl90": {
+   "runs": 30,
+   "taken": 30,
+   "ctrlDistMed": 0.57,
+   "lost": 0,
+   "ctrlDistP90": 3.9
+  }
+ }
+}

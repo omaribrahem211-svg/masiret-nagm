@@ -1,0 +1,102 @@
+{
+ "www": "/tmp/fin/final/js",
+ "runsPerScenario": 40,
+ "scenarios": {
+  "beside_2m_5ms": {
+   "runs": 40,
+   "won": 0,
+   "foul": 0,
+   "miss": 40,
+   "aiWouldSlide": 0,
+   "wonPct": 0
+  },
+  "diag_behind_1.5m_5ms": {
+   "runs": 40,
+   "won": 0,
+   "foul": 0,
+   "miss": 40,
+   "aiWouldSlide": 0,
+   "wonPct": 0
+  },
+  "behind_2.2m_5ms": {
+   "runs": 40,
+   "won": 0,
+   "foul": 0,
+   "miss": 40,
+   "aiWouldSlide": 0,
+   "wonPct": 0
+  },
+  "ahead_side_5ms": {
+   "runs": 40,
+   "won": 40,
+   "foul": 0,
+   "miss": 0,
+   "aiWouldSlide": 40,
+   "wonPct": 100
+  },
+  "beside_2m_7ms": {
+   "runs": 40,
+   "won": 0,
+   "foul": 0,
+   "miss": 40,
+   "aiWouldSlide": 0,
+   "wonPct": 0
+  },
+  "diag_behind_1.5m_7ms": {
+   "runs": 40,
+   "won": 0,
+   "foul": 0,
+   "miss": 40,
+   "aiWouldSlide": 0,
+   "wonPct": 0
+  },
+  "behind_2.2m_7ms": {
+   "runs": 40,
+   "won": 0,
+   "foul": 0,
+   "miss": 40,
+   "aiWouldSlide": 0,
+   "wonPct": 0
+  },
+  "ahead_side_7ms": {
+   "runs": 40,
+   "won": 0,
+   "foul": 40,
+   "miss": 0,
+   "aiWouldSlide": 40,
+   "wonPct": 0
+  },
+  "beside_2m_8.5ms": {
+   "runs": 40,
+   "won": 0,
+   "foul": 0,
+   "miss": 40,
+   "aiWouldSlide": 0,
+   "wonPct": 0
+  },
+  "diag_behind_1.5m_8.5ms": {
+   "runs": 40,
+   "won": 0,
+   "foul": 0,
+   "miss": 40,
+   "aiWouldSlide": 0,
+   "wonPct": 0
+  },
+  "behind_2.2m_8.5ms": {
+   "runs": 40,
+   "won": 0,
+   "foul": 0,
+   "miss": 40,
+   "aiWouldSlide": 0,
+   "wonPct": 0
+  },
+  "ahead_side_8.5ms": {
+   "runs": 40,
+   "won": 40,
+   "foul": 0,
+   "miss": 0,
+   "aiWouldSlide": 40,
+   "wonPct": 100
+  }
+ }
+}

@@ -1,0 +1,57 @@
+{
+ "meta": {
+  "www": "/tmp/fin/final/js",
+  "n": 20,
+  "tactic": "wings"
+ },
+ "inPossession": {
+  "gapDFtoMF": 12.59,
+  "gapMFtoFW": 14.7,
+  "length": 32.46,
+  "width": 51.87,
+  "widthDFMF": 51.67
+ },
+ "outOfPossession": {
+  "gapDFtoMF": 13.02,
+  "gapMFtoFW": 14.81,
+  "length": 32.51,
+  "width": 45.66,
+  "widthDFMF": 45.52
+ },
+ "optionsMedian": 4,
+ "optionsZeroShare": 0.12,
+ "crowdShare": 0.01,
+ "abandonedShare": 0,
+ "perMatch": {
+  "overlaps": 0.1,
+  "overlapUseful": 0.05,
+  "overlapUnnecessary": 0,
+  "underlaps": 0,
+  "underlapUseful": 0,
+  "underlapUnnecessary": 0,
+  "thirdManAttempts": 41.05,
+  "thirdManCompleted": 11.3,
+  "switchPasses": 25.05,
+  "switchCompleted": 12.2
+ },
+ "runsAssignedPerMatch": {
+  "overlap": 1.7,
+  "underlap": 0.7
+ },
+ "thirdManRunsPerMatch": 9.55,
+ "thirdManPassBtoCPerMatch": 3.35,
+ "thirdManReceivedPerMatch": 2.65,
+ "passesToRunnerPerMatch": 0.55,
+ "runnerReceivedPerMatch": 0.55,
+ "runsEndedWithBallLostAndRunnerAheadOfBallPerMatch": 0.25,
+ "fullbackRecoveryMedianSec": 1.8,
+ "fullbackRecoveryOver6s": 0.07,
+ "fullbackRecoveryWhileDefending": {
+  "n": 294,
+  "of": 341,
+  "medianSec": 1.53,
+  "startMetresIntoOppHalfMedian": 7.57,
+  "homewardSpeedMedian": 5.32,
+  "over6s": 0.01
+ }
+}

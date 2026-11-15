@@ -1,0 +1,16 @@
+{
+ "meta": {
+  "www": "/tmp/fin/final/js",
+  "n": 40
+ },
+ "catches": 56,
+ "parries": 101,
+ "parryOutcome": {
+  "defence": 49,
+  "corner": 32,
+  "attackOpenPlay": 14,
+  "goal": 1,
+  "attackShot": 3
+ },
+ "attackRegainShare": 0.182
+}

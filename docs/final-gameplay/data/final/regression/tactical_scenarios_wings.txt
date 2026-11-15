@@ -1,0 +1,92 @@
+{
+ "www": "/tmp/fin/final/js",
+ "tactic": "wings",
+ "runsPerCase": 40,
+ "cases": {
+  "A": {
+   "runs": 40,
+   "runsAssigned": {
+    "underlap:DF": 1,
+    "overlap:DF": 19
+   },
+   "overlap": 3,
+   "underlap": 0,
+   "passToRunner": 20,
+   "runnerReceived": 19,
+   "possessionLost": 14
+  },
+  "B": {
+   "runs": 40,
+   "runsAssigned": {
+    "underlap:DF": 19
+   },
+   "overlap": 1,
+   "underlap": 0,
+   "passToRunner": 14,
+   "runnerReceived": 13,
+   "possessionLost": 21
+  },
+  "C": {
+   "runs": 40,
+   "runsAssigned": {
+    "underlap:DF": 21,
+    "overlap:DF": 2
+   },
+   "overlap": 0,
+   "underlap": 1,
+   "passToRunner": 8,
+   "runnerReceived": 7,
+   "possessionLost": 26
+  },
+  "E": {
+   "runs": 40,
+   "runsAssigned": {
+    "overlap:DF": 25
+   },
+   "overlap": 2,
+   "underlap": 0,
+   "passToRunner": 15,
+   "runnerReceived": 15,
+   "possessionLost": 26
+  },
+  "J": {
+   "runs": 40,
+   "runsAssigned": {
+    "overlap:DF": 18
+   },
+   "overlap": 0,
+   "underlap": 0,
+   "passToRunner": 0,
+   "runnerReceived": 0,
+   "possessionLost": 0
+  },
+  "J2": {
+   "runs": 40,
+   "humanPressedPassTowardRunner": 18,
+   "passToRunner": 16,
+   "runnerReceived": 16
+  },
+  "D": {
+   "runs": 40,
+   "bToC": 8,
+   "cReceived": 8
+  },
+  "F": {
+   "runs": 40,
+   "firstPassIsSwitch": 18,
+   "switchReceivedByTarget": 2,
+   "possessionLost": 27
+  },
+  "G": {
+   "runs": 40,
+   "fullbackBackInOwnHalfMedianSec": 1.33,
+   "notBackWithin6s": "12/80",
+   "possessionLost": 36
+  },
+  "H": {
+   "runs": 40,
+   "crowdShare": 0.04,
+   "defendersGoalSideMedianAtEnd": 7
+  }
+ }
+}

@@ -1,0 +1,40 @@
+{
+ "www": "/tmp/rv/ver/v133",
+ "matches": 10,
+ "seed": 42,
+ "dt": 0.016666666666666666,
+ "receptions": 835,
+ "receptionsDroppedUnder0_1sOwned": 12,
+ "reception": {
+  "withBackwardFrames": 0.519,
+  "backFramesMean": 1.84,
+  "relJumpMedian": 0.125,
+  "relJumpP95": 0.261,
+  "relJumpOver15cm": 0.36,
+  "relVelChangeAfterTouchMedian": 2.686,
+  "relVelChangeAfterTouchP95": 5.702,
+  "relVelChangeOver3": 0.411,
+  "stepJumpP95": 0.079,
+  "withReversal": 0.902,
+  "reversalsMean": 2.22,
+  "pullBack": 0.184,
+  "takeDistMedian": 0.828,
+  "duplicateOwnerChanges": 0.018
+ },
+ "dribble": {
+  "frames": 16711,
+  "backwardShare": 0.071
+ },
+ "keeper": {
+  "contacts": 41,
+  "ballToBodyMedian": 0.344,
+  "ballToBodyP95": 0.649,
+  "contactOver1m": 0,
+  "catches": 18,
+  "catchSnapMedian": 0.506,
+  "catchSnapP95": 1.088,
+  "catchSnapOver05m": 9,
+  "shots": 108,
+  "passThroughNoTouch": 0
+ }
+}

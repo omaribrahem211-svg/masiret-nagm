@@ -920,7 +920,11 @@ class Match{
   else{const r0=toeF+.13,Lpk=r0+.12+Math.min(sp,9)*.09*(1.35-ctl*.55);fwd=r0+(Lpk-r0)*4*phi*(1-phi);lat=(two?side*.09:-.1)*(1-phi*.6);
    const bl=Math.min(1,(sp-1.2)/1);fwd=.38+(fwd-.38)*bl;lat*=bl;}
   o.boff=fwd;const tx=o.x+o.bdx*fwd-o.bdy*lat,ty=o.y+o.bdy*fwd+o.bdx*lat;
-  const nvx=(tx-b.x)/Math.max(dt,1e-3),nvy=(ty-b.y)/Math.max(dt,1e-3);let k=Math.min(1,dt*16);if(o.rcvA>0)o.rcvA-=dt;if(o.rcvT>0){o.rcvT-=dt;k=Math.min(1,dt*(3+13*(1-o.rcvT/.3)));}b.vx+=(nvx-b.vx)*k;b.vy+=(nvy-b.vy)*k;b.vz=0;b.z=0;
+  if(o.rcvA>0)o.rcvA-=dt;
+  /* (recovery) الكورة بتتبع نقطة الرجل بزنبرك متخمّد حرجاً (من غير ما تعدّي النقطة وترجع): قبل كده السرعة كانت بتتشد لسرعة "توصّل النقطة في فريم واحد" بعامل 16/ث
+     = زنبرك ω≈31 وتخميد 0.26، فبعد الاستلام الكورة كانت بتتشد للرجل وتعدّيها وترجع لقدّام (رايح جاي 2–3 مرات في 0.4 ث، 52% من الاستلامات فيها الكورة بترجع لورا على الأرض).
+     دلوقتي: عجلة = −2ω·(السرعة النسبية) − ω²·(البعد عن النقطة)، ω=25 في المراوغة العادية، ومن 12 لـ 25 في أول 0.3 ث بعد الاستلام (اللمسة الأولى بتمتص الكورة براحة) */
+  {let w=25;if(o.rcvT>0){o.rcvT-=dt;w=12+13*(1-Math.max(0,o.rcvT)/.3);}const ex=b.x-tx,ey=b.y-ty;let wx=b.vx-o.vx,wy=b.vy-o.vy;wx+=(-2*w*wx-w*w*ex)*dt;wy+=(-2*w*wy-w*w*ey)*dt;b.vx=o.vx+wx;b.vy=o.vy+wy;}b.vz=0;b.z=0;
   const pPh=o._lph==null?phi:o._lph;if(sp>1.4&&phi<pPh-.5){o.touchA=.16;o.touchSide=two?side:-1;SFX.kick&&sp>5&&Math.random()<.35&&SFX.kick(.05);}o._lph=phi;}
  ballSim(dt){const b=this.ball;b.px=b.x;b.py=b.y;
   if(b.owner&&b.inHands){const o=b.owner;b.x=o.x+o.fx*.4;b.y=o.y+o.fy*.4;b.z=1.14;b.vx=o.vx;b.vy=o.vy;b.vz=0;return;}
@@ -932,7 +936,9 @@ class Match{
   if(b.cx||b.cy){if(b.z>.05||b.vz>.5){b.vx+=b.cx*dt;b.vy+=b.cy*dt;}else{b.cx=b.cy=0;}}
   // منطقة الاستلام: لما الكورة تقرب من رجل اللاعب المستلم، سرعتها بتهدى بمرونة بدل ما تلزق فجأة
   if(!b.owner&&b.target&&b.z<.45&&this.phase==='play'){const p=b.target,fx=p.x+p.fx*.32,fy=p.y+p.fy*.32,dx=fx-b.x,dy=fy-b.y,d=hyp(dx,dy);const rvx=b.vx-p.vx,rvy=b.vy-p.vy,rv=hyp(rvx,rvy);
-   if(d<2.2&&rv>.5&&(rvx*dx+rvy*dy)>0){const want=1.2+d*3.2+p.st.drib/100*.8;if(rv>want){const k=Math.min(1,dt*(3+7*(1-d/2.2)));const sc=1-(1-want/rv)*k;b.vx=p.vx+rvx*sc;b.vy=p.vy+rvy*sc;}
+   /* (recovery) الفرملة بتتحسب من سرعة الكورة على الأرض مش السرعة النسبية: من v131 A1 المستلم بيجري ناحية الكورة، فالسرعة النسبية كانت بتكبر والكورة كانت بتفرمل
+      لوحدها قبل ما توصل (من 7 لـ 2.3 م/ث في 0.3 ث وهي لسه على بعد 4 م) — شكلها بيقف قدّام اللاعب من غير لمسة */
+   if(d<2.2&&rv>.5&&(rvx*dx+rvy*dy)>0){const want=1.2+d*3.2+p.st.drib/100*.8,gv=hyp(b.vx,b.vy);if(gv>want){const k=Math.min(1,dt*(3+7*(1-d/2.2)));const sc=1-(1-want/gv)*k;b.vx*=sc;b.vy*=sc;}
     const st=Math.min(1,dt*2.5*(1-d/2.2));b.vx+=(dx/d*Math.max(rv,1.5)-rvx)*st*.25;b.vy+=(dy/d*Math.max(rv,1.5)-rvy)*st*.25;}}
   b.x+=b.vx*dt;b.y+=b.vy*dt;b.z+=b.vz*dt;b.vz-=9.8*dt;
   // ارتداد من الأرض: النجيلة بتمتص جزء من السرعة، واللفّة بتغيّر الارتداد (لقدّام = بتجري، لورا = بتقف)

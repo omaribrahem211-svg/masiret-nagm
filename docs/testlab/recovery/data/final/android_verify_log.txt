@@ -1,0 +1,606 @@
+﻿2026-11-16T21:14:38.9163952Z Current runner version: '2.338.2'
+2026-11-16T21:14:38.9182977Z ##[group]Runner Image Provisioner
+2026-11-16T21:14:38.9183577Z Hosted Compute Agent
+2026-11-16T21:14:38.9183925Z Version: 20261103.629
+2026-11-16T21:14:38.9184450Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-16T21:14:38.9184880Z Build Date: 2026-11-03T17:26:59Z
+2026-11-16T21:14:38.9185317Z Worker ID: {7c594db7-e475-460f-b7ba-c8b7b651715f}
+2026-11-16T21:14:38.9185741Z Region: centralus
+2026-11-16T21:14:38.9186070Z Cloud: Azure
+2026-11-16T21:14:38.9186465Z ##[endgroup]
+2026-11-16T21:14:38.9187389Z ##[group]Operating System
+2026-11-16T21:14:38.9187827Z Ubuntu
+2026-11-16T21:14:38.9188155Z 26.04.1
+2026-11-16T21:14:38.9188461Z LTS
+2026-11-16T21:14:38.9188848Z ##[endgroup]
+2026-11-16T21:14:38.9189176Z ##[group]Runner Image
+2026-11-16T21:14:38.9189541Z Image: ubuntu-26.04
+2026-11-16T21:14:38.9189974Z Version: 20261111.196.1
+2026-11-16T21:14:38.9190763Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261111.196/images/ubuntu/Ubuntu2604-Readme.md
+2026-11-16T21:14:38.9191690Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261111.196
+2026-11-16T21:14:38.9192253Z ##[endgroup]
+2026-11-16T21:14:38.9193037Z ##[group]GITHUB_TOKEN Permissions
+2026-11-16T21:14:38.9194263Z Actions: read
+2026-11-16T21:14:38.9194678Z Contents: write
+2026-11-16T21:14:38.9195013Z Metadata: read
+2026-11-16T21:14:38.9195503Z ##[endgroup]
+2026-11-16T21:14:38.9196842Z Secret source: Actions
+2026-11-16T21:14:38.9197590Z Cache mode: write
+2026-11-16T21:14:38.9198036Z Prepare workflow directory
+2026-11-16T21:14:38.9530602Z Prepare all required actions
+2026-11-16T21:14:38.9563585Z Getting action download info
+2026-11-16T21:14:39.2843952Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-16T21:14:39.3559715Z Download action repository 'actions/download-artifact@v4' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+2026-11-16T21:14:39.7415378Z Download action repository 'reactivecircus/android-emulator-runner@v2' (SHA:a421e43855164a8197daf9d8d40fe71c6996bb0d)
+2026-11-16T21:14:40.6646714Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-16T21:14:40.8475315Z Complete job name: verify
+2026-11-16T21:14:40.9099952Z ##[group]Run actions/checkout@v4
+2026-11-16T21:14:40.9100673Z with:
+2026-11-16T21:14:40.9101076Z   fetch-depth: 0
+2026-11-16T21:14:40.9101599Z   repository: omaribrahem211-svg/masiret-nagm
+2026-11-16T21:14:40.9106223Z   token: ***
+2026-11-16T21:14:40.9106644Z   ssh-strict: true
+2026-11-16T21:14:40.9107077Z   ssh-user: git
+2026-11-16T21:14:40.9107641Z   persist-credentials: true
+2026-11-16T21:14:40.9108129Z   clean: true
+2026-11-16T21:14:40.9108580Z   sparse-checkout-cone-mode: true
+2026-11-16T21:14:40.9109121Z   fetch-tags: false
+2026-11-16T21:14:40.9109569Z   show-progress: true
+2026-11-16T21:14:40.9110035Z   lfs: false
+2026-11-16T21:14:40.9110461Z   submodules: false
+2026-11-16T21:14:40.9110907Z   set-safe-directory: true
+2026-11-16T21:14:40.9111459Z   allow-unsafe-pr-checkout: false
+2026-11-16T21:14:40.9112074Z env:
+2026-11-16T21:14:40.9116320Z   GH_TOKEN: ***
+2026-11-16T21:14:40.9116750Z   RUN_ID: 43957297181
+2026-11-16T21:14:40.9117217Z   ARTIFACT: masiret-android-34
+2026-11-16T21:14:40.9117846Z   TAG: v134-recovery-rc1
+2026-11-16T21:14:40.9118310Z   PUBLISH: true
+2026-11-16T21:14:40.9118732Z ##[endgroup]
+2026-11-16T21:14:41.1048413Z Syncing repository: omaribrahem211-svg/masiret-nagm
+2026-11-16T21:14:41.1051252Z ##[group]Getting Git version info
+2026-11-16T21:14:41.1052653Z Working directory is '/home/runner/work/masiret-nagm/masiret-nagm'
+2026-11-16T21:14:41.1054422Z [command]/usr/bin/git version
+2026-11-16T21:14:41.1056231Z git version 2.56.1
+2026-11-16T21:14:41.1070092Z ##[endgroup]
+2026-11-16T21:14:41.1084712Z Temporarily overriding HOME='/home/runner/work/_temp/dc039568-2e0c-406a-9685-f2cebc029600' before making global git config changes
+2026-11-16T21:14:41.1086274Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-16T21:14:41.1089615Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/masiret-nagm/masiret-nagm
+2026-11-16T21:14:41.1146674Z Deleting the contents of '/home/runner/work/masiret-nagm/masiret-nagm'
+2026-11-16T21:14:41.1151391Z ##[group]Initializing the repository
+2026-11-16T21:14:41.1154557Z [command]/usr/bin/git init /home/runner/work/masiret-nagm/masiret-nagm
+2026-11-16T21:14:41.1239882Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-16T21:14:41.1241107Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-16T21:14:41.1242154Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-16T21:14:41.1242952Z hint: call:
+2026-11-16T21:14:41.1243359Z hint:
+2026-11-16T21:14:41.1243907Z hint: 	git config --global init.defaultBranch <name>
+2026-11-16T21:14:41.1244564Z hint:
+2026-11-16T21:14:41.1245173Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-16T21:14:41.1246239Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-16T21:14:41.1247044Z hint:
+2026-11-16T21:14:41.1247690Z hint: 	git branch -m <name>
+2026-11-16T21:14:41.1248181Z hint:
+2026-11-16T21:14:41.1248858Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-16T21:14:41.1258861Z Initialized empty Git repository in /home/runner/work/masiret-nagm/masiret-nagm/.git/
+2026-11-16T21:14:41.1270276Z [command]/usr/bin/git remote add origin https://github.com/omaribrahem211-svg/masiret-nagm
+2026-11-16T21:14:41.1333307Z ##[endgroup]
+2026-11-16T21:14:41.1440656Z ##[group]Disabling automatic garbage collection
+2026-11-16T21:14:41.1461162Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-16T21:14:41.1474419Z ##[endgroup]
+2026-11-16T21:14:41.1475539Z ##[group]Setting up auth
+2026-11-16T21:14:41.1476725Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-16T21:14:41.1480314Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-16T21:14:41.1816160Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-16T21:14:41.1846209Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-16T21:14:41.2074672Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-16T21:14:41.2105762Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-16T21:14:41.2336147Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-16T21:14:41.2372917Z ##[endgroup]
+2026-11-16T21:14:41.2373825Z ##[group]Fetching the repository
+2026-11-16T21:14:41.2381804Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-11-16T21:14:44.0264411Z From https://github.com/omaribrahem211-svg/masiret-nagm
+2026-11-16T21:14:44.0265425Z  * [new branch]      audit-1.5             -> origin/audit-1.5
+2026-11-16T21:14:44.0265778Z  * [new branch]      backup-v125           -> origin/backup-v125
+2026-11-16T21:14:44.0266093Z  * [new branch]      backup-v128           -> origin/backup-v128
+2026-11-16T21:14:44.0266388Z  * [new branch]      backup-v129           -> origin/backup-v129
+2026-11-16T21:14:44.0266676Z  * [new branch]      builds                -> origin/builds
+2026-11-16T21:14:44.0266979Z  * [new branch]      final-gameplay        -> origin/final-gameplay
+2026-11-16T21:14:44.0267515Z  * [new branch]      fix-1.6-header        -> origin/fix-1.6-header
+2026-11-16T21:14:44.0267828Z  * [new branch]      fix-1.7-rules         -> origin/fix-1.7-rules
+2026-11-16T21:14:44.0268402Z  * [new branch]      fix-1.8-tackles       -> origin/fix-1.8-tackles
+2026-11-16T21:14:44.0268708Z  * [new branch]      fix-1.9-timing        -> origin/fix-1.9-timing
+2026-11-16T21:14:44.0269039Z  * [new branch]      fix-2.0-defense       -> origin/fix-2.0-defense
+2026-11-16T21:14:44.0269351Z  * [new branch]      fix-2.1-response      -> origin/fix-2.1-response
+2026-11-16T21:14:44.0269720Z  * [new branch]      fix-2.2-fast-attacker -> origin/fix-2.2-fast-attacker
+2026-11-16T21:14:44.0270147Z  * [new branch]      fix-2.3-balance       -> origin/fix-2.3-balance
+2026-11-16T21:14:44.0270560Z  * [new branch]      fix-2.4-hesitation    -> origin/fix-2.4-hesitation
+2026-11-16T21:14:44.0270908Z  * [new branch]      gameplay-final        -> origin/gameplay-final
+2026-11-16T21:14:44.0271249Z  * [new branch]      gameplay-recovery     -> origin/gameplay-recovery
+2026-11-16T21:14:44.0271579Z  * [new branch]      gameplay-v131         -> origin/gameplay-v131
+2026-11-16T21:14:44.0271920Z  * [new branch]      gameplay-v131-e2      -> origin/gameplay-v131-e2
+2026-11-16T21:14:44.0272273Z  * [new branch]      gameplay-v133-repair  -> origin/gameplay-v133-repair
+2026-11-16T21:14:44.0272606Z  * [new branch]      main                  -> origin/main
+2026-11-16T21:14:44.0272905Z  * [new branch]      test-builds           -> origin/test-builds
+2026-11-16T21:14:44.0273226Z  * [new branch]      testlab               -> origin/testlab
+2026-11-16T21:14:44.0273550Z  * [new branch]      visual-v2             -> origin/visual-v2
+2026-11-16T21:14:44.0273850Z  * [new tag]         v130-rc1              -> v130-rc1
+2026-11-16T21:14:44.0274132Z  * [new tag]         v131-rc1              -> v131-rc1
+2026-11-16T21:14:44.0274414Z  * [new tag]         v133-rc1              -> v133-rc1
+2026-11-16T21:14:44.0276262Z [command]/usr/bin/git branch --list --remote origin/gameplay-recovery
+2026-11-16T21:14:44.0302594Z   origin/gameplay-recovery
+2026-11-16T21:14:44.0309822Z [command]/usr/bin/git rev-parse refs/remotes/origin/gameplay-recovery
+2026-11-16T21:14:44.0331698Z 4f3d601ebcf141bd4ffdbe5b66e076fadb04fcd1
+2026-11-16T21:14:44.0335237Z ##[endgroup]
+2026-11-16T21:14:44.0335813Z ##[group]Determining the checkout info
+2026-11-16T21:14:44.0336699Z ##[endgroup]
+2026-11-16T21:14:44.0339883Z [command]/usr/bin/git sparse-checkout disable
+2026-11-16T21:14:44.0381883Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-16T21:14:44.0407912Z ##[group]Checking out the ref
+2026-11-16T21:14:44.0410303Z [command]/usr/bin/git checkout --progress --force -B gameplay-recovery refs/remotes/origin/gameplay-recovery
+2026-11-16T21:14:44.1302953Z Switched to a new branch 'gameplay-recovery'
+2026-11-16T21:14:44.1304491Z branch 'gameplay-recovery' set up to track 'origin/gameplay-recovery'.
+2026-11-16T21:14:44.1318308Z ##[endgroup]
+2026-11-16T21:14:44.1361218Z [command]/usr/bin/git log -1 --format=%H
+2026-11-16T21:14:44.1386504Z 4f3d601ebcf141bd4ffdbe5b66e076fadb04fcd1
+2026-11-16T21:14:44.1578739Z ##[group]Run actions/download-artifact@v4
+2026-11-16T21:14:44.1579008Z with:
+2026-11-16T21:14:44.1579200Z   name: masiret-android-34
+2026-11-16T21:14:44.1579411Z   run-id: 43957297181
+2026-11-16T21:14:44.1581079Z   github-token: ***
+2026-11-16T21:14:44.1581266Z   path: art
+2026-11-16T21:14:44.1581448Z   merge-multiple: false
+2026-11-16T21:14:44.1581666Z   repository: omaribrahem211-svg/masiret-nagm
+2026-11-16T21:14:44.1581904Z env:
+2026-11-16T21:14:44.1583316Z   GH_TOKEN: ***
+2026-11-16T21:14:44.1583497Z   RUN_ID: 43957297181
+2026-11-16T21:14:44.1583696Z   ARTIFACT: masiret-android-34
+2026-11-16T21:14:44.1583903Z   TAG: v134-recovery-rc1
+2026-11-16T21:14:44.1584096Z   PUBLISH: true
+2026-11-16T21:14:44.1584276Z ##[endgroup]
+2026-11-16T21:14:44.2643589Z Downloading single artifact
+2026-11-16T21:14:44.2690437Z (node:2203) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-16T21:14:44.2691436Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-16T21:14:44.2898336Z (node:2203) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-16T21:14:44.5819902Z Preparing to download the following artifacts:
+2026-11-16T21:14:44.5821054Z - masiret-android-34 (ID: 14271813613, Size: 34810767, Expected Digest: sha256:75f9b45fffe6e36dbc8594fe06aba4dd5b0f6177a737c267e94fb963ac96c7c7)
+2026-11-16T21:14:44.5843557Z Downloading artifact '14271813613' from 'omaribrahem211-svg/masiret-nagm'
+2026-11-16T21:14:44.9742040Z Redirecting to blob download url: https://productionresultssa9.blob.core.windows.net/actions-results/5fe38b0b-9006-4625-bab4-1a7dbe70314f/workflow-job-run-c512db19-735c-502e-9fd6-8218c43162ce/artifacts/7c6dc02e5479b6f8e2891c6e882916d23bf6bcd3ce0237c1434ac8e047d4c726.zip
+2026-11-16T21:14:44.9742857Z Starting download of artifact to: /home/runner/work/masiret-nagm/masiret-nagm/art
+2026-11-16T21:14:45.2001385Z (node:2203) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-11-16T21:14:46.3162711Z SHA256 digest of downloaded artifact is 75f9b45fffe6e36dbc8594fe06aba4dd5b0f6177a737c267e94fb963ac96c7c7
+2026-11-16T21:14:46.3163269Z Artifact download completed successfully.
+2026-11-16T21:14:46.3163554Z Total of 1 artifact(s) downloaded
+2026-11-16T21:14:46.3171295Z Download artifact has finished successfully
+2026-11-16T21:14:46.3331222Z ##[group]Run set -euo pipefail
+2026-11-16T21:14:46.3331516Z [36;1mset -euo pipefail[0m
+2026-11-16T21:14:46.3331672Z [36;1mR=report.txt; : > $R[0m
+2026-11-16T21:14:46.3331835Z [36;1msay(){ echo "$*" | tee -a $R; }[0m
+2026-11-16T21:14:46.3332045Z [36;1mfail(){ say "FAIL: $*"; echo FAILED > failed.flag; }[0m
+2026-11-16T21:14:46.3332282Z [36;1mAPK=$(ls art/*-test.apk); say "APK: $(basename $APK)"[0m
+2026-11-16T21:14:46.3332565Z [36;1mRUN=$(gh api repos/omaribrahem211-svg/masiret-nagm/actions/runs/43957297181)[0m
+2026-11-16T21:14:46.3332982Z [36;1mSHA=$(echo "$RUN" | jq -r .head_sha); BR=$(echo "$RUN" | jq -r .head_branch); CON=$(echo "$RUN" | jq -r .conclusion); T=$(echo "$RUN" | jq -r .updated_at)[0m
+2026-11-16T21:14:46.3333379Z [36;1msay "Build run: 43957297181  branch=$BR  commit=$SHA  conclusion=$CON  finished=$T"[0m
+2026-11-16T21:14:46.3333653Z [36;1m[ "$CON" = success ] || fail "build run did not succeed"[0m
+2026-11-16T21:14:46.3333886Z [36;1mecho "sha=$SHA" >> $GITHUB_OUTPUT[0m
+2026-11-16T21:14:46.3334062Z [36;1msay "Size: $(stat -c %s $APK) bytes"[0m
+2026-11-16T21:14:46.3334258Z [36;1msay "SHA-256: $(sha256sum $APK | cut -d' ' -f1)"[0m
+2026-11-16T21:14:46.3334540Z [36;1mBT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1); say "build-tools: $(basename $BT)"[0m
+2026-11-16T21:14:46.3334797Z [36;1msay "--- aapt2 dump badging"[0m
+2026-11-16T21:14:46.3335042Z [36;1m$BT/aapt2 dump badging $APK > badging.txt || fail "aapt2 could not read the APK"[0m
+2026-11-16T21:14:46.3335471Z [36;1mgrep -E "^package:|[sS]dkVersion|^application-label:|^launchable-activity|^native-code|^uses-permission" badging.txt | tee -a $R || true[0m
+2026-11-16T21:14:46.3335904Z [36;1mgrep -q "package: name='com.asomygames.masiretnagm'" badging.txt || fail "package id"[0m
+2026-11-16T21:14:46.3336280Z [36;1mVC=$(sed -n "s/.*versionCode='\([0-9]*\)'.*/\1/p" badging.txt); VN=$(sed -n "s/.*versionName='\([^']*\)'.*/\1/p" badging.txt)[0m
+2026-11-16T21:14:46.3336659Z [36;1mEXP=$(( $(echo "$RUN" | jq -r .run_number) + 100 )); [ "$VC" = "$EXP" ] || fail "versionCode $VC != expected $EXP"[0m
+2026-11-16T21:14:46.3336956Z [36;1msay "versionCode=$VC versionName=$VN (expected code $EXP)"[0m
+2026-11-16T21:14:46.3337605Z [36;1mgrep -Eq "^(sdkVersion|minSdkVersion):'24'" badging.txt && say "minSdk 24 (Android 7.0) as in android/variables.gradle" || fail "minSdk is not 24 (android/variables.gradle)"[0m
+2026-11-16T21:14:46.3338214Z [36;1msay "--- zipalign"[0m
+2026-11-16T21:14:46.3338644Z [36;1m$BT/zipalign -c -P 16 -v 4 $APK > zipalign.txt 2>&1 && say "zipalign: OK (4-byte, 16 KB page alignment for .so)" || { tail -5 zipalign.txt | tee -a $R; $BT/zipalign -c 4 $APK && say "zipalign: OK (4-byte)" || fail "zipalign"; }[0m
+2026-11-16T21:14:46.3339079Z [36;1msay "--- apksigner"[0m
+2026-11-16T21:14:46.3339329Z [36;1m$BT/apksigner verify --verbose --print-certs $APK > signer.txt 2>&1 || fail "apksigner verify"[0m
+2026-11-16T21:14:46.3339731Z [36;1mgrep -Ei "^Verifies|Verified using|Number of signers|certificate DN|certificate SHA-256" signer.txt | tee -a $R || true[0m
+2026-11-16T21:14:46.3340285Z [36;1mgrep -q "CN=Android Debug" signer.txt && say "WARNING: signed with the Android debug key (KEYSTORE secret missing)" || say "Signed with the project upload key (not the Android debug key)"[0m
+2026-11-16T21:14:46.3340767Z [36;1mNEW=$(grep -i "certificate SHA-256 digest" signer.txt | head -1 | sed 's/.*digest: //')[0m
+2026-11-16T21:14:46.3341096Z [36;1msay "--- update compatibility with the previous test APK on the 'builds' branch"[0m
+2026-11-16T21:14:46.3341555Z [36;1mgit fetch -q origin builds && OLDN=$(git ls-tree --name-only origin/builds | grep -- '-test.apk' | head -1) && git show origin/builds:$OLDN > old.apk && say "previous: $OLDN"[0m
+2026-11-16T21:14:46.3341975Z [36;1m$BT/aapt2 dump badging old.apk | grep "^package:" | tee -a $R[0m
+2026-11-16T21:14:46.3342247Z [36;1m$BT/apksigner verify --print-certs old.apk > oldsig.txt 2>&1 || true[0m
+2026-11-16T21:14:46.3342827Z [36;1mgrep -Ei "certificate DN|certificate SHA-256" oldsig.txt | sed 's/^/  previous: /' | tee -a $R || true; OLD=$(grep -i "certificate SHA-256 digest" oldsig.txt | head -1 | sed 's/.*digest: //')[0m
+2026-11-16T21:14:46.3343298Z [36;1mOVC=$($BT/aapt2 dump badging old.apk | sed -n "s/.*versionCode='\([0-9]*\)'.*/\1/p")[0m
+2026-11-16T21:14:46.3343677Z [36;1m[ -n "$NEW" ] && [ "$NEW" = "$OLD" ] && say "same signing certificate as $OLDN: YES ($NEW)" || fail "signing certificate differs from $OLDN"[0m
+2026-11-16T21:14:46.3344093Z [36;1m[ "$VC" -gt "$OVC" ] && say "versionCode $VC > $OVC: update allowed" || fail "versionCode not higher than previous"[0m
+2026-11-16T21:14:46.3344488Z [36;1msay "--- web assets: every file of www/ at the build commit is in the APK and byte-identical"[0m
+2026-11-16T21:14:46.3344754Z [36;1mrm -rf x && mkdir x && unzip -q $APK -d x[0m
+2026-11-16T21:14:46.3344932Z [36;1mMISS=0; DIFF=0; N=0[0m
+2026-11-16T21:14:46.3345377Z [36;1mfor f in $(git ls-tree -r --name-only $SHA www); do N=$((N+1)); p="x/assets/public/${f#www/}"; if [ ! -f "$p" ]; then MISS=$((MISS+1)); say "missing: $f"; elif ! cmp -s "$p" <(git show $SHA:$f); then DIFF=$((DIFF+1)); say "differs: $f"; fi; done[0m
+2026-11-16T21:14:46.3345883Z [36;1msay "www files at build commit: $N   missing: $MISS   different: $DIFF"[0m
+2026-11-16T21:14:46.3346109Z [36;1m[ $MISS = 0 ] || fail "missing web files"[0m
+2026-11-16T21:14:46.3346317Z [36;1m[ $DIFF = 0 ] || fail "web files differ from the build commit"[0m
+2026-11-16T21:14:46.3347009Z [36;1msay "files only in the APK web folder (generated at build time): $(cd x/assets/public && find . -type f | sed 's#^\./#www/#' | LC_ALL=C sort > /tmp/a.txt; git -C "$GITHUB_WORKSPACE" ls-tree -r --name-only $SHA www | LC_ALL=C sort > /tmp/b.txt; LC_ALL=C comm -23 /tmp/a.txt /tmp/b.txt | sed 's#^www/##' | awk -F/ '{print (NF>1?$1"/":$0)}' | sort | uniq -c | tr '\n' ';')"[0m
+2026-11-16T21:14:46.3347848Z [36;1msay "--- JavaScript syntax (node --check) of every .js in the APK web folder"[0m
+2026-11-16T21:14:46.3348240Z [36;1mBAD=0; for j in $(find x/assets/public -name '*.js'); do node --check "$j" 2>/dev/null || { BAD=$((BAD+1)); say "syntax error: $j"; }; done[0m
+2026-11-16T21:14:46.3348694Z [36;1msay "js files checked: $(find x/assets/public -name '*.js' | wc -l)   syntax errors: $BAD"; [ $BAD = 0 ] || fail "javascript syntax"[0m
+2026-11-16T21:14:46.3349287Z [36;1msay "index.html scripts present: $(grep -o 'src=\"[^\"]*\.js\"' x/assets/public/index.html | sed 's/src=\"//;s/\"//' | while read s; do [ -f "x/assets/public/$s" ] && echo ok || echo "MISSING:$s"; done | sort | uniq -c | tr '\n' ' ')"[0m
+2026-11-16T21:14:46.3349978Z [36;1mgrep -o 'src="[^"]*\.js"' x/assets/public/index.html | sed 's/src="//;s/"//' | while read s; do [ -f "x/assets/public/$s" ] || echo FAILED > failed.flag; done[0m
+2026-11-16T21:14:46.3350424Z [36;1msay "capacitor.config.json in APK: $(cat x/assets/capacitor.config.json | tr -d '\n' | head -c 200)"[0m
+2026-11-16T21:14:46.3350829Z [36;1msay "--- result"; if [ -f failed.flag ]; then say "RESULT: FAILED"; exit 1; else say "RESULT: ALL CHECKS PASSED"; fi[0m
+2026-11-16T21:14:46.3397971Z shell: /usr/bin/bash -e {0}
+2026-11-16T21:14:46.3398135Z env:
+2026-11-16T21:14:46.3399635Z   GH_TOKEN: ***
+2026-11-16T21:14:46.3399769Z   RUN_ID: 43957297181
+2026-11-16T21:14:46.3399908Z   ARTIFACT: masiret-android-34
+2026-11-16T21:14:46.3400055Z   TAG: v134-recovery-rc1
+2026-11-16T21:14:46.3400196Z   PUBLISH: true
+2026-11-16T21:14:46.3400322Z ##[endgroup]
+2026-11-16T21:14:46.3554647Z APK: masiret-v134-test.apk
+2026-11-16T21:14:46.7791414Z Build run: 43957297181  branch=gameplay-recovery  commit=d793d201b991d55b3ce3fabf6cc82c9b676dfc9b  conclusion=success  finished=2026-11-16T21:13:57Z
+2026-11-16T21:14:46.7839928Z Size: 22653021 bytes
+2026-11-16T21:14:46.8027048Z SHA-256: 098206af451c72f81ca8b0d75761ee62d8af0a887ebe1e0df91d277b331cb094
+2026-11-16T21:14:46.8129443Z build-tools: 37.0.0
+2026-11-16T21:14:46.8152893Z --- aapt2 dump badging
+2026-11-16T21:14:47.3666418Z package: name='com.asomygames.masiretnagm' versionCode='134' versionName='1.1.34' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+2026-11-16T21:14:47.3667217Z minSdkVersion:'24'
+2026-11-16T21:14:47.3667569Z targetSdkVersion:'36'
+2026-11-16T21:14:47.3667842Z uses-permission: name='android.permission.INTERNET'
+2026-11-16T21:14:47.3668265Z uses-permission: name='com.google.android.gms.permission.AD_ID'
+2026-11-16T21:14:47.3668746Z uses-permission: name='android.permission.ACCESS_ADSERVICES_AD_ID'
+2026-11-16T21:14:47.3669198Z uses-permission: name='android.permission.ACCESS_ADSERVICES_ATTRIBUTION'
+2026-11-16T21:14:47.3669675Z uses-permission: name='android.permission.ACCESS_ADSERVICES_TOPICS'
+2026-11-16T21:14:47.3670109Z uses-permission: name='android.permission.FOREGROUND_SERVICE'
+2026-11-16T21:14:47.3670603Z uses-permission: name='com.asomygames.masiretnagm.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+2026-11-16T21:14:47.3671371Z application-label:'مسيرة نجم'
+2026-11-16T21:14:47.3671927Z launchable-activity: name='com.asomygames.masiretnagm.MainActivity'  label='مسيرة نجم' icon=''
+2026-11-16T21:14:47.3672428Z native-code: 'arm64-v8a' 'armeabi-v7a' 'x86' 'x86_64'
+2026-11-16T21:14:47.3778734Z versionCode=134 versionName=1.1.34 (expected code 134)
+2026-11-16T21:14:47.3816165Z minSdk 24 (Android 7.0) as in android/variables.gradle
+2026-11-16T21:14:47.3841490Z --- zipalign
+2026-11-16T21:14:47.5395096Z zipalign: OK (4-byte, 16 KB page alignment for .so)
+2026-11-16T21:14:47.5420685Z --- apksigner
+2026-11-16T21:14:48.3173928Z Verifies
+2026-11-16T21:14:48.3174254Z Verified using v1 scheme (JAR signing): false
+2026-11-16T21:14:48.3176337Z Verified using v2 scheme (APK Signature Scheme v2): true
+2026-11-16T21:14:48.3176587Z Verified using v3 scheme (APK Signature Scheme v3): false
+2026-11-16T21:14:48.3176828Z Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+2026-11-16T21:14:48.3177084Z Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+2026-11-16T21:14:48.3177528Z Verified using v4 scheme (APK Signature Scheme v4): false
+2026-11-16T21:14:48.3177741Z Number of signers: 1
+2026-11-16T21:14:48.3177926Z V2 Signer: certificate DN: CN=Masiret Nagm, O=asomygames, C=EG
+2026-11-16T21:14:48.3178341Z V2 Signer: certificate SHA-256 digest: df48cdf3a45c106334a8c2e8705a3109ff04e8ecc4a2a68730b8a132a75d901c
+2026-11-16T21:14:48.3211302Z Signed with the project upload key (not the Android debug key)
+2026-11-16T21:14:48.3268076Z --- update compatibility with the previous test APK on the 'builds' branch
+2026-11-16T21:14:48.6397113Z previous: masiret-v129-test.apk
+2026-11-16T21:14:48.6572878Z package: name='com.asomygames.masiretnagm' versionCode='129' versionName='1.1.29' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+2026-11-16T21:14:48.8961060Z   previous: V2 Signer: certificate DN: CN=Masiret Nagm, O=asomygames, C=EG
+2026-11-16T21:14:48.8961808Z   previous: V2 Signer: certificate SHA-256 digest: df48cdf3a45c106334a8c2e8705a3109ff04e8ecc4a2a68730b8a132a75d901c
+2026-11-16T21:14:48.9194019Z same signing certificate as masiret-v129-test.apk: YES (df48cdf3a45c106334a8c2e8705a3109ff04e8ecc4a2a68730b8a132a75d901c)
+2026-11-16T21:14:48.9222537Z versionCode 134 > 129: update allowed
+2026-11-16T21:14:48.9250436Z --- web assets: every file of www/ at the build commit is in the APK and byte-identical
+2026-11-16T21:14:49.2332284Z www files at build commit: 23   missing: 0   different: 0
+2026-11-16T21:14:49.2490301Z files only in the APK web folder (generated at build time):     206 audio/;      1 cordova.js;      1 cordova_plugins.js;     11 fonts/;
+2026-11-16T21:14:49.2514873Z --- JavaScript syntax (node --check) of every .js in the APK web folder
+2026-11-16T21:14:49.8295366Z js files checked: 21   syntax errors: 0
+2026-11-16T21:14:49.8379764Z index.html scripts present:      19 ok 
+2026-11-16T21:14:49.8461926Z capacitor.config.json in APK: {	"appId": "com.asomygames.masiretnagm",	"appName": "مسيرة نجم",	"webDir": "www",	"server": {		"androidScheme": "https"	},	"android": {		"allowMixedContent": false,		"captureInput": true,		"we
+2026-11-16T21:14:49.8487527Z --- result
+2026-11-16T21:14:49.8514914Z RESULT: ALL CHECKS PASSED
+2026-11-16T21:14:49.8574250Z ##[group]Run echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+2026-11-16T21:14:49.8574759Z [36;1mecho 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules[0m
+2026-11-16T21:14:49.8575097Z [36;1msudo udevadm control --reload-rules[0m
+2026-11-16T21:14:49.8575296Z [36;1msudo udevadm trigger --name-match=kvm[0m
+2026-11-16T21:14:49.8622094Z shell: /usr/bin/bash -e {0}
+2026-11-16T21:14:49.8622267Z env:
+2026-11-16T21:14:49.8623822Z   GH_TOKEN: ***
+2026-11-16T21:14:49.8623961Z   RUN_ID: 43957297181
+2026-11-16T21:14:49.8624110Z   ARTIFACT: masiret-android-34
+2026-11-16T21:14:49.8624273Z   TAG: v134-recovery-rc1
+2026-11-16T21:14:49.8624415Z   PUBLISH: true
+2026-11-16T21:14:49.8624548Z ##[endgroup]
+2026-11-16T21:14:49.8770361Z KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"
+2026-11-16T21:14:49.9280702Z ##[group]Run reactivecircus/android-emulator-runner@v2
+2026-11-16T21:14:49.9280912Z with:
+2026-11-16T21:14:49.9281036Z   api-level: 30
+2026-11-16T21:14:49.9281164Z   arch: x86_64
+2026-11-16T21:14:49.9281288Z   target: google_apis
+2026-11-16T21:14:49.9281441Z   force-avd-creation: false
+2026-11-16T21:14:49.9281703Z   emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+2026-11-16T21:14:49.9281975Z   disable-animations: true
+2026-11-16T21:14:49.9282129Z   script: bash scripts/emu_launch_check.sh
+2026-11-16T21:14:49.9282289Z   cores: 2
+2026-11-16T21:14:49.9282405Z   avd-name: test
+2026-11-16T21:14:49.9282536Z   emulator-boot-timeout: 600
+2026-11-16T21:14:49.9282683Z   emulator-port: 5554
+2026-11-16T21:14:49.9282826Z   disable-spellchecker: false
+2026-11-16T21:14:49.9282983Z   disable-linux-hw-accel: auto
+2026-11-16T21:14:49.9283136Z   enable-hw-keyboard: false
+2026-11-16T21:14:49.9283275Z   channel: stable
+2026-11-16T21:14:49.9283401Z env:
+2026-11-16T21:14:49.9284848Z   GH_TOKEN: ***
+2026-11-16T21:14:49.9284972Z   RUN_ID: 43957297181
+2026-11-16T21:14:49.9285109Z   ARTIFACT: masiret-android-34
+2026-11-16T21:14:49.9285258Z   TAG: v134-recovery-rc1
+2026-11-16T21:14:49.9285393Z   PUBLISH: true
+2026-11-16T21:14:49.9285519Z ##[endgroup]
+2026-11-16T21:14:49.9737824Z ##[group]Configure emulator
+2026-11-16T21:14:49.9738550Z API level: 30
+2026-11-16T21:14:49.9738773Z System image API level: 30
+2026-11-16T21:14:49.9739031Z target: google_apis
+2026-11-16T21:14:49.9739294Z CPU architecture: x86_64
+2026-11-16T21:14:49.9739550Z Hardware profile: 
+2026-11-16T21:14:49.9739826Z Cores: 2
+2026-11-16T21:14:49.9740171Z RAM size: 
+2026-11-16T21:14:49.9740390Z Heap size: 
+2026-11-16T21:14:49.9741149Z SD card path or size: 
+2026-11-16T21:14:49.9742442Z Disk size: 
+2026-11-16T21:14:49.9742657Z AVD name: test
+2026-11-16T21:14:49.9742899Z force avd creation: false
+2026-11-16T21:14:49.9743139Z Emulator boot timeout: 600
+2026-11-16T21:14:49.9751936Z emulator port: 5554
+2026-11-16T21:14:49.9752427Z emulator options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+2026-11-16T21:14:49.9752853Z disable animations: true
+2026-11-16T21:14:49.9753077Z disable spellchecker: false
+2026-11-16T21:14:49.9753265Z disable Linux hardware acceleration: false
+2026-11-16T21:14:49.9753470Z enable hardware keyboard: false
+2026-11-16T21:14:49.9753623Z Channel: 0 (stable)
+2026-11-16T21:14:49.9753751Z Script:
+2026-11-16T21:14:49.9753876Z bash scripts/emu_launch_check.sh
+2026-11-16T21:14:49.9754042Z Pre emulator launch script:
+2026-11-16T21:14:49.9754376Z ##[endgroup]
+2026-11-16T21:14:49.9754686Z ##[group]Install Android SDK
+2026-11-16T21:14:49.9785483Z [command]/usr/bin/sh -c \yes | sdkmanager --licenses > /dev/null
+2026-11-16T21:14:54.8331491Z Installing latest build tools, platform tools, and platform.
+2026-11-16T21:14:54.8341550Z [command]/usr/bin/sh -c \sdkmanager --install 'build-tools;37.0.0' platform-tools 'platforms;android-30'> /dev/null
+2026-11-16T21:14:59.0220951Z Installing latest emulator.
+2026-11-16T21:14:59.0229221Z [command]/usr/bin/sh -c \sdkmanager --install emulator --channel=0 > /dev/null
+2026-11-16T21:15:07.6179469Z Installing system images.
+2026-11-16T21:15:07.6186928Z [command]/usr/bin/sh -c \sdkmanager --install 'system-images;android-30;google_apis;x86_64' --channel=0 > /dev/null
+2026-11-16T21:15:37.1099053Z ##[endgroup]
+2026-11-16T21:15:37.1099538Z ##[group]Create AVD
+2026-11-16T21:15:37.1099838Z Creating AVD.
+2026-11-16T21:15:37.1109233Z [command]/usr/bin/sh -c \echo no | avdmanager create avd --force -n test --package 'system-images;android-30;google_apis;x86_64'
+2026-11-16T21:15:37.6713536Z Loading local repository...                                                     
+2026-11-16T21:15:37.7058469Z [=========                              ] 25% Loading local repository...       
+2026-11-16T21:15:37.7059118Z Auto-selecting single ABI x86_64
+2026-11-16T21:15:37.7459398Z Do you wish to create a custom hardware profile? [no] [command]/usr/bin/sh -c \printf 'hw.cpu.ncore=2\n' >> /home/runner/.android/avd/test.avd/config.ini
+2026-11-16T21:15:37.7478713Z ##[endgroup]
+2026-11-16T21:15:37.7480739Z ##[group]Launch Emulator
+2026-11-16T21:15:37.7480984Z Starting emulator.
+2026-11-16T21:15:37.7488009Z [command]/usr/bin/sh -c \/usr/local/lib/android/sdk/emulator/emulator -port 5554 -avd test -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
+2026-11-16T21:15:37.7575203Z INFO         | Android emulator version 37.2.13.0 (build_id 16740729) (CL:N/A)
+2026-11-16T21:15:37.7576756Z INFO         | Graphics backend: gfxstream
+2026-11-16T21:15:37.7577220Z INFO         | Found systemPath /usr/local/lib/android/sdk/system-images/android-30/google_apis/x86_64/
+2026-11-16T21:15:37.7926270Z INFO         | Saving last run QEMU version for the AVD to 2
+2026-11-16T21:15:37.7926979Z WARNING      | Please update the emulator to one that supports the feature(s): Vulkan
+2026-11-16T21:15:37.7927558Z ##############################################################################
+2026-11-16T21:15:37.7927856Z ##                        WARNING - ACTION REQUIRED                         ##
+2026-11-16T21:15:37.7928222Z ##  Consider using the '-metrics-collection' flag to help improve the       ##
+2026-11-16T21:15:37.7928618Z ##  emulator by sending anonymized usage data. Or use the '-no-metrics'     ##
+2026-11-16T21:15:37.7929272Z ##  flag to bypass this warning and turn off the metrics collection.        ##
+2026-11-16T21:15:37.7929671Z ##  In a future release this warning will turn into a one-time blocking     ##
+2026-11-16T21:15:37.7930078Z ##  prompt to ask for explicit user input regarding metrics collection.     ##
+2026-11-16T21:15:37.7930424Z ##                                                                          ##
+2026-11-16T21:15:37.7930810Z ##  Please see '-help-metrics-collection' for more details. You can use     ##
+2026-11-16T21:15:37.7931273Z ##  '-metrics-to-file' or '-metrics-to-console' flags to see what type of   ##
+2026-11-16T21:15:37.7931729Z ##  data is being collected by emulator as part of usage statistics.        ##
+2026-11-16T21:15:37.7932126Z ##############################################################################
+2026-11-16T21:15:37.7932443Z INFO         | Guest GLES Driver: Auto (ext controls)
+2026-11-16T21:15:37.7932880Z INFO         | emuglConfig_init: vulkan_mode_selected:swiftshader gles_mode_selected:swiftshader
+2026-11-16T21:15:37.7933303Z INFO         | Checking system compatibility:
+2026-11-16T21:15:37.7933608Z INFO         |   Checking: hasSufficientDiskSpace
+2026-11-16T21:15:37.7933955Z INFO         |      Ok: Disk space requirements to run avd: `test` are met
+2026-11-16T21:15:37.7934302Z INFO         |   Checking: hasSufficientHwGpu
+2026-11-16T21:15:37.7934635Z INFO         |      Ok: Hardware GPU compatibility checks are not required
+2026-11-16T21:15:37.7934972Z INFO         |   Checking: hasSufficientSystem
+2026-11-16T21:15:37.7935293Z INFO         |      Ok: System requirements to run avd: `test` are met
+2026-11-16T21:15:37.7936012Z WARNING      | Feature QuickbootFileBacked is disabled due to stability issues, if you really want that, the environment variable ANDROID_EMU_FORCE_QUICKBOOT_FILE_BACKED need to set to 1
+2026-11-16T21:15:37.9092288Z WARNING      | FeatureControl is requesting a non existing feature.
+2026-11-16T21:15:38.1991653Z ERROR        | Unable to connect to adb daemon on port: 5037
+2026-11-16T21:15:38.1992256Z INFO         | Storing crashdata in: /tmp/android-runner/emu-crash-37.2.13.db, detection is enabled for process: 3082
+2026-11-16T21:15:38.1992762Z INFO         | Initializing gfxstream backend
+2026-11-16T21:15:38.2000574Z INFO         | startOpenglesRendererImpl: gpu info
+2026-11-16T21:15:38.2000879Z INFO         | 
+2026-11-16T21:15:38.2003032Z INFO         | initIcdPaths: ICD set to 'swiftshader', using Swiftshader ICD
+2026-11-16T21:15:38.2003672Z INFO         | Setting ICD filenames for the loader = /usr/local/lib/android/sdk/emulator/lib64/vulkan/vk_swiftshader_icd.json
+2026-11-16T21:15:38.2009230Z INFO         | SharedLibrary::open for [/usr/local/lib/android/sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so]
+2026-11-16T21:15:38.2009689Z INFO         | SharedLibrary::open for [/usr/local/lib/android/sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1]
+2026-11-16T21:15:38.2010089Z INFO         | SharedLibrary::open for [/usr/local/lib/android/sdk/emulator/lib64/vulkan/libvulkan.so]
+2026-11-16T21:15:38.2011182Z INFO         | Added library: /usr/local/lib/android/sdk/emulator/lib64/vulkan/libvulkan.so
+2026-11-16T21:15:38.2045754Z INFO         | Selecting Vulkan device: SwiftShader Device (Subzero), Version: 1.3.0
+2026-11-16T21:15:38.2046176Z INFO         | Using Vulkan externalMemoryMode: OpaqueFd for VkEmulation
+2026-11-16T21:15:38.2346897Z INFO         | Format VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16 does not support YCbCr sampler conversion
+2026-11-16T21:15:38.2369190Z INFO         | SharedLibrary::open for [libX11]
+2026-11-16T21:15:38.2370012Z WARNING      | Could not open libX11.so, try libX11.so.6
+2026-11-16T21:15:38.2370355Z INFO         | SharedLibrary::open for [libX11.so.6]
+2026-11-16T21:15:38.2370671Z INFO         | SharedLibrary::open for [libX11-xcb]
+2026-11-16T21:15:38.2370991Z WARNING      | Could not open libX11-xcb.so, try libX11-xcb.so.1
+2026-11-16T21:15:38.2371571Z INFO         | SharedLibrary::open for [libX11-xcb.so.1]
+2026-11-16T21:15:38.2436017Z INFO         | Initializing VkEmulation features:
+2026-11-16T21:15:38.2436345Z INFO         |     glInteropSupported: false
+2026-11-16T21:15:38.2436570Z INFO         |     useDeferredCommands: true
+2026-11-16T21:15:38.2436778Z INFO         |     createResourceWithRequirements: true
+2026-11-16T21:15:38.2436972Z INFO         |     useVulkanComposition: false
+2026-11-16T21:15:38.2437156Z INFO         |     useVulkanNativeSwapchain: false
+2026-11-16T21:15:38.2437553Z INFO         |     enable guestRenderDoc: false
+2026-11-16T21:15:38.2437761Z INFO         |     ASTC LDR emulation mode: Gpu
+2026-11-16T21:15:38.2437964Z INFO         |     enable ETC2 emulation: true
+2026-11-16T21:15:38.2438140Z INFO         |     enable Ycbcr emulation: false
+2026-11-16T21:15:38.2438313Z INFO         |     guestVulkanOnly: false
+2026-11-16T21:15:38.2438488Z INFO         |     useDedicatedAllocations: false
+2026-11-16T21:15:38.2438682Z INFO         |     guestVulkanMaxApiVersion: 1.3.0
+2026-11-16T21:15:38.2438878Z INFO         |     enableProtectedMemoryEmulation: false
+2026-11-16T21:15:38.2444050Z INFO         | Graphics Adapter Vendor Google (Google Inc.)
+2026-11-16T21:15:38.2444462Z INFO         | Graphics Adapter Android Emulator OpenGL ES Translator (Google SwiftShader)
+2026-11-16T21:15:38.2444874Z INFO         | Graphics API Version OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1)
+2026-11-16T21:15:38.2446222Z INFO         | Graphics API Extensions GL_OES_EGL_sync GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_depth24 GL_OES_depth32 GL_OES_element_index_uint GL_OES_texture_float GL_OES_texture_float_linear GL_OES_compressed_paletted_texture GL_OES_compressed_ETC1_RGB8_texture GL_OES_depth_texture GL_OES_texture_half_float GL_OES_texture_half_float_linear GL_OES_packed_depth_stencil GL_OES_vertex_half_float GL_OES_standard_derivatives GL_OES_texture_npot GL_OES_rgb8_rgba8 GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_texture_format_BGRA8888 GL_APPLE_texture_format_BGRA8888 
+2026-11-16T21:15:38.2447711Z INFO         | Graphics Device Extensions N/A
+2026-11-16T21:15:38.2447925Z INFO         | Disabling sparse binding feature support
+2026-11-16T21:15:38.2503000Z INFO         | Userspace boot properties:
+2026-11-16T21:15:38.2503487Z INFO         |   android.bootanim=0
+2026-11-16T21:15:38.2503760Z INFO         |   android.qemud=1
+2026-11-16T21:15:38.2504089Z INFO         |   androidboot.boot_devices=pci0000:00/0000:00:03.0 pci0000:00/0000:00:06.0
+2026-11-16T21:15:38.2504466Z INFO         |   androidboot.hardware=ranchu
+2026-11-16T21:15:38.2504745Z INFO         |   androidboot.hardware.vulkan=ranchu
+2026-11-16T21:15:38.2505230Z INFO         |   androidboot.serialno=EMULATOR37X2X13X0
+2026-11-16T21:15:38.2505688Z INFO         |   androidboot.vbmeta.digest=fe75c2a5d8acc56679b9ff248d9bbb4830bcd72c5bca68461d9e9de20914a4e1
+2026-11-16T21:15:38.2506144Z INFO         |   androidboot.vbmeta.hash_alg=sha256
+2026-11-16T21:15:38.2506431Z INFO         |   androidboot.vbmeta.size=6144
+2026-11-16T21:15:38.2506690Z INFO         |   qemu=1
+2026-11-16T21:15:38.2506899Z INFO         |   qemu.avd_name=test
+2026-11-16T21:15:38.2507162Z INFO         |   qemu.camera_hq_edge_processing=0
+2026-11-16T21:15:38.2507628Z INFO         |   qemu.camera_protocol_ver=1
+2026-11-16T21:15:38.2507901Z INFO         |   qemu.dalvik.vm.heapsize=512m
+2026-11-16T21:15:38.2508162Z INFO         |   qemu.encrypt=1
+2026-11-16T21:15:38.2508392Z INFO         |   qemu.gles=1
+2026-11-16T21:15:38.2508626Z INFO         |   qemu.gltransport=pipe
+2026-11-16T21:15:38.2508917Z INFO         |   qemu.gltransport.drawFlushInterval=800
+2026-11-16T21:15:38.2509219Z INFO         |   qemu.hwcodec.avcdec=2
+2026-11-16T21:15:38.2509466Z INFO         |   qemu.hwcodec.hevcdec=2
+2026-11-16T21:15:38.2509722Z INFO         |   qemu.hwcodec.vpxdec=2
+2026-11-16T21:15:38.2509999Z INFO         |   qemu.opengles.version=196608
+2026-11-16T21:15:38.2510329Z INFO         |   qemu.settings.system.screen_off_timeout=2147483647
+2026-11-16T21:15:38.2510858Z INFO         |   qemu.skin=320x640
+2026-11-16T21:15:38.2511102Z INFO         |   qemu.uirenderer=skiagl
+2026-11-16T21:15:38.2511353Z INFO         |   qemu.virtiowifi=1
+2026-11-16T21:15:38.2511589Z INFO         |   qemu.vsync=60
+2026-11-16T21:15:38.2651040Z WARNING: cannnot unmap ptr 0x758ea2601000 as it is in the protected range from 0x758e22600000 to 0x758ea2800000
+2026-11-16T21:15:38.2782766Z INFO         | Monitoring duration of emulator setup.
+2026-11-16T21:15:39.3229067Z INFO         | Successfully initialized netsim WiFi
+2026-11-16T21:15:39.3255837Z INFO         | Setting display: 0 configuration to: 320x640, dpi: 160x160 
+2026-11-16T21:15:39.3256383Z INFO         | setDisplayActiveConfig: id:0, 320x640
+2026-11-16T21:15:39.3257057Z INFO         | emulatorSetupEnvironment: Environment scene is not required
+2026-11-16T21:15:39.3300525Z INFO         | Loading snapshot 'default_boot'...
+2026-11-16T21:15:39.3301151Z WARNING      | Failed to process .ini file /home/runner/.android/emu-update-last-check.ini for reading.
+2026-11-16T21:15:39.3476327Z WARNING      | Device 'cache' does not have the requested snapshot 'default_boot'
+2026-11-16T21:15:39.3476816Z 
+2026-11-16T21:15:39.3477193Z WARNING      | Failed to load snapshot 'default_boot'
+2026-11-16T21:15:39.3477771Z USER_INFO    | The emulator is performing a cold boot without a saved state because there's no snapshot and you have configured it not to save on exit.
+2026-11-16T21:15:39.6058684Z WARNING      | Failed to process .ini file /home/runner/.android/emu-update-last-check.ini for reading.
+2026-11-16T21:15:47.7523846Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-11-16T21:15:47.7553813Z * daemon not running; starting now at tcp:5037
+2026-11-16T21:15:47.8507199Z * daemon started successfully
+2026-11-16T21:15:47.8515682Z The process '/usr/local/lib/android/sdk/platform-tools/adb' failed with exit code 1
+2026-11-16T21:15:47.8516092Z adb: device offline
+2026-11-16T21:15:49.8532514Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-11-16T21:15:49.8565777Z adb: device offline
+2026-11-16T21:15:49.8569501Z The process '/usr/local/lib/android/sdk/platform-tools/adb' failed with exit code 1
+2026-11-16T21:15:51.8604112Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-11-16T21:15:51.8650720Z adb: device offline
+2026-11-16T21:15:51.8659083Z The process '/usr/local/lib/android/sdk/platform-tools/adb' failed with exit code 1
+2026-11-16T21:15:53.8694446Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-11-16T21:15:53.8861017Z 
+2026-11-16T21:15:55.8895654Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-11-16T21:15:55.9078815Z 
+2026-11-16T21:15:57.9148854Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-11-16T21:15:57.9406272Z 
+2026-11-16T21:15:59.9463527Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-11-16T21:16:00.0591510Z 
+2026-11-16T21:16:02.0725352Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-11-16T21:16:02.1549837Z 1
+2026-11-16T21:16:02.1590188Z Emulator booted.
+2026-11-16T21:16:02.1643293Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell input keyevent 82
+2026-11-16T21:16:04.8106220Z Disabling animations.
+2026-11-16T21:16:04.8154967Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell settings put global window_animation_scale 0.0
+2026-11-16T21:16:04.8765378Z INFO         | Boot completed in 27100 ms
+2026-11-16T21:16:04.8769572Z INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+2026-11-16T21:16:05.1078534Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell settings put global transition_animation_scale 0.0
+2026-11-16T21:16:05.4591421Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell settings put global animator_duration_scale 0.0
+2026-11-16T21:16:05.7464742Z ##[endgroup]
+2026-11-16T21:16:05.7478871Z [command]/usr/bin/sh -c bash scripts/emu_launch_check.sh
+2026-11-16T21:16:05.8691772Z Android 11
+2026-11-16T21:16:06.5283081Z --- install
+2026-11-16T21:16:10.7209029Z --- launch
+2026-11-16T21:16:16.0638842Z t=5s pid=3426
+2026-11-16T21:16:25.8860910Z t=15s pid=3426
+2026-11-16T21:16:53.0288817Z t=40s pid=3426
+2026-11-16T21:16:57.4387137Z known Capacitor safe-area messages (not game code): 2
+2026-11-16T21:16:57.4435107Z FATAL EXCEPTION lines: 0   ANR: 0   JS errors in the WebView log: 0
+2026-11-16T21:16:57.4549411Z 11-16 21:16:12.603  3426  3426 E chromium: [ERROR:filesystem_posix.cc(62)] mkdir /data/user/0/com.asomygames.masiretnagm/cache/WebView/Crashpad: No such file or directory (2)
+2026-11-16T21:16:57.4551293Z 11-16 21:16:13.327  3426  3426 E Capacitor/Console: File:  - Line 6 - Msg: Error injecting safe area CSS: TypeError: Cannot read property 'style' of null
+2026-11-16T21:16:57.4552417Z 11-16 21:16:13.334  3426  3426 E Capacitor/Console: File:  - Line 6 - Msg: Error injecting safe area CSS: TypeError: Cannot read property 'style' of null
+2026-11-16T21:16:57.4602488Z --- memory after 40 s
+2026-11-16T21:16:58.1466766Z   Native Heap    39742    39712        8       21    40988    49808    42628     2097
+2026-11-16T21:16:58.1469165Z          Native Heap:    39712                          40988
+2026-11-16T21:16:58.1488160Z             Graphics:        0                              0
+2026-11-16T21:16:58.1503184Z            TOTAL PSS:   123093            TOTAL RSS:   225840       TOTAL SWAP PSS:      153
+2026-11-16T21:16:58.1513628Z LAUNCH: OK (running after 40 s, no crash, no JS error)
+2026-11-16T21:16:58.1529066Z ##[group]Terminate Emulator
+2026-11-16T21:16:58.1545010Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 emu kill
+2026-11-16T21:16:58.1638452Z OK: killing emulator, bye bye
+2026-11-16T21:16:58.1647966Z OK
+2026-11-16T21:16:58.1648807Z INFO         | Wait for emulator (pid 3082) 20 seconds to shutdown gracefully before kill;you can set environment variable ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL(in seconds) to change the default value (20 seconds)
+2026-11-16T21:16:58.1649404Z 
+2026-11-16T21:16:58.1649844Z ##[endgroup]
+2026-11-16T21:16:59.8649555Z glTexImage2D: got err pre :( 0x500 internal 0x1907 format 0x1907 type 0x1401
+2026-11-16T21:16:59.9235665Z INFO         | Saving with gfxstream=1
+2026-11-16T21:17:00.0509370Z INFO         | Saving snapshot 'default_boot' took 1858 ms
+2026-11-16T21:17:00.2968768Z ERROR        | stop: Not implemented
+2026-11-16T21:17:00.2969154Z WARNING      | Emulator client has not yet been configured.. Call configure me first!
+2026-11-16T21:17:00.3123527Z INFO         | removeAll
+2026-11-16T21:17:00.3420538Z WARNING      | Netsim Wifi dns:///localhost:40481 is gone due to Stream removed (CANCELLED)
+2026-11-16T21:17:01.1133172Z ##[group]Run actions/upload-artifact@v4
+2026-11-16T21:17:01.1133340Z with:
+2026-11-16T21:17:01.1133476Z   name: verify-report-v134-recovery-rc1
+2026-11-16T21:17:01.1133700Z   path: report.txt
+badging.txt
+signer.txt
+launch.txt
+logcat.txt
+screen_*.png
+
+2026-11-16T21:17:01.1133922Z   if-no-files-found: warn
+2026-11-16T21:17:01.1134060Z   compression-level: 6
+2026-11-16T21:17:01.1134194Z   overwrite: false
+2026-11-16T21:17:01.1134325Z   include-hidden-files: false
+2026-11-16T21:17:01.1134469Z env:
+2026-11-16T21:17:01.1136106Z   GH_TOKEN: ***
+2026-11-16T21:17:01.1136316Z   RUN_ID: 43957297181
+2026-11-16T21:17:01.1136533Z   ARTIFACT: masiret-android-34
+2026-11-16T21:17:01.1136763Z   TAG: v134-recovery-rc1
+2026-11-16T21:17:01.1136971Z   PUBLISH: true
+2026-11-16T21:17:01.1137178Z   ANDROID_AVD_HOME: /home/runner/.android/avd
+2026-11-16T21:17:01.1137575Z ##[endgroup]
+2026-11-16T21:17:01.2270305Z (node:3526) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-16T21:17:01.2271273Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-16T21:17:01.2410319Z With the provided path, there will be 8 files uploaded
+2026-11-16T21:17:01.2411002Z Artifact name is valid!
+2026-11-16T21:17:01.2411328Z Root directory input is valid!
+2026-11-16T21:17:01.5290491Z Beginning upload of artifact content to blob storage
+2026-11-16T21:17:01.6118626Z (node:3526) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-16T21:17:01.9984165Z Uploaded bytes 504409
+2026-11-16T21:17:02.0477845Z Finished uploading artifact content to blob storage!
+2026-11-16T21:17:02.0478420Z SHA256 digest of uploaded artifact zip is 0b8169cdde15df612789e38fc78d6b30639464364e85824c131392576797714f
+2026-11-16T21:17:02.0479004Z Finalizing artifact upload
+2026-11-16T21:17:02.4144491Z Artifact verify-report-v134-recovery-rc1.zip successfully finalized. Artifact ID 14272672714
+2026-11-16T21:17:02.4145380Z Artifact verify-report-v134-recovery-rc1 has been successfully uploaded! Final size is 504409 bytes. Artifact ID is 14272672714
+2026-11-16T21:17:02.4150531Z Artifact download URL: https://github.com/omaribrahem211-svg/masiret-nagm/actions/runs/43958057685/artifacts/14272672714
+2026-11-16T21:17:02.4301707Z ##[group]Run set -euo pipefail
+2026-11-16T21:17:02.4301915Z [36;1mset -euo pipefail[0m
+2026-11-16T21:17:02.4302117Z [36;1mAPK=$(ls art/*-test.apk); SUM=$(sha256sum $APK | cut -d' ' -f1)[0m
+2026-11-16T21:17:02.4302745Z [36;1m{ echo "Release candidate for real-device testing. Built by run 43957297181 from commit d793d201b991d55b3ce3fabf6cc82c9b676dfc9b (branch gameplay-recovery). Not merged into main."; echo; echo "SHA-256 of the APK: \`$SUM\`"; echo; echo '```'; cat report.txt; echo '```'; } > notes.md[0m
+2026-11-16T21:17:02.4303578Z [36;1mgh release create "v134-recovery-rc1" "$APK" report.txt launch.txt --prerelease --target "d793d201b991d55b3ce3fabf6cc82c9b676dfc9b" --title "v134-recovery-rc1" --notes-file notes.md[0m
+2026-11-16T21:17:02.4346102Z shell: /usr/bin/bash -e {0}
+2026-11-16T21:17:02.4346258Z env:
+2026-11-16T21:17:02.4347788Z   GH_TOKEN: ***
+2026-11-16T21:17:02.4347922Z   RUN_ID: 43957297181
+2026-11-16T21:17:02.4348067Z   ARTIFACT: masiret-android-34
+2026-11-16T21:17:02.4348239Z   TAG: v134-recovery-rc1
+2026-11-16T21:17:02.4348378Z   PUBLISH: true
+2026-11-16T21:17:02.4348518Z   ANDROID_AVD_HOME: /home/runner/.android/avd
+2026-11-16T21:17:02.4348687Z ##[endgroup]
+2026-11-16T21:17:06.1777512Z https://github.com/omaribrahem211-svg/masiret-nagm/releases/tag/v134-recovery-rc1
+2026-11-16T21:17:06.1898477Z Post job cleanup.
+2026-11-16T21:17:06.2492379Z [command]/usr/bin/git version
+2026-11-16T21:17:06.2528923Z git version 2.56.1
+2026-11-16T21:17:06.2555419Z Temporarily overriding HOME='/home/runner/work/_temp/00dbb951-b3ae-46e9-8a9f-55a0528ad4e6' before making global git config changes
+2026-11-16T21:17:06.2556221Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-16T21:17:06.2559467Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/masiret-nagm/masiret-nagm
+2026-11-16T21:17:06.2599489Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-16T21:17:06.2632362Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-16T21:17:06.2882324Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-16T21:17:06.2906458Z http.https://github.com/.extraheader
+2026-11-16T21:17:06.2915887Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-16T21:17:06.2962104Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-16T21:17:06.3215511Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-16T21:17:06.3244821Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-16T21:17:06.3593730Z Cleaning up orphan processes
+2026-11-16T21:17:06.3839585Z Terminate orphan process: pid (3165) (adb)
+2026-11-16T21:17:06.3890877Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/download-artifact@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

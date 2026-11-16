@@ -37,7 +37,7 @@
    "contactToBodyMedian": 0.257,
    "contactToBodyMax": 0.677,
    "earlyContact": 0,
-   "passedThroughReachNoContact": 4,
+   "passedThroughReachNoContact": 0,
    "passedThroughWhileKeeperCooling": 1,
    "catchStepMaxMedian": 1.064,
    "catchStepMaxMax": 1.23,

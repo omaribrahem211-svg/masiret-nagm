@@ -1,0 +1,113 @@
+{
+ "www": "/home/claude/masiret-nagm/www/js",
+ "k": 30,
+ "receiver": "human, stick released",
+ "cases": {
+  "uncontested": {
+   "runs": 30,
+   "contact": {
+    "header": 30
+   },
+   "jumpMedian": 0.024,
+   "jumpP95": 0.025,
+   "zJumpMedian": 0,
+   "zJumpP95": 0,
+   "zJumpOver10cm": 0,
+   "bounceBack": 0,
+   "controlled": 30,
+   "ctrlTimeMedian": 0.883,
+   "ctrlDistMedian": 0.842,
+   "headersMax": 1,
+   "over2Headers": 0
+  },
+  "chest": {
+   "runs": 30,
+   "contact": {
+    "header": 30
+   },
+   "jumpMedian": 0.024,
+   "jumpP95": 0.036,
+   "zJumpMedian": 0,
+   "zJumpP95": 0,
+   "zJumpOver10cm": 0,
+   "bounceBack": 1,
+   "controlled": 30,
+   "ctrlTimeMedian": 0.883,
+   "ctrlDistMedian": 0.688,
+   "headersMax": 1,
+   "over2Headers": 0
+  },
+  "header": {
+   "runs": 30,
+   "contact": {
+    "header": 30
+   },
+   "jumpMedian": 0.029,
+   "jumpP95": 0.036,
+   "zJumpMedian": 0,
+   "zJumpP95": 0,
+   "zJumpOver10cm": 0,
+   "bounceBack": 0,
+   "controlled": 30,
+   "ctrlTimeMedian": 0.9,
+   "ctrlDistMedian": 0.795,
+   "headersMax": 1,
+   "over2Headers": 0
+  },
+  "contested": {
+   "runs": 30,
+   "contact": {
+    "opponent_header": 11,
+    "header": 19
+   },
+   "jumpMedian": 0,
+   "jumpP95": 0.053,
+   "zJumpMedian": 0,
+   "zJumpP95": 0,
+   "zJumpOver10cm": 0,
+   "bounceBack": 7,
+   "controlled": 9,
+   "ctrlTimeMedian": 1.75,
+   "ctrlDistMedian": 0.658,
+   "headersMax": 2,
+   "over2Headers": 0
+  },
+  "clearance": {
+   "runs": 30,
+   "contact": {
+    "aerial_take": 25,
+    "foot_take": 1,
+    "none": 4
+   },
+   "jumpMedian": 0.058,
+   "jumpP95": 0.246,
+   "zJumpMedian": 0,
+   "zJumpP95": 0,
+   "zJumpOver10cm": 0,
+   "bounceBack": 0,
+   "controlled": 0,
+   "ctrlTimeMedian": null,
+   "ctrlDistMedian": null,
+   "headersMax": 0,
+   "over2Headers": 0
+  },
+  "box": {
+   "runs": 30,
+   "contact": {
+    "opponent_header": 21,
+    "header": 9
+   },
+   "jumpMedian": 0,
+   "jumpP95": 0.484,
+   "zJumpMedian": 0,
+   "zJumpP95": 0.131,
+   "zJumpOver10cm": 4,
+   "bounceBack": 1,
+   "controlled": 7,
+   "ctrlTimeMedian": 1.85,
+   "ctrlDistMedian": 0.922,
+   "headersMax": 2,
+   "over2Headers": 0
+  }
+ }
+}

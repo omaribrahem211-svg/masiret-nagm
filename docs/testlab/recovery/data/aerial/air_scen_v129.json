@@ -1,0 +1,112 @@
+{
+ "www": "/tmp/rv/ver/v129",
+ "k": 30,
+ "receiver": "human, stick released",
+ "cases": {
+  "uncontested": {
+   "runs": 30,
+   "contact": {
+    "header": 30
+   },
+   "jumpMedian": 0.026,
+   "jumpP95": 0.036,
+   "zJumpMedian": 0,
+   "zJumpP95": 0,
+   "zJumpOver10cm": 0,
+   "bounceBack": 0,
+   "controlled": 0,
+   "ctrlTimeMedian": null,
+   "ctrlDistMedian": null,
+   "headersMax": 8,
+   "over2Headers": 30
+  },
+  "chest": {
+   "runs": 30,
+   "contact": {
+    "header": 30
+   },
+   "jumpMedian": 0.028,
+   "jumpP95": 0.034,
+   "zJumpMedian": 0,
+   "zJumpP95": 0,
+   "zJumpOver10cm": 0,
+   "bounceBack": 0,
+   "controlled": 0,
+   "ctrlTimeMedian": null,
+   "ctrlDistMedian": null,
+   "headersMax": 8,
+   "over2Headers": 30
+  },
+  "header": {
+   "runs": 30,
+   "contact": {
+    "header": 30
+   },
+   "jumpMedian": 0.025,
+   "jumpP95": 0.033,
+   "zJumpMedian": 0,
+   "zJumpP95": 0,
+   "zJumpOver10cm": 0,
+   "bounceBack": 0,
+   "controlled": 0,
+   "ctrlTimeMedian": null,
+   "ctrlDistMedian": null,
+   "headersMax": 8,
+   "over2Headers": 30
+  },
+  "contested": {
+   "runs": 30,
+   "contact": {
+    "opponent_header": 11,
+    "header": 19
+   },
+   "jumpMedian": 0,
+   "jumpP95": 0.446,
+   "zJumpMedian": 0.261,
+   "zJumpP95": 0.309,
+   "zJumpOver10cm": 17,
+   "bounceBack": 4,
+   "controlled": 6,
+   "ctrlTimeMedian": 1.6,
+   "ctrlDistMedian": 0.676,
+   "headersMax": 4,
+   "over2Headers": 2
+  },
+  "clearance": {
+   "runs": 30,
+   "contact": {
+    "aerial_take": 29,
+    "none": 1
+   },
+   "jumpMedian": 0.054,
+   "jumpP95": 0.325,
+   "zJumpMedian": 0,
+   "zJumpP95": 0,
+   "zJumpOver10cm": 0,
+   "bounceBack": 0,
+   "controlled": 0,
+   "ctrlTimeMedian": null,
+   "ctrlDistMedian": null,
+   "headersMax": 0,
+   "over2Headers": 0
+  },
+  "box": {
+   "runs": 30,
+   "contact": {
+    "header": 22,
+    "opponent_header": 8
+   },
+   "jumpMedian": 0.253,
+   "jumpP95": 0.598,
+   "zJumpMedian": 0,
+   "zJumpP95": 0.618,
+   "zJumpOver10cm": 6,
+   "bounceBack": 6,
+   "controlled": 0,
+   "ctrlTimeMedian": null,
+   "ctrlDistMedian": null,
+   "headersMax": 2,
+   "over2Headers": 0
+  }
+ }
+}

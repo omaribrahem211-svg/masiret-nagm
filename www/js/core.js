@@ -924,7 +924,10 @@ class Match{
   /* (recovery) الكورة بتتبع نقطة الرجل بزنبرك متخمّد حرجاً (من غير ما تعدّي النقطة وترجع): قبل كده السرعة كانت بتتشد لسرعة "توصّل النقطة في فريم واحد" بعامل 16/ث
      = زنبرك ω≈31 وتخميد 0.26، فبعد الاستلام الكورة كانت بتتشد للرجل وتعدّيها وترجع لقدّام (رايح جاي 2–3 مرات في 0.4 ث، 52% من الاستلامات فيها الكورة بترجع لورا على الأرض).
      دلوقتي: عجلة = −2ω·(السرعة النسبية) − ω²·(البعد عن النقطة)، ω=25 في المراوغة العادية، ومن 12 لـ 25 في أول 0.3 ث بعد الاستلام (اللمسة الأولى بتمتص الكورة براحة) */
-  {let w=25;if(o.rcvT>0){o.rcvT-=dt;w=12+13*(1-Math.max(0,o.rcvT)/.3);}const ex=b.x-tx,ey=b.y-ty;let wx=b.vx-o.vx,wy=b.vy-o.vy;wx+=(-2*w*wx-w*w*ex)*dt;wy+=(-2*w*wy-w*w*ey)*dt;b.vx=o.vx+wx;b.vy=o.vy+wy;}b.vz=0;b.z=0;
+  {let w=25;if(o.rcvT>0){o.rcvT-=dt;w=12+13*(1-Math.max(0,o.rcvT)/.3);}const ex=b.x-tx,ey=b.y-ty;let wx=b.vx-o.vx,wy=b.vy-o.vy;wx+=(-2*w*wx-w*w*ex)*dt;wy+=(-2*w*wy-w*w*ey)*dt;b.vx=o.vx+wx;b.vy=o.vy+wy;}
+  /* (recovery) الكورة النازلة من فوق (صدر/راس) بتكمل نزولها بالجاذبية لحد الأرض والرجل بتتحكم فيها بالعرض بس: قبل كده أول ما ارتفاعها يقل عن 35 سم كانت بتتحط على الأرض
+     في فريم واحد (قفزة 25 سم لتحت في كل استلام عالي، 30 من 30 في السيناريوهات) */
+  if(b.z>.02){b.vz=Math.min(b.vz,0);}else{b.vz=0;b.z=0;}
   const pPh=o._lph==null?phi:o._lph;if(sp>1.4&&phi<pPh-.5){o.touchA=.16;o.touchSide=two?side:-1;SFX.kick&&sp>5&&Math.random()<.35&&SFX.kick(.05);}o._lph=phi;}
  ballSim(dt){const b=this.ball;b.px=b.x;b.py=b.y;
   if(b.owner&&b.inHands){const o=b.owner;b.x=o.x+o.fx*.4;b.y=o.y+o.fy*.4;b.z=1.14;b.vx=o.vx;b.vy=o.vy;b.vz=0;return;}

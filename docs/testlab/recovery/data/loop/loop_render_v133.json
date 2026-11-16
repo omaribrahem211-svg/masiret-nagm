@@ -1,0 +1,110 @@
+{
+ "www": "/tmp/rv/ver/v133",
+ "seconds": 60,
+ "patterns": {
+  "60 Hz exact": {
+   "stepsOnly": {
+    "stallPct": 0,
+    "jumpPct": 0.3
+   },
+   "drawnBetweenSteps": {
+    "stallPct": 0,
+    "jumpPct": 0.3
+   },
+   "gameSetting": null,
+   "framesMeasured": 1569,
+   "simulationUnchangedByDrawing": true
+  },
+  "60 Hz, 0.1 ms timestamps": {
+   "stepsOnly": {
+    "stallPct": 33.4,
+    "jumpPct": 33
+   },
+   "drawnBetweenSteps": {
+    "stallPct": 33.4,
+    "jumpPct": 33
+   },
+   "gameSetting": null,
+   "framesMeasured": 1568,
+   "simulationUnchangedByDrawing": true
+  },
+  "60 Hz, 1 ms timestamps": {
+   "stepsOnly": {
+    "stallPct": 33.4,
+    "jumpPct": 32.9
+   },
+   "drawnBetweenSteps": {
+    "stallPct": 33.4,
+    "jumpPct": 32.9
+   },
+   "gameSetting": null,
+   "framesMeasured": 1568,
+   "simulationUnchangedByDrawing": true
+  },
+  "60 Hz +-2 ms jitter": {
+   "stepsOnly": {
+    "stallPct": 0.1,
+    "jumpPct": 0.3
+   },
+   "drawnBetweenSteps": {
+    "stallPct": 23.7,
+    "jumpPct": 21.2
+   },
+   "gameSetting": null,
+   "framesMeasured": 1569,
+   "simulationUnchangedByDrawing": true
+  },
+  "72 Hz, 0.1 ms": {
+   "stepsOnly": {
+    "stallPct": 16.6,
+    "jumpPct": 0.3
+   },
+   "drawnBetweenSteps": {
+    "stallPct": 16.6,
+    "jumpPct": 0.3
+   },
+   "gameSetting": null,
+   "framesMeasured": 1882,
+   "simulationUnchangedByDrawing": true
+  },
+  "90 Hz, 0.1 ms": {
+   "stepsOnly": {
+    "stallPct": 33.3,
+    "jumpPct": 0.4
+   },
+   "drawnBetweenSteps": {
+    "stallPct": 33.3,
+    "jumpPct": 0.4
+   },
+   "gameSetting": null,
+   "framesMeasured": 2352,
+   "simulationUnchangedByDrawing": true
+  },
+  "120 Hz, 0.1 ms": {
+   "stepsOnly": {
+    "stallPct": 50,
+    "jumpPct": 50
+   },
+   "drawnBetweenSteps": {
+    "stallPct": 50,
+    "jumpPct": 50
+   },
+   "gameSetting": null,
+   "framesMeasured": 3137,
+   "simulationUnchangedByDrawing": true
+  },
+  "60 Hz, a dropped frame every second": {
+   "stepsOnly": {
+    "stallPct": 32.8,
+    "jumpPct": 32.6
+   },
+   "drawnBetweenSteps": {
+    "stallPct": 32.8,
+    "jumpPct": 32.6
+   },
+   "gameSetting": null,
+   "framesMeasured": 1541,
+   "simulationUnchangedByDrawing": true
+  }
+ }
+}

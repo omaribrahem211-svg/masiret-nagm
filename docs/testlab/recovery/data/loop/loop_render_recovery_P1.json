@@ -1,0 +1,142 @@
+{
+ "www": "/home/claude/masiret-nagm/www/js",
+ "seconds": 60,
+ "patterns": {
+  "60 Hz exact": {
+   "stepsOnly": {
+    "stallPct": 0,
+    "jumpPct": 0.3
+   },
+   "drawnBetweenSteps": {
+    "stallPct": 1.3,
+    "jumpPct": 0.3
+   },
+   "gameSetting": {
+    "stallPct": 0,
+    "jumpPct": 0.3,
+    "lerpUsed": false
+   },
+   "framesMeasured": 1596,
+   "simulationUnchangedByDrawing": true
+  },
+  "60 Hz, 0.1 ms timestamps": {
+   "stepsOnly": {
+    "stallPct": 0,
+    "jumpPct": 0.3
+   },
+   "drawnBetweenSteps": {
+    "stallPct": 1.3,
+    "jumpPct": 0.3
+   },
+   "gameSetting": {
+    "stallPct": 0,
+    "jumpPct": 0.3,
+    "lerpUsed": false
+   },
+   "framesMeasured": 1596,
+   "simulationUnchangedByDrawing": true
+  },
+  "60 Hz, 1 ms timestamps": {
+   "stepsOnly": {
+    "stallPct": 0,
+    "jumpPct": 0.3
+   },
+   "drawnBetweenSteps": {
+    "stallPct": 1.3,
+    "jumpPct": 0.3
+   },
+   "gameSetting": {
+    "stallPct": 0,
+    "jumpPct": 0.3,
+    "lerpUsed": false
+   },
+   "framesMeasured": 1596,
+   "simulationUnchangedByDrawing": true
+  },
+  "60 Hz +-2 ms jitter": {
+   "stepsOnly": {
+    "stallPct": 0,
+    "jumpPct": 0.3
+   },
+   "drawnBetweenSteps": {
+    "stallPct": 1.3,
+    "jumpPct": 0.3
+   },
+   "gameSetting": {
+    "stallPct": 0,
+    "jumpPct": 0.3,
+    "lerpUsed": false
+   },
+   "framesMeasured": 1596,
+   "simulationUnchangedByDrawing": true
+  },
+  "72 Hz, 0.1 ms": {
+   "stepsOnly": {
+    "stallPct": 16.7,
+    "jumpPct": 0.3
+   },
+   "drawnBetweenSteps": {
+    "stallPct": 0.4,
+    "jumpPct": 0.1
+   },
+   "gameSetting": {
+    "stallPct": 0.4,
+    "jumpPct": 0.1,
+    "lerpUsed": true
+   },
+   "framesMeasured": 1915,
+   "simulationUnchangedByDrawing": true
+  },
+  "90 Hz, 0.1 ms": {
+   "stepsOnly": {
+    "stallPct": 33.2,
+    "jumpPct": 0.5
+   },
+   "drawnBetweenSteps": {
+    "stallPct": 0.2,
+    "jumpPct": 0.2
+   },
+   "gameSetting": {
+    "stallPct": 0.2,
+    "jumpPct": 0.2,
+    "lerpUsed": true
+   },
+   "framesMeasured": 2391,
+   "simulationUnchangedByDrawing": true
+  },
+  "120 Hz, 0.1 ms": {
+   "stepsOnly": {
+    "stallPct": 50,
+    "jumpPct": 50
+   },
+   "drawnBetweenSteps": {
+    "stallPct": 0.4,
+    "jumpPct": 0.3
+   },
+   "gameSetting": {
+    "stallPct": 0.4,
+    "jumpPct": 0.3,
+    "lerpUsed": true
+   },
+   "framesMeasured": 3192,
+   "simulationUnchangedByDrawing": true
+  },
+  "60 Hz, a dropped frame every second": {
+   "stepsOnly": {
+    "stallPct": 0,
+    "jumpPct": 0.3
+   },
+   "drawnBetweenSteps": {
+    "stallPct": 1.3,
+    "jumpPct": 0.3
+   },
+   "gameSetting": {
+    "stallPct": 0,
+    "jumpPct": 0.3,
+    "lerpUsed": false
+   },
+   "framesMeasured": 1570,
+   "simulationUnchangedByDrawing": true
+  }
+ }
+}

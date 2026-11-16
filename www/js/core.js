@@ -46,7 +46,21 @@ const Input={jx:0,jy:0,sprint:false,q:{},hold:{},keys:{},joy:null,
 // في كل فريم بـ dt لحد 33 مللي ث: فريمات 50–66 مللي ث (كتير على الموبايل) كانت بتضيّع وقت من الماتش (19% في فيديو اللعب) والحركة
 // بتتقطّع، والفيزيا بتشتغل بخطوة 1/30 اللي عمرها ما اتختبرت (الكورة بتنط أكتر من 20 سم لحظة الاستلام في 67% من المرات).
 // S = حالة اللوب (acc = الوقت المتراكم). أقصى 6 خطوات في الفريم (0.1 ث) عشان ما يحصلش تراكم لو الجهاز علّق
-const SIM_DT=1/60;function simAdvance(m,raw,S){S.acc=(S.acc||0)+Math.min(Math.max(raw||0,0),.1);let n=0;while(S.acc>=SIM_DT-1e-9&&n<6){m.update(SIM_DT);S.acc-=SIM_DT;n++;}if(n>=6)S.acc=0;return n;}
+const SIM_DT=1/60;
+/* (recovery) زمن الفريم بيتقرّب لأقرب مضاعف لـ 1/60 لو قريب منه بأقل من 4 م.ث: توقيتات requestAnimationFrame في الـ WebView بتتقرّب لـ 0.1 م.ث فالفريم بييجي 16.6 أو 16.7
+   بدل 16.667، والتراكم كان بيدّي نمط 1،0،2 خطوة (ثلث الفريمات من غير أي خطوة وثلثها خطوتين). الملعب كله كان بيقف فريم ويتنطّ فريم والكاميرا (بالوقت الحقيقي) ماشية:
+   الكورة على الشاشة بترجع لورا وبعدين لقدّام. الكمية الكلية للوقت مابتتغيرش (متوسط الفريم هو نفسه) */
+/* الرسم بين الخطوتين بيتشغل بس لو الشاشة أسرع من ~70 هرتز (متوسط زمن الفريم < 14 م.ث): على شاشة 60 هرتز كل فريم = خطوة بالظبط بعد التقريب، فالرسم المباشر ملوش تأخير */
+function simAdvance(m,raw,S){raw=Math.min(Math.max(raw||0,0),.1);if(raw>0&&raw<.05){S.avgDt=S.avgDt?S.avgDt*.95+raw*.05:raw;if(S.auto){if(S.lerp&&S.avgDt>.0155)S.lerp=false;else if(!S.lerp&&S.avgDt<.014)S.lerp=true;}}
+ const tol=Math.abs((S.avgDt||SIM_DT)-SIM_DT)<.001?.004:0;/* التقريب بس لو الشاشة 60 هرتز فعلاً (متوسط الفريم 15.7–17.7 م.ث)، فشاشة 72 أو 90 هرتز مابتتقرّبش لـ 60 */
+ for(let k=1;k<=4&&tol;k++){if(Math.abs(raw-k*SIM_DT)<tol){raw=k*SIM_DT;break;}}S.acc=(S.acc||0)+raw;let n=0;
+ while(S.acc>=SIM_DT-1e-9&&n<6){if(S.lerp)simSnap(m,S);m.update(SIM_DT);S.acc-=SIM_DT;n++;}if(n>=6)S.acc=0;return n;}
+/* (recovery) الرسم بين خطوتين: قبل كل خطوة بنحفظ أماكن الكورة واللاعيبة، ووقت الرسم بنرسم في النقطة بين الخطوة اللي فاتت واللي دلوقتي بنسبة الوقت المتبقي (acc/SIM_DT)،
+   وبعد الرسم بنرجّع الأماكن الحقيقية — المحاكاة نفسها مابتتأثرش. ده بيشيل التقطيع على شاشات 90/120 هرتز (فريمات من غير خطوات). أي نقلة أكبر من 2 م (رمية، ركنية، تبديل) بتترسم من غير تنعيم */
+function simSnap(m,S){const L=S.prevL||(S.prevL=[]);L.length=0;const b=m.ball;L.push([b,b.x,b.y,b.z]);for(const p of m.all)L.push([p,p.x,p.y,0]);}
+function simLerp(m,S,on){const L=S.prevL;if(!L||!L.length)return;if(on){const a=Math.min(1,Math.max(0,S.acc/SIM_DT)),C=S.curL||(S.curL=[]);C.length=0;
+  for(const e of L){const o=e[0];C.push([o,o.x,o.y,o.z]);const dx=o.x-e[1],dy=o.y-e[2];if(dx*dx+dy*dy>4)continue;o.x=e[1]+dx*a;o.y=e[2]+dy*a;if(o===m.ball)o.z=e[3]+(o.z-e[3])*a;}}
+ else{const C=S.curL;if(!C)return;for(const e of C){const o=e[0];o.x=e[1];o.y=e[2];if(o===m.ball)o.z=e[3];}C.length=0;}}
 function keyAxis(){if(Input.joy)return;const k=Input.keys;let x=(k.ArrowRight||k.KeyD?1:0)-(k.ArrowLeft||k.KeyA?1:0),y=(k.ArrowDown||k.KeyS?1:0)-(k.ArrowUp||k.KeyW?1:0);const m=hyp(x,y)||1;Input.jx=x/m*(x||y?1:0);Input.jy=y/m*(x||y?1:0);}
 const KEYMAP={KeyJ:'X',Space:'X',KeyK:'S',KeyL:'O',KeyI:'T',KeyU:'F'};
 addEventListener('keydown',e=>{if(e.repeat){if(e.code.startsWith('Arrow')||e.code==='Space')e.preventDefault();return;}Input.keys[e.code]=true;if(App.match){if(e.code.startsWith('Arrow')||e.code==='Space')e.preventDefault();if(KEYMAP[e.code])Input.down(KEYMAP[e.code]);if(e.code==='ShiftLeft'||e.code==='ShiftRight')Input.sprint=true;if(e.code==='Escape')togglePause();}keyAxis();});

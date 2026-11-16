@@ -546,10 +546,12 @@ const LOOP={acc:0};function frame(ts){const raw=Math.max(0,(ts-last)/1000),dt=Ma
   if(App.match&&(m.phase==='intro'||m.phase==='replay')){if(Input.take('Xd')|Input.take('Od')|Input.take('Td')|Input.take('Sd'))m.skip();Input.take('Su');Input.take('Xu');}
   if(App.match&&m.phase==='replay'&&!App.settings.replay)m.skip();if(App.match){coachTick(App.match);commTick(App.match,dt);Stadium.tick(App.match,dt);App._iT=(App._iT||0)+dt;if(App._iT>.5){App._iT=0;instLive(App.match);}}
   padPoll();
-  const nSt=simAdvance(m,raw,LOOP);/* (v131 A0) خطوات ثابتة 1/60 بدل خطوة واحدة بـ dt متغير */const rT0=performance.now();
-  if(R3){R3.quality=App.settings.gfx;const d0=window.devicePixelRatio||1;R3.render(m,CW,CH,App.settings.gfx>=2?Math.min(2,d0):Math.min(1.25,d0),ts);drawOverlay(octx,m,CW,CH,(x,y,z)=>R3.project(x,y,z,CW,CH));}
+  LOOP.auto=true;const nSt=simAdvance(m,raw,LOOP);/* (v131 A0) خطوات ثابتة 1/60 بدل خطوة واحدة بـ dt متغير */const rT0=performance.now();
+  simLerp(m,LOOP,true);/* (recovery) الرسم بين الخطوتين، والأماكن الحقيقية بترجع بعد الرسم على طول */
+  try{if(R3){R3.quality=App.settings.gfx;const d0=window.devicePixelRatio||1;R3.render(m,CW,CH,App.settings.gfx>=2?Math.min(2,d0):Math.min(1.25,d0),ts);drawOverlay(octx,m,CW,CH,(x,y,z)=>R3.project(x,y,z,CW,CH));}
+  else if(ctx){m.render(ctx,CW,CH);octx.clearRect(0,0,CW,CH);FX.draw(octx,CW,CH,m);}}finally{simLerp(m,LOOP,false);}
+  /* (recovery) سطر القياس كان متحط بين if(R3) و else if(ctx) في v133 فكان بيقطع الرسم ثنائي الأبعاد (لما WebGL2 مش موجود) وقت ما القياس شغال */
   if(typeof Diag!=='undefined'&&Diag.on)Diag.frame(ts,raw,nSt,performance.now()-rT0,App.match);/* (v133) قياس الأداء (مقفول افتراضياً) */
-  else if(ctx){m.render(ctx,CW,CH);octx.clearRect(0,0,CW,CH);FX.draw(octx,CW,CH,m);}
  }catch(e){console.error(e);}if(App.match){hud(App.match);updButtons();}}
  requestAnimationFrame(frame);}
 try{const bt=document.querySelector('#scr-title .brand');if(bt&&typeof Diag!=='undefined')bt.addEventListener('click',()=>Diag.brandTap());}catch(e){}/* (v133) 7 ضغطات على اسم اللعبة = قياس الأداء */

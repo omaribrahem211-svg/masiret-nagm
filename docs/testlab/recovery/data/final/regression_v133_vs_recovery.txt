@@ -1,0 +1,44 @@
+reception atTake/after025/dip (4.5, 3.56, 0.21)
+                             (4.73, 3.69, 0.24)
+human rec                    {'stick idle': (40, 1.37, 0.17), 'stick toward goal': (40, 3.01, 0.17), 'stick sideways': (40, 3.01, 0.17)}
+                             {'stick idle': (40, 1.42, 0.17), 'stick toward goal': (40, 3.01, 0.17), 'stick sideways': (40, 3.01, 0.17)}
+buttons                      {'X pass': {'pass (lofted)': 30, 'pass': 30}, 'O lob/cross': {'pass (lofted)': 60}, 'T through ball': {'pass (lofted)': 30, 'pass': 30}, 'S shoot (tap) from 20 m': {'shot': 60}, 'S held 0.6 s (power shot)': {'shot': 60}, 'X pass while running (stick held forward)': {'lost the ball before the press (not counted)': 11, 'pass': 47, 'opponent took the ball before the kick (not a control failure)': 1, 'nothing': 1}, 'stick only (move up)': {'moved': 60}}
+                             {'X pass': {'pass (lofted)': 38, 'pass': 22}, 'O lob/cross': {'pass (lofted)': 60}, 'T through ball': {'pass (lofted)': 38, 'pass': 22}, 'S shoot (tap) from 20 m': {'shot': 60}, 'S held 0.6 s (power shot)': {'shot': 60}, 'X pass while running (stick held forward)': {'lost the ball before the press (not counted)': 10, 'pass': 46, 'nothing': 3, 'pass (lofted)': 1}, 'stick only (move up)': {'moved': 60}}
+header loops                 0
+                             0
+offside_scenarios.json       (12, 12)
+                             (12, 12)
+dogso_scenarios.json         (9, 9)
+                             (9, 9)
+boundary_scenarios.json      (13, 13)
+                             (13, 13)
+save_compat_v129.json        (8, 8)
+                             (8, 8)
+dup shots                    0
+                             0
+gk3e catches/parries         (56, 115)
+                             (48, 123)
+rules3h                      {'corner': 2.15, 'throw': 2.05, 'fk': 0.93, 'gk': 1.48, 'pen': 0.1}
+                             {'throw': 2.38, 'corner': 1.98, 'gk': 1.9, 'fk': 0.93, 'pen': 0.07}
+attrs                        {'acc': {'45': 0.585, '85': 0.485}, 'agi': {'45': 0.2, '85': 0.183}, 'str': {'45': 0.093, '85': 0.453}, 'bal': {'45': 0.348, '85': 0.238}, 'tackle': {'45': 0.225, '85': 0.297}, 'head': {'45': 0.343, '85': 0.69}, 'fin': {'45': 0.685, '85': 1}, 'wf': {'1': 0.613, '5': 0.785}, 'ref': {'45': 0.682, '85': 0.853}}
+                             {'acc': {'45': 0.585, '85': 0.485}, 'agi': {'45': 0.2, '85': 0.183}, 'str': {'45': 0.093, '85': 0.453}, 'bal': {'45': 0.348, '85': 0.238}, 'tackle': {'45': 0.225, '85': 0.297}, 'head': {'45': 0.343, '85': 0.69}, 'fin': {'45': 0.685, '85': 1}, 'wf': {'1': 0.613, '5': 0.785}, 'ref': {'45': 0.768, '85': 0.903}}
+loop                         ['10']
+                             ['10']
+perf                         {"www":"/tmp/v3/final/js","matches":3,"updates":54972,"meanMs":0.4468,"p99Ms":5.5028,"maxMs":18.081,"heapGrowthMB":17.2}
+                             {"www":"/tmp/rv/final/js","matches":3,"updates":58033,"meanMs":0.6682,"p99Ms":12.2991,"maxMs":1141.553,"heapGrowthMB":18}
+tac bal                      (16, 13, 12, 4, 45.15, 6.8)
+                             (16, 14, 15, 3, 45.17, 6.75)
+tac press                    (17, 15, 14, 8, 46.09, 7.6)
+                             (19, 17, 11, 7, 46.08, 7.2)
+tac counter                  (19, 15, 10, 7, 37.73, 5.65)
+                             (19, 16, 12, 4, 37.21, 7.45)
+tac poss                     (17, 14, 5, 9, 45.2, 6.5)
+                             (15, 14, 4, 8, 45.17, 5.85)
+tac wings                    (20, 13, 7, 6, 45.66, 5.1)
+                             (19, 14, 6, 7, 45.47, 5.1)
+human tackle                 {'won': 394, 'beaten': 488, 'missedOutOfReach': 97, 'fouls': 33}
+                             {'won': 394, 'beaten': 489, 'missedOutOfReach': 98, 'fouls': 33}
+first touch lost             0
+                             2
+pose                         (111.3, 0)
+                             (103, 0)

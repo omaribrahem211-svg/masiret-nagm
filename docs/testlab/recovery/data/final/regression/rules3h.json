@@ -1,0 +1,27 @@
+{
+ "restarts": {
+  "throw": 95,
+  "corner": 79,
+  "gk": 76,
+  "fk": 37,
+  "pen": 3
+ },
+ "throwLastAction": {
+  "header": 87,
+  "ground pass": 1,
+  "cross": 3,
+  "lofted pass": 2,
+  "shot": 1,
+  "tackle": 1
+ },
+ "playSec": 9876.383333273761,
+ "outOfPlayTouchline": 0,
+ "perMatch": {
+  "throw": 2.38,
+  "corner": 1.98,
+  "gk": 1.9,
+  "fk": 0.93,
+  "pen": 0.07
+ },
+ "playSecPerMatch": 246.9
+}

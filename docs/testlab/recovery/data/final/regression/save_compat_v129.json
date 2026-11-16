@@ -1,0 +1,48 @@
+{
+ "old": "/tmp/v3/sc/old",
+ "new": "/tmp/rv/final/js",
+ "checks": [
+  {
+   "check": "old scripts load in the sandbox",
+   "ok": true,
+   "info": []
+  },
+  {
+   "check": "new scripts load in the sandbox",
+   "ok": true,
+   "info": []
+  },
+  {
+   "check": "v129 save accepted by the new code (integrity hash)",
+   "ok": true
+  },
+  {
+   "check": "every career field identical after loading (attributes, season, totals, trophies, schedule)",
+   "ok": true,
+   "info": []
+  },
+  {
+   "check": "a full match plays with the loaded career player",
+   "ok": true,
+   "info": null
+  },
+  {
+   "check": "the match does not mutate the saved career object",
+   "ok": true
+  },
+  {
+   "check": "the new save loads back in the old code (rollback possible)",
+   "ok": true
+  },
+  {
+   "check": "save key unchanged",
+   "ok": true,
+   "info": [
+    "masiret-nagm-v2",
+    "masiret-nagm-v2"
+   ]
+  }
+ ],
+ "passed": 8,
+ "total": 8
+}

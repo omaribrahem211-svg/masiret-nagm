@@ -1,0 +1,40 @@
+{
+ "www": "/home/claude/masiret-nagm/www/js",
+ "matches": 10,
+ "seed": 42,
+ "dt": 0.016666666666666666,
+ "receptions": 855,
+ "receptionsDroppedUnder0_1sOwned": 10,
+ "reception": {
+  "withBackwardFrames": 0.402,
+  "backFramesMean": 1.248,
+  "relJumpMedian": 0.057,
+  "relJumpP95": 0.129,
+  "relJumpOver15cm": 0.019,
+  "relVelChangeAfterTouchMedian": 1.119,
+  "relVelChangeAfterTouchP95": 2.48,
+  "relVelChangeOver3": 0.022,
+  "stepJumpP95": 0.037,
+  "withReversal": 0.884,
+  "reversalsMean": 1.705,
+  "pullBack": 0.09,
+  "takeDistMedian": 0.823,
+  "duplicateOwnerChanges": 0.014
+ },
+ "dribble": {
+  "frames": 17019,
+  "backwardShare": 0.067
+ },
+ "keeper": {
+  "contacts": 45,
+  "ballToBodyMedian": 0.29,
+  "ballToBodyP95": 0.622,
+  "contactOver1m": 0,
+  "catches": 17,
+  "catchSnapMedian": 0.58,
+  "catchSnapP95": 1.183,
+  "catchSnapOver05m": 11,
+  "shots": 118,
+  "passThroughNoTouch": 0
+ }
+}

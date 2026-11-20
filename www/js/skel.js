@@ -60,9 +60,42 @@ const Skel=(()=>{
  // arm: hang down (from T-pose) then swing forward by b1 and bend elbow by b2; side = +1 left, -1 right
  function arm(side,b1,b2,out,w){const L=side>0?'.L':'.R';const down=Qz(-side*(Math.PI/2-out));const up=QQ(Qx(-b1),down),fo=QQ(Qx(-(b1+b2)),down);ov(J['upper_arm'+L],up,w);ov(J['forearm'+L],fo,w);ov(J['hand'+L],fo,w);}
  function leg(side,a1,a2,w){const L=side>0?'.L':'.R';ov(J['thigh'+L],Qx(-a1),w);ov(J['shin'+L],Qx(-(a1-a2)),w);ov(J['foot'+L],Qx(-(a1-a2)*.6),w);}
+ // ---- (motion) تثبيت الرجل على الأرض: مأخوذ بتصرّف من football-tackle-lab (foot-planting.js، رخصة Unlicense / ملكية عامة) — من غير الشبكة العصبية بتاعتهم
+ // (أوزانها متاخدة من FC 27): الركبة بتتحسب تحليلياً (IK بعضمتين) واتجاه الثنية من الأنيميشن نفسه. الرجل اللي على الأرض بتتقفل في مكانها في الملعب
+ // لحد ما الأنيميشن يرفع الكعب، أو تبعد عن مكانها أكتر من 45 سم، أو تعدّي 1 ث. القفل على الكعب بس: قفل المشط بعد ما الكعب يترفع جرّبته
+ // وكان بيعمل نطّات في الكاحل (73 لكل 1000 فريم بدل 31) لأن الرجل بتوصل لآخر مدّها.
+ const FL=[['LeftUpLeg','LeftLeg','LeftFoot','LeftToeBase'],['RightUpLeg','RightLeg','RightFoot','RightToeBase']].map(a=>a.map(n=>J[n]));
+ const sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]],len=v=>Math.hypot(v[0],v[1],v[2]),dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+ function qFromTo(a,b,o){const la=len(a)||1,lb=len(b)||1;const ax=a[0]/la,ay=a[1]/la,az=a[2]/la,bx=b[0]/lb,by=b[1]/lb,bz=b[2]/lb;const d=ax*bx+ay*by+az*bz;
+  if(d<-.999999){o[0]=0;o[1]=1;o[2]=0;o[3]=0;return o;}o[0]=ay*bz-az*by;o[1]=az*bx-ax*bz;o[2]=ax*by-ay*bx;o[3]=1+d;return qnrm(o);}
+ function toWorld(W,v,o){o[0]=W[0]*v[0]+W[4]*v[1]+W[8]*v[2]+W[12];o[1]=W[1]*v[0]+W[5]*v[1]+W[9]*v[2]+W[13];o[2]=W[2]*v[0]+W[6]*v[1]+W[10]*v[2]+W[14];return o;}
+ function toModel(W,v,o){const x=v[0]-W[12],y=v[1]-W[13],z=v[2]-W[14],s2=W[0]*W[0]+W[1]*W[1]+W[2]*W[2];// W = T*R*s (rotation x uniform scale): inverse = R^T/s
+  o[0]=(W[0]*x+W[1]*y+W[2]*z)/s2;o[1]=(W[4]*x+W[5]*y+W[6]*z)/s2;o[2]=(W[8]*x+W[9]*y+W[10]*z)/s2;return o;}
+ function legIK(L,T){const[hi,ki,fi,ti]=L,H=GT[hi],K=GT[ki].slice(),F=GT[fi].slice(),Tz=GT[ti].slice(),a=len(sub(K,H)),b=len(sub(F,K));let d=sub(T,H);const dl=len(d)||1e-6,dist=Math.max(Math.abs(a-b)+.001,Math.min(a+b-.001,dl));d=[d[0]/dl,d[1]/dl,d[2]/dl];
+  const along=(a*a+dist*dist-b*b)/(2*dist),h=Math.sqrt(Math.max(0,a*a-along*along));let bend=sub(K,H);const bp=dot(bend,d);bend=[bend[0]-d[0]*bp,bend[1]-d[1]*bp,bend[2]-d[2]*bp];const bl=len(bend);
+  if(bl<1e-6)return;bend=[bend[0]/bl,bend[1]/bl,bend[2]/bl];const Kd=[H[0]+d[0]*along+bend[0]*h,H[1]+d[1]*along+bend[1]*h,H[2]+d[2]*along+bend[2]*h],Tc=[H[0]+d[0]*dist,H[1]+d[1]*dist,H[2]+d[2]*dist];
+  const d1=qFromTo(sub(K,H),sub(Kd,H),[0,0,0,1]);qmul(d1,GR[hi],GR[hi]);const F1=qrot(d1,sub(F,H),[0,0,0]);F1[0]+=H[0];F1[1]+=H[1];F1[2]+=H[2];
+  const d2=qFromTo(sub(F1,Kd),sub(Tc,Kd),[0,0,0,1]);qmul(d1,GR[ki],GR[ki]);qmul(d2,GR[ki],GR[ki]);
+  GT[ki][0]=Kd[0];GT[ki][1]=Kd[1];GT[ki][2]=Kd[2];const off=sub(Tz,F);GT[fi][0]=Tc[0];GT[fi][1]=Tc[1];GT[fi][2]=Tc[2];GT[ti][0]=Tc[0]+off[0];GT[ti][1]=Tc[1]+off[1];GT[ti][2]=Tc[2]+off[2];}
+ const wv=[0,0,0],mv=[0,0,0];
+ function plantFeet(p,W,allowed,dt){const st=p._fp||(p._fp={lock:[null,null],w:[0,0],prev:[null,null],last:[null,null]});
+  for(let s=0;s<2;s++){const L=FL[s],fi=L[2],fy=GT[fi][1];toWorld(W,GT[fi],wv);
+   // الرجل "على الأرض" لما الكاحل أوطى من 13.5 سم (الكعب نازل). الكاحل بيتقفل بس لو بطيء في الملعب (< 1.25 م/ث) عشان مانمسكش رجل لسه طايرة
+   const heel=fy<.135,pr=st.prev[s],spd=pr&&dt>0?Math.hypot(wv[0]-pr[0],wv[2]-pr[2])/dt:9;st.prev[s]=[wv[0],wv[1],wv[2]];
+   let lk=st.lock[s];if(lk){lk.age+=dt;if(!allowed||!heel||Math.hypot(wv[0]-lk.x,wv[2]-lk.z)>.45||lk.age>1)st.lock[s]=lk=null;}
+   if(!lk&&allowed&&st.w[s]<.1&&heel&&spd<1.25)st.lock[s]=lk={x:wv[0],z:wv[2],age:0};
+   // الدخول بمعدل 30/ث والفك بمعدل 12/ث (فك أسرع من كده بيعمل نطّة في الرجل)
+   st.w[s]+=((lk?1:0)-st.w[s])*Math.min(1,dt*(lk?30:12));if(st.w[s]<.001){st.last[s]=null;continue;}
+   let ax,az;if(lk){ax=lk.x;az=lk.z;st.last[s]=[lk.x-wv[0],lk.z-wv[2]];}else if(st.last[s]){ax=wv[0]+st.last[s][0];az=wv[2]+st.last[s][1];}else continue;
+   toModel(W,[ax,wv[1],az],mv);const w=st.w[s];legIK(L,[GT[fi][0]+(mv[0]-GT[fi][0])*w,GT[fi][1],GT[fi][2]+(mv[2]-GT[fi][2])*w]);}}
  // ---- main: pose player p into row
  function pose(p,m,t,out,off,W){resetRest();if(!(p.slide>0))p.slideMax=0;OV.clear();ADD.clear();accClear();
-  const sp=Math.hypot(p.vx,p.vy),b=m.ball,gk=p.role==='GK';const u=((p.anim||0)/(Math.PI*2));
+  const sp=Math.hypot(p.vx,p.vy),b=m.ball,gk=p.role==='GK';
+  /* (motion) حامل الكورة بيستخدم مرحلة اللعب (لمسات المراوغة متزامنة مع رجله)، والباقي المرحلة المرسومة المظبوطة على طول خطوة الحركة (core.js STRIDE_V).
+     لما المصدر يتغيّر (استلام/فقد الكورة) الفرق بين المرحلتين بيتلاشى في 0.3 ث بدل ما الرجلين يتنطّوا */
+  const own=b.owner===p,src=own||p.animV==null?(p.anim||0):p.animV;let u=src/(Math.PI*2);
+  {const tn2=t,d2=p._uT==null?0:Math.min(.1,Math.max(0,tn2-p._uT));p._uT=tn2;if(p._uSrc!==own){if(p._uLast!=null){let o=((p._uLast-u)%1+1.5)%1-.5;p._uOff=o;}p._uSrc=own;}
+   if(p._uOff){u+=p._uOff;p._uOff*=Math.max(0,1-d2/.3);if(Math.abs(p._uOff)<.002)p._uOff=0;}p._uLast=u;}
   const celeb=m.phase==='goal'&&p===m.celebrator,slide=p.slide>0,dive=p.diveT>0?p.diveT/.75:0;
   const M_r=k=>META[k]||{};
   // locomotion blend by real speed (no foot sliding: cycle follows p.anim which follows speed)
@@ -151,6 +184,8 @@ const Skel=(()=>{
   // world = T(x, lift, -y) * T(0,piv,0) * R * T(0,-piv,0) * S
   W[0]=r00*sc;W[1]=r10*sc;W[2]=r20*sc;W[3]=0;W[4]=r01*sc;W[5]=r11*sc;W[6]=r21*sc;W[7]=0;W[8]=r02*sc;W[9]=r12*sc;W[10]=r22*sc;W[11]=0;
   W[12]=p.x-r01*piv;W[13]=lift+piv-r11*piv;W[14]=-p.y-r21*piv;W[15]=1;
+  {const tn=t,dt=p._ikt==null?0:Math.min(.1,Math.max(0,tn-p._ikt));p._ikt=tn;const PL=act==='turn180'||act==='recv'||act==='stop';
+   const ok=!lift&&!pitch&&!roll&&!slide&&!dive&&!(p.jumpT>0)&&!(p.stun>.4)&&(!act||PL)&&!((p._aw||0)>.05&&!PL&&!act);if(ok||p._fp)plantFeet(p,W,ok,dt);}
   writeRow(out,off,W);}
  // position/orientation of a bind-pose point after skinning by joint j (used for the shirt number)
  function jointPoint(j,W,pt,o){const q=GR[j],t=GT[j];const v=[pt[0]-gT[j][0],pt[1]-gT[j][1],pt[2]-gT[j][2]];const ir=qinv(gR[j],[0,0,0,1]);qrot(ir,v,v);qrot(q,v,v);const x=v[0]+t[0],y=v[1]+t[1],z=v[2]+t[2];o[0]=W[0]*x+W[4]*y+W[8]*z+W[12];o[1]=W[1]*x+W[5]*y+W[9]*z+W[13];o[2]=W[2]*x+W[6]*y+W[10]*z+W[14];return o;}

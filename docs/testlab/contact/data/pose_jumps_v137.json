@@ -1,0 +1,30 @@
+{
+ "www": "/home/claude/masiret-nagm/www/js",
+ "matches": 2,
+ "seconds": 240,
+ "posedFrames": 633600,
+ "popsPer1000": 2.958,
+ "byCause": {
+  "actionChange": 0.15,
+  "possessionChange": 0.088,
+  "keeperOrJumpFlags": 0.003,
+  "other": 2.716
+ },
+ "byJoint": {
+  "RightFoot": 815,
+  "LeftHand": 416,
+  "RightHand": 411,
+  "LeftFoot": 773,
+  "Head": 37
+ },
+ "byIKContext": {
+  "none": 540,
+  "reception ": 1017,
+  "kickIK ": 200,
+  "header reception ": 21,
+  "kickIK reception ": 20,
+  "header ": 52,
+  "gkReach ": 22,
+  "kickIK header ": 2
+ }
+}

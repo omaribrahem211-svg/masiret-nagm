@@ -1,0 +1,1 @@
+{"www":"/home/claude/masiret-nagm/www/js","matches":3,"updates":55245,"meanMs":0.4246,"p99Ms":5.6293,"maxMs":24.734,"heapGrowthMB":17.4}

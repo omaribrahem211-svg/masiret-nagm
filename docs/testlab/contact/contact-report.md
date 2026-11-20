@@ -2,10 +2,88 @@
 
 Branch: `gameplay-contact`, created from `gameplay-motion` (v135). Nothing was merged into `main` (still `0d325d8`, v129).
 
-**Test build:** masiret-v136-test.apk
-- versionCode 136, built by run 44819478801 from commit `08bfb223d54a19c86c4a85b7adad454bada6b4d4`
-- SHA-256 `bc037aabfa0b8bb4df25e3e64c60d775f0db4787123133e8d6ad2143c83b89cb`
-- Download: https://github.com/omaribrahem211-svg/masiret-nagm/releases/download/v136-contact-rc1/masiret-v136-test.apk
+**Latest test build: masiret-v137-test.apk** (rc2, with the new Mixamo clips)
+- versionCode 137, built by run 44834438622 from commit `7134ffa578e0e106bffd59f90f69fe28071d3967`
+- SHA-256 `7f16ff874b6ffa6a0ca284f40503fd8cdde08034d275bdb8d604d52cd773c564`
+- Download: https://github.com/omaribrahem211-svg/masiret-nagm/raw/test-builds-v137-contact-rc2/masiret-v137-test.apk
+- The workflow token could not create a GitHub release this time (HTTP 403), so the verified APK is on the branch `test-builds-v137-contact-rc2`.
+- Verify: versionCode 137, same signing key as v129, 23/23 web files identical, 0 syntax errors.
+- Emulator: running after 40 s, no crash, no JS error (title screen only).
+
+Earlier: v136-contact-rc1 (versionCode 136, run 44819478801, commit `08bfb22`), https://github.com/omaribrahem211-svg/masiret-nagm/releases/download/v136-contact-rc1/masiret-v136-test.apk
+
+## rc2: what the uploaded Mixamo files added (commits `1b170a9`, `7134ffa`)
+
+Of the 65 uploaded FBX files, most were already in the rig, and all use the same Ch38 character as the rig. Added:
+
+| Clip | Mixamo file | Used for | Contact moment (in the clip) |
+|---|---|---|---|
+| `chestR` | Soccer Chest Receive | ball coming at 0.95-1.5 m | chest cushion, 0.45 s |
+| `thigh` | kneeing soccerball | ball at 0.5-0.92 m | left knee highest, 0.5 s |
+| `headS` | Header | standing header (ball 1.3-1.6 m) | head forward-most, 0.55 s |
+| `headP` | Soccer Header In Place | jump header for balls 1.72-1.9 m | head peak 1.83 m, 1.17 s |
+
+Each clip starts early so its contact moment meets the predicted contact. The body still moves the last part (up to 0.6 m for chest/thigh).
+
+A new FBX reader (`tools/fbxanim.py`) and `tools/addclips.py` add clips to `rig.js` without rebuilding the model. Re-extracting three clips already in the rig matches them within 0.8 degrees.
+
+Not used:
+- Chip, Flying Bicycle Kick: no matching game action yet.
+- The plain jumps: no ball.
+- The extra goalkeeper variants: the rig already has the same moves.
+- Jog diagonals and juggling: not needed.
+
+### rc2 measured (8 matches; `data/contact_sync_v137_n8.json`)
+
+| Contact | v135 median | v136 | **v137** | v137 >70 cm |
+|---|---|---|---|---|
+| Ground reception | 0.71 m | 0.16 | **0.17** | 5 % |
+| High reception | 0.90 m | 0.37 | **0.20** | 4 % |
+| Kick/pass | 0.12 m | 0.11 | **0.11** | 4 % |
+| Header | 1.26 m | 0.19 | **0.16** | 6 % |
+| Keeper | 0.46 m | 0.20 | **0.21** | 0 % |
+| Tackle won | 0.44 m | 0.17 | **0.16** | 0 % |
+
+- Jumps with the ball never within 1 m of the head: v135 69 %, v137 5 % (14 of 299).
+- Keeper dives with the ball never within 1.5 m: 0.
+
+Smoothness, v137:
+
+| | v135 | v137 |
+|---|---|---|
+| Limb pops, per 1000 frames | 2.83 | 2.96 |
+| Whole-body pops, per 1000 frames | 0.099 | 0.041 |
+| Foot slide | 0.97 m/s | 0.94 m/s |
+
+### rc2 gameplay (100 AI matches, same seeds)
+
+| | v135 | v136 | **v137** |
+|---|---|---|---|
+| Goals | 1.6 | 1.4 | 1.5 |
+| Shots | 11.0 | 10.7 | 10.9 |
+| Pass completion | 81.3 % | 81.5 % | 83.2 % |
+| Interceptions | 19.7 | 18.2 | 16.7 |
+| **Throw-ins** | **2.8** | **4.7** | **2.1** |
+| Corners | 1.7 | 1.4 | 1.2 |
+| Cross success | 58.7 % | 46.7 % | 50.7 % |
+| Aerial pass success | 67.9 % | 68.1 % | 70.5 % |
+| Save % | 73.2 | 75.7 | 74.8 |
+
+The throw-in rise in v136 came from headed clearances flying out: about half of them went out, against about a quarter in v135. The clearance header is now shorter and less angled toward the touchline (11.5 m/s and 0.4 rad, was 14 m/s and 0.6 rad). Header ping-pong loops: 0.
+
+Aerial duels:
+- box crosses (attacker / defender): 15 / 15;
+- contested: 20 / 10 (v135 19 / 11).
+
+Regression v137 (`data/regression_v137/`) passes, unchanged:
+- offside 12/12, DOGSO 9/9, boundary 13/13;
+- save compatibility 8/8;
+- diagnostics 7/7;
+- loop replay identical;
+- duplicate shots 0;
+- human tackle 393 / 488 / 33 fouls (v135 394 / 489 / 33).
+
+Below: the v136 (rc1) report.
 
 ## The complaint (video of v135)
 

@@ -1,0 +1,193 @@
+{
+ "www": "www/js",
+ "runsPerScenario": 40,
+ "scenarios": {
+  "1_single_receiver": {
+   "runs": 40,
+   "outcomes": {
+    "controlled_by_intended": 40
+   },
+   "firstTouch": {
+    "intended_header": 26,
+    "intended_foot": 9,
+    "intended_chest_hi": 3,
+    "intended_chest": 2
+   },
+   "headerKinds": {
+    "cushion": 26
+   },
+   "loops": 0,
+   "maxSameHeaders": 1,
+   "headersPerRun": 0.65,
+   "medianSecondsToEnd": 1.7,
+   "controlHeights": [
+    0,
+    0.76,
+    1.5
+   ]
+  },
+  "2_contested_two_opponents": {
+   "runs": 40,
+   "outcomes": {
+    "controlled_by_intended": 40
+   },
+   "firstTouch": {
+    "intended_header": 40
+   },
+   "headerKinds": {
+    "cushion": 40
+   },
+   "loops": 0,
+   "maxSameHeaders": 1,
+   "headersPerRun": 1,
+   "medianSecondsToEnd": 1.7,
+   "controlHeights": [
+    0.74,
+    0.8,
+    0.88
+   ]
+  },
+  "3_near_penalty_area": {
+   "runs": 40,
+   "outcomes": {
+    "controlled_by_intended": 40
+   },
+   "firstTouch": {
+    "intended_header": 40
+   },
+   "headerKinds": {
+    "cushion": 40
+   },
+   "loops": 0,
+   "maxSameHeaders": 1,
+   "headersPerRun": 1,
+   "medianSecondsToEnd": 1.72,
+   "controlHeights": [
+    0.67,
+    0.79,
+    0.87
+   ]
+  },
+  "4_defensive_clearance": {
+   "runs": 40,
+   "outcomes": {
+    "won_by_opponent": 29,
+    "out_of_play": 7,
+    "controlled_by_teammate": 4
+   },
+   "firstTouch": {
+    "opponent_foot": 30,
+    "intended_header": 7,
+    "teammate_foot": 3
+   },
+   "headerKinds": {
+    "clear": 7
+   },
+   "loops": 0,
+   "maxSameHeaders": 1,
+   "headersPerRun": 0.18,
+   "medianSecondsToEnd": 2.65,
+   "controlHeights": [
+    0,
+    0.44,
+    0.5
+   ]
+  },
+  "5_attacking_header_shot": {
+   "runs": 40,
+   "outcomes": {
+    "controlled_by_teammate": 23,
+    "won_by_opponent": 13,
+    "goal": 2,
+    "out_of_play": 2
+   },
+   "firstTouch": {
+    "opponent_header": 24,
+    "intended_header": 16
+   },
+   "headerKinds": {
+    "clear": 24,
+    "shot": 16
+   },
+   "loops": 0,
+   "maxSameHeaders": 1,
+   "headersPerRun": 1,
+   "medianSecondsToEnd": 2.93,
+   "controlHeights": [
+    0,
+    0.31,
+    2.12
+   ]
+  },
+  "5b_attacking_header_defender_behind": {
+   "runs": 40,
+   "outcomes": {
+    "controlled_by_teammate": 37,
+    "won_by_opponent": 3
+   },
+   "firstTouch": {
+    "opponent_header": 40
+   },
+   "headerKinds": {
+    "clear": 40
+   },
+   "loops": 0,
+   "maxSameHeaders": 1,
+   "headersPerRun": 1,
+   "medianSecondsToEnd": 3.77,
+   "controlHeights": [
+    0.02,
+    0.65,
+    1.23
+   ]
+  },
+  "5c_attacking_header_unmarked": {
+   "runs": 40,
+   "outcomes": {
+    "out_of_play": 9,
+    "goal": 9,
+    "won_by_opponent": 15,
+    "controlled_by_intended": 1,
+    "controlled_by_teammate": 6
+   },
+   "firstTouch": {
+    "intended_header": 33,
+    "opponent_header": 7
+   },
+   "headerKinds": {
+    "clear": 15,
+    "shot": 26
+   },
+   "loops": 0,
+   "maxSameHeaders": 1,
+   "headersPerRun": 1.02,
+   "medianSecondsToEnd": 2.2,
+   "controlHeights": [
+    0,
+    1.01,
+    2.2
+   ]
+  },
+  "6_rebound_then_receive": {
+   "runs": 40,
+   "outcomes": {
+    "won_by_opponent": 40
+   },
+   "firstTouch": {
+    "intended_header": 40
+   },
+   "headerKinds": {
+    "clear": 40
+   },
+   "loops": 0,
+   "maxSameHeaders": 1,
+   "headersPerRun": 1,
+   "medianSecondsToEnd": 3.12,
+   "controlHeights": [
+    0,
+    0,
+    0
+   ]
+  }
+ }
+}

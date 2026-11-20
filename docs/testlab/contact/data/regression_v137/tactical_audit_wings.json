@@ -1,0 +1,57 @@
+{
+ "meta": {
+  "www": "/home/claude/masiret-nagm/www/js",
+  "n": 20,
+  "tactic": "wings"
+ },
+ "inPossession": {
+  "gapDFtoMF": 12.36,
+  "gapMFtoFW": 14.86,
+  "length": 32.65,
+  "width": 51.75,
+  "widthDFMF": 51.55
+ },
+ "outOfPossession": {
+  "gapDFtoMF": 13.09,
+  "gapMFtoFW": 14.56,
+  "length": 32.12,
+  "width": 45.51,
+  "widthDFMF": 45.36
+ },
+ "optionsMedian": 4,
+ "optionsZeroShare": 0.13,
+ "crowdShare": 0.01,
+ "abandonedShare": 0,
+ "perMatch": {
+  "overlaps": 0.1,
+  "overlapUseful": 0.05,
+  "overlapUnnecessary": 0,
+  "underlaps": 0,
+  "underlapUseful": 0,
+  "underlapUnnecessary": 0,
+  "thirdManAttempts": 39.6,
+  "thirdManCompleted": 11.4,
+  "switchPasses": 26.95,
+  "switchCompleted": 13.7
+ },
+ "runsAssignedPerMatch": {
+  "overlap": 1.55,
+  "underlap": 0.7
+ },
+ "thirdManRunsPerMatch": 13.7,
+ "thirdManPassBtoCPerMatch": 6.3,
+ "thirdManReceivedPerMatch": 4.5,
+ "passesToRunnerPerMatch": 0.75,
+ "runnerReceivedPerMatch": 0.6,
+ "runsEndedWithBallLostAndRunnerAheadOfBallPerMatch": 0.2,
+ "fullbackRecoveryMedianSec": 1.98,
+ "fullbackRecoveryOver6s": 0.11,
+ "fullbackRecoveryWhileDefending": {
+  "n": 234,
+  "of": 291,
+  "medianSec": 1.72,
+  "startMetresIntoOppHalfMedian": 8.82,
+  "homewardSpeedMedian": 5.17,
+  "over6s": 0
+ }
+}

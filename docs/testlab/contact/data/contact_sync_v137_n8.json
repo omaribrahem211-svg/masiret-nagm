@@ -1,0 +1,72 @@
+{
+ "www": "/home/claude/masiret-nagm/www/js",
+ "matches": 8,
+ "seconds": 240,
+ "reception_ground": {
+  "n": 544,
+  "median": 0.167,
+  "p90": 0.575,
+  "over40cm": 0.176,
+  "over70cm": 0.053
+ },
+ "reception_high": {
+  "n": 69,
+  "median": 0.197,
+  "p90": 0.536,
+  "over40cm": 0.13,
+  "over70cm": 0.043
+ },
+ "kick": {
+  "n": 709,
+  "median": 0.109,
+  "p90": 0.454,
+  "over40cm": 0.109,
+  "over70cm": 0.039
+ },
+ "header": {
+  "n": 209,
+  "median": 0.162,
+  "p90": 0.639,
+  "over40cm": 0.211,
+  "over70cm": 0.062
+ },
+ "keeper": {
+  "n": 25,
+  "median": 0.208,
+  "p90": 0.522,
+  "over40cm": 0.24,
+  "over70cm": 0
+ },
+ "keeper_catch": {
+  "n": 6,
+  "median": 0.111,
+  "p90": 0.341,
+  "over40cm": 0,
+  "over70cm": 0
+ },
+ "keeper_parry": {
+  "n": 19,
+  "median": 0.25,
+  "p90": 0.56,
+  "over40cm": 0.316,
+  "over70cm": 0
+ },
+ "tackleWin": {
+  "n": 23,
+  "median": 0.157,
+  "p90": 0.32,
+  "over40cm": 0.087,
+  "over70cm": 0
+ },
+ "jumps": 299,
+ "jumpsBallNeverWithin1m": 14,
+ "gkDives": 27,
+ "gkDivesBallNeverWithin1_5m": 0,
+ "gkDiveClosest": {
+  "n": 27,
+  "median": 0.145,
+  "p90": 1.032,
+  "over40cm": 0.185,
+  "over70cm": 0.148
+ }
+}

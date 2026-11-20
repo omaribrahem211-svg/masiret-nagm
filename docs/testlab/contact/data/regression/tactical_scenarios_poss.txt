@@ -1,0 +1,115 @@
+{
+ "www": "/home/claude/masiret-nagm/www/js",
+ "tactic": "poss",
+ "runsPerCase": 40,
+ "cases": {
+  "A": {
+   "runs": 40,
+   "runsAssigned": {
+    "overlap:DF": 15,
+    "underlap:DF": 2
+   },
+   "overlap": 1,
+   "underlap": 0,
+   "passToRunner": 16,
+   "runnerReceived": 16,
+   "possessionLost": 9
+  },
+  "B": {
+   "runs": 40,
+   "runsAssigned": {
+    "underlap:DF": 16,
+    "overlap:DF": 1
+   },
+   "overlap": 2,
+   "underlap": 0,
+   "passToRunner": 14,
+   "runnerReceived": 14,
+   "possessionLost": 13
+  },
+  "C": {
+   "runs": 40,
+   "runsAssigned": {
+    "underlap:DF": 16
+   },
+   "overlap": 1,
+   "underlap": 0,
+   "passToRunner": 5,
+   "runnerReceived": 4,
+   "possessionLost": 16
+  },
+  "E": {
+   "runs": 40,
+   "runsAssigned": {
+    "overlap:DF": 21,
+    "underlap:DF": 1
+   },
+   "overlap": 1,
+   "underlap": 0,
+   "passToRunner": 12,
+   "runnerReceived": 12,
+   "possessionLost": 15
+  },
+  "J": {
+   "runs": 40,
+   "runsAssigned": {
+    "overlap:DF": 15
+   },
+   "overlap": 0,
+   "underlap": 0,
+   "passToRunner": 0,
+   "runnerReceived": 0,
+   "possessionLost": 0
+  },
+  "J2": {
+   "runs": 40,
+   "humanPressedPassTowardRunner": 12,
+   "passToRunner": 12,
+   "runnerReceived": 12
+  },
+  "D": {
+   "runs": 40,
+   "bToC": 10,
+   "cReceived": 10,
+   "aFirstPassTo": {
+    "B": 35,
+    "other": 4,
+    "C": 1
+   },
+   "bReceived": 40,
+   "thirdRunAssigned": {
+    "FW": 10,
+    "C": 5
+   },
+   "bHeavyTouch": 0,
+   "bFirstPassTo": {
+    "other": 21,
+    "C": 10,
+    "thirdRunner": 1
+   },
+   "bTakeToPassSecMedian": 1.07,
+   "bPassesWithin1s": 15,
+   "bPassWhenCAssigned": {
+    "C": 1,
+    "other": 2
+   }
+  },
+  "F": {
+   "runs": 40,
+   "firstPassIsSwitch": 11,
+   "switchReceivedByTarget": 5,
+   "possessionLost": 10
+  },
+  "G": {
+   "runs": 40,
+   "fullbackBackInOwnHalfMedianSec": 2.5,
+   "notBackWithin6s": "25/80",
+   "possessionLost": 34
+  },
+  "H": {
+   "runs": 40,
+   "crowdShare": 0,
+   "defendersGoalSideMedianAtEnd": 7
+  }
+ }
+}

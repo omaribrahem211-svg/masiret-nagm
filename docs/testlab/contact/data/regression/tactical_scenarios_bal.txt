@@ -1,0 +1,109 @@
+{
+ "www": "/home/claude/masiret-nagm/www/js",
+ "tactic": "bal",
+ "runsPerCase": 40,
+ "cases": {
+  "A": {
+   "runs": 40,
+   "runsAssigned": {
+    "overlap:DF": 18
+   },
+   "overlap": 0,
+   "underlap": 2,
+   "passToRunner": 16,
+   "runnerReceived": 16,
+   "possessionLost": 11
+  },
+  "B": {
+   "runs": 40,
+   "runsAssigned": {
+    "underlap:DF": 17,
+    "overlap:DF": 1
+   },
+   "overlap": 1,
+   "underlap": 2,
+   "passToRunner": 15,
+   "runnerReceived": 13,
+   "possessionLost": 13
+  },
+  "C": {
+   "runs": 40,
+   "runsAssigned": {
+    "underlap:DF": 19,
+    "overlap:DF": 4
+   },
+   "overlap": 0,
+   "underlap": 0,
+   "passToRunner": 15,
+   "runnerReceived": 11,
+   "possessionLost": 14
+  },
+  "E": {
+   "runs": 40,
+   "runsAssigned": {
+    "overlap:DF": 23
+   },
+   "overlap": 0,
+   "underlap": 0,
+   "passToRunner": 8,
+   "runnerReceived": 8,
+   "possessionLost": 26
+  },
+  "J": {
+   "runs": 40,
+   "runsAssigned": {
+    "overlap:DF": 17
+   },
+   "overlap": 0,
+   "underlap": 0,
+   "passToRunner": 0,
+   "runnerReceived": 0,
+   "possessionLost": 0
+  },
+  "J2": {
+   "runs": 40,
+   "humanPressedPassTowardRunner": 16,
+   "passToRunner": 16,
+   "runnerReceived": 16
+  },
+  "D": {
+   "runs": 40,
+   "bToC": 4,
+   "cReceived": 3,
+   "aFirstPassTo": {
+    "B": 28,
+    "C": 3
+   },
+   "bReceived": 29,
+   "thirdRunAssigned": {
+    "C": 6,
+    "FW": 6,
+    "MF": 3
+   },
+   "bHeavyTouch": 0,
+   "bFirstPassTo": {
+    "other": 8,
+    "C": 4
+   },
+   "bTakeToPassSecMedian": 1.6,
+   "bPassesWithin1s": 3
+  },
+  "F": {
+   "runs": 40,
+   "firstPassIsSwitch": 5,
+   "switchReceivedByTarget": 2,
+   "possessionLost": 12
+  },
+  "G": {
+   "runs": 40,
+   "fullbackBackInOwnHalfMedianSec": 1.67,
+   "notBackWithin6s": "3/80",
+   "possessionLost": 39
+  },
+  "H": {
+   "runs": 40,
+   "crowdShare": 0.03,
+   "defendersGoalSideMedianAtEnd": 7
+  }
+ }
+}

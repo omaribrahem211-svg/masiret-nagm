@@ -1,0 +1,24 @@
+{
+ "www": "/tmp/rv/v135js",
+ "matches": 2,
+ "seconds": 240,
+ "posedFrames": 633600,
+ "popsPer1000": 2.831,
+ "byCause": {
+  "actionChange": 0.107,
+  "possessionChange": 0.099,
+  "keeperOrJumpFlags": 0.005,
+  "other": 2.62
+ },
+ "byJoint": {
+  "RightFoot": 901,
+  "LeftHand": 331,
+  "RightHand": 369,
+  "LeftFoot": 800,
+  "Head": 32
+ },
+ "byIKContext": {
+  "none": 1547,
+  "kickIK ": 247
+ }
+}

@@ -1,0 +1,88 @@
+{
+ "www": "/tmp/rv/v135js",
+ "matches": 1,
+ "seconds": 240,
+ "posedFrames": 316800,
+ "bands": {
+  "stand": {
+   "contactFrames": 48544,
+   "slideMean": 0.438,
+   "slideP90": 1.285,
+   "slideOver25": 0.202
+  },
+  "stand+turning": {
+   "contactFrames": 17747,
+   "slideMean": 1.505,
+   "slideP90": 5.13,
+   "slideOver25": 0.464
+  },
+  "walk+turning": {
+   "contactFrames": 6110,
+   "slideMean": 2.212,
+   "slideP90": 6.202,
+   "slideOver25": 0.638
+  },
+  "walk": {
+   "contactFrames": 13598,
+   "slideMean": 1.225,
+   "slideP90": 3.756,
+   "slideOver25": 0.524
+  },
+  "jog": {
+   "contactFrames": 12455,
+   "slideMean": 1.641,
+   "slideP90": 4.099,
+   "slideOver25": 0.759
+  },
+  "action": {
+   "contactFrames": 19509,
+   "slideMean": 1.803,
+   "slideP90": 4.989,
+   "slideOver25": 0.444
+  },
+  "run": {
+   "contactFrames": 34022,
+   "slideMean": 0.555,
+   "slideP90": 1.247,
+   "slideOver25": 0.464
+  },
+  "run+turning": {
+   "contactFrames": 4651,
+   "slideMean": 1.39,
+   "slideP90": 3.513,
+   "slideOver25": 0.631
+  },
+  "sprint": {
+   "contactFrames": 6149,
+   "slideMean": 1.451,
+   "slideP90": 2.853,
+   "slideOver25": 0.802
+  },
+  "jog+turning": {
+   "contactFrames": 3205,
+   "slideMean": 2.892,
+   "slideP90": 6.485,
+   "slideOver25": 0.859
+  },
+  "sprint+turning": {
+   "contactFrames": 780,
+   "slideMean": 1.586,
+   "slideP90": 3.192,
+   "slideOver25": 0.828
+  }
+ },
+ "locomotion": {
+  "contactFrames": 147261,
+  "slideMean": 0.973,
+  "slideOver25": 0.445,
+  "lockedShare": 0.375,
+  "slideWhileLocked": 0.03
+ },
+ "footPopsPer1000": 30.461,
+ "kneeLockedPer1000": 0.546,
+ "_dbg": [
+  9650,
+  173,
+  316800
+ ]
+}

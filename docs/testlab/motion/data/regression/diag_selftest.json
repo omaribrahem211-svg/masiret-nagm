@@ -1,0 +1,48 @@
+{
+ "logs": 1,
+ "on via ?diag=1": true,
+ "fps about 55-60": true,
+ "slow frames counted": true,
+ "two simultaneous touches": true,
+ "input to frame measured": true,
+ "human reception take->move ~200 ms": true,
+ "30 s console summaries written": true,
+ "summary": {
+  "fps": 58.6,
+  "frameMs": {
+   "avg": 17.1,
+   "p95": 16.7,
+   "p99": 40,
+   "max": 55
+  },
+  "slowFrames": {
+   "over33ms": 36,
+   "over50ms": 12
+  },
+  "simStepsPerFrame": {
+   "0": 0,
+   "1": 2364,
+   "2": 0,
+   "3+": 36
+  },
+  "simResets": 0,
+  "renderMs": {
+   "avg": 4,
+   "p95": 4
+  },
+  "inputToFrameMs": {
+   "n": 2,
+   "median": 6,
+   "p95": 6
+  },
+  "maxSimultaneousTouches": 2,
+  "touchEventsPerSec": 0,
+  "jsHeapMB": null,
+  "humanReception": {
+   "n": 1,
+   "takeToMoveMsMedian": 200,
+   "p95": 200
+  },
+  "sessionSec": 41
+ }
+}

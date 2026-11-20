@@ -91,6 +91,22 @@ const Skel=(()=>{
    st.w[s]+=((lk?1:0)-st.w[s])*Math.min(1,dt*(lk?30:12));if(st.w[s]<.001){st.last[s]=null;continue;}
    let ax,az;if(lk){ax=lk.x;az=lk.z;st.last[s]=[lk.x-wv[0],lk.z-wv[2]];}else if(st.last[s]){ax=wv[0]+st.last[s][0];az=wv[2]+st.last[s][1];}else continue;
    toModel(W,[ax,wv[1],az],mv);const w=st.w[s];legIK(L,[GT[fi][0]+(mv[0]-GT[fi][0])*w,GT[fi][1],GT[fi][2]+(mv[2]-GT[fi][2])*w]);}}
+ // ---- (motion) انتقال بالقصور الذاتي (inertialization) — نفس فكرة الانتقالات في football-tackle-lab (animation.js، Unlicense) بتطبيق أبسط:
+ // لو أي عضمة اتلفّت فجأة في فريم واحد (أكتر من 0.15 راديان وأكتر من 2.5 ضعف حركتها في الفريم اللي قبله) — تبديل حركة، تبديل جنب في الجري الجانبي،
+ // دراع اترفع لوحده — الفرق بين الوضع اللي اترسم فعلاً والوضع الجديد بيتحفظ كـ "إزاحة" وبيتلاشى بثابت زمني 0.08 ث. الجسم بيكمّل من مكانه بدل ما ينطّ.
+ const _qa=[0,0,0,1],_qb=[0,0,0,1],_v3=[0,0,0],_I=[0,0,0,1];
+ function qAng(a,b){const d=Math.abs(a[0]*b[0]+a[1]*b[1]+a[2]*b[2]+a[3]*b[3]);return Math.sqrt(Math.max(0,8*(1-d)));}// ≈ الزاوية للزوايا الصغيرة (من غير acos)
+ function inertialize(p,dt){let st=p._in;if(!st||Math.hypot(p.x-st.x,p.y-st.y)>1.5||dt<=0||dt>.2){st=p._in={x:p.x,y:p.y,T:GR.map(q=>q.slice()),O:GR.map(q=>q.slice()),D:new Float32Array(nJ),off:GR.map(()=>[0,0,0,1]),on:new Uint8Array(nJ)};return;}
+  st.x=p.x;st.y=p.y;const sc=dt/(1/60),k=1-Math.exp(-dt/.08);let any=0;
+  for(let i=0;i<nJ;i++){const q=GR[i],a=qAng(q,st.T[i]),prevD=st.D[i];st.D[i]=a;
+   if(a>.15*sc&&a>2.5*prevD){// تبديل مفاجئ: الإزاحة = اللي اترسم آخر مرة × مقلوب الهدف الجديد
+    qinv(q,_qa);qmul(st.O[i],_qa,st.off[i]);qnrm(st.off[i]);st.on[i]=1;}
+   st.T[i][0]=q[0];st.T[i][1]=q[1];st.T[i][2]=q[2];st.T[i][3]=q[3];
+   if(st.on[i]){any=1;const o=st.off[i];if(o[3]<0){o[0]=-o[0];o[1]=-o[1];o[2]=-o[2];o[3]=-o[3];}qmul(o,q,_qb);qnrm(_qb);GR[i][0]=_qb[0];GR[i][1]=_qb[1];GR[i][2]=_qb[2];GR[i][3]=_qb[3];
+    qlerp(o,_I,k,o);if(o[3]>.99995){st.on[i]=0;o[0]=o[1]=o[2]=0;o[3]=1;}}
+   const O=st.O[i];O[0]=GR[i][0];O[1]=GR[i][1];O[2]=GR[i][2];O[3]=GR[i][3];}
+  // المواضع من جديد من الدورانات (الطول بين المفاصل ثابت) — بس لو فيه إزاحة شغالة
+  if(!any)return;for(let i=0;i<nJ;i++){const pp=par[i];if(pp<0)continue;_v3[0]=LT[i*3]*rS[pp][0];_v3[1]=LT[i*3+1]*rS[pp][1];_v3[2]=LT[i*3+2]*rS[pp][2];qrot(GR[pp],_v3,tv);GT[i][0]=GT[pp][0]+tv[0];GT[i][1]=GT[pp][1]+tv[1];GT[i][2]=GT[pp][2]+tv[2];}}
  // ---- main: pose player p into row
  function pose(p,m,t,out,off,W){resetRest();if(!(p.slide>0))p.slideMax=0;OV.clear();ADD.clear();accClear();
   const sp=Math.hypot(p.vx,p.vy),b=m.ball,gk=p.role==='GK';
@@ -175,7 +191,7 @@ const Skel=(()=>{
   if(!act&&!slide&&!dive&&sp>1.6&&wB<.01&&wSd<.01&&fwd>.2){const th=-Math.max(-1.05,Math.min(1.05,Math.atan2(lat,fwd)))*Math.min(1,(sp-1.6)/.8);if(Math.abs(th)>.02){add(J.Hips,Qy(th));add(J['spine.001'],Qy(-th*.35));add(J['spine.002'],Qy(-th*.3));}}
   // (3A) صراع كتف في كتف: الجسم بيميل ناحية الخصم والدراع اللي ناحيته بيبعد شوية (من غير أنيميشن جديد) — 0.5 ث
   if(p.shC&&!slide&&!dive&&!act){const e=m.time-p.shC.t;if(e>=0&&e<.5){const k=Math.sin(Math.PI*e/.5)*p.shC.k;add(J['spine.001'],Qz(-p.shC.s*k*.32));arm(p.shC.s,.25,.7,.55,.8*k);}}
-  computeGlobals();
+  computeGlobals();{const tn=t,dt3=p._inT==null?0:Math.min(.2,Math.max(0,tn-p._inT));p._inT=tn;if(p._far)p._in=null;else inertialize(p,dt3);}
   // world: lift/pitch/roll around a pivot, then yaw to facing
   const yaw=Math.atan2(p.fx,-p.fy);let lift=0,pitch=0,roll=0,piv=.95;
   if(slide&&!act){pitch=-1.15;piv=.35;lift=-.28;}
@@ -191,7 +207,7 @@ const Skel=(()=>{
   W[0]=r00*sc;W[1]=r10*sc;W[2]=r20*sc;W[3]=0;W[4]=r01*sc;W[5]=r11*sc;W[6]=r21*sc;W[7]=0;W[8]=r02*sc;W[9]=r12*sc;W[10]=r22*sc;W[11]=0;
   W[12]=p.x-r01*piv;W[13]=lift+piv-r11*piv;W[14]=-p.y-r21*piv;W[15]=1;
   {const tn=t,dt=p._ikt==null?0:Math.min(.1,Math.max(0,tn-p._ikt));p._ikt=tn;const PL=act==='turn180'||act==='recv'||act==='stop';
-   const ok=!lift&&!pitch&&!roll&&!slide&&!dive&&!(p.jumpT>0)&&!(p.stun>.4)&&(!act||PL)&&!((p._aw||0)>.05&&!PL&&!act);if(ok||p._fp)plantFeet(p,W,ok,dt);}
+   const ok=!lift&&!pitch&&!roll&&!slide&&!dive&&!(p.jumpT>0)&&!(p.stun>.4)&&(!act||PL)&&!((p._aw||0)>.05&&!PL&&!act);if(p._far)p._fp=null;else if(ok||p._fp)plantFeet(p,W,ok,dt);}
   writeRow(out,off,W);}
  // position/orientation of a bind-pose point after skinning by joint j (used for the shirt number)
  function jointPoint(j,W,pt,o){const q=GR[j],t=GT[j];const v=[pt[0]-gT[j][0],pt[1]-gT[j][1],pt[2]-gT[j][2]];const ir=qinv(gR[j],[0,0,0,1]);qrot(ir,v,v);qrot(q,v,v);const x=v[0]+t[0],y=v[1]+t[1],z=v[2]+t[2];o[0]=W[0]*x+W[4]*y+W[8]*z+W[12];o[1]=W[1]*x+W[5]*y+W[9]*z+W[13];o[2]=W[2]*x+W[6]*y+W[10]*z+W[14];return o;}

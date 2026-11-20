@@ -344,7 +344,7 @@ class R3D{
   const D=this.dyn;for(const k in D)D[k].n=0;
   const useSk=this.skin&&!(typeof App!=='undefined'&&App.settings&&+App.settings.plm===1);if(this.skin)this.skin.n=0;
   let drawL=m.leave&&m.leave.length?m.all.concat(m.leave.map(l=>l.p)):m.all;{const st0=m.t&&m.t[0].star;if(st0&&drawL.includes(st0)&&drawL[0]!==st0)drawL=[st0].concat(drawL.filter(q=>q!==st0));}
-  for(const p of drawL){const sx=p.x-c3.x;if(sx<-60||sx>60)continue;if(useSk)this.skinPlayer(p,m,t/1000);else this.player(p,m);this.add(D.blob,this.trs(p.x+0.15,0.012,-p.y-0.1,0,1.25,1,1.0),[0,0,0,0.5]);}this.add(D.blob,this.trs(b.x,0.013,-b.y,0,0.5,1,0.5),[0,0,0,clamp(0.55-b.z*0.08,0.12,0.55)]);
+  for(const p of drawL){const sx=p.x-c3.x;if(sx<-60||sx>60)continue;p._far=sx<-32||sx>32;/* (motion) بعيد عن الكاميرا: من غير تثبيت الرجل والانتقال بالقصور (توفير معالج) */if(useSk)this.skinPlayer(p,m,t/1000);else this.player(p,m);this.add(D.blob,this.trs(p.x+0.15,0.012,-p.y-0.1,0,1.25,1,1.0),[0,0,0,0.5]);}this.add(D.blob,this.trs(b.x,0.013,-b.y,0,0.5,1,0.5),[0,0,0,clamp(0.55-b.z*0.08,0.12,0.55)]);
   // ball
   // دوران الكورة من المسافة اللي اتحركتها فعلاً على الأرض (مافيش انزلاق)، وفي الهوا بتحتفظ بلفّتها
   let bvx,bvy;{const lx=this._bpx==null?b.x:this._bpx,ly=this._bpy==null?b.y:this._bpy;this._bpx=b.x;this._bpy=b.y;const ddt=Math.max(dt,1e-3);let mx=(b.x-lx)/ddt,my=(b.y-ly)/ddt;if(Math.hypot(mx,my)>45){mx=b.vx;my=b.vy;}

@@ -26,7 +26,7 @@ The worst case was headers. The jump started at the contact itself, so the head 
 
 | Commit | What |
 |---|---|
-| C1 `6c8d3f4` | **Headers are prepared.** The game predicts when each airborne ball passes each player. The best-placed player of each team starts the jump 0.15-0.35 s early, so the head peak meets the ball; balls at 1.3-1.6 m get a standing header. A header needs the head at the ball. The chest take goes only up to 1.55 m (was 2.05). The reception radii are shared with the skeleton. |
+| C1 `c7fc598` | **Headers are prepared.** The game predicts when each airborne ball passes each player. The best-placed player of each team starts the jump 0.15-0.35 s early, so the head peak meets the ball; balls at 1.3-1.6 m get a standing header. A header needs the head at the ball. The chest take goes only up to 1.55 m (was 2.05). The reception radii are shared with the skeleton. |
 | C2 `aca0bf4` | **The body goes to the ball.** Reception foot IK to the exact take point, plus a step/lean and chest/knee-high control. Header lunge toward the meeting point. Keeper body plus both arms (IK) to the ball. Tackle and kick foot to the real ball, with a body extension. All moves are rate-limited; hips-position inertialization, smother clip and catch-during-dive fixes. |
 | C3 `08bfb22` | Header reach 0.8 m and jump preparation 1.2 m, to keep aerial duels and interceptions at v135 levels. |
 | tools `5bb2f81` | `contact_sync.js`, `root_pops.js`, and `pose_jumps.js` split by joint and IK. |

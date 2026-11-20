@@ -1,0 +1,88 @@
+{
+ "www": "/home/claude/masiret-nagm/www/js",
+ "matches": 1,
+ "seconds": 120,
+ "posedFrames": 158400,
+ "bands": {
+  "stand": {
+   "contactFrames": 24393,
+   "slideMean": 0.457,
+   "slideP90": 1.317,
+   "slideOver25": 0.205
+  },
+  "stand+turning": {
+   "contactFrames": 9989,
+   "slideMean": 1.466,
+   "slideP90": 4.985,
+   "slideOver25": 0.47
+  },
+  "walk+turning": {
+   "contactFrames": 3486,
+   "slideMean": 2.31,
+   "slideP90": 6.364,
+   "slideOver25": 0.639
+  },
+  "walk": {
+   "contactFrames": 7352,
+   "slideMean": 1.402,
+   "slideP90": 4.487,
+   "slideOver25": 0.5
+  },
+  "jog": {
+   "contactFrames": 6864,
+   "slideMean": 1.204,
+   "slideP90": 3.052,
+   "slideOver25": 0.664
+  },
+  "action": {
+   "contactFrames": 7779,
+   "slideMean": 2.169,
+   "slideP90": 5.214,
+   "slideOver25": 0.542
+  },
+  "run": {
+   "contactFrames": 18927,
+   "slideMean": 0.486,
+   "slideP90": 1.121,
+   "slideOver25": 0.475
+  },
+  "run+turning": {
+   "contactFrames": 2234,
+   "slideMean": 1.168,
+   "slideP90": 2.257,
+   "slideOver25": 0.578
+  },
+  "jog+turning": {
+   "contactFrames": 1457,
+   "slideMean": 2.407,
+   "slideP90": 5.513,
+   "slideOver25": 0.776
+  },
+  "sprint": {
+   "contactFrames": 3336,
+   "slideMean": 1.302,
+   "slideP90": 2.515,
+   "slideOver25": 0.824
+  },
+  "sprint+turning": {
+   "contactFrames": 491,
+   "slideMean": 1.285,
+   "slideP90": 2.592,
+   "slideOver25": 0.819
+  }
+ },
+ "locomotion": {
+  "contactFrames": 78529,
+  "slideMean": 0.926,
+  "slideOver25": 0.442,
+  "lockedShare": 0.377,
+  "slideWhileLocked": 0.027
+ },
+ "footPopsPer1000": 36.989,
+ "kneeLockedPer1000": 0.6,
+ "_dbg": [
+  5859,
+  95,
+  158400
+ ]
+}

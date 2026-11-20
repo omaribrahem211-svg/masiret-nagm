@@ -167,6 +167,9 @@ const Skel=(()=>{
   if(celeb&&!act){if(sp>1.5){arm(1,.15,.15,1.3,1);arm(-1,.15,.15,1.3,1);add(J['spine.001'],Qz(Math.sin(t*2.2)*.18));}
    else{const k=.5+.5*Math.sin(t*6);arm(1,2.7+k*.2,.35,.25,1);arm(-1,2.7+(1-k)*.2,.35,.25,1);add(J['spine.001'],Qx(-.12));}}
   if(!celeb&&!slide&&!dive&&kick<0&&!act)add(J['spine.001'],Qx(.02+Math.min(1,sp/7)*.12));
+  /* (motion) لما اللاعب بيجري في اتجاه مختلف عن اتجاه جسمه (بزاوية لحد 60°، قبل ما حركة الجنب/لورا تشتغل)، الحوض والرجلين بيلفّوا ناحية الجري والجذع بيفضل
+     باصص قدّام (لفّة الوسط). قبل كده حركة الجري لقدّام كانت بتتلعب والجسم ماشي بالجنب فالرجلين كانوا بيتزحلقوا بالعرض */
+  if(!act&&!slide&&!dive&&sp>1.6&&wB<.01&&wSd<.01&&fwd>.2){const th=-Math.max(-1.05,Math.min(1.05,Math.atan2(lat,fwd)))*Math.min(1,(sp-1.6)/.8);if(Math.abs(th)>.02){add(J.Hips,Qy(th));add(J['spine.001'],Qy(-th*.35));add(J['spine.002'],Qy(-th*.3));}}
   // (3A) صراع كتف في كتف: الجسم بيميل ناحية الخصم والدراع اللي ناحيته بيبعد شوية (من غير أنيميشن جديد) — 0.5 ث
   if(p.shC&&!slide&&!dive&&!act){const e=m.time-p.shC.t;if(e>=0&&e<.5){const k=Math.sin(Math.PI*e/.5)*p.shC.k;add(J['spine.001'],Qz(-p.shC.s*k*.32));arm(p.shC.s,.25,.7,.55,.8*k);}}
   computeGlobals();

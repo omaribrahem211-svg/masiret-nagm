@@ -74,8 +74,10 @@ const Skel=(()=>{
  function toWorld(W,v,o){o[0]=W[0]*v[0]+W[4]*v[1]+W[8]*v[2]+W[12];o[1]=W[1]*v[0]+W[5]*v[1]+W[9]*v[2]+W[13];o[2]=W[2]*v[0]+W[6]*v[1]+W[10]*v[2]+W[14];return o;}
  function toModel(W,v,o){const x=v[0]-W[12],y=v[1]-W[13],z=v[2]-W[14],s2=W[0]*W[0]+W[1]*W[1]+W[2]*W[2];// W = T*R*s (rotation x uniform scale): inverse = R^T/s
   o[0]=(W[0]*x+W[1]*y+W[2]*z)/s2;o[1]=(W[4]*x+W[5]*y+W[6]*z)/s2;o[2]=(W[8]*x+W[9]*y+W[10]*z)/s2;return o;}
- function legIK(L,T){const[hi,ki,fi,ti]=L,H=GT[hi],K=GT[ki].slice(),F=GT[fi].slice(),Tz=GT[ti].slice(),a=len(sub(K,H)),b=len(sub(F,K));let d=sub(T,H);const dl=len(d)||1e-6,dist=Math.max(Math.abs(a-b)+.001,Math.min(a+b-.001,dl));d=[d[0]/dl,d[1]/dl,d[2]/dl];
-  const along=(a*a+dist*dist-b*b)/(2*dist),h=Math.sqrt(Math.max(0,a*a-along*along));let bend=sub(K,H);const bp=dot(bend,d);bend=[bend[0]-d[0]*bp,bend[1]-d[1]*bp,bend[2]-d[2]*bp];const bl=len(bend);
+ /* (contact) pole: اتجاه ثابت للكوع/الركبة (لو اتدّى). من غيره اتجاه الثنية بيتاخد من الوضع الحالي، ولما الدراع يكون مفرود (الحارس رافع إيده) الاتجاه ده بيبقى
+    صفر تقريباً وبيقلب من فريم للتاني = الإيد بتنط */
+ function legIK(L,T,pole){const[hi,ki,fi,ti]=L,H=GT[hi],K=GT[ki].slice(),F=GT[fi].slice(),Tz=GT[ti].slice(),a=len(sub(K,H)),b=len(sub(F,K));let d=sub(T,H);const dl=len(d)||1e-6,dist=Math.max(Math.abs(a-b)+.001,Math.min(a+b-.001,dl));d=[d[0]/dl,d[1]/dl,d[2]/dl];
+  const along=(a*a+dist*dist-b*b)/(2*dist),h=Math.sqrt(Math.max(0,a*a-along*along));let bend=pole?pole.slice():sub(K,H);const bp=dot(bend,d);bend=[bend[0]-d[0]*bp,bend[1]-d[1]*bp,bend[2]-d[2]*bp];const bl=len(bend);
   if(bl<1e-6)return;bend=[bend[0]/bl,bend[1]/bl,bend[2]/bl];const Kd=[H[0]+d[0]*along+bend[0]*h,H[1]+d[1]*along+bend[1]*h,H[2]+d[2]*along+bend[2]*h],Tc=[H[0]+d[0]*dist,H[1]+d[1]*dist,H[2]+d[2]*dist];
   const d1=qFromTo(sub(K,H),sub(Kd,H),[0,0,0,1]);qmul(d1,GR[hi],GR[hi]);const F1=qrot(d1,sub(F,H),[0,0,0]);F1[0]+=H[0];F1[1]+=H[1];F1[2]+=H[2];
   const d2=qFromTo(sub(F1,Kd),sub(Tc,Kd),[0,0,0,1]);qmul(d1,GR[ki],GR[ki]);qmul(d2,GR[ki],GR[ki]);
@@ -96,6 +98,7 @@ const Skel=(()=>{
  // دراع اترفع لوحده — الفرق بين الوضع اللي اترسم فعلاً والوضع الجديد بيتحفظ كـ "إزاحة" وبيتلاشى بثابت زمني 0.08 ث. الجسم بيكمّل من مكانه بدل ما ينطّ.
  const _qa=[0,0,0,1],_qb=[0,0,0,1],_v3=[0,0,0],_I=[0,0,0,1];
  function qAng(a,b){const d=Math.abs(a[0]*b[0]+a[1]*b[1]+a[2]*b[2]+a[3]*b[3]);return Math.sqrt(Math.max(0,8*(1-d)));}// ≈ الزاوية للزوايا الصغيرة (من غير acos)
+ const R0=par.indexOf(-1);
  function inertialize(p,dt){let st=p._in;if(!st||Math.hypot(p.x-st.x,p.y-st.y)>1.5||dt<=0||dt>.2){st=p._in={x:p.x,y:p.y,T:GR.map(q=>q.slice()),O:GR.map(q=>q.slice()),D:new Float32Array(nJ),off:GR.map(()=>[0,0,0,1]),on:new Uint8Array(nJ)};return;}
   st.x=p.x;st.y=p.y;const sc=dt/(1/60),k=1-Math.exp(-dt/.08);let any=0;
   for(let i=0;i<nJ;i++){const q=GR[i],a=qAng(q,st.T[i]),prevD=st.D[i];st.D[i]=a;
@@ -105,9 +108,18 @@ const Skel=(()=>{
    if(st.on[i]){any=1;const o=st.off[i];if(o[3]<0){o[0]=-o[0];o[1]=-o[1];o[2]=-o[2];o[3]=-o[3];}qmul(o,q,_qb);qnrm(_qb);GR[i][0]=_qb[0];GR[i][1]=_qb[1];GR[i][2]=_qb[2];GR[i][3]=_qb[3];
     qlerp(o,_I,k,o);if(o[3]>.99995){st.on[i]=0;o[0]=o[1]=o[2]=0;o[3]=1;}}
    const O=st.O[i];O[0]=GR[i][0];O[1]=GR[i][1];O[2]=GR[i][2];O[3]=GR[i][3];}
+  /* (contact) نفس الفكرة لمكان الحوض نفسه (الإزاحة، مش الدوران): لما حركة تبدأ والحوض في الكليب الجديد في مكان تاني (الوقعة بعد خسارة الكورة، قومة الحارس
+     بعد الارتماءة) الجسم كله كان بينط لحد 0.6–0.9 م في فريم. دلوقتي الفرق بيتسجّل وبيتلاشى في ~0.1 ث */
+  {const r=GT[R0];if(!st.RT){st.RT=r.slice();st.RO=r.slice();st.RD=0;st.ro=[0,0,0];st.ron=0;}
+   const d=Math.hypot(r[0]-st.RT[0],r[1]-st.RT[1],r[2]-st.RT[2]),pd=st.RD;st.RD=d;
+   if(d>.1*sc&&d>2.5*pd){st.ro[0]=st.RO[0]-r[0];st.ro[1]=st.RO[1]-r[1];st.ro[2]=st.RO[2]-r[2];st.ron=1;}
+   st.RT[0]=r[0];st.RT[1]=r[1];st.RT[2]=r[2];
+   if(st.ron){const o=st.ro;if(!any)for(let i=0;i<nJ;i++){GT[i][0]+=o[0];GT[i][1]+=o[1];GT[i][2]+=o[2];}else{r[0]+=o[0];r[1]+=o[1];r[2]+=o[2];}
+    o[0]*=1-k;o[1]*=1-k;o[2]*=1-k;if(Math.abs(o[0])+Math.abs(o[1])+Math.abs(o[2])<.002)st.ron=0;}
+   st.RO[0]=GT[R0][0];st.RO[1]=GT[R0][1];st.RO[2]=GT[R0][2];}
   // المواضع من جديد من الدورانات (الطول بين المفاصل ثابت) — بس لو فيه إزاحة شغالة
   if(!any)return;for(let i=0;i<nJ;i++){const pp=par[i];if(pp<0)continue;_v3[0]=LT[i*3]*rS[pp][0];_v3[1]=LT[i*3+1]*rS[pp][1];_v3[2]=LT[i*3+2]*rS[pp][2];qrot(GR[pp],_v3,tv);GT[i][0]=GT[pp][0]+tv[0];GT[i][1]=GT[pp][1]+tv[1];GT[i][2]=GT[pp][2]+tv[2];}}
- const KICKS={kick:1,kickL:1,kickM:1,shotRun:1,shotP:1,pass:1,passS:1,pen:1,penA:1,penB:1,gkPass:1};
+ const KICKS={kick:1,kickL:1,kickM:1,shotRun:1,shotP:1,pass:1,passS:1,pen:1,penA:1,penB:1,gkPass:1,tackleS:1};
  // ---- main: pose player p into row
  function pose(p,m,t,out,off,W){resetRest();if(!(p.slide>0))p.slideMax=0;OV.clear();ADD.clear();accClear();
   const sp=Math.hypot(p.vx,p.vy),b=m.ball,gk=p.role==='GK';
@@ -129,13 +141,15 @@ const Skel=(()=>{
   // ---- حركات الكورة الحقيقية (Mixamo): بتاخد الجسم كله
   let act=null,au=0,aw=0;const M_=k=>META[k]||{};
   const kk=p.windT>0?.5*(1-p.windT/(p.windD||.1)):p.kickT>0?.5+.5*(1-p.kickT/.34):-1;
-  const smother=dive>0&&p.smT>0;
+  /* (contact) الارتماءة على رجل المهاجم (smother): حركة gkBlock بتكمل لآخر الارتماءة. كانت بتقف لما smT يخلص (0.28 ث) والارتماءة لسه شغالة، فالجسم كان بيتحول
+     فجأة للارتماءة الجانبية (بيطير ويميل) = نطّة 0.9 م في فريم */
+  if(p.smT>0&&dive>0)p._smK=true;else if(!(dive>0))p._smK=false;const smother=dive>0&&(p.smT>0||p._smK);
   if(slide&&has('slide')){const S=p.slideMax||(p.slideMax=Math.max(p.slide,.5));const q=1-p.slide/S;act=(p.i||0)%2&&has('slide2')?'slide2':'slide';au=.22+q*.5;aw=1;}
   else if(smother&&has('gkBlock')){act='gkBlock';p._smo=true;au=.25+(1-dive)*.35;aw=1;}
   else if(dive>0&&has('gkDiveL')&&!((p.diveH||0)>1.35)){const yw=Math.atan2(p.fx,-p.fy),left=Math.sin(yw)*(p.diveDir||1)>0;p._dvL=left;p._smo=false;if((p.diveN||9)<2.4&&has('gkLunge')){act=left?'gkLow':'gkLunge';au=.15+(1-dive)*.65;}else{act=left?'gkDiveL':'gkDiveR';au=.2+(1-dive)*.28;}aw=1;}
   else if(p.stun>.4&&p.fallK==='knock'&&has('knock')){act='knock';p._fallen=true;p._kS=Math.max(p._kS||0,p.stun);au=Math.min(.97,.05+(1-p.stun/Math.max(1.35,p._kS))*2.2);aw=1;}
   else if(p.stun>.4&&has('trip')){act='trip';p._fallen=p.stun>.7||p._fallen;au=.15+(1-Math.min(1,p.stun/1.2))*.5;aw=1;}
-  else if(p.jumpT>0&&has('head')){if(p.hdrHi&&has('headJ')){act='headJ';au=.28+(1-p.jumpT/.45)*.3;}else{act=((p.i||0)+(p.kc||0))%2&&has('head2')?'head2':'head';au=.3+(1-p.jumpT/.45)*.3;}aw=1;}
+  else if(p.jumpT>0&&has('head')){const hc=p.hdrClip&&has(p.hdrClip)?p.hdrClip:(p.hdrHi&&has('headJ')?'headJ':((p.i||0)+(p.kc||0))%2&&has('head2')?'head2':'head');act=hc;au=(hc==='headJ'?.28:.3)+(1-p.jumpT/.45)*.3;aw=1;}
   else if(kk>=0&&has('kick')&&!(b.owner===p&&m.restartKind==='throw')&&!(gk&&p.puntT>0)){const pen=m.restartKind==='pen'||(m.pen&&m.pen.live);const vr=(p.i||0)+(p.kc||0);act=pen?(has('penA')?(vr%2?'penB':'penA'):has('pen')?'pen':'kick'):p.kType==='tackle'&&has('tackleS')?'tackleS':p.kType==='pass'&&gk&&has('gkPass')?'gkPass':p.kType==='pass'&&has('pass')?(has('passS')&&vr%2?'passS':'pass'):p.kType==='shot'&&sp>3.2&&has('shotRun')?'shotRun':p.kType==='shot'&&p.lefty&&has('kickL')?'kickL':p.kType==='shot'&&has('shotP')?'shotP':p.kType==='shot'&&has('kickM')?'kickM':'kick';const h=M_(act).hit||.5;const s0=Math.max(0,h-(act==='pen'||act==='penA'||act==='penB'?.55:.36)/clips[act].dur);au=kk<.5?s0+(h-s0)*(kk/.5):h+(1-h)*.8*((kk-.5)/.5);aw=1;}
   else if(gk&&p.puntT>0&&has('gkPunt')){const h=M_('gkPunt').hit||.5;au=h-.12+(1-p.puntT/.4)*.2;act='gkPunt';aw=1;}
   else if(((b.owner===p&&m.restartKind==='throw')||p.throwT>0)&&has('throwin')&&!gk){act='throwin';au=p.throwT>0?.52+(1-p.throwT/.4)*.18:.42;aw=1;}
@@ -201,11 +215,12 @@ const Skel=(()=>{
    let wr=0;if(dl>0&&p._lnA!=null&&sp>2.5){wr=Math.atan2(Math.sin(va-p._lnA),Math.cos(va-p._lnA))/dl;}p._lnA=va;
    const tgt=!act&&!slide&&!dive&&!(p.jumpT>0)?-Math.max(-.3,Math.min(.3,Math.atan(sp*wr/9.8))):0;p._ln=(p._ln||0)+(tgt-(p._ln||0))*Math.min(1,dl/.12);lean=p._ln;}
   if(slide&&!act){pitch=-1.15;piv=.35;lift=-.28;}
-  if(dive>0&&!act){const dH=p.diveH==null?1:p.diveH;const k=Math.sin(Math.min(1,(1-dive)*1.6)*Math.PI*.5);const sideW=-(p.diveDir||1);const fs=Math.sign(-Math.sin(yaw)*0+Math.cos(yaw)*sideW)||1;roll=fs*(dH<.6?1.45:1.3)*k;lift=(.12+.32*Math.min(dH,2))*Math.sin((1-dive)*Math.PI)-.2*k;}
+  const gkC=act==='gkCatch'||act==='gkScoop';/* (contact) مسكة أثناء الارتماءة: الجسم بيفضل مايل وطاير (كان بيتعدل فجأة في فريم = نطّة 0.9 م) */
+  if(dive>0&&(!act||gkC)){const dH=p.diveH==null?1:p.diveH;const k=Math.sin(Math.min(1,(1-dive)*1.6)*Math.PI*.5);const sideW=-(p.diveDir||1);const fs=Math.sign(-Math.sin(yaw)*0+Math.cos(yaw)*sideW)||1;roll=fs*(dH<.6?1.45:1.3)*k;lift=(.12+.32*Math.min(dH,2))*Math.sin((1-dive)*Math.PI)-.2*k;}
   if(!roll&&Math.abs(lean)>.005){roll=lean;piv=0;}
   if(gk&&p.gkHi>0&&!dive&&!act)lift+=.5*Math.sin(Math.PI*(1-p.gkHi/.5));
-  if(gk&&dive>0&&act&&(p.diveH||0)>1.25)lift+=Math.min(.75,(p.diveH-1.1)*.6)*Math.sin((1-dive)*Math.PI);
-  if(p.jumpT>0&&!slide&&!dive)lift+=(act==='head'?.6:1)*.42*Math.sin(Math.PI*(1-p.jumpT/.45));
+  if(gk&&dive>0&&act&&!gkC&&(p.diveH||0)>1.25)lift+=Math.min(.75,(p.diveH-1.1)*.6)*Math.sin((1-dive)*Math.PI);
+  if(p.jumpT>0&&!slide&&!dive&&!p.hdrStand)lift+=(act==='head'?.6:1)*.42*Math.sin(Math.PI*(1-p.jumpT/.45));
   const sc=p._hs||(p._hs=.95+((p.i*7919)%17)/170);
   const cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),spp=Math.sin(pitch),cr=Math.cos(roll),sr=Math.sin(roll);
   // R = Ry * Rx(pitch) * Rz(roll)
@@ -213,17 +228,86 @@ const Skel=(()=>{
   // world = T(x, lift, -y) * T(0,piv,0) * R * T(0,-piv,0) * S
   W[0]=r00*sc;W[1]=r10*sc;W[2]=r20*sc;W[3]=0;W[4]=r01*sc;W[5]=r11*sc;W[6]=r21*sc;W[7]=0;W[8]=r02*sc;W[9]=r12*sc;W[10]=r22*sc;W[11]=0;
   W[12]=p.x-r01*piv;W[13]=lift+piv-r11*piv;W[14]=-p.y-r21*piv;W[15]=1;
+  const W12=W[12],W13=W[13],W14=W[14];
   /* (motion) لمسة الكورة في الركلة: حوالين لحظة الضرب (نص حركة الركلة) رجل الضرب بتتمد ناحية مكان الكورة الحقيقي (IK بعضمتين) بوزن بيطلع ويرجع بنعومة.
      الفكرة من football-tackle-lab (الشوطة بتتحسب لما الرجل تلمس الكورة فعلاً)؛ هنا العكس: اللعب زي ما هو والرجل هي اللي بتروح للكورة. قبل كده الرجل كانت بعيدة
      عن الكورة لحظة الضرب ~33 سم في المتوسط و24% أكتر من 50 سم */
-  if(act&&KICKS[act]){if(b.owner===p&&!b.inHands){p._kb=[b.x,b.y,b.z];}const kq=p.windT>0?.5*(1-p.windT/(p.windD||.1)):p.kickT>0?.5+.5*(1-p.kickT/.34):-1;
-   if(kq>=0&&p._kb){const w=kq<.5?Math.max(0,Math.min(1,(kq-.22)/.28)):Math.max(0,1-(kq-.5)/.14);
-    if(w>.01){if(p._kf==null||kq<.25)p._kf=act==='kickL'||act==='penB'&&p.lefty?0:1;const L=FL[p._kf],fi=L[2];
+  const dtI=p._ikT2==null?1/60:Math.min(.1,Math.max(1/240,t-p._ikT2));p._ikT2=t;
+  // (contact) وزن الـ IK مابيتغيرش أسرع من 8 في الثانية (من 0 لـ 1 في 0.125 ث): مفيش رجل أو دراع بيتنقل فجأة لما الكورة تغيّر اتجاهها أو تعدّي
+  const smw=(k,w)=>{const a=p[k]||0,m=8*dtI,v=a+Math.max(-m,Math.min(m,w-a));p[k]=v;return v;};
+  if(act&&KICKS[act]){if(b.owner===p&&!b.inHands){p._kb=[b.x,b.y,b.z];}else if(act==='tackleS'&&p.tkL&&!b.inHands){/* (contact) التدخل: رجل المدافع بتروح لمكان الكورة لحظة التلامس (الكورة لسه مع المهاجم) */p._kb=[b.x,b.y,b.z];}const kq=p.windT>0?.5*(1-p.windT/(p.windD||.1)):p.kickT>0?.5+.5*(1-p.kickT/.34):-1;
+   if(kq>=0&&p._kb){const w=kq<.5?Math.max(0,Math.min(1,(kq-.22)/.28)):Math.max(0,1-(kq-.5)/(act==='tackleS'?.45:.14));
+    if(w>.01){if(p._kf==null||kq<.25){if(act==='tackleS'){let bd=9;for(let k=0;k<2;k++){toWorld(W,GT[FL[k][2]],wv);const dd=Math.hypot(wv[0]-p._kb[0],wv[2]+p._kb[1]);if(dd<bd){bd=dd;p._kf=k;}}}else p._kf=act==='kickL'||act==='penB'&&p.lefty?0:1;}const L=FL[p._kf],fi=L[2];
      let dx=p.fx,dy=p.fy;if(!b.owner&&b.last===p){const v=Math.hypot(b.vx,b.vy);if(v>2){dx=b.vx/v;dy=b.vy/v;}}
-     const bx=p._kb[0]-dx*.15,by=p._kb[1]-dy*.15;toWorld(W,GT[fi],wv);if(Math.hypot(wv[0]-bx,wv[2]+by)<.9){toModel(W,[bx,.1,-by],mv);legIK(L,[GT[fi][0]+(mv[0]-GT[fi][0])*w,GT[fi][1]+(mv[1]-GT[fi][1])*w,GT[fi][2]+(mv[2]-GT[fi][2])*w]);}}}}
+     const tk=act==='tackleS';const bx=p._kb[0]-dx*(tk?.05:.15),by=p._kb[1]-dy*(tk?.05:.15);
+     /* (contact) الكورة بعيدة عن الجسم (التدخل لحد 1.25 م، والشوطة/الباص لكورة على بعد 0.5–0.8 م) والرجل لوحدها مابتوصلش: الجسم كله بيتمد ناحية الكورة
+        (لحد 0.35 م في التدخل و0.3 م في الركلة) بنفس وزن الرجل، والرجل بتروح لارتفاع الكورة الحقيقي (لحد 0.9 م للطايرة) */
+     {const hx=bx-p.x,hy=by-p.y,hl=Math.hypot(hx,hy),ex=Math.max(0,Math.min(tk?.35:.3,hl-(tk?.75:.45)))*w;if(hl>.01){W[12]+=hx/hl*ex;W[14]-=hy/hl*ex;}}
+     toWorld(W,GT[fi],wv);if(Math.hypot(wv[0]-bx,wv[2]+by)<(tk?1.4:1.1)){toModel(W,[bx,Math.max(.1,Math.min(.9,p._kb[2]+.08)),-by],mv);legIK(L,[GT[fi][0]+(mv[0]-GT[fi][0])*w,GT[fi][1]+(mv[1]-GT[fi][1])*w,GT[fi][2]+(mv[2]-GT[fi][2])*w]);}}}}
   else{p._kf=null;if(!(p.windT>0||p.kickT>0))p._kb=null;}
+  /* (contact) الراس بتروح للكورة في الرأسية: طول القفزة، لو الكورة قربت (أقل من 1.4 م من الراس)، الجسم كله بيتزق ناحيتها (لحد 0.45 م أفقي و0.3 م رأسي)
+     بوزن بيكبر كل ما تقرب، وبعد اللمسة الزقة بترجع لصفر بنعومة. ده اللي بيخلّي الراس تلمس الكورة بدل ما تعدّي جنبها */
+  if(p.jumpT>0&&act&&act.slice(0,4)==='head'&&!b.inHands){const hp=toWorld(W,GT[J.Head],[0,0,0]),e=.45-p.jumpT,o=p._hdO||(p._hdO=[0,0,0]);
+   // الهدف: نقطة اللقاء المتوقعة وقت القفزة (hdrPt) — فالزقة بتبدأ من أول القفزة وتكبر بنعومة لحد أعلى نقطة؛ ولو مفيش توقع (رأسية واقفة) الكورة نفسها لما تقرب
+   const away=b.owner===p||b.last===p&&!p.hdrPt||b.last===p&&((b.x-p.x)*b.vx+(b.y-p.y)*b.vy)>0;let T=null,w=0;
+   // بعد اللمسة: الراس بتفضل عند نقطة اللمسة 0.12 ث وبعدين الزقة بترجع بنعومة
+   if(p.hdrHit&&p.hdrPt){if(p._hdHT==null)p._hdHT=t;const u=t-p._hdHT;if(u<.25){T=[p.hdrPt[0],p.hdrPt[2]+.11,-p.hdrPt[1]];w=u<.12?1:Math.max(0,1-(u-.12)/.13);}}else p._hdHT=null;
+   if(!away&&!T){const live=Math.hypot(b.x-hp[0],b.z+.11-hp[1],-b.y-hp[2]);if(live<.9){T=[b.x,b.z+.11,-b.y];w=Math.max(0,Math.min(1,(.9-live)/.4));}
+    if(p.hdrPt){const ws=Math.sin(Math.PI*.5*Math.min(1,e/.25));if(ws>w||!T){T=live<.9?[b.x,b.z+.11,-b.y]:[p.hdrPt[0],p.hdrPt[2]+.11,-p.hdrPt[1]];w=Math.max(w,ws);}}}
+   if(T){const dx=T[0]-hp[0],dz=T[2]-hp[2],hl=Math.hypot(dx,dz),kh=hl>.7?.7/hl:1,tx=dx*kh*w,ty=Math.max(-.3,Math.min(.4,T[1]-hp[1]))*w,tz=dz*kh*w;
+    // تنعيم: الزقة متتحركش أكتر من 6 م/ث (مفيش نطّة مفاجئة للجسم)
+    const st=.1,mx=Math.hypot(tx-o[0],ty-o[1],tz-o[2]);const k=mx>st?st/mx:1;o[0]+=(tx-o[0])*k;o[1]+=(ty-o[1])*k;o[2]+=(tz-o[2])*k;}
+   else{o[0]*=.85;o[1]*=.85;o[2]*=.85;}
+   W[12]+=o[0];W[13]+=o[1];W[14]+=o[2];}else{if(p._hdO)p._hdO=null;p._hdHT=null;}
+  /* (contact) إيدين الحارس بتروح للكورة: الكورة الجاية ناحيته (تسديدة أو كورة سريعة) من 1.8 م، وطول ما هو بيمسكها، الجسم بيتزق ناحيتها (لحد 0.35 م)
+     والدراعين بيتمدوا (IK بعضمتين، كتف→كوع→إيد) لجنبين الكورة. بعد ما يبعدها الزقة بترجع لصفر بنعومة. قبل كده الإيد كانت على بعد ~0.46 م (المتوسط) من الكورة لحظة الصدّة */
+  if(gk&&!(p.throwT>0)&&!(b.owner===p&&m.restartKind)&&(!act||act==='gkCatch'||act==='gkScoop'||dive>0)){const o=p._gkO||(p._gkO=[0,0,0]);let w=0;
+   const ch=toWorld(W,GT[J.Spine2],[0,0,0]),B=[b.x,b.z+.11,-b.y],dd=Math.hypot(B[0]-ch[0],B[1]-ch[1],B[2]-ch[2]);
+   if(b.owner===p&&b.inHands)w=1;else if(!b.owner){const v=Math.hypot(b.vx,b.vy),inc=((p.x-b.x)*b.vx+(p.y-b.y)*b.vy)>0&&v>4&&b.last!==p;if(inc){/* بالوقت: الدراعين بيبدأوا يتمدوا 0.3 ث قبل وصول الكورة لنقطة اللقاء المتوقعة (أقرب نقطة من صدر الحارس) وبيوصلوا قبلها بـ 0.1 ث */
+      const rx=B[0]-ch[0],ry=B[1]-ch[1],rz=B[2]-ch[2],vx=b.vx-(p.vx||0),vy=b.vz,vz=-(b.vy-(p.vy||0)),v2=vx*vx+vy*vy+vz*vz,tc=v2>1?-(rx*vx+ry*vy+rz*vz)/v2:-1;
+      if(tc>0&&tc<.3){w=Math.max(0,Math.min(1,(.3-tc)/.2));B[0]+=vx*tc;B[1]+=vy*tc-4.9*tc*tc;B[2]+=vz*tc;}else if(dd<.6)w=1;
+      if(w>0){p._gkT=t;p._gkB=B.slice();p._gkW=w;}}
+    // بعد اللمسة (الكورة ارتدت) الإيدين بتفضل عند نقطة اللمسة 0.15 ث وبعدين بترجع — زي اللكمة/الصدّة الحقيقية
+    else if(p._gkB&&t-p._gkT<.2){const u=(t-p._gkT)/.2;w=Math.max(0,(p._gkW>.5?1:p._gkW)*(u<.5?1:2-2*u));B[0]=p._gkB[0];B[1]=p._gkB[1];B[2]=p._gkB[2];}}
+   w=smw('_gkWs',w);
+   if(w>0){const dx=B[0]-ch[0],dz=B[2]-ch[2],hl=Math.hypot(dx,dz),kh=hl>.35?.35/hl:1,tx=b.inHands?0:dx*kh*w,ty=b.inHands?0:Math.max(-.3,Math.min(.3,(B[1]-ch[1])*.5))*w,tz=b.inHands?0:dz*kh*w;
+    const st=.1,mx=Math.hypot(tx-o[0],ty-o[1],tz-o[2]),k=mx>st?st/mx:1;o[0]+=(tx-o[0])*k;o[1]+=(ty-o[1])*k;o[2]+=(tz-o[2])*k;}else{o[0]*=.85;o[1]*=.85;o[2]*=.85;}
+   W[12]+=o[0];W[13]+=o[1];W[14]+=o[2];
+   if(w>.01){const sx=W[0],sy=W[1],sz=W[2],sl=Math.hypot(sx,sy,sz)||1;for(let k=0;k<2;k++){const A=[J[k?'RightArm':'LeftArm'],J[k?'RightForeArm':'LeftForeArm'],J[k?'RightHand':'LeftHand']];
+     
+     const tw=[B[0]+sx/sl*.12*(k?1:-1),B[1],B[2]+sz/sl*.12*(k?1:-1)];toModel(W,tw,mv);const fi=A[2],S0=GT[A[0]],rl=len(sub(GT[A[1]],S0))+len(sub(GT[fi],GT[A[1]])),sv=sub(mv,S0),svl=len(sv);/* الهدف جوه طول الدراع: الكورة البعيدة بيتشاور عليها مش بيتمد لها */if(svl>rl*.98){const kk=rl*.98/svl;mv[0]=S0[0]+sv[0]*kk;mv[1]=S0[1]+sv[1]*kk;mv[2]=S0[2]+sv[2]*kk;}legIK([A[0],A[1],fi,fi],[GT[fi][0]+(mv[0]-GT[fi][0])*w,GT[fi][1]+(mv[1]-GT[fi][1])*w,GT[fi][2]+(mv[2]-GT[fi][2])*w],[(k?-1:1)*.6,-1,-.5]);}}}
+  else if(p._gkO)p._gkO=null;
+  /* (contact) رجل الاستلام بتروح للكورة: الكورة الأرضية الجاية للاعب (مقصودة ليه أو بتقرب منه) من 1.2 م، الرجل الأقرب ليها بتتمد لمكانها (IK بعضمتين)
+     بوزن بيزيد كل ما الكورة تقرب، ولحد 0.15 ث بعد الاستلام؛ تثبيت الرجلين بيتلغي وقتها */
+  let rch=false,chOn=false;if(!act&&!slide&&!dive&&!gk&&b.z<1.6&&!b.inHands&&!(p.jumpT>0)){const own2=b.owner===p,dB=Math.hypot(b.x-p.x,b.y-p.y);let w=0;
+   let tgx=b.x,tgy=b.y;
+   /* الوزن بالوقت مش بالمسافة: الرجل بتبدأ تروح 0.35 ث قبل ما الكورة توصل وبتوصل بالكامل قبلها بـ 0.15 ث، لنقطة اللقاء المتوقعة (الكورة واللاعب الاتنين
+      بيتحركوا). بالمسافة كانت كورة سريعة بتعدّي المسافة كلها في 3–4 فريمات فالرجل كانت بتنط */
+   if(!b.owner){const cl=((p.x-b.x)*b.vx+(p.y-b.y)*b.vy)>0;if((b.target===p||cl)&&Math.hypot(b.vx,b.vy)>1.5){const rx=b.x-p.x,ry=b.y-p.y,vx=b.vx-(p.vx||0),vy=b.vy-(p.vy||0),v2=vx*vx+vy*vy;
+     /* نقطة اللمسة = المكان اللي الكورة هتدخل فيه مدى الاستلام بتاع اللعب (core.js بيلمسها هناك)، ولو هتعدّي برّه المدى: أقرب نقطة ليه */
+     const CR=globalThis.CONTACT_RR,bsp=Math.hypot(b.vx,b.vy),R=CR?Math.min(b.target===p?CR.T:bsp<5&&b.z<.5?CR.S:CR.O,b.z>.5?CR.H:9):.85;
+     const rv=rx*vx+ry*vy,r2=rx*rx+ry*ry,disc=rv*rv-v2*(r2-R*R);let tc=v2>.25?-rv/v2:-1;if(v2>.25&&disc>=0&&r2>R*R)tc=(-rv-Math.sqrt(disc))/v2;
+     if(tc>0&&tc<.35&&Math.hypot(rx+vx*tc,ry+vy*tc)<1.05){w=Math.max(0,Math.min(1,(.35-tc)/.2));tgx=p.x+rx+vx*tc;tgy=p.y+ry+vy*tc;}
+     else if(dB<.6)w=Math.max(0,Math.min(1,(1.2-dB)/.6));}p._rcT=t;p._rcP=[tgx,tgy];}
+   else if(own2&&p._rcT!=null&&t-p._rcT<.15){w=1-(t-p._rcT)/.15;/* بعد الاستلام الرجل بتفضل عند نقطة اللمسة وبترجع (الكورة نفسها بتتحط قدّامه للمراوغة) */if(p._rcP){tgx=p._rcP[0];tgy=p._rcP[1];}}
+   w=smw('_rcW',w);
+   if(w>.01&&b.z>=.95){/* (contact) كورة على مستوى الصدر (0.95–1.6 م): الجسم بيتزق ناحيتها (لحد 0.3 م) عشان الصدر هو اللي يقابلها */const o=p._rcO||(p._rcO=[0,0]);
+     const ch=toWorld(W,GT[J.Spine2],[0,0,0]),dx=tgx-ch[0],dz=-tgy-ch[2],hl=Math.hypot(dx,dz),kh=hl>.3?.3/hl:1;o[0]+=(dx*kh*w-o[0])*.5;o[1]+=(dz*kh*w-o[1])*.5;W[12]+=o[0];W[14]+=o[1];rch=true;chOn=true;w=0;}
+   if(w>.01){const dT=Math.hypot(tgx-p.x,tgy-p.y)||1,bx=tgx+(p.x-tgx)/dT*.12,by=tgy+(p.y-tgy)/dT*.12;
+    /* الكورة بعيدة عن الجسم (لحد 1 م): الجسم كله بيميل/يخطو ناحيتها لحد 0.35 م والرجل بتكمل الباقي */
+    if(dT>.5){const ex=Math.min(.35,dT-.5)*w;W[12]+=(tgx-p.x)/dT*ex;W[14]-=(tgy-p.y)/dT*ex;}let s2=0,bd=9;for(let k=0;k<2;k++){toWorld(W,GT[FL[k][2]],wv);const dd=Math.hypot(wv[0]-bx,wv[2]+by);if(dd<bd){bd=dd;s2=k;}}if(p._rcF!=null){s2=p._rcF;toWorld(W,GT[FL[s2][2]],wv);bd=Math.hypot(wv[0]-bx,wv[2]+by);}else p._rcF=s2;
+    if(bd<1.1){const fi=FL[s2][2];toModel(W,[bx,Math.max(.1,Math.min(.85,b.z+.05)),-by],mv);legIK(FL[s2],[GT[fi][0]+(mv[0]-GT[fi][0])*w,GT[fi][1]+(mv[1]-GT[fi][1])*w,GT[fi][2]+(mv[2]-GT[fi][2])*w]);rch=true;}}}
+  if(!rch&&!(p._rcW>0))p._rcF=null;
+  if(!(!act&&!slide&&!dive&&!gk&&b.z<1.6&&!b.inHands&&!(p.jumpT>0))&&p._rcW)p._rcW=Math.max(0,p._rcW-8*dtI);
+  if(!chOn&&p._rcO){p._rcO[0]*=.8;p._rcO[1]*=.8;W[12]+=p._rcO[0];W[14]+=p._rcO[1];if(Math.abs(p._rcO[0])+Math.abs(p._rcO[1])<.005)p._rcO=null;else rch=true;}
+  /* (contact) كل الزقّات اللي فوق (الرأسية، إيدين الحارس، مدّة الركلة/التدخل، الصدر) بتتجمع وبتتنعّم هنا: الجسم مايتحركش بسببها أسرع من 3.5 م/ث،
+     فلما حركة تبدأ أو تخلص فجأة (الزقة تروح من 0.4 م لصفر في فريم) الجسم بيرجع مكانه في ~0.1 ث بدل ما ينط */
+  {const dx=W[12]-W12,dy=W[13]-W13,dz=W[14]-W14,o=p._ro||(p._ro=[0,0,0]),dtr=p._roT==null?0:Math.min(.1,Math.max(0,t-p._roT));p._roT=t;
+   if(p._far||dtr===0&&!(Math.abs(o[0])+Math.abs(o[1])+Math.abs(o[2]))){o[0]=dx;o[1]=dy;o[2]=dz;}
+   else{const mx=3.5*Math.max(dtr,1/240),ex=dx-o[0],ey=dy-o[1],ez=dz-o[2],el=Math.hypot(ex,ey,ez),k=el>mx?mx/el:1;o[0]+=ex*k;o[1]+=ey*k;o[2]+=ez*k;}
+   W[12]=W12+o[0];W[13]=W13+o[1];W[14]=W14+o[2];if(Math.abs(o[0])+Math.abs(o[1])+Math.abs(o[2])>.01)rch=true;}
   {const tn=t,dt=p._ikt==null?0:Math.min(.1,Math.max(0,tn-p._ikt));p._ikt=tn;const PL=act==='turn180'||act==='recv'||act==='stop';
-   const ok=!lift&&!pitch&&(!roll||piv===0)&&!slide&&!dive&&!(p.jumpT>0)&&!(p.stun>.4)&&(!act||PL)&&!((p._aw||0)>.05&&!PL&&!act);if(p._far)p._fp=null;else if(ok||p._fp)plantFeet(p,W,ok,dt);}
+   const ok=!rch&&!lift&&!pitch&&(!roll||piv===0)&&!slide&&!dive&&!(p.jumpT>0)&&!(p.stun>.4)&&(!act||PL)&&!((p._aw||0)>.05&&!PL&&!act);if(p._far)p._fp=null;else if(ok||p._fp)plantFeet(p,W,ok,dt);}
   writeRow(out,off,W);}
  // position/orientation of a bind-pose point after skinning by joint j (used for the shirt number)
  function jointPoint(j,W,pt,o){const q=GR[j],t=GT[j];const v=[pt[0]-gT[j][0],pt[1]-gT[j][1],pt[2]-gT[j][2]];const ir=qinv(gR[j],[0,0,0,1]);qrot(ir,v,v);qrot(q,v,v);const x=v[0]+t[0],y=v[1]+t[1],z=v[2]+t[2];o[0]=W[0]*x+W[4]*y+W[8]*z+W[12];o[1]=W[1]*x+W[5]*y+W[9]*z+W[13];o[2]=W[2]*x+W[6]*y+W[10]*z+W[14];return o;}

@@ -1,0 +1,50 @@
+{
+ "walk": {
+  "seamJump_m": 0,
+  "normalStepMotion_m": 0.223
+ },
+ "jog": {
+  "seamJump_m": 0.003,
+  "normalStepMotion_m": 0.011
+ },
+ "run (runM)": {
+  "seamJump_m": 0,
+  "normalStepMotion_m": 0.024
+ },
+ "sprint (sprM)": {
+  "seamJump_m": 0,
+  "normalStepMotion_m": 0.022
+ }
+}
+{
+ "walk": {
+  "largestStep_m": 1.402,
+  "atCycle": 0.988,
+  "medianStep_m": 0.0044
+ },
+ "walk/jog": {
+  "largestStep_m": 0.433,
+  "atCycle": 0.555,
+  "medianStep_m": 0.0056
+ },
+ "jog": {
+  "largestStep_m": 1.349,
+  "atCycle": 0.27,
+  "medianStep_m": 0.0067
+ },
+ "jog/run": {
+  "largestStep_m": 0.239,
+  "atCycle": 0.555,
+  "medianStep_m": 0.0059
+ },
+ "run (runM)": {
+  "largestStep_m": 0.009,
+  "atCycle": 0.472,
+  "medianStep_m": 0.0065
+ },
+ "sprint (sprM)": {
+  "largestStep_m": 0.007,
+  "atCycle": 0.217,
+  "medianStep_m": 0.0061
+ }
+}

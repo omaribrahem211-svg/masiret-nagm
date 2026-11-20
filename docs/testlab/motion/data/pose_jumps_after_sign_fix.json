@@ -1,0 +1,13 @@
+{
+ "www": "/home/claude/masiret-nagm/www/js",
+ "matches": 1,
+ "seconds": 120,
+ "posedFrames": 158400,
+ "popsPer1000": 5.606,
+ "byCause": {
+  "actionChange": 0.366,
+  "possessionChange": 0.208,
+  "keeperOrJumpFlags": 0.057,
+  "other": 4.975
+ }
+}

@@ -32,7 +32,10 @@ const Skel=(()=>{
  function accClear(){accT.fill(0);accR.fill(0);accW=0;}
  function accClip(name,u,w,loop){if(w<=0.001)return;const c=clips[name];let f=loop?((u%1)+1)%1*(c.n-1):Math.max(0,Math.min(1,u))*(c.n-1);const f0=Math.floor(f),f1=Math.min(c.n-1,f0+1),a=f-f0;const d=c.d,s0=f0*nA*7,s1=f1*nA*7;
   for(let k=0;k<nA;k++){const o0=s0+k*7,o1=s1+k*7;for(let i=0;i<3;i++)accT[k*3+i]+=(d[o0+i]*(1-a)+d[o1+i]*a)*w;
-   let x=d[o0+3]*(1-a)+d[o1+3]*a,y=d[o0+4]*(1-a)+d[o1+4]*a,z=d[o0+5]*(1-a)+d[o1+5]*a,ww=d[o0+6]*(1-a)+d[o1+6]*a;
+   /* (motion) الفريمين المتتاليين ممكن يكون الدوران فيهم مخزّن بإشارة عكسية (q و −q نفس الدوران): الدمج الخطي من غير ما نعدّل الإشارة كان بيعدّي على دوران
+      غلط خالص في النص — دراع أو رجل بتتقلب لفريم واحد (قفزات 1.3–1.4 م في دورة المشي والجوجينج). دلوقتي الفريم التاني بيتعكس لو الإشارة مختلفة */
+   const sg=(d[o0+3]*d[o1+3]+d[o0+4]*d[o1+4]+d[o0+5]*d[o1+5]+d[o0+6]*d[o1+6])<0?-1:1;
+   let x=d[o0+3]*(1-a)+d[o1+3]*sg*a,y=d[o0+4]*(1-a)+d[o1+4]*sg*a,z=d[o0+5]*(1-a)+d[o1+5]*sg*a,ww=d[o0+6]*(1-a)+d[o1+6]*sg*a;
    if(accW>0&&(x*accR[k*4]+y*accR[k*4+1]+z*accR[k*4+2]+ww*accR[k*4+3])<0){x=-x;y=-y;z=-z;ww=-ww;}
    accR[k*4]+=x*w;accR[k*4+1]+=y*w;accR[k*4+2]+=z*w;accR[k*4+3]+=ww*w;}
   accW+=w;}

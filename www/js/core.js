@@ -1000,11 +1000,11 @@ class Match{
     const dm=hyp(rx+vx*tc,ry+vy*tc),zc=b.z+b.vz*tc-4.9*tc*tc;if(dm>=bd)continue;
     // قفزة: الكورة هتوصل على ارتفاع 1.6–2.6 م بعد 0.15–0.35 ث. رأسية من غير قفزة: 1.3–1.6 م بعد 0.06–0.2 ث (مش لكورة زميل تحت 1.55 م: دي بتتاخد بالصدر)
     const mine=b.target===p||(b.last&&b.last.team===p.team&&!b.shot);
-    if(zc>=1.6&&zc<2.6&&tc>=HP_T0){bd=dm;best=p;bz=zc;btc=tc;bst=false;}else if(zc>=1.3&&zc<1.6&&tc<=.2&&!(mine&&zc<1.55)&&dm<.75){/* من غير قفزة: كل اللي الكورة هتعدّي جنب راسه بيجهّز (الأقرب هو اللي هيلعبها) */p.hdrHit=false;p.hdrStand=true;p.jumpT=.22;p.hdrClip='head';p.hdrHi=false;p.hdrPk=zc;p.hdrPt=[b.x+b.vx*tc,b.y+b.vy*tc,zc];}}
-   if(best){best.hdrHit=false;best.hdrStand=false;best.jumpT=.45;best.hdrClip=bz>1.97?'headJ':bz>1.72?'head2':'head';best.hdrHi=bz>1.97;best.hdrPk=bz;
+    if(zc>=1.6&&zc<2.6&&tc>=HP_T0){bd=dm;best=p;bz=zc;btc=tc;bst=false;}else if(zc>=1.3&&zc<1.6&&tc<=.2&&!(mine&&zc<1.55)&&dm<.75){/* من غير قفزة: كل اللي الكورة هتعدّي جنب راسه بيجهّز (الأقرب هو اللي هيلعبها) */p.hdrHit=false;p.hdrStand=true;p.jumpT=.22;p.hdrClip='headS';p.hdrTc=tc;p.hdrHi=false;p.hdrPk=zc;p.hdrPt=[b.x+b.vx*tc,b.y+b.vy*tc,zc];}}
+   if(best){best.hdrHit=false;best.hdrStand=false;best.jumpT=.45;best.hdrClip=bz>1.97?'headJ':bz>1.9?'head2':bz>1.72?'headP':'head';best.hdrTc=btc;best.hdrHi=bz>1.97;best.hdrPk=bz;
     best.hdrPt=[b.x+b.vx*btc,b.y+b.vy*btc,bz];}}}
  // ارتفاع راس اللاعب دلوقتي (نفس منحنيات حركات الرأسية في skel.js: الراس بتبدأ 1.5 م وأعلى نقطة 0.25 ث بعد بداية القفزة: head 1.67، head2 1.94، headJ 2.10)
- headZ(p){if(!(p.jumpT>0)||p.hdrStand)return 1.62;const e=.45-p.jumpT,pk=p.hdrClip==='headJ'?2.1:p.hdrClip==='head2'?1.94:1.67;return 1.5+(pk-1.5)*Math.max(0,Math.sin(Math.PI*Math.min(1,e/.5)));}
+ headZ(p){if(!(p.jumpT>0)||p.hdrStand)return 1.58;const e=.45-p.jumpT;if(p.hdrClip==='headP'){/* headP: أعلى نقطة للراس 1.83 م لحظة اللمسة المتوقعة (hdrTc) */const tc=p.hdrTc||.25;return 1.5+.33*Math.max(0,Math.sin(Math.PI*.5*Math.min(2,e/tc)));}const pk=p.hdrClip==='headJ'?2.1:p.hdrClip==='head2'?1.94:1.67;return 1.5+(pk-1.5)*Math.max(0,Math.sin(Math.PI*Math.min(1,e/.5)));}
  contacts(){if(this.walk)return;const b=this.ball;if(b.owner||b.z<.4)b.hdrN=0;if(b.owner){const o=b.owner;if(b.inHands||this.restartKind||this.phase!=='play')return;const od=hyp(b.x-o.x,b.y-o.y);if(od<1||b.z>.8)return;let st=null,sd=.45;for(const p of this.other(o.team).pl){if(p.cool>0||p.stun>0||p.role==='GK'&&b.inHands)continue;const d=hyp(p.x-b.x,p.y-b.y);if(d<sd&&d<od-.15){sd=d;st=p;}}if(st){o.stats.lost++;st.stats.tk++;o.cool=.35;this.take(st);if(this.human&&st.team.idx===this.human.team)this.ev('tackle',{p:st},8);}return;}
   let best=null,bd=1e9;const fast=hyp(b.vx,b.vy)>14&&b.px!==undefined;
     for(const p of this.all){
@@ -1056,7 +1056,7 @@ class Match{
   // (الخصم لعبها بقصد، أو زميل لعبها لعبة جديدة بتتقيّم من الأول). اللمسات العرضية (ارتداد) مش بتعدي من هنا فالحالة بتفضل
   if(b.offside){if(b.offside===p){this.offsideCall(p);return;}b.offside=null;}
   {const r=this.shotLive();if(r)this.shotEnd(p.team.idx===r.team?'retained':'blocked',p);}b.shot=null;/* (final) لعبة راس مقصودة بتنهي التسديدة القديمة: كانت b.shot بتفضل، فلو الكورة دخلت بعدها الهدف كان بيتحسب للمسدد الأول (اتشافت في ماتش المختبر 4053) */
-  const t=p.team,g=this.attG(t),og=this.ownG(t);const wasT=b.target===p,ownBall=b.last&&b.last.team===t,wasX=!!b.cross;/* (contact) نقطة اللمسة: الراس بتفضل عندها لحظة بعد اللمسة */p.hdrPt=[b.x,b.y,b.z];p.hdrHit=true;if(!(p.jumpT>0)){/* رأسية من غير قفزة (الكورة جت على مستوى راسه): حركة الراس من نصها ومن غير ما يطلع من الأرض */p.jumpT=.22;p.hdrStand=true;p.hdrClip=b.z>1.75?'head2':'head';}p.hdrHi=p.hdrClip==='headJ';p.cool=.35;b.hdrN=(b.hdrN||0)+1;const chain=b.hdrN>=2;b.last=p;b.target=null;b.passFrom=null;SFX.kick(.4);
+  const t=p.team,g=this.attG(t),og=this.ownG(t);const wasT=b.target===p,ownBall=b.last&&b.last.team===t,wasX=!!b.cross;/* (contact) نقطة اللمسة: الراس بتفضل عندها لحظة بعد اللمسة */p.hdrPt=[b.x,b.y,b.z];p.hdrHit=true;if(!(p.jumpT>0)){/* رأسية من غير قفزة (الكورة جت على مستوى راسه): حركة الراس من نصها ومن غير ما يطلع من الأرض */p.jumpT=.22;p.hdrStand=true;p.hdrClip='headS';p.hdrTc=0;}p.hdrHi=p.hdrClip==='headJ';p.cool=.35;b.hdrN=(b.hdrN||0)+1;const chain=b.hdrN>=2;b.last=p;b.target=null;b.passFrom=null;SFX.kick(.4);
   const dG=hyp(g[0]-p.x,g[1]-p.y),h=this.human;
   // (v131 C1) قرار التسديد بالراس للـ AI: مش كل كورة جوه 17 م تبقى تسديدة. بيحسب زاوية المرمى المفتوحة من مكانه (عرض المرمى × جيب الزاوية ÷ المسافة)
   // واتجاه جسمه: من زاوية ضيقة أو وهو ضهره للمرمى بيمرر بالراس/ينزّلها لزميل بدل ما يسدد
@@ -1071,8 +1071,8 @@ class Match{
   if(hyp(og[0]-p.x,og[1]-p.y)<30&&!(ownBall&&hyp(og[0]-p.x,og[1]-p.y)>22)){let dx=p.x-og[0],dy=p.y-og[1];const d=hyp(dx,dy)||1;dx/=d;dy/=d;
    // (v131 C) التشتيت بالراس بيروح ناحية الخط الجانبي اللي في ناحيته مش في خط مستقيم من المرمى، ولو فيه خصم قدامه (≤7 م في نفس الاتجاه) بيلف أكتر.
    // قبل كده التشتيت كان بيرجع لنفس المهاجم بالظبط وهو بيرجّعها براسه للمرمى: 11 راس ورا بعض بين اتنين في 2.4 ث
-   const sd=Math.sign(p.y-CY)||1;let ang=.6;for(const q of this.other(t).pl){const ox=q.x-p.x,oy=q.y-p.y,od=hyp(ox,oy);if(od<7&&od>.3&&(ox*dx+oy*dy)/od>.8){ang=1;break;}}
-   const a0=Math.atan2(dy,dx),a1=Math.sin(a0+ang)*sd>Math.sin(a0-ang)*sd?a0+ang:a0-ang,v=chain?16:14;b.vx=Math.cos(a1)*v;b.vy=Math.sin(a1)*v;b.vz=chain?2.2:4.5;return;}
+   const sd=Math.sign(p.y-CY)||1;let ang=.4;for(const q of this.other(t).pl){const ox=q.x-p.x,oy=q.y-p.y,od=hyp(ox,oy);if(od<7&&od>.3&&(ox*dx+oy*dy)/od>.8){ang=.75;break;}}
+   const a0=Math.atan2(dy,dx),a1=Math.sin(a0+ang)*sd>Math.sin(a0-ang)*sd?a0+ang:a0-ang,v=chain?14:11.5;b.vx=Math.cos(a1)*v;b.vy=Math.sin(a1)*v;b.vz=chain?2.2:4.8;return;}
   // تمريرة بالراس لأقرب زميل مناسب قدامه بدل ما يخبطها في أي اتجاه
   let bq=null,bs=-1e9;for(const q of t.pl){if(q===p||q.role==='GK'||q.off)continue;const dx=q.x-p.x,dy=q.y-p.y,d=hyp(dx,dy);if(d<5||d>24)continue;let opp=99;for(const o of this.other(t).pl)opp=Math.min(opp,hyp(o.x-q.x,o.y-q.y));const fw=(dx*t.dir)/d;const sc=fw*6-Math.abs(d-12)*.25+Math.min(opp,6)*1.2+((dx*p.fx+dy*p.fy)/d)*3;if(sc>bs){bs=sc;bq=q;}}
   if(bq){const offs=this.isOffside(bq,p);const dx=bq.x-p.x,dy=bq.y-p.y,d=hyp(dx,dy);const s2=clamp(6+d*.45,8,15),T=d/s2;b.vx=dx/d*s2;b.vy=dy/d*s2;b.vz=chain?Math.min(-1.5,4.9*T-b.z/T):Math.max(1.5,4.9*T-b.z/T);/* (F) تاني راس ورا بعض من غير ما الكورة تلمس الأرض: الراس بينزّلها لرجل الزميل */b.target=bq;b.passer=p;b.passT=this.time;b.passFrom=p;b.offside=offs?bq:null;return;}

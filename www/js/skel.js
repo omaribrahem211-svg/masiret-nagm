@@ -195,8 +195,14 @@ const Skel=(()=>{
   computeGlobals();{const tn=t,dt3=p._inT==null?0:Math.min(.2,Math.max(0,tn-p._inT));p._inT=tn;if(p._far)p._in=null;else inertialize(p,dt3);}
   // world: lift/pitch/roll around a pivot, then yaw to facing
   const yaw=Math.atan2(p.fx,-p.fy);let lift=0,pitch=0,roll=0,piv=.95;
+  /* (motion) ميلان الجسم في اللفّة: اللاعب اللي بيلف وهو بيجري بيميل ناحية مركز اللفّة (زاوية = atan(السرعة × سرعة اللف / الجاذبية)، لحد 0.3 راديان)،
+     محسوبة من تغيّر اتجاه السرعة نفسها وناعمة (0.12 ث). الميلان حوالين الرجلين (الجسم مش بيطلع من الأرض) */
+  let lean=0;{const tn=t,dl=p._lnT==null?0:Math.min(.1,Math.max(0,tn-p._lnT));p._lnT=tn;const va=Math.atan2(p.vy,p.vx);
+   let wr=0;if(dl>0&&p._lnA!=null&&sp>2.5){wr=Math.atan2(Math.sin(va-p._lnA),Math.cos(va-p._lnA))/dl;}p._lnA=va;
+   const tgt=!act&&!slide&&!dive&&!(p.jumpT>0)?-Math.max(-.3,Math.min(.3,Math.atan(sp*wr/9.8))):0;p._ln=(p._ln||0)+(tgt-(p._ln||0))*Math.min(1,dl/.12);lean=p._ln;}
   if(slide&&!act){pitch=-1.15;piv=.35;lift=-.28;}
   if(dive>0&&!act){const dH=p.diveH==null?1:p.diveH;const k=Math.sin(Math.min(1,(1-dive)*1.6)*Math.PI*.5);const sideW=-(p.diveDir||1);const fs=Math.sign(-Math.sin(yaw)*0+Math.cos(yaw)*sideW)||1;roll=fs*(dH<.6?1.45:1.3)*k;lift=(.12+.32*Math.min(dH,2))*Math.sin((1-dive)*Math.PI)-.2*k;}
+  if(!roll&&Math.abs(lean)>.005){roll=lean;piv=0;}
   if(gk&&p.gkHi>0&&!dive&&!act)lift+=.5*Math.sin(Math.PI*(1-p.gkHi/.5));
   if(gk&&dive>0&&act&&(p.diveH||0)>1.25)lift+=Math.min(.75,(p.diveH-1.1)*.6)*Math.sin((1-dive)*Math.PI);
   if(p.jumpT>0&&!slide&&!dive)lift+=(act==='head'?.6:1)*.42*Math.sin(Math.PI*(1-p.jumpT/.45));
@@ -217,7 +223,7 @@ const Skel=(()=>{
      const bx=p._kb[0]-dx*.15,by=p._kb[1]-dy*.15;toWorld(W,GT[fi],wv);if(Math.hypot(wv[0]-bx,wv[2]+by)<.9){toModel(W,[bx,.1,-by],mv);legIK(L,[GT[fi][0]+(mv[0]-GT[fi][0])*w,GT[fi][1]+(mv[1]-GT[fi][1])*w,GT[fi][2]+(mv[2]-GT[fi][2])*w]);}}}}
   else{p._kf=null;if(!(p.windT>0||p.kickT>0))p._kb=null;}
   {const tn=t,dt=p._ikt==null?0:Math.min(.1,Math.max(0,tn-p._ikt));p._ikt=tn;const PL=act==='turn180'||act==='recv'||act==='stop';
-   const ok=!lift&&!pitch&&!roll&&!slide&&!dive&&!(p.jumpT>0)&&!(p.stun>.4)&&(!act||PL)&&!((p._aw||0)>.05&&!PL&&!act);if(p._far)p._fp=null;else if(ok||p._fp)plantFeet(p,W,ok,dt);}
+   const ok=!lift&&!pitch&&(!roll||piv===0)&&!slide&&!dive&&!(p.jumpT>0)&&!(p.stun>.4)&&(!act||PL)&&!((p._aw||0)>.05&&!PL&&!act);if(p._far)p._fp=null;else if(ok||p._fp)plantFeet(p,W,ok,dt);}
   writeRow(out,off,W);}
  // position/orientation of a bind-pose point after skinning by joint j (used for the shirt number)
  function jointPoint(j,W,pt,o){const q=GR[j],t=GT[j];const v=[pt[0]-gT[j][0],pt[1]-gT[j][1],pt[2]-gT[j][2]];const ir=qinv(gR[j],[0,0,0,1]);qrot(ir,v,v);qrot(q,v,v);const x=v[0]+t[0],y=v[1]+t[1],z=v[2]+t[2];o[0]=W[0]*x+W[4]*y+W[8]*z+W[12];o[1]=W[1]*x+W[5]*y+W[9]*z+W[13];o[2]=W[2]*x+W[6]*y+W[10]*z+W[14];return o;}

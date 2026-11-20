@@ -1,0 +1,13 @@
+{
+ "www": "/tmp/rv/ver/v133",
+ "kicks": 94,
+ "footToBallAtRelease_m": {
+  "median": 0.269,
+  "p90": 0.72
+ },
+ "minWithin0_1s_m": {
+  "median": 0.234,
+  "p90": 0.693
+ },
+ "over50cmAtRelease": 0.16
+}

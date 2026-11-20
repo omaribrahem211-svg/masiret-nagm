@@ -1,0 +1,13 @@
+{
+ "www": "/home/claude/masiret-nagm/www/js",
+ "kicks": 82,
+ "footToBallAtRelease_m": {
+  "median": 0.333,
+  "p90": 0.688
+ },
+ "minWithin0_1s_m": {
+  "median": 0.207,
+  "p90": 0.437
+ },
+ "over50cmAtRelease": 0.244
+}

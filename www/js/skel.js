@@ -107,6 +107,7 @@ const Skel=(()=>{
    const O=st.O[i];O[0]=GR[i][0];O[1]=GR[i][1];O[2]=GR[i][2];O[3]=GR[i][3];}
   // المواضع من جديد من الدورانات (الطول بين المفاصل ثابت) — بس لو فيه إزاحة شغالة
   if(!any)return;for(let i=0;i<nJ;i++){const pp=par[i];if(pp<0)continue;_v3[0]=LT[i*3]*rS[pp][0];_v3[1]=LT[i*3+1]*rS[pp][1];_v3[2]=LT[i*3+2]*rS[pp][2];qrot(GR[pp],_v3,tv);GT[i][0]=GT[pp][0]+tv[0];GT[i][1]=GT[pp][1]+tv[1];GT[i][2]=GT[pp][2]+tv[2];}}
+ const KICKS={kick:1,kickL:1,kickM:1,shotRun:1,shotP:1,pass:1,passS:1,pen:1,penA:1,penB:1,gkPass:1};
  // ---- main: pose player p into row
  function pose(p,m,t,out,off,W){resetRest();if(!(p.slide>0))p.slideMax=0;OV.clear();ADD.clear();accClear();
   const sp=Math.hypot(p.vx,p.vy),b=m.ball,gk=p.role==='GK';
@@ -206,6 +207,15 @@ const Skel=(()=>{
   // world = T(x, lift, -y) * T(0,piv,0) * R * T(0,-piv,0) * S
   W[0]=r00*sc;W[1]=r10*sc;W[2]=r20*sc;W[3]=0;W[4]=r01*sc;W[5]=r11*sc;W[6]=r21*sc;W[7]=0;W[8]=r02*sc;W[9]=r12*sc;W[10]=r22*sc;W[11]=0;
   W[12]=p.x-r01*piv;W[13]=lift+piv-r11*piv;W[14]=-p.y-r21*piv;W[15]=1;
+  /* (motion) لمسة الكورة في الركلة: حوالين لحظة الضرب (نص حركة الركلة) رجل الضرب بتتمد ناحية مكان الكورة الحقيقي (IK بعضمتين) بوزن بيطلع ويرجع بنعومة.
+     الفكرة من football-tackle-lab (الشوطة بتتحسب لما الرجل تلمس الكورة فعلاً)؛ هنا العكس: اللعب زي ما هو والرجل هي اللي بتروح للكورة. قبل كده الرجل كانت بعيدة
+     عن الكورة لحظة الضرب ~33 سم في المتوسط و24% أكتر من 50 سم */
+  if(act&&KICKS[act]){if(b.owner===p&&!b.inHands){p._kb=[b.x,b.y,b.z];}const kq=p.windT>0?.5*(1-p.windT/(p.windD||.1)):p.kickT>0?.5+.5*(1-p.kickT/.34):-1;
+   if(kq>=0&&p._kb){const w=kq<.5?Math.max(0,Math.min(1,(kq-.22)/.28)):Math.max(0,1-(kq-.5)/.14);
+    if(w>.01){if(p._kf==null||kq<.25)p._kf=act==='kickL'||act==='penB'&&p.lefty?0:1;const L=FL[p._kf],fi=L[2];
+     let dx=p.fx,dy=p.fy;if(!b.owner&&b.last===p){const v=Math.hypot(b.vx,b.vy);if(v>2){dx=b.vx/v;dy=b.vy/v;}}
+     const bx=p._kb[0]-dx*.15,by=p._kb[1]-dy*.15;toWorld(W,GT[fi],wv);if(Math.hypot(wv[0]-bx,wv[2]+by)<.9){toModel(W,[bx,.1,-by],mv);legIK(L,[GT[fi][0]+(mv[0]-GT[fi][0])*w,GT[fi][1]+(mv[1]-GT[fi][1])*w,GT[fi][2]+(mv[2]-GT[fi][2])*w]);}}}}
+  else{p._kf=null;if(!(p.windT>0||p.kickT>0))p._kb=null;}
   {const tn=t,dt=p._ikt==null?0:Math.min(.1,Math.max(0,tn-p._ikt));p._ikt=tn;const PL=act==='turn180'||act==='recv'||act==='stop';
    const ok=!lift&&!pitch&&!roll&&!slide&&!dive&&!(p.jumpT>0)&&!(p.stun>.4)&&(!act||PL)&&!((p._aw||0)>.05&&!PL&&!act);if(p._far)p._fp=null;else if(ok||p._fp)plantFeet(p,W,ok,dt);}
   writeRow(out,off,W);}

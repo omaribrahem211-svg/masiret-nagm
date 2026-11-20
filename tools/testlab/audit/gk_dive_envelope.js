@@ -14,7 +14,7 @@ for(let k=0;k<300;k++){R.f=mulberry32(42);const m=new G.Match({home:{name:'H',ki
  m.all.forEach((p,i)=>{if(p.role!=='GK'){p.x=50;p.y=2+i*.3;}});gk.x=g[0]+sx*1.5;gk.y=CY;gk.fx=sx;gk.fy=0;
  Object.assign(sh,{x:g[0]+sx*16,y:CY+(k%7-3)*1.5,fx:-sx,fy:0,vx:0,vy:0,pend:null,windNow:1});Object.assign(m.ball,{owner:sh,x:sh.x-sx*.4,y:sh.y,z:0,vx:0,vy:0,vz:0,inHands:false});
  m.shoot(sh,.4+(k%4)*.2,(k%9-4)*.25,false);
- for(let i=0;i<90;i++){m.update(1/60);if(gk.diveT>0){gk._aw=1;gk._pt=null;const e=.75-gk.diveT;SK.pose(gk,m,m.time*1000,PM,0,PW);
+ for(let i=0;i<90;i++){m.update(1/60);if(gk.diveT>0){gk._aw=1;gk._pt=null;const e=.75-gk.diveT;SK.pose(gk,m,m.time,PM,0,PW);
    const hs=['LeftHand','RightHand'].map(n=>{const j=SK.J[n];SK.jointPoint(j,PW,SK.gT[j],PO);return [PO[0],-PO[2],PO[1]];});
    const far=hs.reduce((a,p)=>((p[1]-gk.y)*gk.diveDir>(a[1]-gk.y)*gk.diveDir?p:a));const key=(gk._act||'none')+'|'+Math.round(e/.1)/10;
    (B[key]=B[key]||[]).push([(far[1]-gk.y)*gk.diveDir,far[2],gk.diveH]);}

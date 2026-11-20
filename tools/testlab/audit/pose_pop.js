@@ -27,7 +27,7 @@ for (let id = 1; id <= N; id++) {
     m.update(1 / 60); f++;
     if (m.phase !== 'play') { prev.clear(); continue; }
     for (const p of m.all) {
-      SK.pose(p, m, m.time * 1000, PM, 0, PW); frames++;
+      SK.pose(p, m, m.time, PM, 0, PW); frames++;
       const h = pt(HIP), cur = J.map(j => { const q = pt(j); return [q[0] - h[0], q[1] - h[1], q[2] - h[2]]; }), act = p._act || null;
       if (act) actFrames++; if (act === 'recv' && hyp(p.vx, p.vy) > 1) recvMoving++;
       const pv = prev.get(p);

@@ -30,26 +30,30 @@ function drawOverlay(ctx,m,w,h,proj){ctx.clearRect(0,0,w,h);
  if(m.pen&&!m.pen.live&&m.ball.owner&&h0&&m.ball.owner===h0.ctrl){ctx.fillStyle='rgba(7,11,22,.75)';ctx.fillRect(w/2-150,h*.62,300,30);ctx.fillStyle='#F5C542';ctx.font='700 14px Changa, sans-serif';ctx.fillText('وجّه الدايرة بالجويستيك فوق/تحت · سيب الزرار قبل الأحمر',w/2,h*.62+23);}
  m.radar(ctx,w,h);FX.draw(ctx,w,h,m);}
 /* ---------- التعليق الصوتي (ملفات متولدة بالذكاء الاصطناعي وقت البناء) ---------- */
-const Voice={on:true,ready:false,man:null,buf:{},cur:null,last:0,
- base:'audio/voice/',async init(){this.ready=false;this.buf={};const d=(typeof App!=='undefined'&&App.settings&&App.settings.dial)?'gulf':'eg';for(const b of ['audio/voice/'+d+'/','audio/voice/']){try{const r=await fetch(b+'manifest.json',{cache:'no-store'});if(!r.ok)continue;const m=await r.json();if(m&&m.lines){this.man=m;this.base=b;this.ready=true;return;}}catch(e){}}},
+/* التعليق الصوتي: ملفات «Arabic Commentary Pack» (audio/comm). المستخدم بيشغّله أو يقفله من الإعدادات (voice). التعليق المولّد قبل كده (TTS وصوت GitHub) اتلغى */
+const Voice={on:false,ready:false,man:null,buf:{},cur:null,last:0,lastI:{},base:'audio/comm/',
+ async init(){this.ready=false;this.buf={};try{const r=await fetch(this.base+'manifest.json',{cache:'no-store'});if(r.ok){const m=await r.json();if(m&&m.lines){this.man=m;this.ready=true;}}}catch(e){}},
  has(k){return this.ready&&this.man.lines[k]>0;},
- async load(k,i){const url=this.base+k+'_'+i+'.'+(this.man.ext||'mp3');if(this.buf[url])return this.buf[url];if(!SFX.ctx)return null;const ab=await(await fetch(url)).arrayBuffer();const b=await new Promise((ok,no)=>SFX.ctx.decodeAudioData(ab,ok,no));this.buf[url]=b;return b;},
- preload(){if(!this.ready||!SFX.ctx)return;for(const k in this.man.lines)for(let i=0;i<this.man.lines[k];i++)this.load(k,i).catch(()=>{});},
- play(k,prio){if(!this.on||!this.has(k)||!SFX.ctx||!SFX.on)return false;const now=performance.now();if(!prio&&(this.cur||now-this.last<2500))return true;this.last=now;const i=Math.floor(Math.random()*this.man.lines[k]);
+ async load(k,i){const url=this.base+k+'_'+i+'.'+(this.man.ext||'m4a');if(this.buf[url])return this.buf[url];if(!SFX.ctx)return null;const ab=await(await fetch(url)).arrayBuffer();const b=await new Promise((ok,no)=>SFX.ctx.decodeAudioData(ab,ok,no));this.buf[url]=b;return b;},
+ preload(){if(!this.on||!this.ready||!SFX.ctx)return;for(const k in this.man.lines)for(let i=0;i<this.man.lines[k];i++)this.load(k,i).catch(()=>{});},
+ // k = نوع الجملة، idx = أرقام الجمل المناسبة للموقف (مثلاً اللي بتتكلم عن «النجم» بس)، prio = يقطع اللي بيتقال
+ play(k,idx,prio){if(!this.on||!this.has(k)||!SFX.ctx)return null;const now=performance.now();if(!prio&&(this.cur||now-this.last<2500))return null;
+  let L=(idx&&idx.length?idx:[...Array(this.man.lines[k]).keys()]).filter(i=>i<this.man.lines[k]);if(!L.length)return null;if(L.length>1)L=L.filter(i=>i!==this.lastI[k]);const i=L[Math.floor(Math.random()*L.length)];this.lastI[k]=i;this.last=now;
   this.load(k,i).then(b=>{if(!b)return;if(this.cur){try{this.cur.stop();}catch(e){}}const c=SFX.ctx,s=c.createBufferSource();s.buffer=b;
-   // صوت المعلّق: فلتر بث خفيف + ضاغط، والجمهور بيوطى شوية وهو بيتكلم وبيرجع بعدها
-   if(!this.bus){const hp=c.createBiquadFilter();hp.type='highpass';hp.frequency.value=120;const pr=c.createBiquadFilter();pr.type='peaking';pr.frequency.value=2800;pr.gain.value=2.5;pr.Q.value=.9;const cp=c.createDynamicsCompressor();cp.threshold.value=-20;cp.ratio.value=3.5;cp.attack.value=.005;cp.release.value=.15;const og=c.createGain();og.gain.value=1.25;hp.connect(pr);pr.connect(cp);cp.connect(og);og.connect(c.destination);this.bus=hp;}
-   s.connect(this.bus);const dk=SFX.duckG,t0=c.currentTime;if(dk){dk.gain.cancelScheduledValues(t0);dk.gain.setTargetAtTime(.55,t0,.08);}
-   s.onended=()=>{if(this.cur===s){this.cur=null;if(dk)dk.gain.setTargetAtTime(1,c.currentTime,.35);}};s.start();this.cur=s;}).catch(()=>{});return true;},
+   if(!this.bus){const og=c.createGain();og.gain.value=1.1;og.connect(c.destination);this.bus=og;}
+   s.connect(this.bus);const dk=SFX.duckG,t0=c.currentTime;if(dk){dk.gain.cancelScheduledValues(t0);dk.gain.setTargetAtTime(.5,t0,.08);}
+   s.onended=()=>{if(this.cur===s){this.cur=null;if(dk)dk.gain.setTargetAtTime(1,c.currentTime,.35);}};s.start();this.cur=s;}).catch(()=>{});
+  return this.man.text&&this.man.text[k]?this.man.text[k][i]:'';},
  stop(){if(this.cur){try{this.cur.stop();}catch(e){}this.cur=null;}}
 };
 /* ---------- التعليق ---------- */
-const Comm={last:0,el:null,voice:null,tts:false,text:false,
- init(){this.el=document.getElementById('comm');try{if('speechSynthesis' in window){const pickV=()=>{const vs=speechSynthesis.getVoices();this.voice=vs.find(v=>/ar[-_]EG/i.test(v.lang))||vs.find(v=>/^ar/i.test(v.lang))||null;};pickV();speechSynthesis.onvoiceschanged=pickV;}}catch(e){}},
- say(type,vars,prio){const dl=(App.settings&&App.settings.dial)?'gulf':'eg';const FB={goal_late:'goal',goal_equal:'goal',goal_lead:'goal',goal_comeback:'goal',goal_header:'goal',goal_long:'goal',goal_pen:'goal',save_great:'save',gk_rush:'save',miss_big:'miss',shot_long:'shot',end_win:'end',end_draw:'end',end_loss:'end'};const D=typeof COMM_D!=='undefined'?COMM_D[dl]:null;let L0=(D&&D[type])||COMM[type];if(!L0&&FB[type]){type=FB[type];L0=(D&&D[type])||COMM[type];}if(!L0)return;const vk=Voice.has(type)?type:(FB[type]&&Voice.has(FB[type])?FB[type]:type);const spoke=Voice.play(vk,prio);const now=performance.now();if(!prio&&now-this.last<2200)return;this.last=now;let txt=pick(L0);for(const k in (vars||{}))txt=txt.split('{'+k+'}').join(vars[k]);
-  if(this.text&&this.el){this.el.textContent=txt;this.el.classList.remove('on');void this.el.offsetWidth;this.el.classList.add('on');}
-  if(!spoke&&this.tts&&this.voice){try{if(prio)speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt);u.voice=this.voice;u.lang=this.voice.lang;u.rate=1.08;u.pitch=prio?1.15:1;speechSynthesis.speak(u);}catch(e){}}},
- stop(){Voice.stop();try{speechSynthesis.cancel();}catch(e){}if(this.el)this.el.classList.remove('on');}
+// التعليق المكتوب على الشاشة بس (الصوت بقى من ملفات التعليق في Voice)
+const Comm={last:0,el:null,text:false,
+ init(){this.el=document.getElementById('comm');},
+ say(type,vars,prio){/* لو التعليق الصوتي قال جملة للحدث ده، الكلام المكتوب بيبقى نفس الجملة */if(this.over!=null){const o=this.over;this.over=null;this.show(o);this.last=performance.now();return;}const dl=(App.settings&&App.settings.dial)?'gulf':'eg';const FB={goal_late:'goal',goal_equal:'goal',goal_lead:'goal',goal_comeback:'goal',goal_header:'goal',goal_long:'goal',goal_pen:'goal',save_great:'save',gk_rush:'save',miss_big:'miss',shot_long:'shot',end_win:'end',end_draw:'end',end_loss:'end'};const D=typeof COMM_D!=='undefined'?COMM_D[dl]:null;let L0=(D&&D[type])||COMM[type];if(!L0&&FB[type]){type=FB[type];L0=(D&&D[type])||COMM[type];}if(!L0)return;const now=performance.now();if(!prio&&now-this.last<2200)return;this.last=now;let txt=pick(L0);for(const k in (vars||{}))txt=txt.split('{'+k+'}').join(vars[k]);
+  this.show(txt);},
+ show(txt){if(this.text&&this.el&&txt){this.el.textContent=txt;this.el.classList.remove('on');void this.el.offsetWidth;this.el.classList.add('on');}},
+ stop(){Voice.stop();if(this.el)this.el.classList.remove('on');}
 };
 /* ---------- أجواء الجمهور: تصفيق وطبول وأغاني بإيقاع، بتعلى مع الهجمة الخطيرة والجون ---------- */
 const Stadium={on:false,next:0,busy:0,lvl:.07,out:null,
@@ -71,7 +75,7 @@ const Stadium={on:false,next:0,busy:0,lvl:.07,out:null,
   if(P===1){const b=.42;for(let bar=0;bar<4;bar++){const t0=t+bar*b*4;[0,1,2,2.5].forEach(x=>this.drum(t0+x*b,v));this.shout(t0+3*b,v,.32);}return b*16;}  // طبلة الألتراس وهتاف "هيه"
   if(P===2){const notes=[0,0,4,7,5,4,2,0, 0,0,4,7,9,7,5,4],st=.32;this.sing(t,notes,st,v);for(let i=0;i<notes.length;i+=2)this.clap(t+i*st,v*.5);return notes.length*st;}  // أغنية الجمهور
   const b=.5;for(let i=0;i<8;i++){this.drum(t+i*b,v*.8);if(i%2===1)this.clap(t+i*b,v);}this.shout(t+8*b,v*1.2,.6);return 8*b+.6;},
- tick(m,dt){if(!this.on||!SFX.ctx||!SFX.on||!m)return;const c=SFX.ctx,now=c.currentTime,b=m.ball;
+ tick(m,dt){if(!this.on||!SFX.ctx||!SFX.on||!SFX.crowdOn||!m)return;const c=SFX.ctx,now=c.currentTime,b=m.ball;
   // علو الجمهور: هادي في نص الملعب وبيعلى لما الكورة تقرب من المرمى
   let lv=.06;if(m.phase==='play'){const dG=Math.min(b.x,L-b.x);lv=.055+clamp((30-dG)/30,0,1)*.11;}
   if(Math.abs(lv-this.lvl)>.01){this.lvl=lv;SFX.crowd(lv,.6);}

@@ -1,7 +1,7 @@
 // مسيرة نجم — المسيرة والحياة: إنشاء اللاعب، المواسم والبطولات، المنتخب، المؤتمرات، السوشيال، العقود، الحياة الشخصية، الجوائز، وحلقة اللعبة
 'use strict';
 const $=id=>document.getElementById(id);
-const App={match:null,demo:null,c:null,settings:{halfLen:120,diff:0,lock:0,sound:1,gfx:2,plm:0,films:1,cam:0,v113:1,tac:'bal',intro:1,replay:1,voice:0,ctext:0,dial:0},returnTo:'title',quick:false};
+const App={match:null,demo:null,c:null,settings:{halfLen:120,diff:0,lock:0,sound:1,gfx:2,plm:0,films:1,cam:0,v113:1,tac:'bal',intro:1,replay:1,voice:0,ctext:0,dial:0,crowd:1},returnTo:'title',quick:false};
 const SAVE='masiret-nagm-v2';
 // الحفظ: نسخة في المتصفح + نسخة في ذاكرة الجهاز (SharedPreferences) عشان المسيرة ماتضيعش لو أندرويد قفل اللعبة فجأة، ومعاها بصمة تكشف أي تعديل في ملف الحفظ
 function packSave(){if(App.c)Guard.protect(App.c);const d=JSON.stringify({c:App.c,s:App.settings});return JSON.stringify({v:3,t:Date.now(),d,h:Guard.hash(d)});}
@@ -229,7 +229,7 @@ function pickTxt(p){return p.st==='start'?'أساسي في التشكيلة':p.s
 function coachSetup(m,pk){App.subPlan={pk,done:false};if(pk.st!=='bench'||!m)return;const t=m.t[0],st=t.star;if(!st)return;const idx=t.pl.indexOf(st);const rep=t.bench.find(b=>b.role===st.role)||t.bench[0];Object.assign(rep,{i:st.i,role:st.role,bx:st.bx,by:st.by,x:st.x,y:st.y,vx:0,vy:0,team:t,noSub:true});t.pl[idx]=rep;t.bench=t.bench.filter(x=>x!==rep);m.all=[...m.t[0].pl,...m.t[1].pl];if(m.ball.owner===st)m.ball.owner=rep;
  const hh=m.human;if(hh&&hh.ctrl===st)hh.ctrl=rep;m.human=null;m.skip();let g=0;while(m.minute()<pk.min&&m.phase!=='end'&&g++<400000){if(m.phase==='replay')m.endReplay();if(m.phase!=='play')m.pt=Math.min(m.pt,.01);m.update(1/30);}
  m.human=hh;m.rec=[];let ok=m.sub(t,rep,st);if(!ok){const alt=t.pl.filter(q=>q.role===st.role&&q.role!=='GK')[0]||t.pl.filter(q=>q.role!=='GK')[0];st.subbed=false;ok=m.sub(t,alt,st);}if(hh){hh.ctrl=st;}App.subPlan.inMin=m.minute();m.banner={t:'نزلت الملعب!',s:'الدقيقة '+m.minute()+' — النتيجة '+m.score[0]+'-'+m.score[1],life:2.6};}
-function commTick(m,dt){if(m.phase!=='play'||!App.settings.voice)return;m.cT=(m.cT||0)+dt;if(m.cT<R(9,13))return;m.cT=0;if(Voice.cur)return;const b=m.ball,t=m.t[0];const ax=t.dir===1?b.x:L-b.x;const mn=m.minute();if(mn>=84&&m.score[0]<=m.score[1]&&!m.prs){m.prs=1;Comm.say('pressure',{},1);return;}if(Math.random()<.55)Comm.say(ax>70?'build_att':ax<35?'build_def':'build_mid');}
+function commTick(m,dt){if(m.phase!=='play'||!App.settings.ctext)return;m.cT=(m.cT||0)+dt;if(m.cT<R(9,13))return;m.cT=0;if(Voice.cur)return;const b=m.ball,t=m.t[0];const ax=t.dir===1?b.x:L-b.x;const mn=m.minute();if(mn>=84&&m.score[0]<=m.score[1]&&!m.prs){m.prs=1;Comm.say('pressure',{},1);return;}if(Math.random()<.55)Comm.say(ax>70?'build_att':ax<35?'build_def':'build_mid');}
 function coachTick(m){const P=App.subPlan;if(!P||P.done||!m||m.phase!=='play')return;const t=m.t[0],st=t.star;if(!st||st.off||!t.pl.includes(st))return;
  if(!P.perf&&!App.quick&&m.minute()>=(P.pchk||(P.pchk=RI(60,72)))){P.perf=1;const lr=m.liveR(st);const c=App.c;if(t.bench.length&&t.subs<5&&(lr<5.6&&c.coach<62||st.stam<28)){P.done=true;const inp=t.bench.find(b=>b.role===st.role)||t.bench[0];P.outAt=m.minute();m.sub(t,st,inp);m.banner={t:'المدرب طلّعك',s:st.stam<28?'خلصت طاقتك':'أداءك لحد دلوقتي مش مقنع (تقييم '+Math.max(4,lr).toFixed(1)+')',life:2.6};if(m.human&&m.human.lock){m.human=null;m.ff=true;}return;}}if(P.pk.st==='start'&&P.pk.weak&&m.minute()>=(P.chk||(P.chk=RI(64,78)))){P.done=true;const res=Math.sign(m.score[0]-m.score[1]);if(rate(st.stats,res)<6.5&&t.subs<5&&t.bench.length){const inp=t.bench.find(b=>b.role===st.role)||t.bench[0];P.outAt=m.minute();m.sub(t,st,inp);m.banner={t:'المدرب طلّعك',s:'تقييمك لحد دلوقتي ضعيف',life:2.4};if(m.human&&m.human.lock){m.human=null;m.ff=true;}}}}
 /* ---------- prematch ---------- */
@@ -449,11 +449,33 @@ function newSeason(){const c=App.c;c.season++;c.ss={apps:0,g:0,a:0,rs:0,yc:0,mot
 function retire(why){const c=App.c;$('reNew').onclick=()=>{SFX.init();Object.assign(NEW,{step:1,name:'',clubs:null,club:null});show('create');renderCreate();};if(c.retired){show('retire');}c.retired=true;addNews(c,'me','رسمياً: '+c.name+' يعلن اعتزاله كرة القدم في سن '+c.age,true);store();$('reT').textContent='اعتزال '+c.name;$('reS').textContent=`${typeof why==='string'?why+' · ':''}${c.age} سنة · ${c.trophies.length} بطولة وجائزة${c.won?' · '+c.won+' كرة ذهبية':''}`;$('reG').innerHTML=`<div><b>${c.tot.apps}</b><span>ماتش</span></div><div><b>${c.tot.g}</b><span>هدف</span></div><div><b>${c.tot.a}</b><span>أسيست</span></div><div><b>${c.intl.caps}</b><span>دولي</span></div><div><b>${num(c.followers)}</b><span>متابع</span></div><div><b>${money(c.money)}</b><span>ثروة</span></div>`;show('retire');FX.confetti(150);}
 
 /* ---------- settings ---------- */
-function renderSettings(){const vi=$('voiceInfo');if(vi)vi.textContent=Voice.ready?'صوت المعلّق جاهز: '+(App.settings.dial?'خليجي':'مصري')+' ('+Voice.man.engine+')':'الصوت بيتولّد وقت بناء نسخة الأندرويد على GitHub. في نسخة المتصفح دي مش موجود.';document.querySelectorAll('#scr-settings .seg').forEach(seg=>{const k=seg.dataset.k;seg.querySelectorAll('button').forEach(b=>{b.classList.toggle('on',String(App.settings[k])===b.dataset.v);b.onclick=()=>{App.settings[k]=Number(b.dataset.v);SFX.on=!!App.settings.sound;Comm.tts=!!App.settings.voice;Voice.on=!!App.settings.voice;Comm.text=!!App.settings.ctext;SFX.crowd(App.settings.sound?.05:0);if(k==='dial')Voice.init().then(()=>{Voice.preload();renderSettings();});store();renderSettings();};});});}
+// الأصوات: المؤثرات (sound) والجمهور (crowd) والتعليق الصوتي (voice) والتعليق المكتوب (ctext)، كل واحد بيتشغّل ويتقفل لوحده من الإعدادات
+function applyAudioSettings(){const S=App.settings;SFX.on=!!S.sound;SFX.crowdOn=S.crowd!==0;Voice.on=!!S.voice;Comm.text=!!S.ctext;SFX.crowd(App.match&&S.sound&&S.crowd!==0?.07:0,.4);}
+function renderSettings(){const vi=$('voiceInfo');if(vi)vi.textContent=Voice.ready?'ملفات التعليق جاهزة ('+Object.values(Voice.man.lines).reduce((a,b)=>a+b,0)+' جملة)':'ملفات التعليق مش موجودة في النسخة دي';document.querySelectorAll('#scr-settings .seg').forEach(seg=>{const k=seg.dataset.k;seg.querySelectorAll('button').forEach(b=>{b.classList.toggle('on',String(App.settings[k])===b.dataset.v);b.onclick=()=>{App.settings[k]=Number(b.dataset.v);applyAudioSettings();if(k==='voice'&&App.settings.voice)Voice.preload();if(k==='voice'&&!App.settings.voice)Voice.stop();store();renderSettings();};});});}
 $('setBack').onclick=()=>show(App.returnTo||'title');
 
 /* ---------- match flow ---------- */
+/* التعليق الصوتي (Arabic Commentary Pack): الجمل بتتكلم عن «النجم» (لاعبك) و«فريقنا» (فريقك)، فكل حدث بيختار الجمل اللي تناسبه بس.
+   الأرقام = ترتيب الجمل في الملف (0 = _01). الحدث اللي مالوش جملة مناسبة مش بيتقال عنه حاجة (الجمهور والصافرة شغالين) */
+function commVoice(type,d,m){if(!Voice.on||!Voice.ready||!m)return null;const us=p=>p&&p.team&&p.team.idx===0,st=p=>!!(p&&p.star&&us(p)),V=(k,idx)=>Voice.play(k,idx,1);
+ switch(type){
+  case 'kickoff':return V('kickoff');
+  case 'half':return V('halftime');
+  case 'end':{const r=Math.sign(m.score[0]-m.score[1]);return V(r>0?'fulltime_win':r<0?'fulltime_loss':'fulltime_draw');}
+  case 'goal':{const sc=d.scorer;if(d.team!==0)return sc&&us(sc)?V('own_goal'):null;if(!st(sc))return null;if(d.pen)return V('penalty_scored');if(m.minute()>=85&&m.score[0]>=m.score[1])return V('late_goal');return V('goal');}
+  case 'save':return d.p&&us(d.p)&&d.great?V('big_save'):null;
+  case 'save_pen':return d.sh&&st(d.sh)?V('penalty_missed',[2]):d.p&&us(d.p)?V('big_save',[1,3]):null;
+  case 'miss':return st(d.p)?(d.pen?V('penalty_missed',[0,3]):d.close?V('big_chance_missed',[0,2,3]):null):us(d.p)&&d.close&&!d.pen?V('big_chance_missed',[1]):null;
+  case 'woodwork':return st(d.p)?(d.pen?V('penalty_missed',[1]):V('post',[0,1,3])):us(d.p)?V('post',[2]):null;
+  case 'foul':case 'pen':return st(d.c)?V('foul',[1,2]):us(d.c)?V('foul',[0]):null;
+  case 'yellow':return st(d.p)?V('yellow_card'):null;
+  case 'red':return st(d.p)?V('red_card'):null;
+  case 'offside':return st(d.p)?V('offside',[0,1]):us(d.p)?V('offside',[2]):null;
+  case 'injury':return st(d.p)?V('injury'):null;
+  case 'sub':return d.inp&&st(d.inp)?V('substitution'):null;}
+ return null;}
 function matchEvent(type,d,m){const nm=d&&d.p?lastName(d.p.name):'';
+ {const vt=commVoice(type,d||{},m||App.match);Comm.over=vt==null?null:vt;}
  switch(type){
   case 'kickoff':Comm.say('kickoff',{},1);SFX.chant();break;
   case 'second':Comm.say('second',{},1);break;
@@ -477,7 +499,8 @@ function matchEvent(type,d,m){const nm=d&&d.p?lastName(d.p.name):'';
   case 'woodwork':Comm.say('woodwork',{},1);FX.flashOn&&FX.flashOn(.15);break;
   case 'advantage':Comm.say('advantage',{},1);break;
   case 'clear':Comm.say('clear');break;
-  case 'star_red':toast('اتطردت! الماتش هيكمل من غيرك');break;}}
+  case 'star_red':toast('اتطردت! الماتش هيكمل من غيرك');break;}
+ Comm.over=null;}
 // دراع تحكم (Xbox/PlayStation بلوتوث): الاستيك الشمال للحركة، A تمرير، B عرضية، Y بينية، X تسديد، LB لفّة، RT/RB جري (ضغطة سريعة = لمسة طويلة)، Start إيقاف
 const PAD={prev:{},on:false,rT:0};
 function padPoll(){if(!navigator.getGamepads)return;let g=null;try{for(const x of navigator.getGamepads())if(x&&x.connected){g=x;break;}}catch(e){return;}if(!g){if(PAD.on){PAD.on=false;Input.jx=Input.jy=0;}return;}
@@ -486,7 +509,7 @@ function padPoll(){if(!navigator.getGamepads)return;let g=null;try{for(const x o
  for(const k in map){const v=B(+k);if(v&&!PAD.prev[k]){Input.down(map[k]);PAD.on=true;}else if(!v&&PAD.prev[k])Input.up(map[k]);PAD.prev[k]=v;}
  const spr=B(7)||B(5);if(spr&&!PAD.prev.s){Input.sprint=true;PAD.rT=performance.now();}else if(!spr&&PAD.prev.s){Input.sprint=false;if(performance.now()-PAD.rT<200)Input.push('Rtap');}PAD.prev.s=spr;
  const st=B(9);if(st&&!PAD.prev.st&&App.match&&typeof togglePause==='function')togglePause();PAD.prev.st=st;}
-function beginMatch(m,info,home,away){App.demo=null;App.match=m;Input.clear();SFX.init();Voice.preload();SFX.on=!!App.settings.sound;Comm.tts=!!App.settings.voice;SFX.crowd(.07,.5);SFX.rain(m.rain);Stadium.start();
+function beginMatch(m,info,home,away){App.demo=null;App.match=m;Input.clear();SFX.init();applyAudioSettings();Voice.preload();SFX.crowd(.07,.5);SFX.rain(m.rain);Stadium.start();
  $('compTag').textContent=m.comp||'';$('inComp').textContent=m.comp||'';
  const tA=m.t[0],tB=m.t[1];$('inA').innerHTML=crestHTML({name:tA.name,short:tA.short,kitArr:tA.kit})+esc(tA.name);$('inB').innerHTML=crestHTML({name:tB.name,short:tB.short,kitArr:tB.kit})+esc(tB.name);$('inW').textContent=(m.rain?'مطر · ':'')+'الإستاد مليان عن آخره';
  show('match');updButtons(true);}
@@ -555,7 +578,7 @@ const LOOP={acc:0};function frame(ts){const raw=Math.max(0,(ts-last)/1000),dt=Ma
  }catch(e){console.error(e);}if(App.match){hud(App.match);updButtons();}}
  requestAnimationFrame(frame);}
 try{const bt=document.querySelector('#scr-title .brand');if(bt&&typeof Diag!=='undefined')bt.addEventListener('click',()=>Diag.brandTap());}catch(e){}/* (v133) 7 ضغطات على اسم اللعبة = قياس الأداء */
-load();Guard.boot();SFX.on=!!App.settings.sound;Comm.init();Comm.tts=!!App.settings.voice;Voice.on=!!App.settings.voice;Comm.text=!!App.settings.ctext;Voice.init();startDemo();renderTitle();
+load();Guard.boot();Comm.init();applyAudioSettings();Voice.init();startDemo();renderTitle();
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(App.c)store();if(App.match&&!App.match.paused)togglePause();SFX.crowd(0,.1);}else if(App.match)SFX.crowd(.07,.5);});
 try{const CapApp=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;if(CapApp)CapApp.addListener('backButton',()=>{if(App.match){togglePause();return;}const cur=document.querySelector('.screen.on');const id=cur?cur.id.replace('scr-',''):'title';if(id==='title'){CapApp.exitApp();}else if(['player','comps','career','inbox','social','life','pre'].includes(id))show('hub');else if(id==='settings')show(App.returnTo||'title');else if(id==='hub'||id==='create')show('title');});}catch(e){}
 requestAnimationFrame(frame);

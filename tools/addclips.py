@@ -56,6 +56,19 @@ def extract(R, path, t0=0.0, t1=None, keepXZ=0.0):
     return frames, t1 - t0
 
 
+def mirror(R, frames):
+    """Left/right mirror. The rig's rest rotations are identity (every bone frame is world-aligned in the bind pose), so a mirrored
+    local rotation is the partner bone's rotation reflected in the x plane: (x, y, z, w) -> (x, -y, -z, w); hips x is negated."""
+    names = R['names']; idx = {n: i for i, n in enumerate(names)}
+    part = [idx.get(n.replace('Left', '#').replace('Right', 'Left').replace('#', 'Right'), i) for i, n in enumerate(names)]
+    out = []
+    for T, Q in frames:
+        T2 = [list(T[i]) for i in range(len(names))]; T2[0] = [-T[0][0], T[0][1], T[0][2]]
+        Q2 = [np.array([Q[part[i]][0], -Q[part[i]][1], -Q[part[i]][2], Q[part[i]][3]]) for i in range(len(names))]
+        out.append((T2, Q2))
+    return out
+
+
 def check(path, key):
     h, R, tl = load_rig(); T0, Q0 = decode(R, key); fr, du = extract(R, path)
     print('rig', key, 'frames', len(T0), 'dur', R['clips'][key]['dur'], '| fbx frames', len(fr), 'dur', round(du, 3))
@@ -89,4 +102,38 @@ def add():
     save_rig(h, R, tl)
 
 
+B2 = '/tmp/mx/b2/'; G1 = '/tmp/mx/a2fbc3c4-Mixamo_Soccer_Pack_1_-_Goalkeeper/'
+import glob as _g
+def _f(d, name): return (_g.glob(d + '* - ' + _g.escape(name) + '.fbx') or [d + name + '.fbx'])[0]
+# batch 2 (21 Nov): key, file, t0, t1, meta, mirror   (segments chosen from the clips' hips/head height curves)
+NEW2 = [('walkB', _f(B2, 'Walking Backwards'), 0, None, {}, False),
+        ('strWL', _f(B2, 'Left Strafe Walk'), 0, None, {}, False), ('strWR', _f(B2, 'Left Strafe Walk'), 0, None, {}, True),
+        ('gkSideL', _f(G1, 'goalkeeper sidestep (2)'), 0, None, {}, False), ('gkSideR', _f(G1, 'goalkeeper sidestep'), 0, None, {}, False),
+        ('defIdle', _f(B2, 'Ready Idle Defensive'), 0, None, {}, False), ('ballIdle', _f(B2, 'Soccer Idle Ball'), 0, 3, {}, False),
+        ('gkDirect', _f(G1, 'goalkeeper directing'), 0, 3.5, {}, False),
+        ('fallF', _f(B2, 'Tripping Forward'), .6, 2.2, {}, False), ('fallK2', _f(B2, 'Knocked Down Stomach'), .2, 1.8, {}, False),
+        ('fallB', _f(B2, 'Stumble Backwards Fall'), .3, 2.8, {}, False),
+        ('upF', _f(B2, 'Getting Up From Stomach'), 2.0, 5.8, {}, False), ('upB', _f(B2, 'Getting Up Knocked Down'), .3, 1.9, {}, False),
+        ('stumble', _f(B2, 'Jogging Stumble'), 0, None, {}, False),
+        ('argA', _f(B2, 'Standing Arguing A'), 0, 4, {}, False), ('argB', _f(B2, 'Standing Arguing B'), 0, 4, {}, False),
+        ('angryPt', _f(B2, 'Angry Point'), 0, None, {}, False), ('angryG', _f(B2, 'Angry Gesture Forward'), 0, None, {}, False),
+        ('headNo', _f(B2, 'Shaking Head No'), 0, None, {}, False), ('annoyed', _f(B2, 'Annoyed Head Shake'), 0, None, {}, False),
+        ('disap', _f(B2, 'Disappointed'), 0, None, {}, False), ('clap', _f(B2, 'Clapping Standing'), 0, None, {}, False),
+        ('thumbs', _f(B2, 'Standing Thumbs Up'), 0, None, {}, False), ('cheer2', _f(B2, 'Cheering Two Fists'), 0, None, {}, False),
+        ('rally', _f(B2, 'Rallying Crowd'), 0, 4, {}, False),
+        ('injHurt', _f(B2, 'Injured Hurting Idle'), 0, 4.5, {}, False), ('injWalk', _f(B2, 'Injured Walk'), 0, None, {}, False)]
+
+
+def add2():
+    h, R, tl = load_rig()
+    for key, fn, t0, t1, m, mir in NEW2:
+        assert os.path.exists(fn), fn
+        fr, du = extract(R, fn, t0, t1)
+        if mir: fr = mirror(R, fr)
+        R['clips'][key] = {'n': len(fr), 'dur': round(float(du), 3), 'd': encode(fr)}; R['meta'][key] = m
+        print(key, len(fr), round(du, 3), os.path.basename(fn), 'mirrored' if mir else '')
+    save_rig(h, R, tl)
+
+
 if __name__ == '__main__' and sys.argv[1] == 'add': add()
+if __name__ == '__main__' and sys.argv[1] == 'add2': add2()

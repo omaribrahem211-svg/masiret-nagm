@@ -61,7 +61,7 @@ const Skel=(()=>{
  function arm(side,b1,b2,out,w){const L=side>0?'.L':'.R';const down=Qz(-side*(Math.PI/2-out));const up=QQ(Qx(-b1),down),fo=QQ(Qx(-(b1+b2)),down);ov(J['upper_arm'+L],up,w);ov(J['forearm'+L],fo,w);ov(J['hand'+L],fo,w);}
  function leg(side,a1,a2,w){const L=side>0?'.L':'.R';ov(J['thigh'+L],Qx(-a1),w);ov(J['shin'+L],Qx(-(a1-a2)),w);ov(J['foot'+L],Qx(-(a1-a2)*.6),w);}
  // ---- main: pose player p into row
- function pose(p,m,t,out,off,W){if(m.phase==='play')t=m.time;resetRest();if(!(p.slide>0))p.slideMax=0;OV.clear();ADD.clear();accClear();
+ function pose(p,m,t,out,off,W){t=m.animTime==null?m.time||0:m.animTime;resetRest();if(!(p.slide>0))p.slideMax=0;OV.clear();ADD.clear();accClear();
   const sp=Math.hypot(p.vx,p.vy),b=m.ball,gk=p.role==='GK';const u=((p.anim||0)/(Math.PI*2));
   const celeb=m.phase==='goal'&&p===m.celebrator,slide=p.slide>0,dive=keeperDivePhase(p,m);
   const M_r=k=>META[k]||{};
@@ -95,15 +95,15 @@ const Skel=(()=>{
   else if(gk&&b.owner===p&&b.inHands&&has('gkCatch')){act='gkCatch';au=.72;aw=1;}
   if(!(p.stun>.4))p._kS=0;
   if(!act&&p.rcvA>0&&b.owner===p&&sp<3.5&&has('recv')&&!gk){act='recv';au=.3+(1-p.rcvA/.45)*.45;}
-  if(!act&&p.turnT>0&&has('turn180')&&!gk&&b.owner!==p&&!slide&&!dive&&!(p.stun>.4)){act='turn180';au=.04+(1-p.turnT/.5)*.9;}
+  if(!act&&p.turnT>0&&sp<3&&has('turn180')&&!gk&&b.owner!==p&&!slide&&!dive&&!(p.stun>.4)){act='turn180';au=.04+(1-p.turnT/.5)*.9;}
   // احتفال/حزن بعد الجول ونهاية الماتش (Mixamo: Victory, Cheering, Fist Pump, Defeated)
-  if(!act&&!slide&&!dive&&sp<1.6&&(m.phase==='goal'||m.phase==='end')&&has('cheer')){let wt=null;if(m.phase==='goal')wt=m.celebrator&&m.celebrator.team;else{const sc=m.score;if(sc[0]!==sc[1])wt=m.t[sc[0]>sc[1]?0:1];}
+  if(!act&&!slide&&!dive&&sp<.25&&(m.phase==='goal'||m.phase==='end')&&has('cheer')){let wt=null;if(m.phase==='goal')wt=m.celebrator&&m.celebrator.team;else{const sc=m.score;if(sc[0]!==sc[1])wt=m.t[sc[0]>sc[1]?0:1];}
    if(wt){const off=(p.i||0)*.37,lp=(c,a0,a1)=>{const d=clips[c].dur,q=((t+off*d)/((a1-a0)*d))%2;return a0+(a1-a0)*(q<1?q:2-q);};
     if(p.team===wt){const near=m.phase==='end'||(m.celebrator&&Math.hypot(m.celebrator.x-p.x,m.celebrator.y-p.y)<20);if(p===m.celebrator){const CL=['victory','fistp','celKnee','celArms','celJump'].filter(has);act=CL[((p.i||0)+(m.score[0]+m.score[1]))%CL.length];au=act==='victory'?lp('victory',.2,.68):act==='celKnee'?lp('celKnee',.35,.95):act==='celJump'?lp('celJump',.05,.95):lp(act,.05,.95);}else if(near&&!gk){act='cheer';au=lp('cheer',0,1);}}
     else{act='defeat';au=lp('defeat',.08,.9);}}}
-  if(!act&&p.protT>0&&sp<1.3&&!gk&&has('protest')){act='protest';au=(t/clips.protest.dur+(p.i||0)*.13)%1*.96;}
+  if(!act&&p.protT>0&&sp<.25&&!p.wT&&!gk&&has('protest')){act='protest';au=(t/clips.protest.dur+(p.i||0)*.13)%1*.96;}
   if(!act&&!gk&&sp<.4&&(p.i%3===1)&&has('fold')&&(m.restartKind==='fk'||m.restartKind==='pen'||(m.pen&&!m.pen.live))&&Math.hypot(b.x-p.x,b.y-p.y)>20)accClip('fold',(t/clips.fold.dur+(p.i||0)*.21)%1,3,true);
-  if(!act&&p.upT>0&&p.upClip&&has(p.upClip)){act=p.upClip;au=p.upA+(p.upB-p.upA)*(1-p.upT/p.upD);}
+  if(!act&&p.upT>0&&sp<1.2&&p.upClip&&has(p.upClip)){act=p.upClip;au=p.upA+(p.upB-p.upA)*(1-p.upT/p.upD);}
   if(!act&&p.spinT>0&&has('spin')&&b.owner===p){act='spin';au=.2+(1-p.spinT/.55)*.55;}
   if(!act&&p.stopT>0&&has('stop')&&!gk&&b.owner!==p){const q=1-p.stopT/.6,fd=Math.min(1,p.stopT/.15)*Math.min(1,q/.1+.3);accClip('stop',.05+q*.85,fd*3*Math.max(.2,1-sp/3),false);}
   if(act){accClear();accClip(act,au,1,false);}
@@ -113,6 +113,7 @@ const Skel=(()=>{
   // low-pass every frame: the foot must still meet the ball at impact.
   const poseKey=act||'locomotion';let pb=p._poseBlend;
   if(!pb){pb=p._poseBlend={key:poseKey,at:t,lastT:new Float32Array(LT),lastR:new Float32Array(LR),fromT:new Float32Array(LT),fromR:new Float32Array(LR)};}
+  if(t<pb.at){pb.at=t;pb.fromT.set(LT);pb.fromR.set(LR);}
   if(pb.key!==poseKey){pb.key=poseKey;pb.at=t;pb.fromT.set(pb.lastT);pb.fromR.set(pb.lastR);}
   const fade=gk?1:Math.max(0,Math.min(1,(t-pb.at)/(act?.06:.10)));
   if(fade<1){const f=fade*fade*(3-2*fade);for(let i=0;i<LT.length;i++)LT[i]=pb.fromT[i]+(LT[i]-pb.fromT[i])*f;for(let i=0;i<LR.length;i+=4){qlerp(pb.fromR.subarray(i,i+4),LR.subarray(i,i+4),f,tq);LR.set(tq,i);}}

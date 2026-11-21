@@ -119,7 +119,7 @@ class Match{
  snap(){const m=new Map();for(const p of this.all)m.set(p,[p.x,p.y]);return m;}
  beginWalk(prev,max){const b=this.ball;let far=0;for(const p of this.all){const q=prev.get(p);if(!q||q[1]<-.5&&Math.abs(q[0]-CX)<1)continue;const d=hyp(p.x-q[0],p.y-q[1]);if(d<.3)continue;p.wT=[p.x,p.y,p.fx,p.fy];p.wV=clamp(d/(max*.8),4,p.mse);p.x=q[0];p.y=q[1];if(d>far)far=d;}
   if(far<.3)return;this.walk={t:0,max,own:b.owner,bx:b.x,by:b.y};b.owner=null;}
- walkTick(dt){const w=this.walk;w.t+=dt;let done=true;for(const p of this.all){const T=p.wT;if(!T){p.vx*=.85;p.vy*=.85;p.ampS=(p.ampS||0)*.9;continue;}const dx=T[0]-p.x,dy=T[1]-p.y,d=hyp(dx,dy);
+ walkTick(dt){const w=this.walk;w.t+=dt;let done=true;for(const p of this.all){const T=p.wT;if(!T){p.vx*=.85;p.vy*=.85;p.ampS=(p.ampS||0)*.9;continue;}if(p.slide>0||p.diveT>0||p.stun>.4||p.upT>0){p.vx=p.vy=0;p.ampS=0;done=false;continue;}const dx=T[0]-p.x,dy=T[1]-p.y,d=hyp(dx,dy);
    if(d<.2){p.vx=p.vy=0;p.fx+=(T[2]-p.fx)*.2;p.fy+=(T[3]-p.fy)*.2;const n=hyp(p.fx,p.fy)||1;p.fx/=n;p.fy/=n;p.ampS=(p.ampS||0)*.88;continue;}done=false;
    const sp=Math.min(d*2+.5,p.wV||5);p.vx=dx/d*sp;p.vy=dy/d*sp;p.x+=p.vx*dt;p.y+=p.vy*dt;const k=Math.min(1,dt*8);p.fx+=(dx/d-p.fx)*k;p.fy+=(dy/d-p.fy)*k;const n=hyp(p.fx,p.fy)||1;p.fx/=n;p.fy/=n;
    p.anim+=sp*dt*6.283/strideLen(sp);p.ampS=(p.ampS||0)+(Math.min(1,sp/7)-(p.ampS||0))*Math.min(1,dt*7);}
@@ -128,11 +128,12 @@ class Match{
  endWalk(){const w=this.walk,b=this.ball;if(!w)return;for(const p of this.all){const T=p.wT;if(!T)continue;if(hyp(p.x-T[0],p.y-T[1])>.5){p.x=T[0];p.y=T[1];}p.fx=T[2];p.fy=T[3];p.vx=p.vy=0;p.wT=null;}b.owner=w.own;b.x=w.bx;b.y=w.by;this.walk=null;}
  later(bn,d){this.bq=bn;this.bqT=d;}
  // مؤقتات الحركات (وقعة/قيام/اعتراض) بتكمّل حتى والماتش واقف للكورة الثابتة
- fxTick(dt){for(const p of this.all){if(p.protT>0)p.protT-=dt;if(p.upT>0)p.upT-=dt;if(p.fallK==='knock'&&p.stun>0){p.stun-=dt;if(p.stun<=.4){p.stun=0;p.fallK=null;p._fallen=false;p._fl=false;p.upClip='layUp';p.upA=.12;p.upB=.98;p.upD=p.upT=1.15;}}}}
+ fxTick(dt){for(const p of this.all){const slide=p.slide>0,dive=p.diveT>0;if(p.slide>0)p.slide=Math.max(0,p.slide-dt);if(p.diveT>0)p.diveT=Math.max(0,p.diveT-dt);for(const k of ['kickT','throwT','jumpT','catchT','gkHi','puntT','turnT','stopT','spinT','lungeT'])if(p[k]>0)p[k]=Math.max(0,p[k]-dt);if(slide&&!(p.slide>0)){p.slideDone=true;p.upClip='slide';p.upA=.66;p.upB=.95;p.upD=p.upT=.45;}if(dive&&!(p.diveT>0)){p.rushOn=null;p.diveStart=null;p.diveLead=0;p.upClip=p._smo?'gkBlock':p._dvL?'gkDiveL':'gkDiveR';p.upA=.62;p.upB=.9;p.upD=p.upT=.7;}if(p.stun>0&&p.fallK!=='knock')p.stun=Math.max(0,p.stun-dt);if(p.protT>0)p.protT-=dt;if(p.upT>0)p.upT=Math.max(0,p.upT-dt);if(p.fallK==='knock'&&p.stun>0){p.stun-=dt;if(p.stun<=.4){p.stun=0;p.fallK=null;p._fallen=false;p._fl=false;p.upClip='layUp';p.upA=.12;p.upB=.98;p.upD=p.upT=1.15;}}}}
  skip(){if(this.walk)this.walk.t=1e9;else if(this.phase==='intro'){this.phase='kickoff';this.pt=1.2;}else if(this.phase==='replay')this.endReplay();else if(this.phase==='goal'&&this.pt>.4)this.pt=.4;}
  update(dt){
   if(this.paused)return;
   if(this.ff)dt*=4;
+  this.animTime=(this.animTime||0)+dt;
   if(this.banner){this.banner.life-=dt;if(this.banner.life<=0)this.banner=null;}
   if(this.bq){this.bqT-=dt;if(this.bqT<=0){this.banner=this.bq;this.bq=null;}}
   this.shake=Math.max(0,this.shake-dt*1.6);
@@ -166,7 +167,7 @@ class Match{
   b.owner=null;b.x=l(0);b.y=l(1);b.z=l(2);b.vx=(B.f[0]-A.f[0])*15;b.vy=(B.f[1]-A.f[1])*15;
   A.ref.forEach((p,j)=>{const o=3+j*13;p.x=l(o);p.y=l(o+1);let fx=l(o+2),fy=l(o+3);const n=hyp(fx,fy)||1;p.fx=fx/n;p.fy=fy/n;p.vx=l(o+4);p.vy=l(o+5);p.anim=l(o+6);p.slide=A.f[o+7];p.kickT=A.f[o+8];p.windT=A.f[o+9];p.windD=p.windD||.2;const dv=A.f[o+10];p.diveT=Math.abs(dv);if(dv)p.diveDir=Math.sign(dv);p.diveH=A.f[o+11];const jc=A.f[o+12];p.catchT=jc>=10?.2:0;p.jumpT=jc%10;});}
  endReplay(){this.rpFrames=null;for(const p of this.all){p.kickT=p.windT=p.diveT=p.catchT=p.jumpT=p.slide=0;p.windFn=null;}this.kickoff(this.kickTeam,true);}
- animIdle(dt){for(const p of this.all){p.vx*=Math.exp(-5*dt);p.vy*=Math.exp(-5*dt);p.x+=p.vx*dt;p.y+=p.vy*dt;}if(this.ball.owner)this.ballSim(dt);}
+ animIdle(dt){for(const p of this.all){if(p.slide>0||p.diveT>0||p.stun>.4||p.upT>0){p.vx=p.vy=0;continue;}p.vx*=Math.exp(-8*dt);p.vy*=Math.exp(-8*dt);p.x+=p.vx*dt;p.y+=p.vy*dt;const sp=hyp(p.vx,p.vy);p.anim+=sp*dt*6.283/strideLen(sp);}if(this.ball.owner)this.ballSim(dt);}
  camUpd(dt){const b=this.ball,c=this.cam,ow=b.owner;const wl=this.phase==='play'?(ow?ow.team.dir*6+ow.vx*.35:b.vx*.3):0;c.lx=(c.lx||0)+(clamp(wl,-9,9)-(c.lx||0))*Math.min(1,dt*1.2);const tx=clamp(b.x+c.lx,20,L-20);c.x+=(tx-c.x)*Math.min(1,dt*2.2);if(c.F)c.cy+=(c.want(b.y)-c.cy)*Math.min(1,dt*1.8);}
  /* ---------- AI ---------- */
  think(dt){this._dt=dt;
@@ -536,6 +537,7 @@ class Match{
   if(p.spinT>0)p.spinT-=dt;p.spinCd=Math.max(0,(p.spinCd||0)-dt);if(bo===p&&p.spinCd<=0&&this.phase==='play'&&!this.restartKind&&p.des){const dl=hyp(p.des[0],p.des[1]);if(dl>2.5&&(p.des[0]*p.fx+p.des[1]*p.fy)/dl<-.35){p.spinT=.55;p.spinCd=2.2;}}p.tcool=Math.max(0,p.tcool-dt);p.stun=Math.max(0,p.stun-dt);p.slide=Math.max(0,p.slide-dt);
    if(p.slide>0){p.vx*=Math.exp(-2.2*dt);p.vy*=Math.exp(-2.2*dt);if(this.phase==='play')this.slideCheck(p);}
    else if(p.stun>0){p.vx*=Math.exp(-6*dt);p.vy*=Math.exp(-6*dt);}
+   else if(p.upT>0){p.vx=p.vy=0;}
    else{let tx=0,ty=0;if(p.des){tx=p.des[0];ty=p.des[1];}else if(p.tgt){const dx=p.tgt[0]-p.x,dy=p.tgt[1]-p.y,d=hyp(dx,dy);if(d>.05){let s=p.spd;if(d<2.5)s*=d/2.5;tx=dx/d*s;ty=dy/d*s;}}
     const own=this.ball.owner===p;
     p.ix=tx;p.iy=ty;

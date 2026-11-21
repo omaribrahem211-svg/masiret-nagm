@@ -79,3 +79,8 @@ The phone playtest confirmed the animation repair but reported weak keeping and 
 The deterministic battery uses 20 shots in each of nine height/aim buckets, 180 in total, with both control modes. The rejected build saved zero of 20 high central and zero of 20 waist-height wide shots; the corrected build records contact in all 20 in each bucket, with 14-19 saves per 20 depending on the bucket. These are intentionally reachable fixture shots, not a target save rate for normal matches. Each save event asserts actual current posed contact, while extra unreachable wide-shot fixtures require zero saves. `node scripts/measure-keepers.mjs` now gates CI.
 
 Eight seeded balanced AI matches previously chose 194 aerial passes out of 392 (49.5%). The correction produced 30 out of 439 (6.8%) in the same probe. Long chips now need pressure, meaningful forward distance, free receiving space and an eight-second team cooldown; they carry a stronger score penalty than ground options. Open-play crosses have lower per-decision weight, a seven-second player cooldown, a viable central box target and enough delivery distance. Corners, direct user lob input and genuine emergency clearances remain available. `node scripts/measure-aerial.mjs` checks that ordinary matches do not drift back to excessive aerial share. Small samples are regression evidence, not proof of final balance.
+
+
+## Football-law follow-up
+
+See [FOOTBALL_RULES_AUDIT.md](FOOTBALL_RULES_AUDIT.md) for the current rule-by-rule audit, source URLs,52 regression groups in both modes/directions, and explicit simulation limits. This adds rule state without restoring remote contact or changing the animation clock.

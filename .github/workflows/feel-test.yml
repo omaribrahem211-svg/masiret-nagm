@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 22
       - name: Verify gameplay and timing
-        run: node scripts/verify-gameplay.mjs && node scripts/verify-skeletal-contact.mjs && node scripts/verify-animation.mjs && node scripts/measure-keepers.mjs && node scripts/measure-aerial.mjs && node scripts/verify-commentary.mjs --bank-only
+        run: node scripts/verify-laws.mjs && node scripts/verify-gameplay.mjs && node scripts/verify-skeletal-contact.mjs && node scripts/verify-animation.mjs && node scripts/measure-keepers.mjs && node scripts/measure-aerial.mjs && node scripts/verify-commentary.mjs --bank-only
       - run: npm ci
       - uses: actions/cache@v4
         with:

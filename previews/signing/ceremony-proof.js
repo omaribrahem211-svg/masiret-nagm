@@ -6,9 +6,9 @@ const hook=`
   if(p.ceremonyPose){
    const c=p.ceremonyPose;W[13]+=c.lift||0;
    for(const side of ['L','R']){const target=c[side];if(target){const dx=target[0]-W[12],dy=target[1]-W[13],dz=target[2]-W[14],ss=sc*sc;aimArm(side,[(W[0]*dx+W[1]*dy+W[2]*dz)/ss,(W[4]*dx+W[5]*dy+W[6]*dz)/ss,(W[8]*dx+W[9]*dy+W[10]*dz)/ss]);
-   const hand=J['hand.'+side];GR[hand]=c.present?Qz(side==='L'?Math.PI/2:-Math.PI/2):side==='R'&&c.grip?QQ(Qz(-.22),Qx(1.85)):Qx(Math.PI/2);
+   const hand=J['hand.'+side];GR[hand]=c.leftWave&&side==='L'?Qz(.12*Math.sin(t*5)):c.wave?QQ(Qy(.2),Qz(side==='L'?.12*Math.sin(t*8):0)):c.fan?Qy(side==='L'?-Math.PI/2:Math.PI/2):c.present?QQ(Qz(side==='L'?Math.PI/2:-Math.PI/2),Qx(window.proofAngle||.6)):side==='R'&&c.grip?QQ(Qz(-.22),Qx(window.proofAngle||2.10)):Qx(Math.PI/2);
 
-   for(let j=hand+1;j<nJ;j++){let ancestor=par[j];while(ancestor>=0&&ancestor!==hand)ancestor=par[ancestor];if(ancestor!==hand)continue;const pr=par[j],lq=[LR[j*4],LR[j*4+1],LR[j*4+2],LR[j*4+3]];if(c.grip&&side==='R'&&!names[j].includes('Thumb')){qmul(lq,Qz(-.85),lq);}qmul(GR[pr],lq,GR[j]);const v=qrot(GR[pr],[LT[j*3],LT[j*3+1],LT[j*3+2]],[0,0,0]);GT[j]=v.map((v,k)=>v+GT[pr][k]);}
+   for(let j=hand+1;j<nJ;j++){let ancestor=par[j];while(ancestor>=0&&ancestor!==hand)ancestor=par[ancestor];if(ancestor!==hand)continue;const pr=par[j],lq=[LR[j*4],LR[j*4+1],LR[j*4+2],LR[j*4+3]];const digit=window.PROOF_FINGERS.find(d=>d.a===j||d.b===j);if(digit&&!(c.leftWave&&side==='L')&&(c.present||c.grip&&side==='R')){const tip=digit.b===j;const angle=digit.f===0?(tip?.55:.35):(c.present?(tip?1.2:.9):digit.f===4?(tip?1.2:1.0):(tip?.95:.75));qmul(lq,digit.f===0&&!tip?QQ(Qz(side==='R'?1.1:-1.1),Qx(.8)):Qx(angle),lq);}qmul(GR[pr],lq,GR[j]);const v=qrot(GR[pr],[LT[j*3],LT[j*3+1],LT[j*3+2]],[0,0,0]);GT[j]=v.map((v,k)=>v+GT[pr][k]);}
    }}
   }
 `;
@@ -25,13 +25,6 @@ const allowed=new Set(Object.values(r.dyn));const draw=r.draw.bind(r);let garmen
 r.draw=b=>{if(allowed.has(b)&&b!==r.dyn.ball&&b!==r.dyn.ring&&b!==r.dyn.glow)draw(b);if(b===r.dyn.box&&cupBatch&&r.gl.getParameter(r.gl.CURRENT_PROGRAM)===r.prog)draw(cupBatch);};
 const X=52,Z=-34,lerp=(a,b,t)=>a+(b-a)*t,cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)),ease=x=>{x=cl(x);return x*x*(3-2*x);};
 const vec=(a,b,t)=>a.map((v,i)=>lerp(v,b[i],t));
-
-// Preview-only grip morph. The shipped gameplay rig has wrist joints but no finger joints.
-// Curl its existing finger vertices rather than substituting a different person's hands.
-const verts=Skel.d64(RIG.v,Float32Array),base=verts.slice(),joints=Skel.d64(RIG.j,Uint8Array),weights=Skel.d64(RIG.w,Uint8Array),ib=Skel.d64(RIG.ib,Float32Array);
-const gl=r.gl,gripBuffer=gl.createBuffer();gl.bindVertexArray(r.skin.vao);gl.bindBuffer(gl.ARRAY_BUFFER,gripBuffer);gl.bufferData(gl.ARRAY_BUFFER,verts,gl.DYNAMIC_DRAW);gl.vertexAttribPointer(0,3,gl.FLOAT,false,24,0);gl.vertexAttribPointer(1,3,gl.FLOAT,false,24,12);gl.bindVertexArray(null);
-function grip(strength){verts.set(base);for(let i=0;i<RIG.nV;i++){let k=0;for(let j=1;j<4;j++)if(weights[i*4+j]>weights[i*4+k])k=j;const bone=joints[i*4+k];if(bone!==9&&bone!==13)continue;const o=i*6,b=bone*16,x=base[o],y=base[o+1],z=base[o+2],lx=ib[b]*x+ib[b+4]*y+ib[b+8]*z+ib[b+12],ly=ib[b+1]*x+ib[b+5]*y+ib[b+9]*z+ib[b+13],lz=ib[b+2]*x+ib[b+6]*y+ib[b+10]*z+ib[b+14];if(ly<.095)continue;const v=ly-.095,theta=cl(v/.12)*1.8*strength,rad=.12/(1.8*strength||1),ny=.095+(strength>.001?Math.sin(theta)*rad:v),nz=lz+(strength>.001?(1-Math.cos(theta))*rad:0),dy=ny-ly,dz=nz-lz;verts[o]+=ib[b+1]*dy+ib[b+2]*dz;verts[o+1]+=ib[b+5]*dy+ib[b+6]*dz;verts[o+2]+=ib[b+9]*dy+ib[b+10]*dz;const nx=base[o+3],ny0=base[o+4],nz0=base[o+5],a=ib[b]*nx+ib[b+4]*ny0+ib[b+8]*nz0,bn=ib[b+1]*nx+ib[b+5]*ny0+ib[b+9]*nz0,cn=ib[b+2]*nx+ib[b+6]*ny0+ib[b+10]*nz0,nb=bn*Math.cos(theta)-cn*Math.sin(theta),nc=bn*Math.sin(theta)+cn*Math.cos(theta);verts[o+3]=ib[b]*a+ib[b+1]*nb+ib[b+2]*nc;verts[o+4]=ib[b+4]*a+ib[b+5]*nb+ib[b+6]*nc;verts[o+5]=ib[b+8]*a+ib[b+9]*nb+ib[b+10]*nc;}gl.bindBuffer(gl.ARRAY_BUFFER,gripBuffer);gl.bufferSubData(gl.ARRAY_BUFFER,0,verts);}
-
 
 let now=0,penTip=[0,0,0],shirtTop=1.22;
 // Cup bowl uses actual 3D surface geometry and follows the same lift as the hands.
@@ -54,30 +47,31 @@ if(kind==='trophy'){
  prizeY=lerp(.98,2.02,ease((t-3.2)/3.0));prizeZ=.25;
  r.add(cupBatch,r.trs(X,prizeY,Z+prizeZ,0,1,1,1),lin('#c9a04a'));r.up(cupBatch);
  box(0,prizeY-.04,prizeZ,.24,.08,.24,'#14202c');box(0,prizeY+.005,prizeZ,.22,.018,.22,'#e0bd72');
- for(const side of [-1,1]){bar([side*.22,prizeY+.48,prizeZ],[side*.34,prizeY+.4,prizeZ],.028,'#c9a04a');bar([side*.34,prizeY+.4,prizeZ],[side*.32,prizeY+.23,prizeZ],.028,'#c9a04a');bar([side*.32,prizeY+.23,prizeZ],[side*.12,prizeY+.18,prizeZ],.028,'#c9a04a');box(side*.26,prizeY+.20,prizeZ,.028,.34,.015,side>0?'#e2d4a9':'#2a5c90');}
+ for(const side of [-1,1]){bar([side*.22,prizeY+.48,prizeZ],[side*.34,prizeY+.4,prizeZ],.028,'#c9a04a');bar([side*.34,prizeY+.4,prizeZ],[side*.32,prizeY+.03,prizeZ],.028,'#c9a04a');bar([side*.32,prizeY+.03,prizeZ],[side*.12,prizeY+.07,prizeZ],.028,'#c9a04a');box(side*.26,prizeY+.20,prizeZ,.028,.34,.015,side>0?'#e2d4a9':'#2a5c90');}
 }else if(kind==='motm'){
  prizeY=1.24;prizeZ=.28;
  box(-.20,prizeY,prizeZ,.32,.42,.035,'#99bdc9');box(-.20,prizeY-.23,prizeZ,.36,.055,.16,'#152435');box(-.20,prizeY,prizeZ+.023,.22,.30,.01,'#203f59');sphere(-.20,prizeY+.04,prizeZ+.04,.075,'#d7b366');
 }else{
  prizeY=1.25;prizeZ=.27;
- box(-.13,prizeY-.19,prizeZ,.35,.13,.25,'#171e29');box(-.13,prizeY-.115,prizeZ,.28,.022,.22,'#d0ad59');sphere(-.13,prizeY+.03,prizeZ,.19,'#d7b45d');bar([-.13,prizeY-.13,prizeZ],[-.13,prizeY+.03,prizeZ],.055,'#b89342');
+ box(-.13,prizeY-.19,prizeZ,.35,.13,.25,'#171e29');box(-.13,prizeY-.115,prizeZ,.28,.022,.22,'#d0ad59');sphere(-.13,prizeY+.03,prizeZ,.30,'#d7b45d');bar([-.13,prizeY-.13,prizeZ],[-.13,prizeY+.03,prizeZ],.055,'#b89342');
+ const pent=[];for(let i=0;i<5;i++){const a=i*Math.PI*2/5+Math.PI/2;pent.push([-.13+.06*Math.cos(a),prizeY+.03+.06*Math.sin(a),prizeZ+.138]);}for(let i=0;i<5;i++){bar(pent[i],pent[(i+1)%5],.006,'#87682d');const a=i*Math.PI*2/5+Math.PI/2;bar(pent[i],[-.13+.13*Math.cos(a),prizeY+.03+.13*Math.sin(a),prizeZ+.077],.006,'#87682d');}
 }
 if(t>6&&kind==='trophy')for(let i=0;i<26;i++){const q=t-6,xx=Math.sin(i*13.7)*2.6,zz=Math.cos(i*9.3)*.7-.1,yy=3.5-((q*(.28+(i%4)*.12)+i*.18)%3.6);box(xx,yy,zz,.025,.07,.008,i%2?'#cfb56f':'#7195b3',q+i);}
 }
 function point(x,y,z){return r.project(X+x,-(Z+z),y,overlay.width,overlay.height);}
 function text3(text,x,y,z,size,color='#cdb982',align='center'){const a=point(x,y,z),b=point(x,y+size,z);if(!a||!b)return;ctx.save();ctx.font=`700 ${Math.max(5,Math.hypot(b.x-a.x,b.y-a.y))}px Changa, sans-serif`;ctx.textAlign=align;ctx.textBaseline='middle';ctx.fillStyle=color;ctx.fillText(text,a.x,a.y);ctx.restore();}
 window.proofFrame=async t=>{
-grip(.7);now=t;m.time=m.animTime=t;p.anim=t*.18;
-for(let i=0;i<fans.length;i++){const q=fans[i];q.ceremonyPose=null;q.proofClip=['idle','cheer','fold','offIdle','victory','idle'][i];q.proofOffset=i*1.37;q.anim=t*.18;}
+now=t;m.time=m.animTime=t;p.anim=t*.18;
+for(let i=0;i<fans.length;i++){const q=fans[i];q.ceremonyPose=null;q.proofClip=['idle','offIdle','fold','offIdle','idle','idle'][i];q.proofOffset=i*1.37;q.anim=t*.18;if((i===1||i===4)&&t>2.0+i*.26){const spread=.035+.080*(.5+.5*Math.sin(t*7.5+i*2.1)),h=1.12+.020*Math.sin(t*2+i);q.ceremonyPose={fan:true,L:[q.x+spread,h,-q.y+.39],R:[q.x-spread,h,-q.y+.39]};}if(i===5&&t>8.6&&t<12.2){const a=ease((t-8.6)/.7)*ease((12.2-t)/.7);q.ceremonyPose={wave:true,L:vec([q.x+.30,.88,-q.y+.07],[q.x+.38,1.63,-q.y+.19],a)};}}
 const lift=lerp(.98,2.02,ease((t-3.2)/3.0));
-if(kind==='trophy')p.ceremonyPose={lift:.18,present:true,L:[X+.32,lift+.18,Z+.25],R:[X-.32,lift+.18,Z+.25]};
-else if(kind==='motm')p.ceremonyPose={lift:.18,present:true,L:[X+.28,1.6+.06*Math.sin(t*4),Z+.22],R:[X-.26,1.45,Z+.28]};
-else p.ceremonyPose={lift:.18,present:true,L:[X+.02,1.39,Z+.28],R:[X-.24,1.37,Z+.28]};
+if(kind==='trophy')p.ceremonyPose={lift:.18,present:true,L:[X+.42,lift+.27,Z+.25],R:[X-.42,lift+.27,Z+.25]};
+else if(kind==='motm')p.ceremonyPose={lift:.18,present:true,leftWave:true,L:vec([X+.30,.86,Z+.07],[X+.35,1.62+.025*Math.sin(t*2),Z+.14],ease((t-2)/.8)*ease((8-t)/.8)),R:[X-.26,1.45,Z+.28]};
+else p.ceremonyPose={lift:.18,present:true,L:[X+.07,1.04,Z+.28],R:[X-.27,1.27,Z+.34]};
 let eye,tgt,fov;
 if(t<3.2){const a=ease(t/3.2);eye=vec([3.3,2.4,5.8],[2.1,2.0,4.9],a);tgt=[0,1.0,-.1];fov=39;}
-else if(t<7.2){const a=ease((t-3.2)/4);eye=vec([.75,1.8,3.5],[.28,2.2,3.25],a);tgt=[0,kind==='trophy'?1.55:1.12,.12];fov=kind==='trophy'?44:39;}
-else if(t<10.5){const a=ease((t-7.2)/3.3);eye=vec([-.85,2.0,4.2],[-.45,2.15,4.6],a);tgt=[0,kind==='trophy'?1.4:1.12,.06];fov=39;}
-else{eye=[-.45,2.15,5.8];tgt=[0,1.18,.06];fov=40;}
+else if(t<7.2){const a=ease((t-3.2)/4);eye=vec([.75,1.8,3.5],[.28,2.2,3.25],a);tgt=[0,kind==='trophy'?1.72:1.12,.12];fov=kind==='trophy'?49:39;}
+else if(t<10.5){const a=ease((t-7.2)/3.3);eye=vec([-.85,2.0,4.2],[-.45,2.15,4.6],a);tgt=[0,kind==='trophy'?1.58:1.12,.06];fov=kind==='trophy'?43:39;}
+else{eye=[-.45,2.15,5.8];tgt=[0,kind==='trophy'?1.58:1.18,.06];fov=kind==='trophy'?43:40;}
 r.debugCam={eye:[X+eye[0],eye[1],Z+eye[2]],tgt:[X+tgt[0],tgt[1],Z+tgt[2]],fov};
 const w=innerWidth,h=innerHeight;overlay.width=w;overlay.height=h;r.render(m,w,h,1,t*1000);ctx.clearRect(0,0,w,h);
 if(kind==='motm')text3('MVP',-.20,1.07,.331,.045,'#eadbb5');

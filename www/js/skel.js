@@ -87,9 +87,9 @@ const Skel=(()=>{
   else if(gk&&p.puntT>0&&has('gkPunt')){const h=M_('gkPunt').hit||.5;au=h-.12+(1-p.puntT/.4)*.2;act='gkPunt';aw=1;}
   else if(((b.owner===p&&m.restartKind==='throw')||p.throwT>0)&&has('throwin')&&!gk){act='throwin';au=p.throwT>0?.52+(1-p.throwT/.4)*.18:.42;aw=1;}
   else if(gk&&p.throwT>0&&has('gkThrow')){act='gkThrow';au=.35+(1-p.throwT/.4)*.2;aw=1;}
-  else if(gk&&p.gkHi>0&&!dive&&p.gkLeap===2&&has('gkHiJ')){act='gkHiJ';au=.3+(1-p.gkHi/.5)*.55;aw=1;}
-  else if(gk&&p.gkHi>0&&!dive&&p.gkLeap&&has('gkLeap')){act='gkLeap';au=.3+(1-p.gkHi/.5)*.55;aw=1;}
-  else if(gk&&p.gkHi>0&&!dive&&has('gkCatchHi')){act='gkCatchHi';au=.18+(1-p.gkHi/.5)*.5;aw=1;}
+  else if(gk&&p.gkHi>0&&!dive&&!b.shot&&p.gkLeap===2&&has('gkHiJ')){act='gkHiJ';au=.3+(1-p.gkHi/.5)*.55;aw=1;}
+  else if(gk&&p.gkHi>0&&!dive&&!b.shot&&p.gkLeap&&has('gkLeap')){act='gkLeap';au=.3+(1-p.gkHi/.5)*.55;aw=1;}
+  else if(gk&&p.gkHi>0&&!dive&&!b.shot&&has('gkCatchHi')){act='gkCatchHi';au=.18+(1-p.gkHi/.5)*.5;aw=1;}
   else if(gk&&p.catchT>0&&!(p.gkHi>0)&&p.lowC&&has('gkScoop')){act='gkScoop';au=.25+(1-p.catchT/.45)*.45;aw=1;}
   else if(gk&&p.catchT>0&&!(p.gkHi>0)&&has('gkCatch')){act='gkCatch';au=.25+(1-p.catchT/.45)*.4;aw=1;}
   else if(gk&&b.owner===p&&b.inHands&&has('gkCatch')){act='gkCatch';au=.72;aw=1;}
@@ -143,6 +143,7 @@ const Skel=(()=>{
   if(gk&&p.gkHi>0&&!dive&&!act)lift+=.5*Math.sin(Math.PI*(1-p.gkHi/.5));
   if(gk&&dive>0&&act&&(p.diveH||0)>1.25)lift+=Math.min(.75,(p.diveH-1.1)*.6)*Math.sin((1-dive)*Math.PI);
   if(p.jumpT>0&&!slide&&!dive)lift+=(act==='head'?.6:1)*.42*Math.sin(Math.PI*(1-p.jumpT/.45));
+  if(gk&&b.shot&&b.shot.by.team!==p.team&&!dive){const eta=clamp((p.x-b.x)/(b.vx||.001),0,.5),height=b.z+b.vz*eta-4.9*eta*eta;if(eta<.3&&height>1.65)lift+=Math.min(.45,(height-1.65)*.6)*Math.sin(Math.PI*clamp(1-eta/.35,0,1));}
   const sc=p._hs||(p._hs=.95+((p.i*7919)%17)/170);
   const cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),spp=Math.sin(pitch),cr=Math.cos(roll),sr=Math.sin(roll);
   // R = Ry * Rx(pitch) * Rz(roll)
@@ -150,11 +151,19 @@ const Skel=(()=>{
   // world = T(x, lift, -y) * T(0,piv,0) * R * T(0,-piv,0) * S
   W[0]=r00*sc;W[1]=r10*sc;W[2]=r20*sc;W[3]=0;W[4]=r01*sc;W[5]=r11*sc;W[6]=r21*sc;W[7]=0;W[8]=r02*sc;W[9]=r12*sc;W[10]=r22*sc;W[11]=0;
   W[12]=p.x-r01*piv;W[13]=lift+piv-r11*piv;W[14]=-p.y-r21*piv;W[15]=1;
+  // Prepare the real arms towards the incoming shot, within anatomical reach.
+  // This changes the drawn pose too, never an invisible catch radius.
+  if(gk&&b.shot&&b.shot.by.team!==p.team&&!b.owner&&!p._catchPose){const tx=p.x+(b.vx<0?.35:-.35),eta=clamp((tx-b.x)/(b.vx||.001),0,.35),wx=tx,wy=b.y+b.vy*eta,wz=clamp(b.z+b.vz*eta-4.9*eta*eta+.15,.2,2.4);const dx=wx-W[12],dy=wz-W[13],dz=-wy-W[14],ss=sc*sc;
+   const target=[(W[0]*dx+W[1]*dy+W[2]*dz)/ss,(W[4]*dx+W[5]*dy+W[6]*dz)/ss,(W[8]*dx+W[9]*dy+W[10]*dz)/ss];
+   for(const side of ['L','R'])aimArm(side,target);}
+  if(gk&&p._catchPose&&p._catchPose.world){const a=clamp((m.time-p._catchPose.at)/.12,0,1);for(let i=0;i<16;i++)W[i]=p._catchPose.world[i]+(W[i]-p._catchPose.world[i])*a;}
   if(out)writeRow(out,off,W);}
+ function rotateFromTo(a,b){const al=Math.hypot(...a)||1,bl=Math.hypot(...b)||1;const x=a.map(v=>v/al),y=b.map(v=>v/bl),d=x[0]*y[0]+x[1]*y[1]+x[2]*y[2];if(d<-.999){const axis=Math.abs(x[0])<.8?[0,-x[2],x[1]]:[-x[1],x[0],0];return qnrm([...axis,0]);}return qnrm([x[1]*y[2]-x[2]*y[1],x[2]*y[0]-x[0]*y[2],x[0]*y[1]-x[1]*y[0],1+d]);}
+ function aimArm(side,target){const u=J['upper_arm.'+side],f=J['forearm.'+side],h=J['hand.'+side];if(u==null||f==null||h==null)return;const S=GT[u].slice(),E=GT[f].slice(),H=GT[h].slice(),len=(a,b)=>Math.hypot(...a.map((v,i)=>v-b[i])),a=len(S,E),b=len(E,H),v=target.map((x,i)=>x-S[i]),d0=Math.hypot(...v)||1,d=Math.min(d0,a+b-.005),n=v.map(x=>x/d0),T=S.map((x,i)=>x+n[i]*d),along=(a*a-b*b+d*d)/(2*d),bend=Math.sqrt(Math.max(0,a*a-along*along));let perp=[0,-1,0];const dot=perp.reduce((s,x,i)=>s+x*n[i],0);perp=perp.map((x,i)=>x-dot*n[i]);const pn=Math.hypot(...perp)||1;const elbow=S.map((x,i)=>x+n[i]*along+perp[i]/pn*bend);const q1=rotateFromTo(E.map((x,i)=>x-S[i]),elbow.map((x,i)=>x-S[i]));qmul(q1,GR[u],GR[u]);const q2=rotateFromTo(H.map((x,i)=>x-E[i]),T.map((x,i)=>x-elbow[i]));qmul(q2,GR[f],GR[f]);qmul(q2,GR[h],GR[h]);GT[f]=elbow;GT[h]=T;}
  // Physical keeper contact samples the same posed joints used for drawing.
  const contactWorld=new Float32Array(16);
- function freezeCatch(p,m){pose(p,m,m.time,null,0,contactWorld);p._catchPose={at:m.time,rot:GR.map(q=>q.slice()),pos:GT.map(v=>v.slice())};}
- function keeperContacts(p,m){const key=[m.time,m.phase,p.x,p.y,p.fx,p.fy,p.vx,p.vy,p.diveT,p.smT,p.gkHi,p.jumpT,p.catchT,p.stun,p.upT,m.ball.owner===p,!!m.ball.shot,m.ball.inHands].join('|');if(p._contactPoints&&p._contactPoints.key===key)return p._contactPoints.points;pose(p,m,m.time,null,0,contactWorld);const points={};for(const key of ['hand.L','hand.R','forearm.L','forearm.R','shin.L','shin.R','foot.L','foot.R','hips','spine.002','head']){const j=J[key];if(j==null)continue;const v=GT[j],W=contactWorld;points[key]=[W[0]*v[0]+W[4]*v[1]+W[8]*v[2]+W[12],W[1]*v[0]+W[5]*v[1]+W[9]*v[2]+W[13],-(W[2]*v[0]+W[6]*v[1]+W[10]*v[2]+W[14])];}p._contactPoints={key,points};return points;}
+ function freezeCatch(p,m){pose(p,m,m.time,null,0,contactWorld);p._contactPoints=null;p._catchPose={at:m.time,world:new Float32Array(contactWorld),rot:GR.map(q=>q.slice()),pos:GT.map(v=>v.slice())};}
+ function keeperContacts(p,m){const key=[m.time,m.phase,p.x,p.y,p.fx,p.fy,p.vx,p.vy,p.diveT,p.smT,p.gkHi,p.jumpT,p.catchT,p.stun,p.upT,m.ball.owner===p,!!m.ball.shot,m.ball.inHands,m.ball.x,m.ball.y,m.ball.z,m.ball.vx,m.ball.vy,m.ball.vz].join('|');if(p._contactPoints&&p._contactPoints.key===key)return p._contactPoints.points;pose(p,m,m.time,null,0,contactWorld);const points={};for(const key of ['hand.L','hand.R','forearm.L','forearm.R','shin.L','shin.R','foot.L','foot.R','hips','spine.002','head']){const j=J[key];if(j==null)continue;const v=GT[j],W=contactWorld;points[key]=[W[0]*v[0]+W[4]*v[1]+W[8]*v[2]+W[12],W[1]*v[0]+W[5]*v[1]+W[9]*v[2]+W[13],-(W[2]*v[0]+W[6]*v[1]+W[10]*v[2]+W[14])];}p._contactPoints={key,points};return points;}
  // position/orientation of a bind-pose point after skinning by joint j (used for the shirt number)
  function jointPoint(j,W,pt,o){const q=GR[j],t=GT[j];const v=[pt[0]-gT[j][0],pt[1]-gT[j][1],pt[2]-gT[j][2]];const ir=qinv(gR[j],[0,0,0,1]);qrot(ir,v,v);qrot(q,v,v);const x=v[0]+t[0],y=v[1]+t[1],z=v[2]+t[2];o[0]=W[0]*x+W[4]*y+W[8]*z+W[12];o[1]=W[1]*x+W[5]*y+W[9]*z+W[13];o[2]=W[2]*x+W[6]*y+W[10]*z+W[14];return o;}
  function jointDir(j,W,d,o){const ir=qinv(gR[j],[0,0,0,1]);const v=qrot(ir,d,[0,0,0]);qrot(GR[j],v,v);o[0]=W[0]*v[0]+W[4]*v[1]+W[8]*v[2];o[1]=W[1]*v[0]+W[5]*v[1]+W[9]*v[2];o[2]=W[2]*v[0]+W[6]*v[1]+W[10]*v[2];return o;}

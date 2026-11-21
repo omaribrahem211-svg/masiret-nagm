@@ -134,10 +134,21 @@ const Skel=(()=>{
   const wI=Math.max(0,1-sp/1.0),wW=sp<1?sp:Math.max(0,1-(sp-1.8)/1.6),MR=has('runM'),wJ=sp<1.8?Math.max(0,(sp-1)/.8):Math.max(0,1-(sp-(MR?3.8:4.6))/(MR?1.2:1.8)),wR=MR?(sp<3.8?0:sp<5?(sp-3.8)/1.2:Math.max(0,1-(sp-6.6)/1)):0,wS=MR?Math.max(0,Math.min(1,(sp-6.6)/1)):Math.max(0,Math.min(1,(sp-4.4)/2));
   // حركة الرجلين حسب اتجاه الجري بالنسبة لاتجاه الجسم: لقدام، لورا، أو جنب (المدافع وهو بيراقب)
   const fwd=sp>.3?(p.vx*p.fx+p.vy*p.fy)/sp:1,lat=sp>.3?(p.vx*p.fy-p.vy*p.fx)/sp:0;const wB=has('jogB')?Math.max(0,Math.min(1,(-fwd-.25)/.5))*Math.min(1,sp/1.6):0,wSd=has('strL')?Math.max(0,Math.min(1,(Math.abs(lat)-.6)/.3))*(1-wB)*Math.min(1,sp/1.6)*(sp<6?1:0):0,wF=1-Math.max(wB,wSd);
-  {if(has('offIdle')&&!gk){const q=(t/clips.offIdle.dur+(p.i||0)*.37)%2;accClip('offIdle',q<1?q:2-q,wI,false);}else accClip('idle',t/2.5+(p.i||0)*.17,wI,true);accClip('walk',u,wW*.8*wF,true);const dr=has('dribble')&&b.owner===p&&!b.inHands&&!m.restartKind&&sp>1.5,DM=META.dribble||{};const dW=dr?(p.dHi?0:Math.max(0,Math.min(1,(5.6-sp)/.8))):0,nd=1-dW;if(dW>0)accClip('dribble',((u*.5+(DM.ph||0)*.5)%1+1)%1,(wJ+wR+wS)*wF*dW,true);accClip('jog',u,wJ*wF*nd,true);if(MR){if(wR>0)accClip('runM',((u+(M_r('runM').ph||0))%1+1)%1,wR*wF*nd,true);if(wS>0)accClip('sprM',((u+(M_r('sprM').ph||0))%1+1)%1,wS*wF*nd,true);}else accClip('sprint',u,wS*wF*nd,true);
-   if(wB>0)accClip('jogB',u,(1-wI)*wB,true);if(wSd>0)accClip(lat>0?'strR':'strL',u,(1-wI)*wSd,true);}
+  /* (anim) الوقفة حسب الموقف: صاحب الكورة في الكورة الثابتة بيلعب بيها، المدافع قريب من الخصم اللي معاه الكورة واقف وقفة دفاع، المصاب ماسك رجله */
+  const oppB=b.owner&&b.owner.team!==p.team&&!b.inHands&&!gk?Math.hypot(b.owner.x-p.x,b.owner.y-p.y):99;
+  const idleC=!gk&&b.owner===p&&m.restartKind&&m.restartKind!=='throw'&&has('ballIdle')?'ballIdle':!gk&&p.injT>0&&has('injHurt')?'injHurt':oppB<6&&has('defIdle')?'defIdle':null;
+  const wkC=p.injT>0&&has('injWalk')&&!gk?'injWalk':'walk';
+  {if(idleC)accClip(idleC,(t/clips[idleC].dur+(p.i||0)*.29)%1,wI,true);else if(has('offIdle')&&!gk){const q=(t/clips.offIdle.dur+(p.i||0)*.37)%2;accClip('offIdle',q<1?q:2-q,wI,false);}else accClip('idle',t/2.5+(p.i||0)*.17,wI,true);accClip(wkC,u,wW*.8*wF,true);const dr=has('dribble')&&b.owner===p&&!b.inHands&&!m.restartKind&&sp>1.5,DM=META.dribble||{};const dW=dr?(p.dHi?0:Math.max(0,Math.min(1,(5.6-sp)/.8))):0,nd=1-dW;if(dW>0)accClip('dribble',((u*.5+(DM.ph||0)*.5)%1+1)%1,(wJ+wR+wS)*wF*dW,true);accClip('jog',u,wJ*wF*nd,true);if(MR){if(wR>0)accClip('runM',((u+(M_r('runM').ph||0))%1+1)%1,wR*wF*nd,true);if(wS>0)accClip('sprM',((u+(M_r('sprM').ph||0))%1+1)%1,wS*wF*nd,true);}else accClip('sprint',u,wS*wF*nd,true);
+   /* (anim) لورا وعلى الجنب ببطء (أقل من 1.6 م/ث، ومزج لحد 2.6): مشي لورا ومشي جانبي بدل الجري. الحارس على الجنب: خطوة الحارس الجانبية (Mixamo) */
+   const wsl=sp<1.6?1:sp<2.6?2.6-sp:0;
+   if(wB>0){if(has('walkB')&&wsl>0)accClip('walkB',u,(1-wI)*wB*wsl,true);if(wsl<1||!has('walkB'))accClip('jogB',u,(1-wI)*wB*(has('walkB')?1-wsl:1),true);}
+   if(wSd>0){if(gk&&has('gkSideL')){const g0=p._gsT==null?t:p._gsT;p._gsU=((p._gsU||0)+sp*Math.min(.1,Math.max(0,t-g0))/1.3)%1;p._gsT=t;accClip(lat>0?'gkSideR':'gkSideL',p._gsU,(1-wI)*wSd,true);}
+    else{if(has('strWL')&&wsl>0)accClip(lat>0?'strWR':'strWL',u,(1-wI)*wSd*wsl,true);if(wsl<1||!has('strWL'))accClip(lat>0?'strR':'strL',u,(1-wI)*wSd*(has('strWL')?1-wsl:1),true);}}}
   if(gk&&!dive&&b.owner&&b.owner.team!==p.team&&sp<2.2&&Math.hypot(b.x-p.x,b.y-p.y)<24&&!(b.owner===p))accClip(has('gkIdle')?'gkIdle':'crouch',has('gkIdle')?t/4.6:t/2.93,1.2,true);
-  if(p.stun>0&&!slide&&!dive&&!(p.stun>.4&&has('trip')))accClip('hit',1-Math.min(1,p.stun/.35),2,false);
+  if(gk&&!dive&&sp<.5&&has('gkDirect')&&!b.inHands&&b.owner!==p&&Math.hypot(b.x-p.x,b.y-p.y)>40){const q=(t+(p.i||0)*3.1)%11;if(q<clips.gkDirect.dur)accClip('gkDirect',q/clips.gkDirect.dur,2*Math.min(1,q/.3,(clips.gkDirect.dur-q)/.3),false);}
+  // (anim) تكعبلة وهو بيجري بعد ما خسر الكورة (stun قصير): Jogging Stumble بدل هزة الجسم
+  if(p.stun>0&&!(p._stP>0)&&sp>2.2&&!p.fallK&&p.stun<=.6){p._stS=t;p._stD=p.stun;}if(!(p.stun>0))p._stS=null;p._stP=p.stun;
+  if(p.stun>0&&!slide&&!dive&&!(p.stun>.4&&has('trip'))&&!(p._stS!=null&&has('stumble')))accClip('hit',1-Math.min(1,p.stun/.35),2,false);
   // ---- حركات الكورة الحقيقية (Mixamo): بتاخد الجسم كله
   let act=null,au=0,aw=0;const M_=k=>META[k]||{};
   // (contact) حركة استلام بالصدر/الفخد بتتلغي لو حد تاني خد الكورة قبل اللمسة، أو خلصت
@@ -149,7 +160,9 @@ const Skel=(()=>{
   if(slide&&has('slide')){const S=p.slideMax||(p.slideMax=Math.max(p.slide,.5));const q=1-p.slide/S;act=(p.i||0)%2&&has('slide2')?'slide2':'slide';au=.22+q*.5;aw=1;}
   else if(smother&&has('gkBlock')){act='gkBlock';p._smo=true;au=.25+(1-dive)*.35;aw=1;}
   else if(dive>0&&has('gkDiveL')&&!((p.diveH||0)>1.35)){const yw=Math.atan2(p.fx,-p.fy),left=Math.sin(yw)*(p.diveDir||1)>0;p._dvL=left;p._smo=false;if((p.diveN||9)<2.4&&has('gkLunge')){act=left?'gkLow':'gkLunge';au=.15+(1-dive)*.65;}else{act=left?'gkDiveL':'gkDiveR';au=.2+(1-dive)*.28;}aw=1;}
+  else if(p.stun>.4&&p.fallK==='knock'&&p.fallV&&has(p.fallV)){act=p.fallV;p._fallen=true;p._kS=Math.max(p._kS||0,p.stun);au=Math.min(.99,(p._kS-p.stun)/Math.max(.5,p._kS-.4));aw=1;}
   else if(p.stun>.4&&p.fallK==='knock'&&has('knock')){act='knock';p._fallen=true;p._kS=Math.max(p._kS||0,p.stun);au=Math.min(.97,.05+(1-p.stun/Math.max(1.35,p._kS))*2.2);aw=1;}
+  else if(p.stun>0&&p._stS!=null&&!p.fallK&&has('stumble')&&!gk){act='stumble';au=.08+.7*Math.min(1,(t-p._stS)/Math.max(.3,p._stD||.5));aw=1;}
   else if(p.stun>.4&&has('trip')){act='trip';p._fallen=p.stun>.7||p._fallen;au=.15+(1-Math.min(1,p.stun/1.2))*.5;aw=1;}
   else if(p.jumpT>0&&has('head')){const hc=p.hdrClip&&has(p.hdrClip)?p.hdrClip:p.hdrStand?'head':(p.hdrHi&&has('headJ')?'headJ':((p.i||0)+(p.kc||0))%2&&has('head2')?'head2':'head');act=hc;
    /* (contact) headS (رأسية واقفة) و headP (رأسية بنطّة من مكانه): الحركة بتتلعب بسرعتها الحقيقية ولحظة ضرب الكورة في الكليب (meta.hit) بتيجي مع اللمسة المتوقعة
@@ -174,9 +187,11 @@ const Skel=(()=>{
   // احتفال/حزن بعد الجول ونهاية الماتش (Mixamo: Victory, Cheering, Fist Pump, Defeated)
   if(!act&&!slide&&!dive&&sp<1.6&&(m.phase==='goal'||m.phase==='end')&&has('cheer')){let wt=null;if(m.phase==='goal')wt=m.celebrator&&m.celebrator.team;else{const sc=m.score;if(sc[0]!==sc[1])wt=m.t[sc[0]>sc[1]?0:1];}
    if(wt){const off=(p.i||0)*.37,lp=(c,a0,a1)=>{const d=clips[c].dur,q=((t+off*d)/((a1-a0)*d))%2;return a0+(a1-a0)*(q<1?q:2-q);};
-    if(p.team===wt){const near=m.phase==='end'||(m.celebrator&&Math.hypot(m.celebrator.x-p.x,m.celebrator.y-p.y)<20);if(p===m.celebrator){const CL=['victory','fistp','celKnee','celArms','celJump'].filter(has);act=CL[((p.i||0)+(m.score[0]+m.score[1]))%CL.length];au=act==='victory'?lp('victory',.2,.68):act==='celKnee'?lp('celKnee',.35,.95):act==='celJump'?lp('celJump',.05,.95):lp(act,.05,.95);}else if(near&&!gk){act='cheer';au=lp('cheer',0,1);}}
-    else{act='defeat';au=lp('defeat',.08,.9);}}}
-  if(!act&&p.protT>0&&sp<1.3&&!gk&&has('protest')){act='protest';au=(t/clips.protest.dur+(p.i||0)*.13)%1*.96;}
+    if(p.team===wt){const near=m.phase==='end'||(m.celebrator&&Math.hypot(m.celebrator.x-p.x,m.celebrator.y-p.y)<20);if(p===m.celebrator){const CL=['victory','fistp','celKnee','celArms','celJump','cheer2','rally'].filter(has);act=CL[((p.i||0)+(m.score[0]+m.score[1]))%CL.length];au=act==='victory'?lp('victory',.2,.68):act==='celKnee'?lp('celKnee',.35,.95):act==='celJump'?lp('celJump',.05,.95):lp(act,.05,.95);}else if(near&&!gk){const TC=['cheer','clap','thumbs','cheer2'].filter(has);act=TC[(p.i||0)%TC.length];au=lp(act,0,1);}}
+    else{/* الفريق اللي اتجاله جون: زعل بأشكال مختلفة */const LC=['defeat','disap','annoyed','headNo'].filter(has);act=LC[(p.i||0)%LC.length];au=act==='defeat'?lp('defeat',.08,.9):lp(act,0,1);}}}
+  if(!act&&p.protT>0&&sp<1.3&&!gk&&has('protest')){act=p.protC&&has(p.protC)?p.protC:'protest';au=(t/clips[act].dur+(p.i||0)*.13)%1*.96;}
+  // (anim) اللي ضيّع تسديدة طلعت برّه بيزعل لحد ما اللعب يرجع
+  if(!act&&p.missT>0&&sp<.8&&!gk&&p.missC&&has(p.missC)){act=p.missC;au=Math.min(.97,(3.5-p.missT)/clips[act].dur);}
   if(!act&&!gk&&sp<.4&&(p.i%3===1)&&has('fold')&&(m.restartKind==='fk'||m.restartKind==='pen'||(m.pen&&!m.pen.live))&&Math.hypot(b.x-p.x,b.y-p.y)>20)accClip('fold',(t/clips.fold.dur+(p.i||0)*.21)%1,3,true);
   if(!act&&p.upT>0&&p.upClip&&has(p.upClip)){act=p.upClip;au=p.upA+(p.upB-p.upA)*(1-p.upT/p.upD);}
   if(!act&&p.spinT>0&&has('spin')&&b.owner===p){act='spin';au=.2+(1-p.spinT/.55)*.55;}

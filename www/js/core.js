@@ -164,7 +164,7 @@ class Match{
  endWalk(){const w=this.walk,b=this.ball;if(!w)return;for(const p of this.all){const T=p.wT;if(!T)continue;if(hyp(p.x-T[0],p.y-T[1])>.5){p.x=T[0];p.y=T[1];}p.fx=T[2];p.fy=T[3];p.vx=p.vy=0;p.wT=null;}b.owner=w.own;b.x=w.bx;b.y=w.by;this.walk=null;}
  later(bn,d){this.bq=bn;this.bqT=d;}
  // مؤقتات الحركات (وقعة/قيام/اعتراض) بتكمّل حتى والماتش واقف للكورة الثابتة
- fxTick(dt){for(const p of this.all){if(p.protT>0)p.protT-=dt;if(p.upT>0)p.upT-=dt;if(p.fallK==='knock'&&p.stun>0){p.stun-=dt;if(p.stun<=.4){p.stun=0;p.fallK=null;p._fallen=false;p._fl=false;p.upClip='layUp';p.upA=.12;p.upB=.98;p.upD=p.upT=1.15;}}}}
+ fxTick(dt){for(const p of this.all){if(p.protT>0)p.protT-=dt;if(p.injT>0)p.injT-=dt;if(p.missT>0)p.missT-=dt;if(p.upT>0)p.upT-=dt;if(p.fallK==='knock'&&p.stun>0){p.stun-=dt;if(p.stun<=.4){p.stun=0;p.fallK=null;p._fallen=false;p._fl=false;if(p.fallV==='fallB'){p.upClip='upB';p.upA=0;p.upB=1;p.upD=p.upT=1.4;}else if(p.fallV){p.upClip='upF';p.upA=0;p.upB=1;p.upD=p.upT=2;}else{p.upClip='layUp';p.upA=.12;p.upB=.98;p.upD=p.upT=1.15;}p.fallV=null;}}}}
  skip(){if(this.walk)this.walk.t=1e9;else if(this.phase==='intro'){this.phase='kickoff';this.pt=1.2;}else if(this.phase==='replay')this.endReplay();else if(this.phase==='goal'&&this.pt>.4)this.pt=.4;}
  update(dt){
   if(this.paused)return;
@@ -703,11 +703,11 @@ class Match{
   if(card==='red'){p.stats.rc++;this.sendOff(p);}
   const ag=this.attG(c.team),adv=!inBox&&card!=='red'&&!inj&&this.ball.owner===c&&hyp(ag[0]-c.x,ag[1]-c.y)<42&&!this.other(c.team).pl.some(q=>q!==p&&q.role!=='GK'&&hyp(q.x-c.x,q.y-c.y)<3);
   if(adv){p.stun=.6;this.banner={t:'أفضلية',s:card?(card==='yellow'?'وكارت أصفر بعدين':''):'',life:1.6,small:true,card};this.ev('advantage',{p,c});if(card==='yellow')this.ev('yellow',{p});return;}
-  if(c.role!=='GK'&&(slide||behind||fast||Math.random()<.4)){c.stun=Math.max(c.stun,1.35);c.fallK='knock';}if(card!=='red')p.protT=R(2.2,3.2);
+  if(c.role!=='GK'&&(slide||behind||fast||Math.random()<.4)){/* (anim) نوع الوقعة حسب الفاول: من ورا بيقع على وشه، الزحلقة بتكعبله لقدام، من قدام/جنب بيقع على ضهره. الوقعات الجديدة أطول شوية (1.9 بدل 1.35) عشان الحركة تكمل */c.fallV=behind?(Math.random()<.5?'fallF':'fallK2'):slide?'fallF':'fallB';c.stun=Math.max(c.stun,1.9);c.fallK='knock';}if(card!=='red'){p.protT=R(2.2,3.2);/* اعتراض اللاعب اللي عمل الفاول: نوع مختلف كل مرة، ولو خد كارت بيهز راسه */p.protC=card?pick(['annoyed','headNo','argA']):pick(['protest','argA','argB','angryPt','angryG','headNo']);}
   if(inBox)this.restart('pen',c.team.idx);else this.restart('fk',c.team.idx,clamp(c.x,1,L-1),clamp(c.y,1,W-1));
   this.ev(inBox?'pen':'foul',{p,c});
   if(card){this.banner={t:card==='yellow'?'كارت أصفر':'كارت أحمر',s:p.name,life:2.4,card};this.pt=Math.max(this.pt,2);this.ev(card,{p});}
-  if(inj){this.ev('injury',{p:c});}}
+  if(inj){c.injT=12;/* (anim) المصاب بيعرج شوية بعد ما يقوم */this.ev('injury',{p:c});}}
  sendOff(p){const t=p.team;t.pl=t.pl.filter(q=>q!==p);t.off.push(p);p.off=true;this.all=[...this.t[0].pl,...this.t[1].pl];const b=this.ball;if(b.owner===p)b.owner=null;if(b.target===p)b.target=null;
   const h=this.human;if(h&&h.ctrl===p){if(h.lock){this.human=null;this.ff=true;}else this.switchCtl();}
   if(p.star)this.ev('star_red',{p});}
@@ -884,7 +884,7 @@ class Match{
    if(p.upT>0)p.upT=Math.max(0,p.upT-dt);
    if(wasDive&&p.diveT<=0&&!(p.diveH>1.3)){const sm=p.smT>0||p._smo;p.upClip=sm?'gkBlock':(p._dvL?'gkDiveL':'gkDiveR');p.upA=sm?.62:.6;p.upB=.9;p.upD=p.upT=.7;}
    if(wasSlide&&!(p.slide>0)){p.upClip='slide';p.upA=.66;p.upB=.95;p.upD=p.upT=.45;}
-   if(wasFall&&!(p.stun>.4)&&p._fallen){if(p.fallK==='knock'){p.upClip='layUp';p.upA=.12;p.upB=.98;p.upD=p.upT=1.15;}else{p.upClip='standup';p.upA=.08;p.upB=1;p.upD=p.upT=.8;}p._fallen=false;p.fallK=null;}if(p.protT>0)p.protT-=dt;p.catchT=Math.max(0,(p.catchT||0)-dt);if(p.gkHi>0)p.gkHi-=dt;p.puntT=Math.max(0,(p.puntT||0)-dt);p.jumpT=Math.max(0,(p.jumpT||0)-dt);
+   if(wasFall&&!(p.stun>.4)&&p._fallen){if(p.fallK==='knock'&&p.fallV){/* (anim) القومة المناسبة للوقعة: من على بطنه أو من على ضهره */if(p.fallV==='fallB'){p.upClip='upB';p.upA=0;p.upB=1;p.upD=p.upT=1.4;}else{p.upClip='upF';p.upA=0;p.upB=1;p.upD=p.upT=2;}p.fallV=null;}else if(p.fallK==='knock'){p.upClip='layUp';p.upA=.12;p.upB=.98;p.upD=p.upT=1.15;}else{p.upClip='standup';p.upA=.08;p.upB=1;p.upD=p.upT=.8;}p._fallen=false;p.fallK=null;}if(p.protT>0)p.protT-=dt;if(p.injT>0)p.injT-=dt;if(p.missT>0)p.missT-=dt;p.catchT=Math.max(0,(p.catchT||0)-dt);if(p.gkHi>0)p.gkHi-=dt;p.puntT=Math.max(0,(p.puntT||0)-dt);p.jumpT=Math.max(0,(p.jumpT||0)-dt);
    if(p._steer){}else if(sp>.4&&!(this.ball.owner===p&&this.restartKind)){const ta=Math.atan2(p.vy,p.vx),ca=Math.atan2(p.fy,p.fx);const da=angDiff(ta,ca);const mx=(this.ball.owner===p?(sp<3?14:9):22)*dt;const na=ca+clamp(da,-mx,mx);p.fx=Math.cos(na);p.fy=Math.sin(na);}else if(this.ball.owner!==p){const bx=this.ball.x-p.x,by=this.ball.y-p.y,bd=hyp(bx,by)||1;p.fx+=(bx/bd-p.fx)*.1;p.fy+=(by/bd-p.fy)*.1;const n=hyp(p.fx,p.fy)||1;p.fx/=n;p.fy/=n;}
    p.x=clamp(p.x,-3,L+3);p.y=clamp(p.y,-3,W+3);if(p.role==='GK'&&this.ball.owner===p&&this.ball.inHands){const g=this.ownG(p.team);if(g[0]<1)p.x=clamp(p.x,.5,15.8);else p.x=clamp(p.x,L-15.8,L-.5);p.y=clamp(p.y,CY-19.6,CY+19.6);}}
   this.collide(dt);this.sep(.74,p=>p.slide>0||p.diveT>0);}
@@ -1094,7 +1094,7 @@ class Match{
  wood(b){SFX.kick(.8);vib(30);{const r=this.shotLive();if(r)r.wood=true;}if(b.shot){SFX.ooh();this.later({t:'في الخشبة!',life:1.3,small:true},.5);this.ev('woodwork',{p:b.shot.by});b.shot=null;}this.shake=Math.max(this.shake,.25);}
  // قانون ٩٫١٥ م: طول ما الكورة ماتلعبتش في الضربة الحرة، لاعيبة الخصم (غير الحائط) مايقربوش منها
  fkKeep(){const b=this.ball,o=b.owner;if(this.restartKind!=='fk'||!o||b.inHands)return;for(const q of this.other(o.team).pl){if(q.off||q.wallP||q.role==='GK')continue;const dx=q.x-b.x,dy=q.y-b.y,d=hyp(dx,dy);if(d<9.15){const u=d||1;q.x=b.x+dx/u*9.15;q.y=b.y+dy/u*9.15;const vr=(q.vx*dx+q.vy*dy)/u;if(vr<0){q.vx-=vr*dx/u;q.vy-=vr*dy/u;}}}for(const q of o.team.pl){if(q===o||q.off||q.role==='GK')continue;const dx=q.x-b.x,dy=q.y-b.y,d=hyp(dx,dy);if(d<4){const u=d||1;q.x=b.x+dx/u*4;q.y=b.y+dy/u*4;const vr=(q.vx*dx+q.vy*dy)/u;if(vr<0){q.vx-=vr*dx/u;q.vy-=vr*dy/u;}}}}
- restart(kind,ti,x,y){this.shotEnd('other');if(this.walk)this.endWalk();const prev=this.snap();this.bq=null;const b=this.ball,t=this.t[ti],o=this.other(t),g=this.attG(t);let tk;for(const p of this.all){p.spT=null;p.wallP=0;p.windT=0;p.windFn=null;p.pend=null;}
+ restart(kind,ti,x,y){{const r=this.shotLive();if(r&&r.by&&!r.by.off&&(kind==='gk'||kind==='corner')){/* (anim) اللي ضيّع التسديدة بيزعل لحد ما اللعب يرجع */r.by.missT=3.5;r.by.missC=pick(['disap','headNo','annoyed']);}}this.shotEnd('other');if(this.walk)this.endWalk();const prev=this.snap();this.bq=null;const b=this.ball,t=this.t[ti],o=this.other(t),g=this.attG(t);let tk;for(const p of this.all){p.spT=null;p.wallP=0;p.windT=0;p.windFn=null;p.pend=null;}
   if(kind==='pen'){x=g[0]-t.dir*11;y=CY;}
   const st=t.star&&!t.star.off?t.star:null;
   if(kind==='gk')tk=this.gkOf(t);

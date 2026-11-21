@@ -161,3 +161,6 @@ const LIFE=[
 ];
 const NATS_OPP=['مصر','السعودية','المغرب','الجزائر','تونس','الإمارات','قطر','الأردن','العراق','إنجلترا','إسبانيا','إيطاليا','ألمانيا','فرنسا','البرتغال','هولندا','تركيا','البرازيل','الأرجنتين','أمريكا','نيجيريا','السنغال','اليابان','كوريا','المكسيك','الكاميرون','غانا','كولومبيا','أوروجواي','بلجيكا','كرواتيا'];
 const NAT_STR={'نيجيريا':.6,'السنغال':.65,'اليابان':.65,'كوريا':.6,'المكسيك':.62,'الكاميرون':.55,'غانا':.55,'كولومبيا':.68,'أوروجواي':.72,'بلجيكا':.8,'كرواتيا':.8};
+
+// Shared dive presentation phase. Anticipation reaches its contact pose at ball ETA.
+function keeperDivePhase(p,m){if(!(p.diveT>0))return 0;if(p.diveStart==null||!p.diveLead||m.phase==='replay')return clamp(p.diveT/.75,0,1);const elapsed=Math.max(0,m.time-p.diveStart),lead=p.diveLead;const u=elapsed<lead?.5*elapsed/lead:.5+.5*clamp((elapsed-lead)/Math.max(.1,.75-lead),0,1);return 1-u;}

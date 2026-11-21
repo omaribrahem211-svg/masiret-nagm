@@ -61,9 +61,9 @@ const Skel=(()=>{
  function arm(side,b1,b2,out,w){const L=side>0?'.L':'.R';const down=Qz(-side*(Math.PI/2-out));const up=QQ(Qx(-b1),down),fo=QQ(Qx(-(b1+b2)),down);ov(J['upper_arm'+L],up,w);ov(J['forearm'+L],fo,w);ov(J['hand'+L],fo,w);}
  function leg(side,a1,a2,w){const L=side>0?'.L':'.R';ov(J['thigh'+L],Qx(-a1),w);ov(J['shin'+L],Qx(-(a1-a2)),w);ov(J['foot'+L],Qx(-(a1-a2)*.6),w);}
  // ---- main: pose player p into row
- function pose(p,m,t,out,off,W){resetRest();if(!(p.slide>0))p.slideMax=0;OV.clear();ADD.clear();accClear();
+ function pose(p,m,t,out,off,W){if(m.phase==='play')t=m.time;resetRest();if(!(p.slide>0))p.slideMax=0;OV.clear();ADD.clear();accClear();
   const sp=Math.hypot(p.vx,p.vy),b=m.ball,gk=p.role==='GK';const u=((p.anim||0)/(Math.PI*2));
-  const celeb=m.phase==='goal'&&p===m.celebrator,slide=p.slide>0,dive=p.diveT>0?p.diveT/.75:0;
+  const celeb=m.phase==='goal'&&p===m.celebrator,slide=p.slide>0,dive=keeperDivePhase(p,m);
   const M_r=k=>META[k]||{};
   // locomotion blend by real speed (no foot sliding: cycle follows p.anim which follows speed)
   const wI=Math.max(0,1-sp/1.0),wW=sp<1?sp:Math.max(0,1-(sp-1.8)/1.6),MR=has('runM'),wJ=sp<1.8?Math.max(0,(sp-1)/.8):Math.max(0,1-(sp-(MR?3.8:4.6))/(MR?1.2:1.8)),wR=MR?(sp<3.8?0:sp<5?(sp-3.8)/1.2:Math.max(0,1-(sp-6.6)/1)):0,wS=MR?Math.max(0,Math.min(1,(sp-6.6)/1)):Math.max(0,Math.min(1,(sp-4.4)/2));
@@ -114,7 +114,7 @@ const Skel=(()=>{
   const poseKey=act||'locomotion';let pb=p._poseBlend;
   if(!pb){pb=p._poseBlend={key:poseKey,at:t,lastT:new Float32Array(LT),lastR:new Float32Array(LR),fromT:new Float32Array(LT),fromR:new Float32Array(LR)};}
   if(pb.key!==poseKey){pb.key=poseKey;pb.at=t;pb.fromT.set(pb.lastT);pb.fromR.set(pb.lastR);}
-  const fade=Math.max(0,Math.min(1,(t-pb.at)/(act?.06:.10)));
+  const fade=gk?1:Math.max(0,Math.min(1,(t-pb.at)/(act?.06:.10)));
   if(fade<1){const f=fade*fade*(3-2*fade);for(let i=0;i<LT.length;i++)LT[i]=pb.fromT[i]+(LT[i]-pb.fromT[i])*f;for(let i=0;i<LR.length;i+=4){qlerp(pb.fromR.subarray(i,i+4),LR.subarray(i,i+4),f,tq);LR.set(tq,i);}}
   pb.lastT.set(LT);pb.lastR.set(LR);
   // kicking leg (right) — wind-up, strike, follow-through
@@ -134,6 +134,7 @@ const Skel=(()=>{
    else{const k=.5+.5*Math.sin(t*6);arm(1,2.7+k*.2,.35,.25,1);arm(-1,2.7+(1-k)*.2,.35,.25,1);add(J['spine.001'],Qx(-.12));}}
   if(!celeb&&!slide&&!dive&&kick<0&&!act)add(J['spine.001'],Qx(.02+Math.min(1,sp/7)*.12));
   computeGlobals();
+  if(gk&&p._catchPose){const a=Math.max(0,Math.min(1,(m.time-p._catchPose.at)/.12));if(a<1){for(let j=0;j<nJ;j++){const from=p._catchPose;qlerp(from.rot[j],GR[j],a,GR[j]);for(let k=0;k<3;k++)GT[j][k]=from.pos[j][k]+(GT[j][k]-from.pos[j][k])*a;}}else p._catchPose=null;}
   // world: lift/pitch/roll around a pivot, then yaw to facing
   const yaw=Math.atan2(p.fx,-p.fy);let lift=0,pitch=0,roll=0,piv=.95;
   if(slide&&!act){pitch=-1.15;piv=.35;lift=-.28;}
@@ -149,9 +150,13 @@ const Skel=(()=>{
   W[0]=r00*sc;W[1]=r10*sc;W[2]=r20*sc;W[3]=0;W[4]=r01*sc;W[5]=r11*sc;W[6]=r21*sc;W[7]=0;W[8]=r02*sc;W[9]=r12*sc;W[10]=r22*sc;W[11]=0;
   W[12]=p.x-r01*piv;W[13]=lift+piv-r11*piv;W[14]=-p.y-r21*piv;W[15]=1;
   writeRow(out,off,W);}
+ // Physical keeper contact samples the same posed joints used for drawing.
+ const contactBuffer=new Float32Array(nJ*16),contactWorld=new Float32Array(16);
+ function freezeCatch(p,m){pose(p,m,m.time,contactBuffer,0,contactWorld);p._catchPose={at:m.time,rot:GR.map(q=>q.slice()),pos:GT.map(v=>v.slice())};}
+ function keeperContacts(p,m){pose(p,m,m.time,contactBuffer,0,contactWorld);const points={};for(const key of ['hand.L','hand.R','forearm.L','forearm.R','shin.L','shin.R','foot.L','foot.R','hips','spine.002','head']){const j=J[key];if(j==null)continue;const v=GT[j],W=contactWorld;points[key]=[W[0]*v[0]+W[4]*v[1]+W[8]*v[2]+W[12],W[1]*v[0]+W[5]*v[1]+W[9]*v[2]+W[13],-(W[2]*v[0]+W[6]*v[1]+W[10]*v[2]+W[14])];}return points;}
  // position/orientation of a bind-pose point after skinning by joint j (used for the shirt number)
  function jointPoint(j,W,pt,o){const q=GR[j],t=GT[j];const v=[pt[0]-gT[j][0],pt[1]-gT[j][1],pt[2]-gT[j][2]];const ir=qinv(gR[j],[0,0,0,1]);qrot(ir,v,v);qrot(q,v,v);const x=v[0]+t[0],y=v[1]+t[1],z=v[2]+t[2];o[0]=W[0]*x+W[4]*y+W[8]*z+W[12];o[1]=W[1]*x+W[5]*y+W[9]*z+W[13];o[2]=W[2]*x+W[6]*y+W[10]*z+W[14];return o;}
  function jointDir(j,W,d,o){const ir=qinv(gR[j],[0,0,0,1]);const v=qrot(ir,d,[0,0,0]);qrot(GR[j],v,v);o[0]=W[0]*v[0]+W[4]*v[1]+W[8]*v[2];o[1]=W[1]*v[0]+W[5]*v[1]+W[9]*v[2];o[2]=W[2]*v[0]+W[6]*v[1]+W[10]*v[2];return o;}
  // تسريحة/دقن لكل لاعب من اسمه (0 = الشعر الأصلي، 1 شعر مفروق، 2 دقن)
  function hairStyle(p){if(p.hairSt!=null)return p.hairSt;const n=String(p.name||'')+(p.num||0);let h=7;for(let i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))>>>0;const r=h%20;return r<9?0:r<15?1:2;}
- return{nJ,J,pose,jointPoint,jointDir,gT,rig:RIG,d64,hairStyle};})();
+ return{nJ,J,pose,keeperContacts,freezeCatch,jointPoint,jointDir,gT,rig:RIG,d64,hairStyle};})();

@@ -14,7 +14,7 @@ Player-lock keeps the career star selected through passes, turnovers, kickoffs a
 - The ground-pass button does not silently change to a lob. Leading a moving receiver is shorter and bounded.
 - Ordinary shot dispersion is reduced, retaining ratings, fatigue, pressure and distance. Flight time accounts for air drag rather than assuming constant horizontal speed.
 - Standing tackles reward an exposed ball and a front-facing approach; body shielding and bad angles still matter. Contact has short haptic/audio feedback.
-- Keeper contact sweeps the ball path between frames, including interpolated height. High reach requires the corresponding jump/dive state. Ratings and shot speed still determine catches versus parries.
+- Keeper contact tests current posed glove/arm/body/leg geometry. Actual ball flight is integrated in short steps, rather than awarding a save from a projected or past segment. High reach requires the corresponding jump/dive state. Ratings and shot speed still determine catches versus parries.
 - Player acceleration/braking is bounded; braking and carrying response are slightly faster. Clip changes blend over 60ms into actions and 100ms out, without smoothing the impact keyframe every frame.
 
 ## Difficulty policy
@@ -46,8 +46,20 @@ Simulation runs at 60Hz with at most 12 catch-up steps. Display interpolation do
 
 Run `node scripts/verify-gameplay.mjs`, `node scripts/verify-commentary.mjs --bank-only` and `node scripts/verify-browser.mjs`. Packaged builds additionally validate every recorded file and manifest count.
 
-The browser checks include short-landscape layouts, both control modes, stable button bounds, save round trips and 12 simulated career fixtures with persisted results. Seeded engine checks exercise complete matches. In eight equal-rating AI fixtures, the initial feel changes produced 8 goals / 64 shots / 34 saves versus 10 / 69 / 29 before. These small samples do not establish final balance.
+The browser checks include short-landscape layouts, both control modes, stable button bounds, save round trips and 12 simulated career fixtures with persisted results. Seeded engine checks exercise complete matches. The contact correction adds 11 regression groups for a total of 29, plus 8 real-skeleton fixtures across both control modes. In eight equal-rating AI fixtures, the initial feel changes produced 8 goals / 64 shots / 34 saves versus 10 / 69 / 29 before. These small samples do not establish final balance.
 
 No physical Android installation, hardware touch latency or subjective play feel is claimed as verified. Those need device playtests. Button drift was not reproduced; its bounds remained stable across match phases.
 
 The trial package is `com.asomygames.masiretnagm.playtest`, installed beside the original game. Its career data is separate. Never ask someone to uninstall the original to try this build.
+
+## Contact correction after feel-test-4 playtest
+
+The phone playtest rejected the apparent pre-arrival saves. The audit found an inherited goalkeeper rush path that could take the ball at dive start, up to 2.6m away. A separate anticipation path set catch animation before the shot arrived. Both are removed. Dive initiation now means movement only; possession, parries and save events require actual contact. Catch animation never starts merely from predicting a shot. Dive presentation uses flight ETA, and a caught ball preserves the impact point while the keeper gathers it rather than jumping straight to chest height.
+
+The earlier segment-sweep save/interception code is removed. Short actual-flight integration steps prevent tunnelling without claiming a contact from a past segment. The skinned goalkeeper samples the same actual posed glove/arm/body/leg joints used for rendering, including ball radius. A leg/body block cannot become a hand catch. Contact poses are preserved at catch impact. The alternate procedural player model keeps a bounded current-position reach envelope.
+
+Other audited contact paths: standing/sliding tackles, shoulder challenges, receptions, interceptions, blocks, headers, first-time shots, emergency clearances and pass/shot windups. No receiving attraction or braking is applied before arrival. Shoulder collisions do not change ball velocity unless the ball itself is reachable. Headers above standing reach require an actual jump. Long-distance windup fallbacks are removed; a pass request whose ball rolls out of reach waits for a reachable contact instead of releasing remotely or silently disappearing. Rendering does not interpolate positions across a contact event while showing a new action pose.
+
+Deterministic comparison against pre-overhaul 0d325d8 and rejected 3456760: in 100 rush-start fixtures at 2.4m, the ball changed ownership/state before contact 89 and 88 times respectively; corrected code does so zero times. Both previous versions could release an expired windup with the ball at 1.5m; corrected code retains the request until reachable. This does not prove subjective feel, nor identify the exact revision in the user's earlier recording.
+
+Additional commands: `node scripts/verify-skeletal-contact.mjs`, `node scripts/compare-contacts.mjs`, `node scripts/verify-contact-visual.mjs`. The last script captures actual close-up shot/rush sequences and per-step traces. The actual-rush-contact screenshot shows the glove at the ball, with no possession in earlier frames. A low-shot fixture contacts the leg and parries, rather than pretending it is a hand catch. Full Android hardware playtesting is still needed; do not describe the whole game as proven fixed.

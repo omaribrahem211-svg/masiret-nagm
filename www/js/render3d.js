@@ -264,7 +264,7 @@ class R3D{
   const tc=this.teamCols(p.team),gk=p.role==='GK';const shirt=gk?tc.gk:tc.shirt,shorts=gk?tc.gks:tc.shorts,socks=gk?tc.gk:tc.socks;
   if(!p._sk){p._sk=lin(p.skin);p._hr=lin(p.hair);}const skin=p._sk,hair=p._hr,boot=p.star?lin('#F5C542'):[0.012,0.012,0.014,1],glove=lin('#F5F5F5');
   const sp=Math.hypot(p.vx,p.vy),amp=p.ampS!=null?p.ampS:clamp(sp/7,0,1),ph=p.anim;const gw=clamp((amp-.03)/.14,0,1);const slide=p.slide>0,celeb=m.phase==='goal'&&p===m.celebrator;
-  const b=m.ball,throwing=(b.owner===p&&m.restartKind==='throw')||p.throwT>0,kick=p.windT>0?.5*(1-p.windT/(p.windD||.1)):p.kickT>0?.5+.5*(1-p.kickT/.34):-1,dive=p.diveT>0?p.diveT/.75:0;
+  const b=m.ball,throwing=(b.owner===p&&m.restartKind==='throw')||p.throwT>0,kick=p.windT>0?.5*(1-p.windT/(p.windD||.1)):p.kickT>0?.5+.5*(1-p.kickT/.34):-1,dive=keeperDivePhase(p,m);
   const dH=p.diveH==null?1:p.diveH,hands=gk&&((b.owner===p&&b.inHands)||p.catchT>0),crouch=gk&&!hands&&!(dive>0)&&b.owner&&b.owner.team!==p.team&&sp<2.2&&Math.hypot(b.x-p.x,b.y-p.y)<24;
   // root rotation: pitch (slide) around side axis, roll (GK dive) around forward axis
   let ap=0,ar=0,lift=0,piv=.95;if(slide){ap=-1.15;piv=.35;lift=-.28;}

@@ -1,0 +1,64 @@
+name: Gameplay feel trial APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [fix/pro-gameplay-20261121]
+permissions:
+  contents: write
+jobs:
+  test-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify gameplay and timing
+        run: node scripts/verify-gameplay.mjs
+      - run: npm ci
+      - name: Reuse the existing recorded commentary without paid generation
+        run: |
+          curl -fL --retry 2 https://raw.githubusercontent.com/omaribrahem211-svg/masiret-nagm/builds/masiret-v129-test.apk -o /tmp/previous.apk
+          python3 - <<'PY'
+          import zipfile,pathlib
+          with zipfile.ZipFile('/tmp/previous.apk') as z:
+              prefix='assets/public/audio/voice/'
+              for n in z.namelist():
+                  if n.startswith(prefix) and not n.endswith('/'):
+                      p=pathlib.Path('www/audio/voice')/n[len(prefix):]
+                      p.parent.mkdir(parents=True,exist_ok=True)
+                      p.write_bytes(z.read(n))
+          PY
+      - run: npm run fonts && npx cap sync android
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Prepare stable test signing
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | tr -d ' \r\n' | base64 -d > "$RUNNER_TEMP/upload.jks"
+            echo "KS_FILE=$RUNNER_TEMP/upload.jks" >> "$GITHUB_ENV"
+          fi
+      - name: Build isolated test application
+        working-directory: android
+        env:
+          KS_PASS: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASS: ${{ secrets.KEY_PASSWORD }}
+          KS_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug -Pplaytest -PautoVersionCode=$((1000 + ${{ github.run_number }}))
+      - name: Publish downloadable test APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p out
+          cp android/app/build/outputs/apk/debug/app-debug.apk out/masiret-feel-test-${{ github.run_number }}.apk
+          gh release create feel-test-${{ github.run_number }} out/*.apk --target "$GITHUB_SHA" --prerelease --title "Gameplay feel trial ${{ github.run_number }}" --notes "Side-by-side test package. Main and the installed career are unchanged. Not a Play production release."
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gameplay-feel-test-${{ github.run_number }}
+          path: out/*.apk

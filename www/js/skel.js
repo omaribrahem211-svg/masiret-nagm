@@ -109,6 +109,14 @@ const Skel=(()=>{
   if(act){accClear();accClip(act,au,1,false);}
   p._act=act;
   accApply();
+  // Blend clip changes over 60ms into an action and 100ms out. Do not
+  // low-pass every frame: the foot must still meet the ball at impact.
+  const poseKey=act||'locomotion';let pb=p._poseBlend;
+  if(!pb){pb=p._poseBlend={key:poseKey,at:t,lastT:new Float32Array(LT),lastR:new Float32Array(LR),fromT:new Float32Array(LT),fromR:new Float32Array(LR)};}
+  if(pb.key!==poseKey){pb.key=poseKey;pb.at=t;pb.fromT.set(pb.lastT);pb.fromR.set(pb.lastR);}
+  const fade=Math.max(0,Math.min(1,(t-pb.at)/(act?.06:.10)));
+  if(fade<1){const f=fade*fade*(3-2*fade);for(let i=0;i<LT.length;i++)LT[i]=pb.fromT[i]+(LT[i]-pb.fromT[i])*f;for(let i=0;i<LR.length;i+=4){qlerp(pb.fromR.subarray(i,i+4),LR.subarray(i,i+4),f,tq);LR.set(tq,i);}}
+  pb.lastT.set(LT);pb.lastR.set(LR);
   // kicking leg (right) — wind-up, strike, follow-through
   const kick=p.windT>0?.5*(1-p.windT/(p.windD||.1)):p.kickT>0?.5+.5*(1-p.kickT/.34):-1;
   if(kick>=0&&!act){let a1,a2;if(kick<.4){a1=-.95*(kick/.4);a2=.5+1.2*(kick/.4);}else if(kick<.7){const q=(kick-.4)/.3;a1=-.95+2.2*q;a2=1.7-1.65*q;}else{const q=(kick-.7)/.3;a1=1.25-1.1*q;a2=.05+.2*q;}

@@ -4,8 +4,8 @@ const FX={parts:[],flash:0,flashCol:'255,255,255',drops:null,
  confetti(n,cols){const w=innerWidth;cols=cols||['#C6F432','#F5C542','#FFFFFF','#4FC3F7','#FF5A5F'];for(let i=0;i<n;i++)this.parts.push({k:'c',x:Math.random()*w,y:-20-Math.random()*innerHeight*.5,vx:R(-40,40),vy:R(80,220),r:Math.random()*6,vr:R(-8,8),w:R(5,10),h:R(8,14),c:pick(cols),life:R(3,5)});},
  firework(x,y,col){const n=46;for(let i=0;i<n;i++){const a=i/n*Math.PI*2,s=R(120,260);this.parts.push({k:'s',x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,c:col,life:R(.9,1.5),max:1.5});}},
  fireworks(cnt){const w=innerWidth,h=innerHeight;for(let i=0;i<cnt;i++)setTimeout(()=>{this.firework(R(w*.15,w*.85),R(h*.08,h*.4),pick(['#F5C542','#C6F432','#FF5A5F','#4FC3F7','#FFFFFF']));SFX.kick(.15);},i*280);},
- flashOn(a,col){this.flash=Math.max(this.flash,a);this.flashCol=col||'255,255,255';},
- goal(ours,big){this.flashOn(ours?.75:.35);if(ours){this.confetti(big?220:150);this.fireworks(big?7:4);}},
+ flashOn(a,col){this.flash=Math.max(this.flash,Math.min(.12,a));this.flashCol=col||'255,255,255';},
+ goal(ours,big){this.flashOn(ours?.10:.04);if(ours){this.confetti(big?220:150);this.fireworks(big?7:4);}},
  update(dt){this.flash=Math.max(0,this.flash-dt*2.2);const p=this.parts;for(let i=p.length-1;i>=0;i--){const q=p[i];q.life-=dt;if(q.life<=0){p.splice(i,1);continue;}if(q.k==='c'){q.vy+=30*dt;q.vx+=Math.sin(q.life*3)*20*dt;q.r+=q.vr*dt;}else{q.vy+=140*dt;q.vx*=.985;q.vy*=.985;}q.x+=q.vx*dt;q.y+=q.vy*dt;}},
  draw(ctx,w,h,m){
   if(m&&m.rain&&!m.demo){if(!this.drops){this.drops=[];for(let i=0;i<160;i++)this.drops.push({x:Math.random()*w,y:Math.random()*h,l:R(10,22),s:R(700,1100)});}ctx.strokeStyle='rgba(190,210,255,.32)';ctx.lineWidth=1.2;ctx.beginPath();for(const d of this.drops){d.y+=d.s/60;d.x-=d.s/60*.18;if(d.y>h){d.y=-d.l;d.x=Math.random()*w*1.2;}ctx.moveTo(d.x,d.y);ctx.lineTo(d.x-d.l*.18,d.y+d.l);}ctx.stroke();ctx.fillStyle='rgba(40,60,90,.12)';ctx.fillRect(0,0,w,h);}

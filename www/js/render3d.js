@@ -336,6 +336,7 @@ class R3D{
    eye=[c3.x-d*12.5,7.6,-c3.y+1.2];tgt=[c3.x+d*5.5,-0.6,-c3.y];wf=aspect<1.5?62:50;c3.f=c3.f||wf;c3.f+=(wf-c3.f)*Math.min(1,dt*1.5);}
   else{c3.re=null;const H=CM===1?9.6:CM===2?19:16.5,Dz=CM===1?14.5:CM===2?28:21.5,fk=CM===1?.88:CM===2?1.12:1;eye=[c3.x,H*zoomK,Dz*zoomK-(c3.y-34)*0.28];tgt=[c3.x,0.6,-(c3.y*0.88+3.5)];wf=(aspect<1.5?34:21)*fk*(cel?0.62:c3.zk);c3.f=c3.f||wf;c3.f+=(wf-c3.f)*Math.min(1,dt*1.5);}
   if(this.debugCam){eye=this.debugCam.eye.slice();tgt=this.debugCam.tgt.slice();c3.f=this.debugCam.fov;}
+  {const fx=tgt[0]-eye[0],fy=eye[2]-tgt[2],n=Math.hypot(fx,fy)||1;m.inputBasis={rx:fy/n,ry:-fx/n,ux:fx/n,uy:fy/n};}
   if(m.shake>0){const k=m.shake*.45;eye[0]+=R(-k,k);eye[1]+=R(-k,k)*.6;tgt[1]+=R(-k,k)*.3;}
   M4.look(this.V,eye,tgt,[0,1,0]);M4.persp(this.Pm,c3.f*Math.PI/180,aspect,1,600);M4.mul(this.VP,this.Pm,this.V);this.eye=eye;
   // light
@@ -353,10 +354,10 @@ class R3D{
    for(let cc=0;cc<3;cc++)for(let r=0;r<3;r++)n[cc*3+r]=Rm[r]*B[cc*3]+Rm[3+r]*B[cc*3+1]+Rm[6+r]*B[cc*3+2];this.ballR=n;if((++this.frameN)%120===0){const v0=[n[0],n[1],n[2]],l0=Math.hypot(...v0);v0.forEach((v,i)=>n[i]=v/l0);let d=n[3]*n[0]+n[4]*n[1]+n[5]*n[2];for(let i=0;i<3;i++)n[3+i]-=d*n[i];const l1=Math.hypot(n[3],n[4],n[5]);for(let i=0;i<3;i++)n[3+i]/=l1;n[6]=n[1]*n[5]-n[2]*n[4];n[7]=n[2]*n[3]-n[0]*n[5];n[8]=n[0]*n[4]-n[1]*n[3];}}
   {const B=this.ballR,sc=0.3,o=this.tm;o[0]=B[0]*sc;o[1]=B[1]*sc;o[2]=B[2]*sc;o[3]=0;o[4]=B[3]*sc;o[5]=B[4]*sc;o[6]=B[5]*sc;o[7]=0;o[8]=B[6]*sc;o[9]=B[7]*sc;o[10]=B[8]*sc;o[11]=0;o[12]=b.x;o[13]=b.z+0.15;o[14]=-b.y;o[15]=1;this.add(D.ball,o,[1,1,1,1]);}
   // rings
-  const h0=m.human;if(h0&&h0.ctrl){const p=h0.ctrl;this.add(D.ring,this.trs(p.x,0.03,-p.y,0,0.75,1,0.75),lin('#C6F432'));}
+  const h0=m.human;if(h0&&h0.ctrl){const p=h0.ctrl;this.add(D.ring,this.trs(p.x,0.045,-p.y,0,0.94,1,0.94),lin('#B9FF43'));}
   for(const p of m.all)if(p.star&&!(h0&&p===h0.ctrl))this.add(D.ring,this.trs(p.x,0.03,-p.y,0,0.62,1,0.62),lin('#F5C542'));
   // glows (billboards facing camera)
-  for(const L0 of this.lamps){const dx=eye[0]-L0[0],dz=eye[2]-L0[2];const ry=Math.atan2(dx,dz);this.add(D.glow,this.trs(L0[0],L0[1],L0[2],ry,26,26,1),[1.6,1.5,1.3,1]);}
+  for(const L0 of this.lamps){const dx=eye[0]-L0[0],dz=eye[2]-L0[2];const ry=Math.atan2(dx,dz);this.add(D.glow,this.trs(L0[0],L0[1],L0[2],ry,5.5,5.5,1),[.28,.26,.22,1]);}
   for(const k in D)this.up(D[k]);if(this.skin)this.skinUpload();
   // shadow pass
   gl.enable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);gl.disable(gl.BLEND);gl.depthMask(true);

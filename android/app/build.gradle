@@ -36,6 +36,8 @@ android {
         }
         // نسخة التجربة بتتوقع بنفس المفتاح، فكل نسخة جديدة بتتسطب فوق القديمة والمسيرة ما تضيعش
         debug {
+            // Side-by-side trial builds never overwrite the installed career.
+            if (project.hasProperty('playtest')) applicationIdSuffix '.playtest'
             if (hasKey) signingConfig signingConfigs.upload
         }
     }

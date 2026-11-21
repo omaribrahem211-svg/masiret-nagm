@@ -20,9 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      RUN_ID: '44834438622'
-      ARTIFACT: masiret-android-37
-      TAG: v137-contact-rc2
+      RUN_ID: '44877572454'
+      ARTIFACT: masiret-android-39
+      TAG: v139-anim-audio-rc1
       PUBLISH: 'true'
     steps:
       - name: Checkout (full history, to compare with the build commit)

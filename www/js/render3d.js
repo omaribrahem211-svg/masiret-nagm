@@ -317,9 +317,9 @@ class R3D{
    this.add(D.sph,this.trs(H1[0],H1[1],H1[2],th,gk?.12:.09,gk?.12:.09,gk?.12:.09),gk?glove:skin);}
   }
  render(m,w,h,dpr,t){const gl=this.gl,cv=this.cv;const W2=Math.round(w*dpr),H2=Math.round(h*dpr);if(cv.width!==W2||cv.height!==H2){cv.width=W2;cv.height=H2;}
-  const q=this.quality;this.shadowSetup(q>=2?2048:1024);
+  const q=this.quality;this.shadowSetup(q>=2?2048:q>=1?1024:512);
   // camera
-  const b=m.ball;if(!m._c3)m._c3={x:clamp(b.x,7,L-7),y:clamp(b.y,14,W-10)};const c3=m._c3;const dt=Math.min(0.05,(t-(c3.t||t))/1000)||0.016;c3.t=t;
+  const b=m.ball;if(!m._c3)m._c3={x:clamp(b.x,7,L-7),y:clamp(b.y,14,W-10)};const c3=m._c3;const dt=clamp((t-(c3.t||t))/1000,0,.05)||0.016;c3.t=t;
   const cel=m.phase==='goal'&&m.celebrator;const ow=b.owner,pd=ow?ow.team.dir:(b.last?b.last.team.dir*.5:0);
   // كاميرا ناعمة: زنبرك متخمّد (من غير قفزات)، سبقة بسيطة ناحية الهجمة، وزووم تدريجي كل ما الكورة تقرب من المرمى
   const SD=(k,target,tau)=>{const v=k+'v';const om=2/tau,x=om*dt,ex=1/(1+x+.48*x*x+.235*x*x*x);const ch=(c3[k]==null?target:c3[k])-target,tmp=((c3[v]||0)+om*ch)*dt;c3[v]=((c3[v]||0)-om*tmp)*ex;c3[k]=target+(ch+tmp)*ex;return c3[k];};

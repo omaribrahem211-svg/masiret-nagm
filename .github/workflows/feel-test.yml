@@ -10,25 +10,47 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - name: Verify gameplay and timing
-        run: node scripts/verify-gameplay.mjs
+        run: node scripts/verify-gameplay.mjs && node scripts/verify-commentary.mjs --bank-only
       - run: npm ci
+      - uses: actions/cache@v4
+        with:
+          path: www/audio/voice
+          key: feel-free-voice-${{ hashFiles('voice/lines_*.json', 'scripts/gen_voice.py') }}
+          restore-keys: feel-free-voice-
       - name: Reuse the existing recorded commentary without paid generation
         run: |
           curl -fL --retry 2 https://raw.githubusercontent.com/omaribrahem211-svg/masiret-nagm/builds/masiret-v129-test.apk -o /tmp/previous.apk
           python3 - <<'PY'
-          import zipfile,pathlib
+          import zipfile,pathlib,json,hashlib,subprocess
           with zipfile.ZipFile('/tmp/previous.apk') as z:
               prefix='assets/public/audio/voice/'
+              existing={d:(pathlib.Path('www/audio/voice')/d/'manifest.json').exists() for d in ['eg','gulf']}
               for n in z.namelist():
-                  if n.startswith(prefix) and not n.endswith('/'):
+                  if n.startswith(prefix) and not n.endswith('/') and not existing.get(n[len(prefix):].split('/')[0],True):
                       p=pathlib.Path('www/audio/voice')/n[len(prefix):]
                       p.parent.mkdir(parents=True,exist_ok=True)
                       p.write_bytes(z.read(n))
+              for dial in ['eg','gulf']:
+                  if existing[dial]: continue
+                  p=pathlib.Path('www/audio/voice')/dial/'manifest.json'
+                  m=json.loads(p.read_text())
+                  baseline=json.loads(subprocess.check_output(['git','show','0d325d8:voice/lines_'+dial+'.json']))
+                  m['hashes']={k:[hashlib.sha256(t.encode()).hexdigest() for t in spec['lines'][:m['lines'].get(k,0)]] for k,spec in baseline.items()}
+                  p.write_text(json.dumps(m,ensure_ascii=False))
           PY
+      - name: Expand recorded commentary with the existing free voice path
+        env:
+          VOICE_FREE_ONLY: '1'
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          python3 scripts/gen_voice.py
+          node scripts/verify-commentary.mjs
       - run: npm run fonts && npx cap sync android
       - uses: actions/setup-java@v4
         with:

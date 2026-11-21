@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="gameplay.css">
 </head>
 <body>
 <canvas id="game" aria-label="ملعب الماتش"></canvas>
@@ -166,6 +167,9 @@
   <div class="panel scroll" style="flex:1">
     <div class="field"><label>مدة الماتش</label><div class="seg" data-k="halfLen"><button data-v="60">دقيقتين</button><button data-v="120">4 دقايق</button><button data-v="180">6 دقايق</button><button data-v="300">10 دقايق</button></div></div>
     <div class="field"><label>الصعوبة</label><div class="seg" data-k="diff"><button data-v="-6">سهل</button><button data-v="0">عادي</button><button data-v="5">صعب</button><button data-v="10">أسطوري</button></div></div>
+    <div class="sub">الصعوبة بتغيّر سرعة قرار المنافس ورد فعله بس. مفيش زيادة خفية في السرعة أو المهارات.</div>
+    <div class="field"><label>حجم أزرار الماتش</label><div class="seg" data-k="controlScale"><button data-v="0.72">صغير</button><button data-v="0.8">مدمج</button><button data-v="1">كبير</button></div></div>
+    <div class="field"><label>وضوح أزرار الماتش</label><div class="seg" data-k="controlOpacity"><button data-v="0.6">خفيف</button><button data-v="0.85">عادي</button><button data-v="1">واضح</button></div></div>
     <div class="field"><label>التحكم في ماتشات المسيرة</label><div class="seg" data-k="lock"><button data-v="0">الفريق كله (تبديل اللاعبين)</button><button data-v="1">لاعبك بس (اطلب الكورة)</button></div></div>
     <div class="field"><label>جودة الجرافيكس</label><div class="seg" data-k="gfx"><button data-v="2">عالية</button><button data-v="1">متوسطة (أسرع)</button></div></div>
     <div class="field"><label>مقدمة الماتش السينمائية</label><div class="seg" data-k="intro"><button data-v="1">شغّالة</button><button data-v="0">مقفولة</button></div></div>

@@ -118,27 +118,49 @@ def main():
     random.seed(7)
     use_azure = bool(os.environ.get('AZURE_SPEECH_KEY') and os.environ.get('AZURE_SPEECH_REGION'))
     use_11 = bool(os.environ.get('ELEVENLABS_API_KEY'))
+    if os.environ.get('VOICE_FREE_ONLY') == '1':
+        use_azure = use_11 = False
     engines = ([('eleven', eleven)] if use_11 else []) + ([('azure', azure)] if use_azure else []) + [('edge', edge), ('piper', piper)]
+    unavailable = set()
     for dial in VOICES:
         data = json.load(open(os.path.join(ROOT, 'voice', f'lines_{dial}.json'), encoding='utf-8'))
         out = os.path.join(OUTROOT, dial)
         os.makedirs(out, exist_ok=True)
-        counts, used = {}, set()
+        counts, used, hashes = {}, set(), {}
+        try:
+            old = json.load(open(os.path.join(out, 'manifest.json'), encoding='utf-8'))
+        except (OSError, ValueError):
+            old = {}
         for key, spec in data.items():
             n = 0
+            hashes[key] = []
             for text in spec['lines']:
                 path = os.path.join(out, f'{key}_{n}')
+                digest = hashlib.sha256(text.encode('utf-8')).hexdigest()
+                known = old.get('hashes', {}).get(key, [])
+                if n < len(known) and known[n] == digest and os.path.exists(path + '.mp3') and os.path.getsize(path + '.mp3') >= 800:
+                    used.add(old.get('engine', 'cached'))
+                    hashes[key].append(digest)
+                    n += 1
+                    continue
                 for name, fn in engines:
+                    if name in unavailable:
+                        continue
                     try:
                         fn(text, spec.get('excited'), path, dial)
                         master(path + '.mp3', spec.get('excited'))
                         used.add(name)
+                        hashes[key].append(digest)
                         n += 1
                         break
                     except Exception as e:
-                        print('engine', name, 'failed for', key, e)
+                        print('engine', name, 'failed for', key, e, flush=True)
+                        unavailable.add(name)
+                else:
+                    # Keep indices aligned with captions; never silently shift them.
+                    break
             counts[key] = n
-        json.dump({'engine': '+'.join(sorted(used)), 'ext': 'mp3', 'lines': counts}, open(os.path.join(out, 'manifest.json'), 'w'), ensure_ascii=False)
+        json.dump({'engine': '+'.join(sorted(used)), 'ext': 'mp3', 'lines': counts, 'hashes': hashes}, open(os.path.join(out, 'manifest.json'), 'w'), ensure_ascii=False)
         print(dial, 'engine', used, 'clips', sum(counts.values()))
 
 

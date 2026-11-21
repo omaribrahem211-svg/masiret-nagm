@@ -16,8 +16,9 @@ const FX={parts:[],flash:0,flashCol:'255,255,255',drops:null,
 /* ---------- طبقة الأسماء والرادار فوق الماتش ---------- */
 function drawOverlay(ctx,m,w,h,proj){ctx.clearRect(0,0,w,h);
  if(m.demo||m.phase==='intro'||m.phase==='replay'){FX.draw(ctx,w,h,m);return;}
+ const labelPoint=(x,y,z)=>{const q=proj(x,y,z);if(!q)return null;const g={x:clamp(q.x,65,w-65),y:clamp(q.y,100,h-18)};const scale=typeof App!=='undefined'?clamp(+App.settings.controlScale||.8,.7,1):.8;if(g.x>w-250*scale&&g.y>h-238*scale)g.y=h-238*scale;if(g.x<185&&g.y>h-170)g.y=h-170;if(Math.abs(g.x-w/2)<68&&g.y>h-88)g.y=h-88;g.y=Math.max(100,g.y);return g;};
  const h0=m.human;ctx.textAlign='center';ctx.textBaseline='bottom';
- if(h0&&h0.ctrl){const c=h0.ctrl,g=proj(c.x,c.y,2.25);if(g){ctx.fillStyle='#C6F432';ctx.beginPath();ctx.moveTo(g.x,g.y+2);ctx.lineTo(g.x-6,g.y-7);ctx.lineTo(g.x+6,g.y-7);ctx.closePath();ctx.fill();
+ if(h0&&h0.ctrl){const c=h0.ctrl,g=labelPoint(c.x,c.y,2.25);if(g){ctx.fillStyle='#C6F432';ctx.beginPath();ctx.moveTo(g.x,g.y+2);ctx.lineTo(g.x-6,g.y-7);ctx.lineTo(g.x+6,g.y-7);ctx.closePath();ctx.fill();
   ctx.font='700 12px Changa, sans-serif';const nm=typeof lastName==='function'?lastName(c.name):c.name.split(' ').slice(-1)[0];const tw=Math.max(ctx.measureText(nm).width+14,46);ctx.fillStyle='rgba(7,11,22,.85)';ctx.fillRect(g.x-tw/2,g.y-30,tw,22);ctx.fillStyle='#EEF2FF';ctx.fillText(nm,g.x,g.y-13);
   const st=c.stam/100;ctx.fillStyle='rgba(255,255,255,.18)';ctx.fillRect(g.x-tw/2+4,g.y-12,tw-8,3);ctx.fillStyle=st>.5?'#C6F432':st>.25?'#F5C542':'#FF5A5F';ctx.fillRect(g.x-tw/2+4,g.y-12,(tw-8)*st,3);
   if(c.inj){ctx.fillStyle='#FF5A5F';ctx.font='800 12px Changa, sans-serif';ctx.fillText('مصاب',g.x,g.y-32);}
@@ -26,30 +27,38 @@ function drawOverlay(ctx,m,w,h,proj){ctx.clearRect(0,0,w,h);
    if(q){const col=pw>.88?'#FF5A5F':pw>.6?'#F5C542':'#C6F432';ctx.save();ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.shadowColor='rgba(0,0,0,.7)';ctx.shadowBlur=4;ctx.beginPath();ctx.arc(q.x,q.y,10,0,6.2832);ctx.stroke();ctx.beginPath();ctx.moveTo(q.x-15,q.y);ctx.lineTo(q.x-5,q.y);ctx.moveTo(q.x+5,q.y);ctx.lineTo(q.x+15,q.y);ctx.moveTo(q.x,q.y-15);ctx.lineTo(q.x,q.y-5);ctx.moveTo(q.x,q.y+5);ctx.lineTo(q.x,q.y+15);ctx.stroke();
     if(h0.fin){ctx.font='800 11px Changa, sans-serif';ctx.fillStyle='#F5C542';ctx.fillText('لفّة',q.x,q.y-17);}ctx.restore();}}
   if(h0.call>0){ctx.fillStyle='#F5C542';ctx.font='800 14px Changa, sans-serif';ctx.fillText('اطلب!',g.x,g.y-46);}}}
- for(const p of m.all){if(!p.star||(h0&&p===h0.ctrl))continue;const g=proj(p.x,p.y,2.2);if(!g)continue;ctx.fillStyle='#F5C542';ctx.font='800 13px Changa, sans-serif';ctx.fillText('★ '+p.name.split(' ').slice(-1)[0],g.x,g.y);}
+ for(const p of m.all){if(!p.star||(h0&&p===h0.ctrl))continue;const g=labelPoint(p.x,p.y,2.2);if(!g)continue;ctx.fillStyle='#F5C542';ctx.font='800 13px Changa, sans-serif';ctx.fillText('★ '+p.name.split(' ').slice(-1)[0],g.x,g.y);}
  if(m.pen&&!m.pen.live&&m.ball.owner&&h0&&m.ball.owner===h0.ctrl){ctx.fillStyle='rgba(7,11,22,.75)';ctx.fillRect(w/2-150,h*.62,300,30);ctx.fillStyle='#F5C542';ctx.font='700 14px Changa, sans-serif';ctx.fillText('وجّه الدايرة بالجويستيك فوق/تحت · سيب الزرار قبل الأحمر',w/2,h*.62+23);}
  m.radar(ctx,w,h);FX.draw(ctx,w,h,m);}
 /* ---------- التعليق الصوتي (ملفات متولدة بالذكاء الاصطناعي وقت البناء) ---------- */
-const Voice={on:true,ready:false,man:null,buf:{},cur:null,last:0,
- base:'audio/voice/',async init(){this.ready=false;this.buf={};const d=(typeof App!=='undefined'&&App.settings&&App.settings.dial)?'gulf':'eg';for(const b of ['audio/voice/'+d+'/','audio/voice/']){try{const r=await fetch(b+'manifest.json',{cache:'no-store'});if(!r.ok)continue;const m=await r.json();if(m&&m.lines){this.man=m;this.base=b;this.ready=true;return;}}catch(e){}}},
+const Voice={on:true,ready:false,man:null,buf:{},cur:null,last:0,pending:false,serial:0,priority:0,
+ base:'audio/voice/',async init(){this.stop();this.ready=false;this.buf={};const d=(typeof App!=='undefined'&&App.settings&&App.settings.dial)?'gulf':'eg';for(const b of ['audio/voice/'+d+'/','audio/voice/']){try{const r=await fetch(b+'manifest.json',{cache:'no-store'});if(!r.ok)continue;const m=await r.json();if(m&&m.lines){this.man=m;this.base=b;this.ready=true;return;}}catch(e){}}},
  has(k){return this.ready&&this.man.lines[k]>0;},
- async load(k,i){const url=this.base+k+'_'+i+'.'+(this.man.ext||'mp3');if(this.buf[url])return this.buf[url];if(!SFX.ctx)return null;const ab=await(await fetch(url)).arrayBuffer();const b=await new Promise((ok,no)=>SFX.ctx.decodeAudioData(ab,ok,no));this.buf[url]=b;return b;},
- preload(){if(!this.ready||!SFX.ctx)return;for(const k in this.man.lines)for(let i=0;i<this.man.lines[k];i++)this.load(k,i).catch(()=>{});},
- play(k,prio){if(!this.on||!this.has(k)||!SFX.ctx||!SFX.on)return false;const now=performance.now();if(!prio&&(this.cur||now-this.last<2500))return true;this.last=now;const i=Math.floor(Math.random()*this.man.lines[k]);
-  this.load(k,i).then(b=>{if(!b)return;if(this.cur){try{this.cur.stop();}catch(e){}}const c=SFX.ctx,s=c.createBufferSource();s.buffer=b;
+ async load(k,i){const url=this.base+k+'_'+i+'.'+(this.man.ext||'mp3');if(this.buf[url])return this.buf[url];if(!SFX.ctx)return null;const ab=await(await fetch(url)).arrayBuffer();const b=await new Promise((ok,no)=>SFX.ctx.decodeAudioData(ab,ok,no));this.buf[url]=b;const keys=Object.keys(this.buf);if(keys.length>24)delete this.buf[keys[0]];return b;},
+ preload(){if(!this.ready||!SFX.ctx)return;for(const k of ['intro','kickoff','shot','save_catch','goal'])if(this.has(k))this.load(k,0).catch(()=>{});},
+ play(k,prio,index,onFailure){if(!this.on||!this.has(k)||!SFX.ctx||!SFX.on)return false;const now=performance.now();if((this.cur||this.pending)&&prio<=this.priority||!prio&&now-this.last<1800)return true;this.last=now;this.priority=prio;this.pending=true;const seq=++this.serial,i=index==null?Math.floor(Math.random()*this.man.lines[k]):index;
+  this.load(k,i).then(b=>{if(seq!==this.serial)return;this.pending=false;if(!b){if(onFailure)onFailure();return;}if(this.cur){try{this.cur.stop();}catch(e){}}const c=SFX.ctx,s=c.createBufferSource();s.buffer=b;
    // صوت المعلّق: فلتر بث خفيف + ضاغط، والجمهور بيوطى شوية وهو بيتكلم وبيرجع بعدها
    if(!this.bus){const hp=c.createBiquadFilter();hp.type='highpass';hp.frequency.value=120;const pr=c.createBiquadFilter();pr.type='peaking';pr.frequency.value=2800;pr.gain.value=2.5;pr.Q.value=.9;const cp=c.createDynamicsCompressor();cp.threshold.value=-20;cp.ratio.value=3.5;cp.attack.value=.005;cp.release.value=.15;const og=c.createGain();og.gain.value=1.25;hp.connect(pr);pr.connect(cp);cp.connect(og);og.connect(c.destination);this.bus=hp;}
    s.connect(this.bus);const dk=SFX.duckG,t0=c.currentTime;if(dk){dk.gain.cancelScheduledValues(t0);dk.gain.setTargetAtTime(.55,t0,.08);}
-   s.onended=()=>{if(this.cur===s){this.cur=null;if(dk)dk.gain.setTargetAtTime(1,c.currentTime,.35);}};s.start();this.cur=s;}).catch(()=>{});return true;},
- stop(){if(this.cur){try{this.cur.stop();}catch(e){}this.cur=null;}}
+   s.onended=()=>{if(this.cur===s){this.cur=null;this.priority=0;if(dk)dk.gain.setTargetAtTime(1,c.currentTime,.35);}};s.start();this.cur=s;}).catch(()=>{if(seq!==this.serial)return;this.pending=false;this.priority=0;if(onFailure)onFailure();});return true;},
+ stop(){this.serial++;this.pending=false;this.priority=0;if(this.cur){try{this.cur.stop();}catch(e){}this.cur=null;}}
 };
 /* ---------- التعليق ---------- */
-const Comm={last:0,el:null,voice:null,tts:false,text:false,
+const Comm={last:0,el:null,voice:null,tts:false,text:false,seen:{},
  init(){this.el=document.getElementById('comm');try{if('speechSynthesis' in window){const pickV=()=>{const vs=speechSynthesis.getVoices();this.voice=vs.find(v=>/ar[-_]EG/i.test(v.lang))||vs.find(v=>/^ar/i.test(v.lang))||null;};pickV();speechSynthesis.onvoiceschanged=pickV;}}catch(e){}},
- say(type,vars,prio){const dl=(App.settings&&App.settings.dial)?'gulf':'eg';const FB={goal_late:'goal',goal_equal:'goal',goal_lead:'goal',goal_comeback:'goal',goal_header:'goal',goal_long:'goal',goal_pen:'goal',save_great:'save',gk_rush:'save',miss_big:'miss',shot_long:'shot',end_win:'end',end_draw:'end',end_loss:'end'};const D=typeof COMM_D!=='undefined'?COMM_D[dl]:null;let L0=(D&&D[type])||COMM[type];if(!L0&&FB[type]){type=FB[type];L0=(D&&D[type])||COMM[type];}if(!L0)return;const vk=Voice.has(type)?type:(FB[type]&&Voice.has(FB[type])?FB[type]:type);const spoke=Voice.play(vk,prio);const now=performance.now();if(!prio&&now-this.last<2200)return;this.last=now;let txt=pick(L0);for(const k in (vars||{}))txt=txt.split('{'+k+'}').join(vars[k]);
+ fallback(txt,rank){if(!this.tts||!this.voice||!SFX.on)return;try{if(!rank&&speechSynthesis.speaking)return;if(rank)speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt);u.voice=this.voice;u.lang=this.voice.lang;u.rate=1.08;u.pitch=rank>=3?1.12:1;speechSynthesis.speak(u);}catch(e){}},
+ say(type,vars,prio){const dl=(App.settings&&App.settings.dial)?'gulf':'eg';const FB={goal_late:'goal',goal_equal:'goal',goal_lead:'goal',goal_comeback:'goal',goal_header:'goal',goal_long:'goal',goal_pen:'goal',save_great:'save',save_catch:'save',save_parry:'save',gk_rush:'save',miss_big:'miss',shot_long:'shot',end_win:'end',end_draw:'end',end_loss:'end',intro:'kickoff',receive:'star_ball',through:'pass',cross:'pass',intercept:'tackle',chance:'build_att',counter:'build_att',restart:'kickoff',throw:'build_mid',gkick:'clear'};
+  const D=typeof COMM_D!=='undefined'?COMM_D[dl]:null;let L0=(D&&D[type])||COMM[type];if(!L0&&FB[type])L0=(D&&D[FB[type]])||COMM[FB[type]];if(!L0)return;
+  const rank=/^goal|^end/.test(type)?4:/^(save|gk_rush|half|second|kickoff|woodwork|pen|red)/.test(type)?3:/^(shot|miss|foul|yellow|intro)/.test(type)?2:prio?1:0;
+  const now=performance.now();if(!rank&&now-this.last<1800)return;if(Voice.on&&SFX.on&&(Voice.cur||Voice.pending)&&rank<=Voice.priority)return;
+  const vk=Voice.has(type)?type:(FB[type]&&Voice.has(FB[type])?FB[type]:type);const spokenBank=(D&&D[vk])||COMM[vk]||L0;if(Voice.has(vk))L0=spokenBank;
+  const n=Voice.has(vk)?Math.min(Voice.man.lines[vk],L0.length):L0.length;let i=Math.floor(Math.random()*n);if(n>1&&i===this.seen[vk])i=(i+1+Math.floor(Math.random()*(n-1)))%n;this.seen[vk]=i;
+  let txt=L0[i];for(const k in (vars||{}))txt=txt.split('{'+k+'}').join(vars[k]);this.last=now;
   if(this.text&&this.el){this.el.textContent=txt;this.el.classList.remove('on');void this.el.offsetWidth;this.el.classList.add('on');}
-  if(!spoke&&this.tts&&this.voice){try{if(prio)speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt);u.voice=this.voice;u.lang=this.voice.lang;u.rate=1.08;u.pitch=prio?1.15:1;speechSynthesis.speak(u);}catch(e){}}},
- stop(){Voice.stop();try{speechSynthesis.cancel();}catch(e){}if(this.el)this.el.classList.remove('on');}
+  if(!Voice.play(vk,rank,i,()=>this.fallback(txt,rank)))this.fallback(txt,rank);
+ },
+ stop(){Voice.stop();this.last=0;try{speechSynthesis.cancel();}catch(e){}if(this.el)this.el.classList.remove('on');}
 };
 /* ---------- أجواء الجمهور: تصفيق وطبول وأغاني بإيقاع، بتعلى مع الهجمة الخطيرة والجون ---------- */
 const Stadium={on:false,next:0,busy:0,lvl:.07,out:null,

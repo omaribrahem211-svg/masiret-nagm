@@ -1,0 +1,20 @@
+/* Compact match HUD. Scale is saved by the settings screen; even the smallest
+   preset keeps action circles above 54 CSS px. Anchors never follow the ball. */
+#btns{position:fixed;transform:scale(var(--control-scale,.8));transform-origin:bottom right;z-index:4}
+.cb.ps{opacity:var(--control-opacity,.85)}
+.cb.ps.dim{opacity:.3}
+.cb.ps.act{opacity:1}
+#instr{pointer-events:auto;cursor:pointer;max-width:calc(100vw - 36px);white-space:normal;text-align:center;border-radius:12px;line-height:1.5;z-index:4;top:62px}
+#instr .inst-summary{display:none}
+#instr.collapsed .inst-summary{display:inline}
+#instr.collapsed .inst-detail{display:none}
+#instr:focus-visible{outline:2px solid #C6F432}
+#banner.small{top:90px;max-width:65vw;pointer-events:none}
+#banner.small #bnT{font-size:16px}
+#banner.small #bnS{font-size:12px}
+@media (max-height:420px){
+ #instr{font-size:10px;top:58px;padding:3px 9px}
+ #banner.small{top:82px}
+ #banner.small #bnT{font-size:14px}
+ #joyBase{background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
+}

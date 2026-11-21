@@ -4,7 +4,7 @@ Isolated 14-second style proof, not wired into the game or APK. The shipped cere
 
 The preview reuses the game's actual `RIG`, skin/kit shaders, and player renderer. It adds a small room, desk, paper/ink, pen, shirt silhouette, four camera shots, Arabic titles, and one photo flash. It samples the existing skinned player rather than importing or generating another human.
 
-The player name/number, skin, hair and team colours are demonstration values. This proof does not read the user's phone save or custom face photo. Integration with the active career comes after style approval.
+The player name is Omar Ibrahem (عمر إبراهيم), matching the request context. Number, skin, hair and team colours are demonstration values. This proof does not read the user's phone save or custom face photo. Integration with the active career comes after style approval.
 
 The gameplay rig has wrist joints but no finger joints. The preview adds a vertex grip morph and isolated arm IK. This is a low-poly direction proof, not a final hand-animation or cloth-simulation pass. The morph and pose hook are preview-only; neither modifies the rig asset nor the gameplay skeleton source.
 
@@ -25,7 +25,15 @@ Font: Noto Sans Arabic Bold, SIL Open Font License, included alongside the font.
 ## Checked
 
 - 336 browser-rendered frames, 24 fps, 14 seconds.
-- MP4 H.264/yuv420p and AAC, fast-start, 1,955,676 bytes.
+- MP4 H.264/yuv420p and AAC, fast-start, 3,298,718 bytes.
 - Inspected all four shots as images and sampled the encoded MP4.
 - No production JavaScript, HTML, CSS, rig or ceremony changes.
 - Not a phone-performance test and not an APK.
+
+## Revision 2
+
+The contract is now a depth-tested canvas texture with Arabic clauses and a stamp. Ink traces a thinned Naskh glyph path spelling the name in Arabic; the hand and pen use this path too. Six supporters use the same gameplay rig with varied appearance and arm poses.
+
+The included generated voices are original game narration, not recordings of real fans. `scripts/mix-signing-proof.py` builds the 14-second mix from those WAVs with synthesized applause/ambience, a pen scratch and one shutter. The announcer is sped to 1.13x without pitch change. The chant is layered and comes forward at the end. Narration and the final chant tail were transcription-checked, not human listening-reviewed.
+
+Reproduction additionally needs Python numpy/scipy/Pillow and ffmpeg. The signature helper uses a system Noto Naskh font, renders the chosen name, and applies Zhang-Suen thinning. This is demonstration-name preprocessing, not yet arbitrary-name career integration.

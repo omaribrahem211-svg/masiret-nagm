@@ -6,15 +6,16 @@ const hook=`
   if(p.ceremonyPose){
    const c=p.ceremonyPose;
    for(const side of ['L','R']){const target=c[side];if(target){const dx=target[0]-W[12],dy=target[1]-W[13],dz=target[2]-W[14],ss=sc*sc;aimArm(side,[(W[0]*dx+W[1]*dy+W[2]*dz)/ss,(W[4]*dx+W[5]*dy+W[6]*dz)/ss,(W[8]*dx+W[9]*dy+W[10]*dz)/ss]);
-   const hand=J['hand.'+side];GR[hand]=Qx(c.fan?-.55:Math.PI/2);
+   const hand=J['hand.'+side];GR[hand]=c.fan?Qy(side==='L'?-Math.PI/2:Math.PI/2):c.present?QQ(Qz(side==='L'?Math.PI/2:-Math.PI/2),Qx(window.proofAngle||.6)):side==='R'&&c.grip?QQ(Qz(-.22),Qx(window.proofAngle||2.4)):Qx(Math.PI/2);
 
-   for(let j=hand+1;j<nJ;j++){let ancestor=par[j];while(ancestor>=0&&ancestor!==hand)ancestor=par[ancestor];if(ancestor!==hand)continue;const pr=par[j],lq=[LR[j*4],LR[j*4+1],LR[j*4+2],LR[j*4+3]];if(c.grip&&side==='R'&&!names[j].includes('Thumb')){qmul(lq,Qz(-.85),lq);}qmul(GR[pr],lq,GR[j]);const v=qrot(GR[pr],[LT[j*3],LT[j*3+1],LT[j*3+2]],[0,0,0]);GT[j]=v.map((v,k)=>v+GT[pr][k]);}
+   for(let j=hand+1;j<nJ;j++){let ancestor=par[j];while(ancestor>=0&&ancestor!==hand)ancestor=par[ancestor];if(ancestor!==hand)continue;const pr=par[j],lq=[LR[j*4],LR[j*4+1],LR[j*4+2],LR[j*4+3]];const digit=window.PROOF_FINGERS.find(d=>d.a===j||d.b===j);if(digit&&(c.present||c.grip&&side==='R')){const tip=digit.b===j;const angle=digit.f===0?(tip?.55:.35):(c.present?(tip?1.2:.9):digit.f===4?(tip?.85:.55):(tip?1.35:1.1));qmul(lq,digit.f===0&&!tip?QQ(Qz(side==='R'?.75:-.75),Qx(.3)):Qx(angle),lq);}qmul(GR[pr],lq,GR[j]);const v=qrot(GR[pr],[LT[j*3],LT[j*3+1],LT[j*3+2]],[0,0,0]);GT[j]=v.map((v,k)=>v+GT[pr][k]);}
    }}
   }
 `;
-const s=document.createElement('script');s.textContent=src.replace('  computeGlobals();',"  if(p.ceremonyPose)ov(J['head'],Qx(p.ceremonyPose.present?-.03:.2),1);\n  computeGlobals();").replace('  if(out)writeRow(out,off,W);',hook+'  if(out)writeRow(out,off,W);');document.head.appendChild(s);
+const s=document.createElement('script');s.textContent=src.replace('  computeGlobals();',"  if(p.ceremonyPose)ov(J['head'],Qx(p.ceremonyPose.present?-.03:.2),1);\n  if(p.proofClip){OV.clear();ADD.clear();accClear();accClip(p.proofClip,(t+(p.proofOffset||0))/clips[p.proofClip].dur,1,true);accApply();}\n  computeGlobals();").replace('  if(out)writeRow(out,off,W);',hook+'  if(out)writeRow(out,off,W);');document.head.appendChild(s);
 await document.fonts.load('700 30px Changa');await document.fonts.load('400 30px Naskh');await document.fonts.ready;
 const cv=document.getElementById('scene'),overlay=document.getElementById('type'),ctx=overlay.getContext('2d');
+const mk0=R3D.prototype.mk;R3D.prototype.mk=function(v,f){if(v.includes('uBones')){v=v.replace('uniform mat4','layout(location=6) in vec3 aCurl;layout(location=7) in vec3 aCurlN;\nuniform mat4').replaceAll('vec4(aP,1.0)','vec4(aP+aCurl*texelFetch(uBones,ivec2(textureSize(uBones,0).x-1,r),0).r,1.0)').replace('mat3(S)*aN','mat3(S)*(aN+aCurlN*texelFetch(uBones,ivec2(textureSize(uBones,0).x-1,r),0).r)');}return mk0.call(this,v,f);};
 const r=new R3D(cv);r.quality=2;r.Ld=[-.35,.8,.48];
 const perspective=M4.persp;M4.persp=(o,f,a,n,far)=>perspective(o,f,a,.08,far);
 let seed=127;Math.random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
@@ -29,8 +30,8 @@ const vec=(a,b,t)=>a.map((v,i)=>lerp(v,b[i],t));
 // Preview-only grip morph. The shipped gameplay rig has wrist joints but no finger joints.
 // Curl its existing finger vertices rather than substituting a different person's hands.
 const verts=Skel.d64(RIG.v,Float32Array),base=verts.slice(),joints=Skel.d64(RIG.j,Uint8Array),weights=Skel.d64(RIG.w,Uint8Array),ib=Skel.d64(RIG.ib,Float32Array);
-const gl=r.gl,gripBuffer=gl.createBuffer();gl.bindVertexArray(r.skin.vao);gl.bindBuffer(gl.ARRAY_BUFFER,gripBuffer);gl.bufferData(gl.ARRAY_BUFFER,verts,gl.DYNAMIC_DRAW);gl.vertexAttribPointer(0,3,gl.FLOAT,false,24,0);gl.vertexAttribPointer(1,3,gl.FLOAT,false,24,12);gl.bindVertexArray(null);
-function grip(strength){verts.set(base);for(let i=0;i<RIG.nV;i++){let k=0;for(let j=1;j<4;j++)if(weights[i*4+j]>weights[i*4+k])k=j;const bone=joints[i*4+k];if(bone!==9&&bone!==13)continue;const o=i*6,b=bone*16,x=base[o],y=base[o+1],z=base[o+2],lx=ib[b]*x+ib[b+4]*y+ib[b+8]*z+ib[b+12],ly=ib[b+1]*x+ib[b+5]*y+ib[b+9]*z+ib[b+13],lz=ib[b+2]*x+ib[b+6]*y+ib[b+10]*z+ib[b+14];if(ly<.095)continue;const v=ly-.095,theta=cl(v/.12)*1.8*strength,rad=.12/(1.8*strength||1),ny=.095+(strength>.001?Math.sin(theta)*rad:v),nz=lz+(strength>.001?(1-Math.cos(theta))*rad:0),dy=ny-ly,dz=nz-lz;verts[o]+=ib[b+1]*dy+ib[b+2]*dz;verts[o+1]+=ib[b+5]*dy+ib[b+6]*dz;verts[o+2]+=ib[b+9]*dy+ib[b+10]*dz;const nx=base[o+3],ny0=base[o+4],nz0=base[o+5],a=ib[b]*nx+ib[b+4]*ny0+ib[b+8]*nz0,bn=ib[b+1]*nx+ib[b+5]*ny0+ib[b+9]*nz0,cn=ib[b+2]*nx+ib[b+6]*ny0+ib[b+10]*nz0,nb=bn*Math.cos(theta)-cn*Math.sin(theta),nc=bn*Math.sin(theta)+cn*Math.cos(theta);verts[o+3]=ib[b]*a+ib[b+1]*nb+ib[b+2]*nc;verts[o+4]=ib[b+4]*a+ib[b+5]*nb+ib[b+6]*nc;verts[o+5]=ib[b+8]*a+ib[b+9]*nb+ib[b+10]*nc;}gl.bindBuffer(gl.ARRAY_BUFFER,gripBuffer);gl.bufferSubData(gl.ARRAY_BUFFER,0,verts);}
+const gl=r.gl,gripBuffer=gl.createBuffer();gl.bindVertexArray(r.skin.vao);gl.bindBuffer(gl.ARRAY_BUFFER,gripBuffer);gl.bufferData(gl.ARRAY_BUFFER,verts,gl.DYNAMIC_DRAW);gl.enableVertexAttribArray(6);gl.vertexAttribPointer(6,3,gl.FLOAT,false,24,0);gl.enableVertexAttribArray(7);gl.vertexAttribPointer(7,3,gl.FLOAT,false,24,12);gl.bindVertexArray(null);
+function grip(amount){verts.set(base);for(let i=0;i<RIG.nV;i++){let k=0;for(let j=1;j<4;j++)if(weights[i*4+j]>weights[i*4+k])k=j;const bone=joints[i*4+k];if(bone!==9&&bone!==13)continue;const strength=bone===9&&now<7.2?.18:amount;const o=i*6,b=bone*16,x=base[o],y=base[o+1],z=base[o+2],lx=ib[b]*x+ib[b+4]*y+ib[b+8]*z+ib[b+12],ly=ib[b+1]*x+ib[b+5]*y+ib[b+9]*z+ib[b+13],lz=ib[b+2]*x+ib[b+6]*y+ib[b+10]*z+ib[b+14];if((bone===13?lx:-lx)>.035&&ly<.145&&strength>.5){const u=cl(((bone===13?lx:-lx)-.025)/.04)*cl((ly-.035)/.05),dx=-(bone===13?1:-1)*.010*u,dy=.003*u,dz=.012*u;verts[o]+=ib[b]*dx+ib[b+1]*dy+ib[b+2]*dz;verts[o+1]+=ib[b+4]*dx+ib[b+5]*dy+ib[b+6]*dz;verts[o+2]+=ib[b+8]*dx+ib[b+9]*dy+ib[b+10]*dz;continue;}if(ly<.095)continue;const v=ly-.095,curl=strength*(now<7.2&&bone===13&&lx>.015?.62:1),theta=cl(v/.12)*1.8*curl,rad=.12/(1.8*curl||1),ny=.095+(strength>.001?Math.sin(theta)*rad:v),nz=lz+(strength>.001?(1-Math.cos(theta))*rad:0),dy=ny-ly,dz=nz-lz;verts[o]+=ib[b+1]*dy+ib[b+2]*dz;verts[o+1]+=ib[b+5]*dy+ib[b+6]*dz;verts[o+2]+=ib[b+9]*dy+ib[b+10]*dz;const nx=base[o+3],ny0=base[o+4],nz0=base[o+5],a=ib[b]*nx+ib[b+4]*ny0+ib[b+8]*nz0,bn=ib[b+1]*nx+ib[b+5]*ny0+ib[b+9]*nz0,cn=ib[b+2]*nx+ib[b+6]*ny0+ib[b+10]*nz0,nb=bn*Math.cos(theta)-cn*Math.sin(theta),nc=bn*Math.sin(theta)+cn*Math.cos(theta);verts[o+3]=ib[b]*a+ib[b+1]*nb+ib[b+2]*nc;verts[o+4]=ib[b+4]*a+ib[b+5]*nb+ib[b+6]*nc;verts[o+5]=ib[b+8]*a+ib[b+9]*nb+ib[b+10]*nc;}for(let i=0;i<verts.length;i++)verts[i]-=base[i];gl.bindBuffer(gl.ARRAY_BUFFER,gripBuffer);gl.bufferSubData(gl.ARRAY_BUFFER,0,verts);}
 
 
 const sheet=document.createElement('canvas');sheet.width=1024;sheet.height=680;const pc=sheet.getContext('2d');
@@ -55,7 +56,7 @@ for(let i=0;i<12;i++){const x=-.27+i*.045,n=x+.045,z=.012*Math.cos(i*1.9),zz=.01
 quad([-.27,.012,0],[-.46,-.045,0],[-.43,-.20,0],[-.27,-.14,0]);quad([.27,-.14,0],[.43,-.20,0],[.46,-.045,0],[.27,.012,0]);
 garment=r.batch(r.geo({P,N,T,I}),1);}
 const originalSkin=r.skinPlayer.bind(r);
-r.skinPlayer=(q,match,t)=>{originalSkin(q,match,t);if(q===p)room(now);};
+r.skinPlayer=(q,match,t)=>{originalSkin(q,match,t);const row=r.skin.n-1;r.skin.data[row*r.skin.texW*4+(r.skin.texW-1)*4]=q===p?1:0;if(q===p)room(now);};
 function box(x,y,z,sx,sy,sz,col,rot=0){r.add(r.dyn.box,r.trs(X+x,y,Z+z,rot,sx,sy,sz),lin(col));}
 function sphere(x,y,z,rad,col){r.add(r.dyn.sph,r.trs(X+x,y,Z+z,0,rad,rad,rad),lin(col));}
 function bar(a,b,width,col){const dx=b[0]-a[0],dy=b[1]-a[1],dz=b[2]-a[2],len=Math.hypot(dx,dy,dz),y=[dx/len,dy/len,dz/len],v=Math.abs(y[1])>.95?[1,0,0]:[0,1,0],xx=[v[1]*y[2]-v[2]*y[1],v[2]*y[0]-v[0]*y[2],v[0]*y[1]-v[1]*y[0]],n=Math.hypot(...xx),x=xx.map(v=>v/n),z=[x[1]*y[2]-x[2]*y[1],x[2]*y[0]-x[0]*y[2],x[0]*y[1]-x[1]*y[0]],mat=new Float32Array([x[0]*width,x[1]*width,x[2]*width,0,y[0]*len,y[1]*len,y[2]*len,0,z[0]*width,z[1]*width,z[2]*width,0,X+(a[0]+b[0])/2,(a[1]+b[1])/2,Z+(a[2]+b[2])/2,1]);r.add(r.dyn.cyl,mat,lin(col));}
@@ -75,20 +76,20 @@ box(-.15,1.022,.63,.65,.008,.43,'#eee8db');box(-.15,1.027,.63,.60,.003,.39,'#f9f
 box(.73,1.024,.63,.34,.025,.43,'#182b40');box(.73,1.041,.63,.018,.005,.36,'#b2975d');
 box(-.83,1.025,.70,.34,.025,.065,'#af9157');bar([-.91,1.045,.69],[-.7,1.045,.69],.012,'#17202b');
 box(.48,.48,-.48,.65,.08,.65,'#20262d');box(.48,.89,-.76,.65,.85,.08,'#20262d');
-if(t>=3.4&&t<7.2){const lift=ease((t-6.6)/.35);const penBase=[penTip[0],penTip[1]+lift*.12,penTip[2]-lift*.21];bar(penBase,[penBase[0],penBase[1]+.19,penBase[2]-.03],.008,'#141b24');sphere(penBase[0],penBase[1]+.19,penBase[2]-.03,.009,'#c4a66a');}
+if(t>=3.4&&t<7.2){const lift=ease((t-6.6)/.35);const penBase=[penTip[0],penTip[1]+lift*.12,penTip[2]-lift*.21];bar(penBase,[penBase[0]-.035,penBase[1]+.20,penBase[2]-.13],.008,'#141b24');sphere(penBase[0]-.035,penBase[1]+.20,penBase[2]-.13,.009,'#c4a66a');}
 if(t>=7.2){const rise=ease((t-7.2)/1.0);shirtTop=lerp(.96,1.36,rise);const z=.48,bodyHeight=.47;garment.n=0;r.add(garment,r.trs(X,shirtTop,Z+z,0,1,1,1),lin('#183550'));r.up(garment);box(0,shirtTop-.035,z+.016,.18,.014,.009,'#d9c28b');}
 }
 function point(x,y,z){return r.project(X+x,-(Z+z),y,overlay.width,overlay.height);}
 function text3(text,x,y,z,size,color='#cdb982',align='center'){const a=point(x,y,z),b=point(x,y+size,z);if(!a||!b)return;ctx.save();ctx.font=`700 ${Math.max(5,Math.hypot(b.x-a.x,b.y-a.y))}px Changa, sans-serif`;ctx.textAlign=align;ctx.textBaseline='middle';ctx.fillStyle=color;ctx.fillText(text,a.x,a.y);ctx.restore();}
 window.proofFrame=async t=>{
-grip(t<3.3?0:t<7.2?1:.8);now=t;m.time=m.animTime=t;p.anim=t*.18;p.ceremonyPose=null;
+now=t;grip(0);m.time=m.animTime=t;p.anim=t*.18;p.ceremonyPose=null;
 const sigU=cl((t-3.65)/2.95),motion=updatePaper(sigU),sx=motion[0],sz=motion[1];
-for(let i=0;i<fans.length;i++){const q=fans[i],side=i<3?-1:1,c=.5+.5*Math.sin(t*8+i*1.5),z=-q.y;const raised=t>7.2||i%3===0;q.anim=t*.4;q.ceremonyPose={fan:true,present:true,L:[q.x+(raised?.29:.04+c*.12),raised?1.65+.12*Math.sin(t*5+i):1.25,z+.26],R:[q.x-(raised?.29:.04+c*.12),raised?1.65-.12*Math.sin(t*5+i):1.25,z+.28]};}
+for(let i=0;i<fans.length;i++){const q=fans[i];q.ceremonyPose=null;q.proofClip=['idle','offIdle','fold','offIdle','idle','idle'][i];q.proofOffset=i*1.37;q.anim=t*.18;if((i===1||i===4)&&t>2.0+i*.26){const spread=.035+.080*(.5+.5*Math.sin(t*7.5+i*2.1)),h=1.12+.020*Math.sin(t*2+i);q.ceremonyPose={fan:true,L:[q.x+spread,h,-q.y+.39],R:[q.x-spread,h,-q.y+.39]};}}
 
 penTip=[sx,1.037+motion[2],sz];
 const idleL=[X+.29,1.03,Z+.34],idleR=[X-.29,1.03,Z+.34];
-if(t<7.2){const a=ease((t-2.6)/.8),L=vec(idleL,[X+.08,1.055,Z+.46],a),R=vec(idleR,[X+sx-.005,1.14+motion[2]+ease((t-6.6)/.35)*.12,Z+sz-.065-ease((t-6.6)/.35)*.21],a);p.ceremonyPose={L,R,grip:t>3.3};}
-else {const a=ease((t-7.2)/1),top=lerp(.96,1.36,a);p.ceremonyPose={present:true,L:[X+.36,top-.06,Z+.47],R:[X-.36,top-.06,Z+.47]};}
+if(t<7.2){const a=ease((t-2.6)/.8),L=vec(idleL,[X+.08,1.055,Z+.46],a),R=vec(idleR,[X+sx-.030,1.253+motion[2]+ease((t-6.6)/.35)*.12,Z+sz-.10-ease((t-6.6)/.35)*.21],a);p.ceremonyPose={L,R,grip:t>3.3};}
+else {const a=ease((t-7.2)/1),top=lerp(.96,1.36,a);p.ceremonyPose={present:true,L:[X+.38,top+.015,Z+.50],R:[X-.38,top+.015,Z+.50]};}
 let eye,tgt,fov;
 if(t<3.4){const a=ease(t/3.4);eye=vec([3.8,2.5,5.2],[2.6,2.15,4.7],a);tgt=[0,1,-.1];fov=40;}
 else if(t<7.2){const a=ease((t-3.4)/3.8);eye=vec([-.18,1.95,1.30],[-.12,1.89,1.25],a);tgt=[-.15,1.03,.63];fov=38;}

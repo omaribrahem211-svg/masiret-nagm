@@ -6,5 +6,5 @@ try{const page=await browser.newPage();page.on('pageerror',e=>console.error('PAG
 if(process.argv.includes('--motion-test')){for(let i=0;i<96;i++){const t=i<48?3.65+i/24:8+(i-48)/24;await page.evaluate(t=>proofFrame(t),t);await page.screenshot({path:out+'/frame-'+String(i).padStart(4,'0')+'.png'});}}
 else if(process.argv.includes('--frames')){for(let i=Number(process.env.START||0);i<Number(process.env.END||336);i++){await page.evaluate(t=>proofFrame(t),i/24);await page.screenshot({path:out+'/frame-'+String(i).padStart(4,'0')+'.png'});if(i%48===0)console.log('frame',i);}}
 else if(process.argv.includes('--sweep')){for(const t of [4.7,8.8])for(const angle of [0,.6,1.2,1.8,2.4])for(const grip of [.9,1.8]){await page.evaluate(({t,angle,grip})=>{window.proofAngle=angle;window.proofGrip=grip;return proofFrame(t);},{t,angle,grip});await page.screenshot({path:out+'/sweep-'+t+'-'+angle+'-'+grip+'.png'});}}
-else for(const t of [1.5,4.7,6.95,8.8,11.8]){console.log(await page.evaluate(t=>proofFrame(t),t));await page.screenshot({path:out+'/shot-'+t+'.png'});}
+else for(const t of (process.env.SHOTS?process.env.SHOTS.split(',').map(Number):[1.5,4.7,6.95,8.8,11.8])){console.log(await page.evaluate(t=>proofFrame(t),t));await page.screenshot({path:out+'/shot-'+t+'.png'});}
 }finally{await browser.close();server.close();}

@@ -160,6 +160,7 @@ def main():
                     # Keep indices aligned with captions; never silently shift them.
                     break
             counts[key] = n
+            print(dial, key, n, '/', len(spec['lines']), flush=True)
         json.dump({'engine': '+'.join(sorted(used)), 'ext': 'mp3', 'lines': counts, 'hashes': hashes}, open(os.path.join(out, 'manifest.json'), 'w'), ensure_ascii=False)
         print(dial, 'engine', used, 'clips', sum(counts.values()))
 

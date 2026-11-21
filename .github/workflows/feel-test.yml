@@ -44,12 +44,16 @@ jobs:
                   m['hashes']={k:[hashlib.sha256(t.encode()).hexdigest() for t in spec['lines'][:m['lines'].get(k,0)]] for k,spec in baseline.items()}
                   p.write_text(json.dumps(m,ensure_ascii=False))
           PY
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
       - name: Expand recorded commentary with the existing free voice path
         env:
           VOICE_FREE_ONLY: '1'
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
-          python3 scripts/gen_voice.py
+          python -m pip install edge-tts piper-tts
+          python -u scripts/gen_voice.py
           node scripts/verify-commentary.mjs
       - run: npm run fonts && npx cap sync android
       - uses: actions/setup-java@v4

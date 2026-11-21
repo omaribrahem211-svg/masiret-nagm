@@ -1,5 +1,6 @@
 /* Compact match HUD. Scale is saved by the settings screen; even the smallest
    preset keeps action circles above 54 CSS px. Anchors never follow the ball. */
+#hud.noctl .cb,#hud.cine .cb{pointer-events:none}
 #btns{position:fixed;transform:scale(var(--control-scale,.8));transform-origin:bottom right;z-index:4}
 .cb.ps{opacity:var(--control-opacity,.85)}
 .cb.ps.dim{opacity:.3}

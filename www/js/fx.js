@@ -41,7 +41,7 @@ const Voice={on:true,ready:false,man:null,buf:{},cur:null,last:0,pending:false,s
    // صوت المعلّق: فلتر بث خفيف + ضاغط، والجمهور بيوطى شوية وهو بيتكلم وبيرجع بعدها
    if(!this.bus){const hp=c.createBiquadFilter();hp.type='highpass';hp.frequency.value=120;const pr=c.createBiquadFilter();pr.type='peaking';pr.frequency.value=2800;pr.gain.value=2.5;pr.Q.value=.9;const cp=c.createDynamicsCompressor();cp.threshold.value=-20;cp.ratio.value=3.5;cp.attack.value=.005;cp.release.value=.15;const og=c.createGain();og.gain.value=1.25;hp.connect(pr);pr.connect(cp);cp.connect(og);og.connect(c.destination);this.bus=hp;}
    s.connect(this.bus);const dk=SFX.duckG,t0=c.currentTime;if(dk){dk.gain.cancelScheduledValues(t0);dk.gain.setTargetAtTime(.55,t0,.08);}
-   s.onended=()=>{if(this.cur===s){this.cur=null;this.priority=0;if(dk)dk.gain.setTargetAtTime(1,c.currentTime,.35);}};s.start();this.cur=s;}).catch(()=>{if(seq!==this.serial)return;this.pending=false;this.priority=0;if(onFailure)onFailure();});return true;},
+   s.onended=()=>{if(this.cur===s){this.cur=null;if(!this.pending)this.priority=0;if(dk)dk.gain.setTargetAtTime(1,c.currentTime,.35);}};s.start();this.cur=s;}).catch(()=>{if(seq!==this.serial)return;this.pending=false;this.priority=0;if(onFailure)onFailure();});return true;},
  stop(){this.serial++;this.pending=false;this.priority=0;if(this.cur){try{this.cur.stop();}catch(e){}this.cur=null;}}
 };
 /* ---------- التعليق ---------- */

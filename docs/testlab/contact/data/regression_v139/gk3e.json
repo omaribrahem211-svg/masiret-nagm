@@ -1,0 +1,15 @@
+{
+ "meta": {
+  "www": "/home/claude/masiret-nagm/www/js",
+  "n": 40
+ },
+ "catches": 57,
+ "parries": 119,
+ "parryOutcome": {
+  "defence": 60,
+  "corner": 32,
+  "attackShot": 1,
+  "attackOpenPlay": 11
+ },
+ "attackRegainShare": 0.115
+}

@@ -1,0 +1,254 @@
+{
+ "www": "www/js",
+ "hasShotRecord": true,
+ "runsPerScenario": 60,
+ "scenarios": {
+  "A_defender_in_lane_block": {
+   "runs": 60,
+   "outcomes": {
+    "saved": 25,
+    "blocked": 64,
+    "goal": 7,
+    "live": 1,
+    "off_target": 4,
+    "retained": 1
+   },
+   "flags": {
+    "deflected": 18,
+    "deflectedOnTarget": 8,
+    "gkTouched": 0,
+    "wood": 3,
+    "fumble": 0
+   },
+   "problems": [
+    {
+     "run": 4,
+     "issue": "shot still open after 6 s"
+    }
+   ],
+   "goals": 7,
+   "ownGoals": 0,
+   "secondShots": 0,
+   "deliberateShots": 102,
+   "gameShots": 102,
+   "duplicateShots": 0,
+   "goalsWithoutShot": 0,
+   "problemCount": 1
+  },
+  "B_clear_shot_on_target": {
+   "runs": 60,
+   "outcomes": {
+    "saved": 50,
+    "goal": 28,
+    "retained": 6,
+    "off_target": 1
+   },
+   "flags": {
+    "deflected": 0,
+    "deflectedOnTarget": 0,
+    "gkTouched": 2,
+    "wood": 6,
+    "fumble": 0
+   },
+   "problems": [],
+   "goals": 28,
+   "ownGoals": 0,
+   "secondShots": 0,
+   "deliberateShots": 85,
+   "gameShots": 85,
+   "duplicateShots": 0,
+   "goalsWithoutShot": 0,
+   "problemCount": 0
+  },
+  "C_defender_off_lane_deflection": {
+   "runs": 60,
+   "outcomes": {
+    "blocked": 38,
+    "saved": 33,
+    "goal": 9,
+    "off_target": 1,
+    "retained": 1,
+    "own_goal": 1
+   },
+   "flags": {
+    "deflected": 14,
+    "deflectedOnTarget": 7,
+    "gkTouched": 0,
+    "wood": 1,
+    "fumble": 0
+   },
+   "problems": [],
+   "goals": 10,
+   "ownGoals": 1,
+   "secondShots": 0,
+   "deliberateShots": 83,
+   "gameShots": 83,
+   "duplicateShots": 0,
+   "goalsWithoutShot": 0,
+   "problemCount": 0
+  },
+  "D_ball_passes_near_defender_no_contact": {
+   "runs": 60,
+   "outcomes": {
+    "saved": 56,
+    "goal": 10,
+    "blocked": 10,
+    "live": 1,
+    "off_target": 1
+   },
+   "flags": {
+    "deflected": 2,
+    "deflectedOnTarget": 0,
+    "gkTouched": 1,
+    "wood": 1,
+    "fumble": 0
+   },
+   "problems": [
+    {
+     "run": 42,
+     "issue": "shot still open after 6 s"
+    }
+   ],
+   "goals": 10,
+   "ownGoals": 0,
+   "secondShots": 0,
+   "deliberateShots": 78,
+   "gameShots": 78,
+   "duplicateShots": 0,
+   "goalsWithoutShot": 0,
+   "problemCount": 1
+  },
+  "E_wide_shot_defender_at_post": {
+   "runs": 60,
+   "outcomes": {
+    "blocked": 33,
+    "saved": 29,
+    "live": 1,
+    "off_target": 8,
+    "goal": 3
+   },
+   "flags": {
+    "deflected": 5,
+    "deflectedOnTarget": 0,
+    "gkTouched": 6,
+    "wood": 0,
+    "fumble": 0
+   },
+   "problems": [
+    {
+     "run": 2,
+     "issue": "shot still open after 6 s"
+    },
+    {
+     "run": 4,
+     "issue": "blocked shot counted on target"
+    }
+   ],
+   "goals": 3,
+   "ownGoals": 0,
+   "secondShots": 0,
+   "deliberateShots": 74,
+   "gameShots": 74,
+   "duplicateShots": 0,
+   "goalsWithoutShot": 0,
+   "problemCount": 2
+  },
+  "F_rebound_no_reshoot": {
+   "runs": 60,
+   "outcomes": {
+    "saved": 54,
+    "goal": 23,
+    "live": 1
+   },
+   "flags": {
+    "deflected": 0,
+    "deflectedOnTarget": 0,
+    "gkTouched": 2,
+    "wood": 0,
+    "fumble": 0
+   },
+   "problems": [
+    {
+     "run": 30,
+     "issue": "shot still open after 6 s"
+    }
+   ],
+   "goals": 23,
+   "ownGoals": 0,
+   "secondShots": 0,
+   "deliberateShots": 78,
+   "gameShots": 78,
+   "duplicateShots": 0,
+   "goalsWithoutShot": 0,
+   "problemCount": 1
+  },
+  "G_rebound_then_deliberate_reshoot": {
+   "runs": 60,
+   "outcomes": {
+    "saved": 66,
+    "blocked": 1,
+    "goal": 22,
+    "off_target": 2,
+    "live": 4
+   },
+   "flags": {
+    "deflected": 0,
+    "deflectedOnTarget": 0,
+    "gkTouched": 3,
+    "wood": 1,
+    "fumble": 0
+   },
+   "problems": [
+    {
+     "run": 13,
+     "issue": "shot still open after 6 s"
+    },
+    {
+     "run": 26,
+     "issue": "shot still open after 6 s"
+    },
+    {
+     "run": 46,
+     "issue": "shot still open after 6 s"
+    },
+    {
+     "run": 51,
+     "issue": "shot still open after 6 s"
+    }
+   ],
+   "goals": 22,
+   "ownGoals": 0,
+   "secondShots": 30,
+   "deliberateShots": 95,
+   "gameShots": 95,
+   "duplicateShots": 0,
+   "goalsWithoutShot": 0,
+   "problemCount": 4
+  },
+  "H_aim_at_post": {
+   "runs": 60,
+   "outcomes": {
+    "off_target": 31,
+    "goal": 13,
+    "saved": 24,
+    "retained": 1
+   },
+   "flags": {
+    "deflected": 0,
+    "deflectedOnTarget": 0,
+    "gkTouched": 2,
+    "wood": 1,
+    "fumble": 0
+   },
+   "problems": [],
+   "goals": 13,
+   "ownGoals": 0,
+   "secondShots": 0,
+   "deliberateShots": 69,
+   "gameShots": 69,
+   "duplicateShots": 0,
+   "goalsWithoutShot": 0,
+   "problemCount": 0
+  }
+ }
+}

@@ -1,0 +1,19 @@
+Android 11
+--- install
+Performing Streamed Install
+Success
+--- launch
+t=5s pid=3063
+t=15s pid=3063
+t=40s pid=3063
+known Capacitor safe-area messages (not game code): 2
+FATAL EXCEPTION lines: 0   ANR: 0   JS errors in the WebView log: 0
+11-21 07:01:56.960  3063  3063 E chromium: [ERROR:filesystem_posix.cc(62)] mkdir /data/user/0/com.asomygames.masiretnagm/cache/WebView/Crashpad: No such file or directory (2)
+11-21 07:01:57.953  3063  3063 E Capacitor/Console: File:  - Line 6 - Msg: Error injecting safe area CSS: TypeError: Cannot read property 'style' of null
+11-21 07:01:57.962  3063  3063 E Capacitor/Console: File:  - Line 6 - Msg: Error injecting safe area CSS: TypeError: Cannot read property 'style' of null
+--- memory after 40 s
+  Native Heap    37824    37804        0       28    39032    48804    41581     2159
+         Native Heap:    37804                          39032
+            Graphics:        0                              0
+           TOTAL PSS:   113403            TOTAL RSS:   214724       TOTAL SWAP PSS:      182
+LAUNCH: OK (running after 40 s, no crash, no JS error)

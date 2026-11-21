@@ -1,16 +1,104 @@
-# Ball contact: the drawn body now touches the ball
+# Ball contact, new animations and the commentary pack
 
-Branch: `gameplay-contact`, created from `gameplay-motion` (v135). Nothing was merged into `main` (still `0d325d8`, v129).
+Branch: `gameplay-contact`. `main` is unchanged (`0d325d8`, v129).
 
-**Latest test build: masiret-v137-test.apk** (rc2, with the new Mixamo clips)
-- versionCode 137, built by run 44834438622 from commit `7134ffa578e0e106bffd59f90f69fe28071d3967`
-- SHA-256 `7f16ff874b6ffa6a0ca284f40503fd8cdde08034d275bdb8d604d52cd773c564`
-- Download: https://github.com/omaribrahem211-svg/masiret-nagm/raw/test-builds-v137-contact-rc2/masiret-v137-test.apk
-- The workflow token could not create a GitHub release this time (HTTP 403), so the verified APK is on the branch `test-builds-v137-contact-rc2`.
-- Verify: versionCode 137, same signing key as v129, 23/23 web files identical, 0 syntax errors.
+**Latest test build: masiret-v139-test.apk** (versionCode 139)
+- Built by run 44877572454 from commit `6497867b75626f6a5b0bb81f40eeebd80f6cf47a`
+- SHA-256 `164819013ce30a6abb0e1c0623e080566b8c95d0e18829eb8ad4d8127f41082f`
+- Download: https://github.com/omaribrahem211-svg/masiret-nagm/raw/test-builds-v139-anim-audio-rc1/masiret-v139-test.apk
+- Verify: same signing key as v129, 98/98 web files identical (including the 74 commentary files), 0 syntax errors.
 - Emulator: running after 40 s, no crash, no JS error (title screen only).
 
-Earlier: v136-contact-rc1 (versionCode 136, run 44819478801, commit `08bfb22`), https://github.com/omaribrahem211-svg/masiret-nagm/releases/download/v136-contact-rc1/masiret-v136-test.apk
+## v139: second Mixamo batch (commits `922ffca`, `cd9fd1c`)
+
+All 49 files of the batch use the same Ch38 character as the rig.
+
+27 clips were added, plus the two keeper side-steps and the keeper directing clip from the first goalkeeper pack:
+
+| Kind | Clips |
+|---|---|
+| Slow movement | walking backwards; walking strafe (left, and a mirrored right) |
+| Goalkeeper | side-step left and right; directing the defence |
+| Situation stances | defensive stance; playing with the ball at a set piece; injured |
+| Falls by foul type | on the face (from behind / slide), on the back (front / side) |
+| Getting up | the matching get-up clip for each fall |
+| Lost the ball while running | stumble |
+| Fouler protests | arguing (two kinds), pointing, angry gesture, head shake; head shake / annoyed after a card |
+| Missed shot | the shooter shows disappointment until the restart |
+| Goals | two more scorer celebrations; teammates cheer, clap or give a thumbs up; four different reactions from the team that conceded |
+| Injured star | limps for 12 s |
+
+Not used: the three turns (Running Right Turn, Running To Turn, Sprint Turn), Idle To Sprint, Standing Sprint Forward and Run Backwards Start. A full-body turn or start clip would make the feet slide, because the game moves the player at its own speed. The pivot code already handles turns.
+
+Measured, same seeds as v137:
+
+| | v137 | v139 |
+|---|---|---|
+| Whole-body pops, per 1000 frames | 0.041 | 0.016 |
+| Limb pops, per 1000 frames | 2.96 | 2.95 |
+
+Feet sliding while standing rose slightly, from 0.40 to 0.50 m/s, because the new stances move the feet. There are no NaN poses.
+
+Gameplay (40 matches) is within noise of v137:
+
+| | v137 | v139 |
+|---|---|---|
+| Goals | 1.4 | 1.3 |
+| Fouls | 1.0 | 1.3 |
+| Throw-ins | 2.1 | 2.0 |
+
+The fall after a foul lasts 1.9 s (was 1.35 s) so the clip can finish.
+
+The regression suite (`data/regression_v139/`) is unchanged:
+- offside 12/12, DOGSO 9/9, boundary 13/13;
+- save compatibility 8/8;
+- diagnostics 7/7;
+- loop replay identical;
+- human tackle 393 / 488 / 33.
+
+## v139: Arabic Commentary Pack (commit `6497867`)
+
+The earlier generated voice was removed:
+- the CI step that generated it (`scripts/gen_voice.py`, `voice/lines_*.json`);
+- the browser speech-synthesis fallback.
+
+The 74 uploaded lines are in `www/audio/comm`:
+- loudness normalized to -16 LUFS;
+- AAC 64 kb/s mono, 3.6 MB in total.
+
+Each line speaks about "the star" (your player) or "our team", so each game event picks only the lines that fit.
+
+| Event | Lines used |
+|---|---|
+| Goal by the star | goal; penalty_scored for a penalty; late_goal from the 85th minute when level or ahead |
+| Own goal by our team | own_goal |
+| Big save by our keeper | big_save |
+| Miss by the star | big_chance_missed (close); penalty_missed (penalty) |
+| Miss by our team | big_chance_missed (the team line) |
+| Woodwork | post (star or team lines) |
+| Foul | foul (lines about a foul on the star, or on our team) |
+| Star's cards, offside, injury, substitution | yellow_card, red_card, offside, injury, substitution |
+| Match | kickoff, halftime, fulltime_win / draw / loss |
+
+Goals by teammates other than the star are not voiced, because every goal line names the star. VAR lines are not used, because the game has no VAR.
+
+Settings:
+- **التعليق الصوتي** on/off (off by default).
+- **صوت الجمهور** on/off (new, on by default): covers ambience, chants and stadium rhythm.
+- **الأصوات**: ball and whistle effects only.
+- The written commentary keeps its own switch. When a voice line plays, the on-screen text is the same sentence.
+
+Checked in Chrome (Playwright):
+- 74/74 files decode;
+- the settings switches drive the players;
+- the event mapping gives the expected line in 26 cases;
+- a quick match voiced the kick-off and a big save with no page error.
+
+Not checked on a phone.
+
+## Earlier builds
+
+- v137-contact-rc2 (versionCode 137, run 44834438622, commit `7134ffa`): https://github.com/omaribrahem211-svg/masiret-nagm/raw/test-builds-v137-contact-rc2/masiret-v137-test.apk
 
 ## rc2: what the uploaded Mixamo files added (commits `1b170a9`, `7134ffa`)
 

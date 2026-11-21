@@ -37,3 +37,15 @@ The contract is now a depth-tested canvas texture with Arabic clauses and a stam
 The included generated voices are original game narration, not recordings of real fans. `scripts/mix-signing-proof.py` builds the 14-second mix from those WAVs with synthesized applause/ambience, a pen scratch and one shutter. The announcer is sped to 1.13x without pitch change. The chant is layered and comes forward at the end. Narration and the final chant tail were transcription-checked, not human listening-reviewed.
 
 Reproduction additionally needs Python numpy/scipy/Pillow and ffmpeg. The signature helper uses a system Noto Naskh font, renders the chosen name, and applies Zhang-Suen thinning. This is demonstration-name preprocessing, not yet arbitrary-name career integration.
+
+## Revision 3 and archived review exports
+
+The current signing proof uses preview-only articulated finger joints reweighted onto the original mesh. This replaces the earlier vertex-grip experiment described above. Supporters use staggered body motions and chest-level clapping. The signing proof was accepted as a style proof.
+
+Trophy, MOTM and top-award proofs use the same finger rig, tailored prop contact and supplied generated Arabic commentary. They remain isolated from the game. The later pitch reel uses the actual gameplay stadium with running, knee and jump celebrations plus varied teammate reactions. Its goal call contains no player name.
+
+The five final MP4s sent for review are committed in `previews/exports/`, with SHA-256 hashes in `SHA256SUMS`. Signing and awards are 14 seconds each. The pitch reel is 18 seconds. All are 1280x720 at 24fps, H.264/AAC. The encoded videos were visually inspected. They are stylized low-poly proofs, not phone performance tests.
+
+Capture entry points are `/proofs/signing.html`, `/proofs/ceremony.html?scene=trophy` (or `motm`, `award`), and `/proofs/pitch.html`. Use `PROOF_PAGE`, `PROOF_OUT`, `START`, `END`, and optional comma-separated `SHOTS` with the capture script. Pitch has 432 frames; the other scenes have 336. Final audio sources and mixers are committed.
+
+No production ceremony integration, main merge or new preview APK is authorized by this archive. Keep the branch unmerged until the owner approves the relevant test and integration.
